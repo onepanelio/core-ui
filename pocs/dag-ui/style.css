@@ -53,6 +53,11 @@ body {
   background-color: orange;
 }
 
+.node.failed .phase,
+.node.error .phase {
+  background-color: red;
+}
+
 .node.selected rect {
   stroke: red;
 }
