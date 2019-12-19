@@ -38,19 +38,19 @@ let drawEdges = (node: any) => {
   }
 };
 
-let displayInfo = (id: any, status: any) => {
-  let template = "";
-  if (status.nodes[id].storedTemplateID) {
-    template = status.storedTemplates[status.nodes[id].storedTemplateID];
-  }
-
-  document.getElementById("name").innerHTML = status.nodes[id].templateName;
-  document.getElementById("template").value = yaml.safeDump(template);
+let displayInfo = (node: any, workflow: any) => {
+  let workflowTemplate = yaml.safeLoad(workflow.workflowTemplate.manifest);
+  let nodeTemplate = workflowTemplate.spec.templates.find(
+    t => t.name === node.templateName
+  );
+  document.getElementById("name").innerHTML = node.templateName;
+  document.getElementById("template").value = yaml.safeDump(nodeTemplate);
 };
 
-let drawWorkflow = status => {
+let drawWorkflow = workflow => {
   // Add nodes to the graph. The first argument is the node id. The second is
   // metadata about the node.
+  let status = JSON.parse(workflow.status);
   Object.keys(status.nodes).forEach(key => {
     drawNode(status.nodes[key]);
   });
@@ -64,12 +64,12 @@ let drawWorkflow = status => {
 
   // Capture click events
   svg.selectAll("g.node").on("click", id => {
-    displayInfo(id, status);
+    displayInfo(status.nodes[id], workflow);
   });
 };
 
-drawWorkflow(JSON.parse(streams["stream0"]));
-// let i = 0;
+drawWorkflow(streams["stream0"]);
+// let i = 1;
 // setInterval(() => {
 //   drawWorkflow(JSON.parse(streams["stream" + (i % 3)]));
 //   i++;
