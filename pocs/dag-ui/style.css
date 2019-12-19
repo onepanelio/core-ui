@@ -1,0 +1,67 @@
+body {
+  font: 300 14px "Helvetica Neue", Helvetica;
+}
+
+.node {
+  cursor: pointer;
+  height: 40px;
+}
+
+.node .phase {
+  height: 40px;
+  width: 6px;
+  display: block;
+  float: left;
+}
+
+.node .name {
+  height: 26px;
+  padding: 5px;
+  display: block;
+  float: left;
+  border: 2px solid #ddd;
+  border-left: none;
+}
+
+.node .dashed-circle {
+  border-radius: 50%;
+  border: 1px dashed #bbb;
+  width: 20px;
+  height: 20px;
+}
+
+.node rect {
+  fill: #fff;
+}
+
+.edgePath path {
+  stroke: #bbb;
+  fill: #bbb;
+  stroke-width: 1px;
+  stroke-dasharray: 3;
+}
+
+.node.succeeded .phase {
+  background-color: green;
+}
+
+.node.running .phase {
+  background-color: blue;
+}
+
+.node.pending .phase {
+  background-color: orange;
+}
+
+.node.selected rect {
+  stroke: red;
+}
+
+#info {
+  padding-left: 10px;
+}
+
+#template {
+  width: 400px;
+  height: 400px;
+}
