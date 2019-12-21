@@ -1,8 +1,8 @@
 import * as d3 from "d3";
 import * as dagreD3 from "dagre-d3";
 import * as yaml from "js-yaml";
-import * as streams from "./streams";
 import { createGraph, nodeTemplate } from "./graph-parser";
+import * as request from "request-promise-native";
 
 let drawNode = (node: any) => {
   g.setNode(node.id, {
@@ -66,10 +66,26 @@ let setupZoomSupport = () => {
   svg.attr("height", "100%");
 };
 
+let getWorkflow = async (namespace, name: string): Promise<any> => {
+  var options = {
+    uri: `http://localhost:8888/apis/v1beta1/${namespace}/workflows/${name}`
+  };
+
+  let workflow = JSON.parse(await request.get(options));
+  
+  return workflow;
+};
+
 let svg = d3.select("svg"),
   inner = svg.select("g");
 
 let g = new dagreD3.graphlib.Graph().setGraph({});
 
-drawWorkflowGraph(streams["stream0"]);
-setupZoomSupport();
+(async () => {
+  let workflow = await getWorkflow("rushtehrani", "dag-diamond-coinflip-7x4pb");
+  drawWorkflowGraph(workflow);
+  setupZoomSupport();
+})();
+
+
+
