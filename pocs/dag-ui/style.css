@@ -4,23 +4,30 @@ body {
 
 .node {
   cursor: pointer;
-  height: 40px;
+  height: 30px;
 }
 
 .node .phase {
-  height: 40px;
-  width: 6px;
+  height: 30px;
+  width: 14px;
   display: block;
   float: left;
+  border-radius: 4px 0 0 4px;
 }
 
 .node .name {
-  height: 26px;
+  height: 18px;
   padding: 5px;
   display: block;
   float: left;
-  border: 2px solid #ddd;
+  border: 1px solid #ddd;
   border-left: none;
+  border-radius: 0 4px 4px 0;
+}
+
+.node.skipped .name {
+  border-left: 1px solid #ddd;
+  border-radius: 4px;
 }
 
 .node .dashed-circle {
@@ -39,6 +46,10 @@ body {
   fill: #bbb;
   stroke-width: 1px;
   stroke-dasharray: 3;
+}
+
+.node.skipped .phase {
+  display: none;
 }
 
 .node.succeeded .phase {

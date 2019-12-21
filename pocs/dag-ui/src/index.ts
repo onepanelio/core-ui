@@ -2,29 +2,12 @@ import * as d3 from "d3";
 import * as dagreD3 from "dagre-d3";
 import * as yaml from "js-yaml";
 import * as streams from "./streams";
-
-let g = new dagreD3.graphlib.Graph().setGraph({});
-
-let svg = d3.select("svg"),
-  inner = svg.select("g");
-// Create the renderer
-let render = new dagreD3.render();
+import { createGraph, nodeTemplate } from "./graph-parser";
 
 let drawNode = (node: any) => {
-  var html = "<div>";
-  if (node.type === "StepGroup") {
-    html += "<div class=dashed-circle></div>";
-  } else {
-    html += "<span class=phase></span>";
-    html +=
-      "<span class=name>" +
-      (node.type === "StepGroup" ? node.name : node.displayName) +
-      "</span>";
-  }
-  html += "</div>";
   g.setNode(node.id, {
     labelType: "html",
-    label: html,
+    label: nodeTemplate(node),
     padding: 0,
     class: node.phase.toLowerCase()
   });
@@ -44,10 +27,12 @@ let displayInfo = (node: any, workflow: any) => {
     t => t.name === node.templateName
   );
   document.getElementById("name").innerHTML = node.templateName;
-  document.getElementById("template").value = yaml.safeDump(nodeTemplate);
+  (document.getElementById(
+    "template"
+  ) as HTMLInputElement).value = yaml.safeDump(nodeTemplate);
 };
 
-let drawWorkflow = workflow => {
+let drawWorkflowGraph = (workflow: any) => {
   // Add nodes to the graph. The first argument is the node id. The second is
   // metadata about the node.
   let status = JSON.parse(workflow.status);
@@ -60,6 +45,9 @@ let drawWorkflow = workflow => {
   });
 
   // Run the renderer. This is what draws the final graph.
+  let render = new dagreD3.render();
+  //g = createGraph(streams.stream0.workflowTemplate);
+  console.log(g);
   render(inner, g);
 
   // Capture click events
@@ -68,25 +56,20 @@ let drawWorkflow = workflow => {
   });
 };
 
-drawWorkflow(streams["stream0"]);
-// let i = 1;
-// setInterval(() => {
-//   drawWorkflow(JSON.parse(streams["stream" + (i % 3)]));
-//   i++;
-// }, 3000);
+let setupZoomSupport = () => {
+  let zoom = d3.zoom().on("zoom", () => {
+    inner.attr("transform", d3.event.transform);
+  });
 
-// Set up zoom support
-let zoom = d3.zoom().on("zoom", () => {
-  inner.attr("transform", d3.event.transform);
-});
-let initialScale = 1;
+  svg.call(zoom);
+  svg.attr("width", 800);
+  svg.attr("height", "100%");
+};
 
-svg.call(zoom);
-svg.call(
-  zoom.transform,
-  d3.zoomIdentity
-    .translate((svg.attr("width") - g.graph().width * initialScale) / 800, 0)
-    .scale(initialScale)
-);
-svg.attr("width", g.graph().width * initialScale + 600);
-svg.attr("height", g.graph().height * initialScale + 100);
+let svg = d3.select("svg"),
+  inner = svg.select("g");
+
+let g = new dagreD3.graphlib.Graph().setGraph({});
+
+drawWorkflowGraph(streams["stream0"]);
+setupZoomSupport();
