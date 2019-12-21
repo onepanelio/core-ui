@@ -66,7 +66,7 @@ let setupZoomSupport = () => {
   svg.attr("height", "100%");
 };
 
-let getWorkflow = async (namespace, name: string): Promise<any> => {
+let getWorkflow = async (namespace: string, name: string): Promise<any> => {
   var options = {
     uri: `http://localhost:8888/apis/v1beta1/${namespace}/workflows/${name}`
   };
