@@ -1,59 +1,14 @@
 import * as d3 from "d3";
 import * as dagreD3 from "dagre-d3";
-import * as yaml from "js-yaml";
-import { createGraph, nodeTemplate } from "./graph-parser";
+import { createGraphFromWorkflowTemplate, createGraphFromWorkflowStatus } from "./graph-parser";
 import * as request from "request-promise-native";
 
-let drawNode = (node: any) => {
-  g.setNode(node.id, {
-    labelType: "html",
-    label: nodeTemplate(node),
-    padding: 0,
-    class: node.phase.toLowerCase()
-  });
-};
-
-let drawEdges = (node: any) => {
-  if (node.children !== undefined) {
-    node.children.forEach(child => {
-      g.setEdge(node.id, child, {});
-    });
-  }
-};
-
-let displayInfo = (node: any, workflow: any) => {
-  let workflowTemplate = yaml.safeLoad(workflow.workflowTemplate.manifest);
-  let nodeTemplate = workflowTemplate.spec.templates.find(
-    t => t.name === node.templateName
-  );
-  document.getElementById("name").innerHTML = node.templateName;
-  (document.getElementById(
-    "template"
-  ) as HTMLInputElement).value = yaml.safeDump(nodeTemplate);
-};
-
-let drawWorkflowGraph = (workflow: any) => {
-  // Add nodes to the graph. The first argument is the node id. The second is
-  // metadata about the node.
-  let status = JSON.parse(workflow.status);
-  Object.keys(status.nodes).forEach(key => {
-    drawNode(status.nodes[key]);
-  });
-
-  Object.keys(status.nodes).forEach(key => {
-    drawEdges(status.nodes[key]);
-  });
-
-  // Run the renderer. This is what draws the final graph.
-  let render = new dagreD3.render();
-  //g = createGraph(streams.stream0.workflowTemplate);
-  console.log(g);
-  render(inner, g);
-
-  // Capture click events
-  svg.selectAll("g.node").on("click", id => {
-    displayInfo(status.nodes[id], workflow);
-  });
+let displayInfo = (node: any) => {
+  document.getElementById("name").innerHTML = node.info.nodeType;
+  // (document.getElementById(
+  //   "template"
+  // ) as HTMLInputElement).value = yaml.safeDump(node.info);
+  console.log(node);
 };
 
 let setupZoomSupport = () => {
@@ -79,11 +34,21 @@ let getWorkflow = async (namespace: string, name: string): Promise<any> => {
 let svg = d3.select("svg"),
   inner = svg.select("g");
 
-let g = new dagreD3.graphlib.Graph().setGraph({});
-
 (async () => {
   let workflow = await getWorkflow("rushtehrani", "dag-diamond-coinflip-7x4pb");
-  drawWorkflowGraph(workflow);
+  // draw workflow template
+  let g = createGraphFromWorkflowTemplate(workflow.workflowTemplate);
+  // draw executed workflow
+  g = createGraphFromWorkflowStatus(workflow.status);
+  
+  // Run the renderer. This is what draws the final graph.
+  let render = new dagreD3.render();
+  render(inner, g);
+  
+  svg.selectAll("g.node").on("click", id => {
+    displayInfo(g.node(id));
+  });
+
   setupZoomSupport();
 })();
 

@@ -28,7 +28,7 @@ export function nodeTemplate(node: any) {
   return html;
 }
 
-export class SelectedNodeInfo {
+export class NodeInfo {
   public args: string[];
   public command: string[];
   public condition: string;
@@ -52,10 +52,10 @@ export class SelectedNodeInfo {
   }
 }
 
-export function _populateInfoFromTemplate(
-  info: SelectedNodeInfo,
+export function populateInfoFromTemplate(
+  info: NodeInfo,
   template?: any
-): SelectedNodeInfo {
+): NodeInfo {
   if (!template || (!template.container && !template.resource)) {
     return info;
   }
@@ -174,7 +174,7 @@ function buildDag(
 
       // This object contains information about the node that we display to the user when they
       // click on a node in the graph
-      const info = new SelectedNodeInfo();
+      const info = new NodeInfo();
       if (task.when) {
         info.condition = task.when;
       }
@@ -190,7 +190,7 @@ function buildDag(
           child.nodeType === "container" ||
           child.nodeType === "resource"
         ) {
-          _populateInfoFromTemplate(info, child.template);
+          populateInfoFromTemplate(info, child.template);
         } else {
           throw new Error(
             `Unknown nodetype: ${child.nodeType} on workflow template: ${
@@ -220,7 +220,7 @@ function buildDag(
   }
 }
 
-export function createGraph(workflowTemplate: any): dagre.graphlib.Graph {
+export function createGraphFromWorkflowTemplate(workflowTemplate: any): dagre.graphlib.Graph {
   const graph = new dagre.graphlib.Graph();
   graph.setGraph({});
   graph.setDefaultEdgeLabel(() => ({}));
@@ -241,8 +241,8 @@ export function createGraph(workflowTemplate: any): dagre.graphlib.Graph {
   for (const template of workflowTemplates.filter(t => !!t && !!t.name)) {
     // Argo allows specifying a single global exit handler. We also highlight that node
     if (template.name === manifest.spec.onExit) {
-      const info = new SelectedNodeInfo();
-      _populateInfoFromTemplate(info, template);
+      const info = new NodeInfo();
+      populateInfoFromTemplate(info, template);
       graph.setNode(template.name, {
         info,
         label: "onExit - " + template.name
@@ -279,4 +279,48 @@ export function createGraph(workflowTemplate: any): dagre.graphlib.Graph {
   }
 
   return graph;
+}
+
+export function populateInfoFromNodeStatus(
+  info: NodeInfo,
+  nodeStatus?: any
+): NodeInfo {
+  console.log(nodeStatus);
+  info.nodeType = nodeStatus.type;
+  return info
+}
+
+export function createGraphFromWorkflowStatus(workflowStatus: any): dagre.graphlib.Graph {
+  const status = JSON.parse(workflowStatus);
+  
+  const graph = new dagre.graphlib.Graph();
+  graph.setGraph({});
+  graph.setDefaultEdgeLabel(() => ({}));
+
+  Object.keys(status.nodes).forEach(key => {
+    const nodeStatus = status.nodes[key];
+    
+    const info = new NodeInfo();
+    populateInfoFromNodeStatus(info, nodeStatus);
+    
+    graph.setNode(nodeStatus.id, {
+      labelType: "html",
+      label: nodeTemplate(nodeStatus),
+      padding: 0,
+      class: nodeStatus.phase.toLowerCase(),
+      info
+    });
+  });
+
+  Object.keys(status.nodes).forEach(key => {
+    const nodeStatus = status.nodes[key];
+    
+    if (nodeStatus.children !== undefined) {
+      nodeStatus.children.forEach((child: any) => {
+        graph.setEdge(nodeStatus.id, child, {});
+      });
+    }
+  });
+
+  return graph
 }
