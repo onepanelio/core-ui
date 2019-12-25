@@ -1,7 +1,9 @@
 import * as d3 from "d3";
+import * as dagre from "dagre";
 import * as dagreD3 from "dagre-d3";
 import { createGraphFromWorkflowTemplate, createGraphFromWorkflowStatus } from "./graph-parser";
 import * as request from "request-promise-native";
+import url from 'url';
 
 let displayInfo = (node: any) => {
   document.getElementById("name").innerHTML = node.info.nodeType;
@@ -36,11 +38,17 @@ let svg = d3.select("svg"),
 
 (async () => {
   let workflow = await getWorkflow("rushtehrani", "dag-diamond-coinflip-7x4pb");
-  // draw workflow template
-  let g = createGraphFromWorkflowTemplate(workflow.workflowTemplate);
-  // draw executed workflow
-  g = createGraphFromWorkflowStatus(workflow.status);
-  
+
+  const uri = url.parse(document.location.href);
+  let g = new dagre.graphlib.Graph();
+  if (uri.query === "template") {
+    // draw workflow template
+    g = createGraphFromWorkflowTemplate(workflow.workflowTemplate);
+    } else {
+    // draw executed workflow
+    g = createGraphFromWorkflowStatus(workflow.status);
+  }
+
   // Run the renderer. This is what draws the final graph.
   let render = new dagreD3.render();
   render(inner, g);

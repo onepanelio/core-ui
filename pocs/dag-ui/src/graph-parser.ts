@@ -9,7 +9,7 @@ export interface KeyValue<T> extends Array<any> {
   1?: T;
 }
 
-export function nodeTemplate(node: any) {
+function nodeTemplate(node: any) {
   let html: string = "<div>";
   if (node.type === "StepGroup") {
     html += "<div class=dashed-circle></div>";
@@ -285,7 +285,6 @@ export function populateInfoFromNodeStatus(
   info: NodeInfo,
   nodeStatus?: any
 ): NodeInfo {
-  console.log(nodeStatus);
   info.nodeType = nodeStatus.type;
   return info
 }
