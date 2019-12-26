@@ -264,9 +264,7 @@ export function createGraphFromWorkflowTemplate(workflowTemplate: any): dagre.gr
 
   buildDag(graph, manifest.spec.entrypoint, templates, new Map(), "");
 
-  // DSL-compiled Pipelines will always include a DAG, so they should never reach this point.
-  // It is, however, possible for users to upload manually constructed Pipelines, and extremely
-  // simple ones may have no steps or DAGs, just an entry point container.
+  // If template is not a DAG
   if (graph.nodeCount() === 0) {
     const entryPointTemplate = workflowTemplates.find(
       t => t.name === manifest.spec.entrypoint
