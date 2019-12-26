@@ -2,7 +2,7 @@
 import * as dagre from "dagre";
 import * as yaml from "js-yaml";
 
-export type nodeType = "container" | "resource" | "dag" | "unknown";
+export type nodeType = "container" | "resource" | "dag" | "steps" | "script" | "unknown";
 
 export interface KeyValue<T> extends Array<any> {
   0?: string;
@@ -56,12 +56,11 @@ export function populateInfoFromTemplate(
   info: NodeInfo,
   template?: any
 ): NodeInfo {
-  if (!template || (!template.container && !template.resource)) {
+  if (!template || (!template.container && !template.resource && !template.script && !template.steps)) {
     return info;
   }
 
   if (template.container) {
-    info.nodeType = "container";
     (info.args = template.container.args || []),
       (info.command = template.container.command || []),
       (info.image = template.container.image || "");
@@ -70,7 +69,6 @@ export function populateInfoFromTemplate(
       v.name
     ]);
   } else {
-    info.nodeType = "resource";
     if (
       template.resource &&
       template.resource.action &&
@@ -188,8 +186,11 @@ function buildDag(
           buildDag(graph, task.template, templates, alreadyVisited, nodeId);
         } else if (
           child.nodeType === "container" ||
-          child.nodeType === "resource"
+          child.nodeType === "resource"  ||
+          child.nodeType === "steps"     ||
+          child.nodeType === "script"
         ) {
+          info.nodeType = child.nodeType;
           populateInfoFromTemplate(info, child.template);
         } else {
           throw new Error(
@@ -255,6 +256,10 @@ export function createGraphFromWorkflowTemplate(workflowTemplate: any): dagre.gr
       templates.set(template.name, { nodeType: "resource", template });
     } else if (template.dag) {
       templates.set(template.name, { nodeType: "dag", template });
+    } else if (template.steps) {
+      templates.set(template.name, { nodeType: "steps", template });
+    } else if (template.script) {
+      templates.set(template.name, { nodeType: "script", template });
     } else {
       console.log(
         `Template: ${template.name} was neither a Container/Resource nor a DAG`
