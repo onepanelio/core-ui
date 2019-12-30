@@ -2,7 +2,7 @@
 import * as dagre from "dagre";
 import * as yaml from "js-yaml";
 
-export type nodeType = "pod" | "resource" | "dag" | "unknown";
+export type nodeType = "Pod" | "Resource" | "DAG" | "Unknown";
 
 export interface KeyValue<T> extends Array<any> {
   0?: string;
@@ -45,7 +45,7 @@ export class NodeInfo {
     this.condition = "";
     this.image = "";
     this.inputs = [[]];
-    this.nodeType = "unknown";
+    this.nodeType = "Unknown";
     this.outputs = [[]];
     this.volumeMounts = [[]];
     this.resource = [[]];
@@ -56,7 +56,7 @@ export function populateInfoFromTemplate(
   info: NodeInfo,
   template?: any
 ): NodeInfo {
-  if (!template || (!template.container && !template.resource && !template.script && !template.steps)) {
+  if (!template || (!template.container && !template.resource && !template.script)) {
     return info;
   }
 
@@ -130,7 +130,7 @@ function buildDag(
 ): void {
   const root = templates.get(rootTemplateId);
 
-  if (root && root.nodeType === "dag") {
+  if (root && root.nodeType === "DAG") {
     // Mark that we have visited this DAG, and save the original qualified path to it.
     alreadyVisited.set(rootTemplateId, parentFullPath || "/" + rootTemplateId);
     const template = root.template;
@@ -182,14 +182,14 @@ function buildDag(
       // leaf node
       const child = templates.get(task.template);
       if (child) {
-        if (child.nodeType === "dag") {
+        if (child.nodeType === "DAG") {
           // TODO: Handle self referencing templates better
           if (rootTemplateId !== task.template) {
             buildDag(graph, task.template, templates, alreadyVisited, nodeId);
           }
         } else if (
-          child.nodeType === "pod" ||
-          child.nodeType === "resource"
+          child.nodeType === "Pod" ||
+          child.nodeType === "Resource"
         ) {
           info.nodeType = child.nodeType;
           populateInfoFromTemplate(info, child.template);
@@ -202,6 +202,7 @@ function buildDag(
         }
       }
 
+      info.nodeType = child.nodeType;
       graph.setNode(nodeId, {
         labelType: "html",
         label: nodeTemplate(task),
@@ -252,14 +253,14 @@ export function createGraphFromWorkflowTemplate(workflowTemplate: any): dagre.gr
     }
 
     if (template.container || template.script) {
-      templates.set(template.name, { nodeType: "pod", template });
+      templates.set(template.name, { nodeType: "Pod", template });
     } else if (template.resource) {
-      templates.set(template.name, { nodeType: "resource", template });
+      templates.set(template.name, { nodeType: "Resource", template });
     } else if (template.dag) {
-      templates.set(template.name, { nodeType: "dag", template });
+      templates.set(template.name, { nodeType: "DAG", template });
     } else {
       console.log(
-        `Template: ${template.name} was neither a Container/Resource nor a DAG`
+        `Template: ${template.name} was neither a Container, Resource, Script nor a DAG`
       );
     }
   }
