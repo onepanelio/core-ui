@@ -1,26 +1,26 @@
-import * as d3 from "d3";
-import * as dagre from "dagre";
-import * as dagreD3 from "dagre-d3";
-import { createGraphFromWorkflowTemplate, createGraphFromWorkflowStatus } from "./graph-parser";
-import * as request from "request-promise-native";
+import * as d3 from 'd3';
+import * as dagre from 'dagre';
+import * as dagreD3 from 'dagre-d3';
+import { createGraphFromWorkflowTemplate, createGraphFromWorkflowStatus } from './graph-parser';
+import * as request from 'request-promise-native';
 import url from 'url';
 
 let displayInfo = (node: any) => {
-  document.getElementById("name").innerHTML = node.info.nodeType;
+  document.getElementById('name').innerHTML = node.info.nodeType;
   // (document.getElementById(
-  //   "template"
+  //   'template'
   // ) as HTMLInputElement).value = yaml.safeDump(node.info);
   console.log(node);
 };
 
 let setupZoomSupport = () => {
-  let zoom = d3.zoom().on("zoom", () => {
-    inner.attr("transform", d3.event.transform);
+  let zoom = d3.zoom().on('zoom', () => {
+    inner.attr('transform', d3.event.transform);
   });
 
   svg.call(zoom);
-  svg.attr("width", 800);
-  svg.attr("height", "100%");
+  svg.attr('width', 800);
+  svg.attr('height', '100%');
 };
 
 let getWorkflow = async (namespace: string, name: string): Promise<any> => {
@@ -33,15 +33,15 @@ let getWorkflow = async (namespace: string, name: string): Promise<any> => {
   return workflow;
 };
 
-let svg = d3.select("svg"),
-  inner = svg.select("g");
+let svg = d3.select('svg'),
+  inner = svg.select('g');
 
 (async () => {
-  let workflow = await getWorkflow("rushtehrani", "dag-diamond-coinflip-cjpx2");
+  let workflow = await getWorkflow('rushtehrani', 'dag-diamond-coinflip-cjpx2');
 
   const uri = url.parse(document.location.href);
   let g = new dagre.graphlib.Graph();
-  if (uri.query === "template") {
+  if (uri.query === 'template') {
     // draw workflow template
     g = createGraphFromWorkflowTemplate(workflow.workflowTemplate);
     } else {
@@ -53,7 +53,7 @@ let svg = d3.select("svg"),
   let render = new dagreD3.render();
   render(inner, g);
   
-  svg.selectAll("g.node").on("click", id => {
+  svg.selectAll('g.node').on('click', id => {
     displayInfo(g.node(id));
   });
 

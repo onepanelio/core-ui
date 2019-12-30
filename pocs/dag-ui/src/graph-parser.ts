@@ -1,8 +1,8 @@
 // reference: https://github.com/kubeflow/pipelines/blob/master/frontend/src/lib/StaticGraphParser.ts
-import * as dagre from "dagre";
-import * as yaml from "js-yaml";
+import * as dagre from 'dagre';
+import * as yaml from 'js-yaml';
 
-export type nodeType = "Pod" | "Resource" | "DAG" | "Unknown";
+export type nodeType = 'Pod' | 'Resource' | 'DAG' | 'Unknown';
 
 export interface KeyValue<T> extends Array<any> {
   0?: string;
@@ -10,20 +10,20 @@ export interface KeyValue<T> extends Array<any> {
 }
 
 function nodeTemplate(node: any) {
-  let html: string = "<div>";
-  if (node.type === "StepGroup") {
-    html += "<div class=dashed-circle></div>";
+  let html: string = '<div>';
+  if (node.type === 'StepGroup') {
+    html += '<div class=dashed-circle></div>';
   } else {
-    html += "<span class=phase></span>";
+    html += '<span class=phase></span>';
     html += `<span class=name>
       ${
-        node.type === "StepGroup" || node.type === undefined
+        node.type === 'StepGroup' || node.type === undefined
           ? node.name
           : node.displayName
       }
       </span>`;
   }
-  html += "</div>";
+  html += '</div>';
 
   return html;
 }
@@ -42,10 +42,10 @@ export class NodeInfo {
   constructor() {
     this.args = [];
     this.command = [];
-    this.condition = "";
-    this.image = "";
+    this.condition = '';
+    this.image = '';
     this.inputs = [[]];
-    this.nodeType = "Unknown";
+    this.nodeType = 'Unknown';
     this.outputs = [[]];
     this.volumeMounts = [[]];
     this.resource = [[]];
@@ -63,7 +63,7 @@ export function populateInfoFromTemplate(
   if (template.container) {
     (info.args = template.container.args || []),
       (info.command = template.container.command || []),
-      (info.image = template.container.image || "");
+      (info.image = template.container.image || '');
     info.volumeMounts = (template.container.volumeMounts || []).map(v => [
       v.mountPath,
       v.name
@@ -83,12 +83,12 @@ export function populateInfoFromTemplate(
   if (template.inputs) {
     info.inputs = (template.inputs.parameters || []).map(p => [
       p.name,
-      p.value || ""
+      p.value || ''
     ]);
   }
   if (template.outputs) {
     info.outputs = (template.outputs.parameters || []).map(p => {
-      let value = "";
+      let value = '';
       if (p.value) {
         value = p.value;
       } else if (p.valueFrom) {
@@ -97,7 +97,7 @@ export function populateInfoFromTemplate(
           p.valueFrom.jsonPath ||
           p.valueFrom.parameter ||
           p.valueFrom.path ||
-          "";
+          '';
       }
       return [p.name, value];
     });
@@ -130,19 +130,19 @@ function buildDag(
 ): void {
   const root = templates.get(rootTemplateId);
 
-  if (root && root.nodeType === "DAG") {
+  if (root && root.nodeType === 'DAG') {
     // Mark that we have visited this DAG, and save the original qualified path to it.
-    alreadyVisited.set(rootTemplateId, parentFullPath || "/" + rootTemplateId);
+    alreadyVisited.set(rootTemplateId, parentFullPath || '/' + rootTemplateId);
     const template = root.template;
 
     (template.dag.tasks || []).forEach(task => {
-      const nodeId = parentFullPath + "/" + task.name;
+      const nodeId = parentFullPath + '/' + task.name;
 
       // If the user specifies an exit handler, then the compiler will wrap the entire Pipeline
-      // within an additional DAG template prefixed with "exit-handler".
+      // within an additional DAG template prefixed with 'exit-handler'.
       // If this is the case, we simply treat it as the root of the graph and work from there
-      if (task.name.startsWith("exit-handler")) {
-        buildDag(graph, task.template, templates, alreadyVisited, "");
+      if (task.name.startsWith('exit-handler')) {
+        buildDag(graph, task.template, templates, alreadyVisited, '');
         return;
       }
 
@@ -177,19 +177,19 @@ function buildDag(
         info.condition = task.when;
       }
 
-      // "Child" here is the template that this task points to. This template should either be a
+      // 'Child' here is the template that this task points to. This template should either be a
       // DAG, in which case we recurse, or a pod/resource which can be thought of as a
       // leaf node
       const child = templates.get(task.template);
       if (child) {
-        if (child.nodeType === "DAG") {
+        if (child.nodeType === 'DAG') {
           // TODO: Handle self referencing templates better
           if (rootTemplateId !== task.template) {
             buildDag(graph, task.template, templates, alreadyVisited, nodeId);
           }
         } else if (
-          child.nodeType === "Pod" ||
-          child.nodeType === "Resource"
+          child.nodeType === 'Pod' ||
+          child.nodeType === 'Resource'
         ) {
           info.nodeType = child.nodeType;
           populateInfoFromTemplate(info, child.template);
@@ -204,10 +204,10 @@ function buildDag(
 
       info.nodeType = child.nodeType;
       graph.setNode(nodeId, {
-        labelType: "html",
+        labelType: 'html',
         label: nodeTemplate(task),
         padding: 0,
-        class: "skipped",
+        class: 'skipped',
         info
       });
 
@@ -217,7 +217,7 @@ function buildDag(
       // ever directly depend on their siblings. This is true now but may change in the future, and
       // this will need to be updated.
       (task.dependencies || []).forEach(dep =>
-        graph.setEdge(parentFullPath + "/" + dep, nodeId)
+        graph.setEdge(parentFullPath + '/' + dep, nodeId)
       );
     });
   }
@@ -231,7 +231,7 @@ export function createGraphFromWorkflowTemplate(workflowTemplate: any): dagre.gr
 
   if (!manifest.spec || !manifest.spec.templates) {
     throw new Error(
-      "Could not generate graph. Provided Pipeline had no components."
+      'Could not generate graph. Provided Pipeline had no components.'
     );
   }
 
@@ -248,16 +248,16 @@ export function createGraphFromWorkflowTemplate(workflowTemplate: any): dagre.gr
       populateInfoFromTemplate(info, template);
       graph.setNode(template.name, {
         info,
-        label: "onExit - " + template.name
+        label: 'onExit - ' + template.name
       });
     }
 
     if (template.container || template.script) {
-      templates.set(template.name, { nodeType: "Pod", template });
+      templates.set(template.name, { nodeType: 'Pod', template });
     } else if (template.resource) {
-      templates.set(template.name, { nodeType: "Resource", template });
+      templates.set(template.name, { nodeType: 'Resource', template });
     } else if (template.dag) {
-      templates.set(template.name, { nodeType: "DAG", template });
+      templates.set(template.name, { nodeType: 'DAG', template });
     } else {
       console.log(
         `Template: ${template.name} was neither a Container, Resource, Script nor a DAG`
@@ -265,7 +265,7 @@ export function createGraphFromWorkflowTemplate(workflowTemplate: any): dagre.gr
     }
   }
 
-  buildDag(graph, manifest.spec.entrypoint, templates, new Map(), "");
+  buildDag(graph, manifest.spec.entrypoint, templates, new Map(), '');
 
   // If template is not a DAG
   if (graph.nodeCount() === 0) {
@@ -304,7 +304,7 @@ export function createGraphFromWorkflowStatus(workflowStatus: any): dagre.graphl
     populateInfoFromNodeStatus(info, nodeStatus);
     
     graph.setNode(nodeStatus.id, {
-      labelType: "html",
+      labelType: 'html',
       label: nodeTemplate(nodeStatus),
       padding: 0,
       class: nodeStatus.phase.toLowerCase(),
