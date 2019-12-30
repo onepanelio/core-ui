@@ -37,7 +37,7 @@ let svg = d3.select("svg"),
   inner = svg.select("g");
 
 (async () => {
-  let workflow = await getWorkflow("rushtehrani", "dag-diamond-coinflip-7x4pb");
+  let workflow = await getWorkflow("rushtehrani", "dag-diamond-coinflip-cjpx2");
 
   const uri = url.parse(document.location.href);
   let g = new dagre.graphlib.Graph();
@@ -49,7 +49,7 @@ let svg = d3.select("svg"),
     g = createGraphFromWorkflowStatus(workflow.status);
   }
 
-  // Run the renderer. This is what draws the final graph.
+  // Run the renderer. This is what draws theq final graph.
   let render = new dagreD3.render();
   render(inner, g);
   

@@ -2,7 +2,7 @@
 import * as dagre from "dagre";
 import * as yaml from "js-yaml";
 
-export type nodeType = "container" | "resource" | "dag" | "steps" | "script" | "unknown";
+export type nodeType = "pod" | "resource" | "dag" | "unknown";
 
 export interface KeyValue<T> extends Array<any> {
   0?: string;
@@ -178,17 +178,18 @@ function buildDag(
       }
 
       // "Child" here is the template that this task points to. This template should either be a
-      // DAG, in which case we recurse, or a container/resource which can be thought of as a
+      // DAG, in which case we recurse, or a pod/resource which can be thought of as a
       // leaf node
       const child = templates.get(task.template);
       if (child) {
         if (child.nodeType === "dag") {
-          buildDag(graph, task.template, templates, alreadyVisited, nodeId);
+          // TODO: Handle self referencing templates better
+          if (rootTemplateId !== task.template) {
+            buildDag(graph, task.template, templates, alreadyVisited, nodeId);
+          }
         } else if (
-          child.nodeType === "container" ||
-          child.nodeType === "resource"  ||
-          child.nodeType === "steps"     ||
-          child.nodeType === "script"
+          child.nodeType === "pod" ||
+          child.nodeType === "resource"
         ) {
           info.nodeType = child.nodeType;
           populateInfoFromTemplate(info, child.template);
@@ -250,16 +251,12 @@ export function createGraphFromWorkflowTemplate(workflowTemplate: any): dagre.gr
       });
     }
 
-    if (template.container) {
-      templates.set(template.name, { nodeType: "container", template });
+    if (template.container || template.script) {
+      templates.set(template.name, { nodeType: "pod", template });
     } else if (template.resource) {
       templates.set(template.name, { nodeType: "resource", template });
     } else if (template.dag) {
       templates.set(template.name, { nodeType: "dag", template });
-    } else if (template.steps) {
-      templates.set(template.name, { nodeType: "steps", template });
-    } else if (template.script) {
-      templates.set(template.name, { nodeType: "script", template });
     } else {
       console.log(
         `Template: ${template.name} was neither a Container/Resource nor a DAG`
