@@ -2,7 +2,6 @@ import * as d3 from 'd3';
 import * as dagre from 'dagre';
 import * as dagreD3 from 'dagre-d3';
 import { createGraphFromWorkflowTemplate, createGraphFromWorkflowStatus } from './graph-parser';
-import * as request from 'request-promise-native';
 import url from 'url';
 
 let displayInfo = (node: any) => {
@@ -23,42 +22,37 @@ let setupZoomSupport = () => {
   svg.attr('height', '100%');
 };
 
-let getWorkflow = async (namespace: string, name: string): Promise<any> => {
-  var options = {
-    uri: `http://localhost:8888/apis/v1beta1/${namespace}/workflows/${name}`
-  };
-
-  let workflow = JSON.parse(await request.get(options));
-  
-  return workflow;
+let watchWorkflow = (namespace: string, name: string) => {
+  return new WebSocket(`ws://localhost:8888/apis/v1beta1/${namespace}/workflows/${name}/watch`);
 };
 
 let svg = d3.select('svg'),
   inner = svg.select('g');
 
-(async () => {
-  let workflow = await getWorkflow('rushtehrani', 'dag-diamond-coinflip-cjpx2');
+  let websocket = watchWorkflow('rushtehrani', 'dag-nested-4j9fc');
 
   const uri = url.parse(document.location.href);
   let g = new dagre.graphlib.Graph();
-  if (uri.query === 'template') {
-    // draw workflow template
-    g = createGraphFromWorkflowTemplate(workflow.workflowTemplate);
-    } else {
-    // draw executed workflow
-    g = createGraphFromWorkflowStatus(workflow.status);
-  }
-
-  // Run the renderer. This is what draws theq final graph.
   let render = new dagreD3.render();
-  render(inner, g);
-  
-  svg.selectAll('g.node').on('click', id => {
-    displayInfo(g.node(id));
-  });
+  websocket.onmessage = (event: any) => {
+    let data = JSON.parse(event.data);
+    if (uri.query === 'template') {
+      // draw workflow template
+      g = createGraphFromWorkflowTemplate(data.result.workflowTemplate);
+    } else {
+      // draw executed workflow
+      g = createGraphFromWorkflowStatus(data.result.status);
+    }
 
-  setupZoomSupport();
-})();
+    // Run the renderer. This is what draws theq final graph.
+    render(inner, g);
+
+    svg.selectAll('g.node').on('click', id => {
+      displayInfo(g.node(id));
+    });
+
+    setupZoomSupport();
+  };
 
 
 
