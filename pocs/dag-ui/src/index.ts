@@ -26,33 +26,33 @@ let watchWorkflow = (namespace: string, name: string) => {
   return new WebSocket(`ws://localhost:8888/apis/v1beta1/${namespace}/workflows/${name}/watch`);
 };
 
-let svg = d3.select('svg'),
-  inner = svg.select('g');
+const svg = d3.select('svg'),
+  inner = svg.select('g'),
+  render = new dagreD3.render(),
+  uri = url.parse(document.location.href),
+  websocket = watchWorkflow('rushtehrani', 'dag-nested-mwz56');
 
-  let websocket = watchWorkflow('rushtehrani', 'dag-nested-4j9fc');
+let g = new dagre.graphlib.Graph();
 
-  const uri = url.parse(document.location.href);
-  let g = new dagre.graphlib.Graph();
-  let render = new dagreD3.render();
-  websocket.onmessage = (event: any) => {
-    let data = JSON.parse(event.data);
-    if (uri.query === 'template') {
-      // draw workflow template
-      g = createGraphFromWorkflowTemplate(data.result.workflowTemplate);
-    } else {
-      // draw executed workflow
-      g = createGraphFromWorkflowStatus(data.result.status);
-    }
+websocket.onmessage = (event: any) => {
+  let data = JSON.parse(event.data);
+  if (uri.query === 'template') {
+    // draw workflow template
+    g = createGraphFromWorkflowTemplate(data.result.workflowTemplate);
+  } else {
+    // draw executed workflow
+    g = createGraphFromWorkflowStatus(data.result.status);
+  }
 
-    // Run the renderer. This is what draws theq final graph.
-    render(inner, g);
+  // Run the renderer. This is what draws theq final graph.
+  render(inner, g);
 
-    svg.selectAll('g.node').on('click', id => {
-      displayInfo(g.node(id));
-    });
+  svg.selectAll('g.node').on('click', id => {
+    displayInfo(g.node(id));
+  });
 
-    setupZoomSupport();
-  };
+  setupZoomSupport();
+};
 
 
 
