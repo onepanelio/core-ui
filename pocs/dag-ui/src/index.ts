@@ -47,12 +47,12 @@ websocket.onmessage = (event: any) => {
   // Run the renderer. This is what draws theq final graph.
   render(inner, g);
 
-  svg.selectAll('g.node').on('click', id => {
+  svg.selectAll('g.node').on('click', (id: any) => {
     displayInfo(g.node(id));
   });
-
-  setupZoomSupport();
 };
+
+setupZoomSupport();
 
 
 
