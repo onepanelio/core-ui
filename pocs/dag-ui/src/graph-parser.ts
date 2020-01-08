@@ -11,7 +11,7 @@ export interface KeyValue<T> extends Array<any> {
 
 function nodeTemplate(node: any) {
   let html: string = '<div>';
-  if (node.type === 'StepGroup') {
+  if (node.type === 'StepGroup' || node.type === 'DAG') {
     html += '<div class=dashed-circle></div>';
   } else {
     html += '<span class=phase></span>';
