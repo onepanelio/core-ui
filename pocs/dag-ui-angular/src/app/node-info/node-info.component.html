@@ -1,0 +1,35 @@
+<table>
+  <thead>
+
+  </thead>
+  <tbody>
+    <tr>
+      <td>Name</td>
+      <td>{{node.displayName}}</td>
+    </tr>
+    <tr>
+      <td>Type</td>
+      <td>{{node.type}}</td>
+    </tr>
+    <tr>
+      <td>Phase</td>
+      <td>{{node.phase}}</td>
+    </tr>
+    <tr>
+      <td>Start Time</td>
+      <td>{{node.startedAt}}</td>
+    </tr>
+    <tr>
+      <td>End Time</td>
+      <td>{{node.finishedAt}}</td>
+    </tr>
+    <tr>
+      <td>Duration</td>
+      <td>
+        <ng-container *ngIf="formatDuration()">
+          {{formatDuration()}} min
+        </ng-container>
+      </td>
+    </tr>
+  </tbody>
+</table>

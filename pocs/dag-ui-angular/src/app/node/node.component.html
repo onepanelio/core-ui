@@ -1,0 +1,7 @@
+<div>
+  <div *ngIf="node.type === 'StepGroup' || node.type === 'DAG'"  class=dashed-circle></div>
+  <ng-container *ngIf="!(node.type === 'StepGroup' || node.type === 'DAG')">
+    <span class=phase></span>
+    <span class="name">{{ name }}</span>
+  </ng-container>
+</div>

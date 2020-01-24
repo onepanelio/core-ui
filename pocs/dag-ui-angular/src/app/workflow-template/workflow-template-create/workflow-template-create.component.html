@@ -1,0 +1,56 @@
+<div class="page">
+  <a [routerLink]="['/', this.namespace, 'workflow-templates']" >Workflow Templates</a>
+  <alert *ngIf="error" type="danger">
+    <strong>{{error.title}}</strong> {{error.description}}
+  </alert>
+
+  <div class="page-header">
+    <h1 class="page-title">Workflow Template Create</h1>
+  </div>
+
+  <div class="page-body">
+    <div>
+      Namespace <strong>{{namespace}}</strong>
+    </div>
+
+    <div class="mt-2">
+      <input #templateNameInput matInput placeholder="template name"/>
+    </div>
+
+    <div class="mt-2 d-flex align-items-center">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Choose from a template</mat-panel-title>
+        </mat-expansion-panel-header>
+        <div class="d-flex flex-column">
+          <button mat-raised-button (click)="setManifestTemplate('hello-world')">Argo: Hello World!</button>
+          <button mat-raised-button class="mt-2" (click)="setManifestTemplate('coin-flip')">Argo: Coin-Flip</button>
+          <button mat-raised-button class="mt-2" (click)="setManifestTemplate('loops-map')">Argo: Loops map</button>
+        </div>
+      </mat-expansion-panel>
+
+      <div class="ml-4">
+        <button mat-raised-button color="warn" (click)="clearManifest()">Clear</button>
+      </div>
+    </div>
+
+    <div class="two-panels mt-3">
+      <div #manifestYaml
+           ace-editor
+           [mode]="'yaml'"
+           [text]="manifestText"
+           (textChanged)="onManifestChange($event)"
+           [durationBeforeCallback]="500"
+           [options]="{
+            showInvisibles: false,
+            showPrintMargin: false,
+            scrollPastEnd: 1,
+            showLineNumbers: true
+          }"
+      ></div>
+      <app-dag></app-dag>
+    </div>
+
+    <button mat-raised-button color="accent" class="mt-2" (click)="save()">Save</button>
+  </div>
+</div>

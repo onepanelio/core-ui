@@ -1,0 +1,67 @@
+<div class="page">
+  <alert *ngIf="yamlError" type="danger">
+    <strong>Yaml Error</strong>
+  </alert>
+
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a [routerLink]="['/', this.namespace, 'workflow-templates']">templates</a>
+      </li>
+      <li class="breadcrumb-item active">
+        <span *ngIf="workflowTemplate">{{workflowTemplate.name}}</span>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">view</li>
+    </ol>
+  </nav>
+
+
+  <div class="d-flex justify-content-between align-items-center">
+    <mat-form-field>
+      <mat-label>Version</mat-label>
+      <mat-select [(value)]="this.selectedWorkflowTemplateVersionValue">
+        <mat-option *ngFor="let workflowTemplateVersion of workflowTemplateVersions" [value]="workflowTemplateVersion.version">
+          {{workflowTemplateVersion.version}} <ng-container *ngIf="workflowTemplateVersion.isLatest">(unpublished)</ng-container>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-raised-button color="accent" (click)="executeWorkflow()">Execute</button>
+    <a mat-raised-button color="accent" [routerLink]="['/', this.namespace, 'workflow-templates', this.uid, 'edit']">Edit</a>
+
+  </div>
+
+  <mat-tab-group (selectedTabChange)="onTabChange($event)" [dynamicHeight]="true">
+    <mat-tab label="Executions">
+      <table>
+        <thead>
+          <tr>
+            <td>Name</td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let workflow of this.workflows">
+            <td><a [routerLink]="['/', this.namespace, 'workflows', workflow.name]"> {{workflow.name}} </a></td>
+          </tr>
+        </tbody>
+      </table>
+    </mat-tab>
+    <mat-tab label="Definition">
+      <ng-template matTabContent>
+        <div class="two-panels">
+          <div ace-editor
+               [mode]="'yaml'"
+               [text]="manifestText"
+               [readOnly]="true"
+               [options]="{
+              showInvisibles: false,
+              showPrintMargin: false,
+              scrollPastEnd: 1,
+              showLineNumbers: true
+            }"></div>
+          <app-dag></app-dag>
+        </div>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+</div>

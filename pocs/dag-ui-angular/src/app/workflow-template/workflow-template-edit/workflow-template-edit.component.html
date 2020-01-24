@@ -1,0 +1,46 @@
+<div class="page">
+  <alert *ngIf="yamlError" type="danger">
+    <strong>Yaml Error</strong>
+  </alert>
+
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a [routerLink]="['/', this.namespace, 'workflow-templates']">templates</a>
+      </li>
+      <li class="breadcrumb-item">
+        <a *ngIf="workflowTemplate" [routerLink]="['/', this.namespace, 'workflow-templates', workflowTemplate.uid]">{{workflowTemplate.name}}</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">edit</li>
+    </ol>
+  </nav>
+
+  <div class="d-flex align-items-center">
+    <mat-form-field class="ml-3">
+      <mat-label>Version</mat-label>
+      <mat-select [(value)]="this.selectedWorkflowTemplateVersionValue">
+        <mat-option *ngFor="let workflowTemplateVersion of workflowTemplateVersions" [value]="workflowTemplateVersion.version">
+          {{workflowTemplateVersion.version}} <ng-container *ngIf="workflowTemplateVersion.isLatest">(unpublished)</ng-container>
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="two-panels">
+    <div ace-editor
+         [mode]="'yaml'"
+         [text]="manifestText"
+         (textChanged)="onManifestChange($event)"
+         [options]="{
+            showInvisibles: false,
+            showPrintMargin: false,
+            scrollPastEnd: 1,
+            showLineNumbers: true
+          }"
+    ></div>
+    <app-dag></app-dag>
+  </div>
+  <div class="mt-3">
+    <button mat-raised-button color="accent" (click)="update()">Save</button>
+    <button mat-raised-button color="accent" class="ml-3" (click)="updateAndPublish()">Save & Publish</button>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+<div class="page">
+  <a *ngIf="this.workflowTemplate" [routerLink]="['/', this.namespace, 'workflow-templates', this.workflowTemplate.uid]" >Workflow Template {{this.workflowTemplate.name}}</a>
+
+  <div class="page-header">
+    <h1 class="page-title">Workflow</h1>
+  </div>
+
+  <div #pageContent class="page-body">
+    <div class="d-flex" [style.height]="height">
+      <app-dag
+        class="flex-grow-1"
+        (nodeClicked)="handleNodeClicked($event)"
+        [identifier]="dagIdentifier">
+      </app-dag>
+      <app-node-info
+        class="flex-grow-1 ml-3"
+        *ngIf="nodeInfo"
+        [node]="nodeInfo">
+      </app-node-info>
+    </div>
+  </div>
+</div>

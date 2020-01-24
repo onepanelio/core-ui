@@ -1,0 +1,15 @@
+<div class="page">
+  <div class="page-header">
+    <h1 class="page-title">Workflow Templates List</h1>
+    <div class="page-action-bar">
+      <a mat-raised-button color="accent" [routerLink]="['/', this.namespace, 'workflow-templates', 'create']">Create</a>
+    </div>
+  </div>
+
+  <div class="page-body">
+    <app-workflow-template-list
+      *ngIf="namespace"
+      [namespace]="namespace">
+    </app-workflow-template-list>
+  </div>
+</div>

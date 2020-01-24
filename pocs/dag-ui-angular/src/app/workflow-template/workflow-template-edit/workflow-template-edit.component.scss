@@ -1,0 +1,19 @@
+@import "../../../colors";
+
+.two-panels {
+  display: flex;
+  height: 500px;
+
+  div {
+    flex-grow: 1;
+    resize: none;
+    width: 50%;
+  }
+
+  app-dag {
+    flex-grow: 1;
+    margin-left: 20px;
+    width: 50%;
+  }
+
+}

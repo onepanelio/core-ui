@@ -1,0 +1,22 @@
+
+@import "colors";
+@import "~bootstrap";
+
+body {
+  padding: 0;
+  margin: 0;
+}
+
+.page {
+  padding: 20px;
+
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+}
+
+
+

@@ -1,0 +1,103 @@
+:host {
+  display: block;
+}
+
+svg {
+  border: solid 1px gray;
+}
+
+/* This sets the color for "TK" nodes to a light blue green. */
+/deep/ g.type-TK > rect {
+  fill: #00ffd0;
+}
+
+/deep/ text {
+  font-weight: 300;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+}
+
+/deep/ .node rect {
+  stroke: #999;
+  fill: #fff;
+  stroke-width: 1.5px;
+}
+
+/deep/ .edgePath path {
+  stroke: #333;
+  stroke-width: 1.5px;
+}
+
+/deep/ .node {
+  cursor: pointer;
+  height: 30px;
+}
+
+/deep/ .node .phase {
+  height: 30px;
+  width: 14px;
+  display: block;
+  float: left;
+  border-radius: 4px 0 0 4px;
+}
+
+/deep/ .node .name {
+  height: 30px;
+  padding: 5px;
+  display: block;
+  float: left;
+  border: 1px solid #ddd;
+  border-left: none;
+  border-radius: 0 4px 4px 0;
+}
+
+/deep/ .node.skipped .name {
+  border-left: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+/deep/ .node .dashed-circle {
+  border-radius: 50%;
+  border: 1px dashed #bbb;
+  width: 20px;
+  height: 20px;
+}
+
+/deep/ .node rect {
+  fill: #fff;
+}
+
+/deep/ .edgePath path {
+  stroke: #bbb;
+  fill: #bbb;
+  stroke-width: 1px;
+  stroke-dasharray: 3;
+}
+
+/deep/ .node.skipped .phase {
+  display: none;
+}
+
+/deep/ .node.succeeded .phase {
+  background-color: green;
+}
+
+/deep/ .node.running .phase {
+  background-color: blue;
+}
+
+/deep/ .node.pending .phase {
+  background-color: orange;
+}
+
+/deep/ .node.failed .phase,
+.node.error .phase {
+  background-color: red;
+}
+
+/deep/ .node.selected rect {
+  stroke: red;
+  stroke-width: 2px;
+  rx: 1%;
+  ry: 2%;
+}
