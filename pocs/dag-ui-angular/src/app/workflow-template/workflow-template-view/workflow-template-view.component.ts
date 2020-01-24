@@ -54,6 +54,8 @@ export class WorkflowTemplateViewComponent implements OnInit {
       .subscribe(res => {
         this.workflowTemplate = res;
       });
+
+    this.getWorkflows(value);
   }
 
   get selectedWorkflowTemplateVersionValue(): number {
@@ -73,7 +75,6 @@ export class WorkflowTemplateViewComponent implements OnInit {
 
       this.getWorkflowTemplate();
       this.getWorkflowTemplateVersions();
-      this.getWorkflows();
     });
   }
 
@@ -107,8 +108,8 @@ export class WorkflowTemplateViewComponent implements OnInit {
       });
   }
 
-  getWorkflows() {
-    this.workflowService.listWorkflows(this.namespace, this.uid)
+  getWorkflows(version: number) {
+    this.workflowService.listWorkflows(this.namespace, this.uid, version)
       .subscribe(res => {
         this.workflows = res.workflows;
       });

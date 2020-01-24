@@ -48,10 +48,14 @@ export class WorkflowService {
     return this.client.get<WorkflowDetail>(`${this.baseUrl}/apis/v1beta1/${namespace}/workflows/${uid}`);
   }
 
-  listWorkflows(namespace: string, workflowTemplateUid?: string): Observable<WorkflowResponse> {
+  listWorkflows(namespace: string, workflowTemplateUid?: string, version?: number): Observable<WorkflowResponse> {
     let url = `${this.baseUrl}/apis/v1beta1/${namespace}/workflows`;
     if (workflowTemplateUid) {
       url += `?workflowTemplateUid=${workflowTemplateUid}`;
+
+      if (version) {
+        url += `&workflowTemplateVersion=${version}`;
+      }
     }
 
     return this.client.get<WorkflowResponse>(url);
