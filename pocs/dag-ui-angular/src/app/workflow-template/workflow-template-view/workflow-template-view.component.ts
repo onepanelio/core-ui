@@ -139,8 +139,12 @@ export class WorkflowTemplateViewComponent implements OnInit {
       return;
     }
 
-    const g = NodeRenderer.createGraphFromManifest(this.workflowTemplateDetail.manifest);
-    this.dag.display(g);
+    try {
+      const g = NodeRenderer.createGraphFromManifest(this.workflowTemplateDetail.manifest);
+      this.dag.display(g);
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   onTabChange(event: MatTabChangeEvent) {
