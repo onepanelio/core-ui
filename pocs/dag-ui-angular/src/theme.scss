@@ -70,9 +70,7 @@ $mat-red: (
 
 $primary: mat-palette($mat-light-blue, 900);
 $accent: mat-palette($mat-orange, A400);
-
 $warn: mat-palette($mat-red, A700);
-
 $theme: mat-light-theme($primary, $accent, $warn);
 
 @include angular-material-theme($theme);

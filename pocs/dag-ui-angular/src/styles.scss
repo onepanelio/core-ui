@@ -1,5 +1,39 @@
 @import "colors";
 
+// Utilities
+
+.m-auto {
+  margin: auto !important;
+}
+
+@each $name, $color in $colors {
+  .border-#{$name} {
+    border-color: $color !important;
+  }
+
+  .bg-#{$name} {
+    background-color: $color;
+  }
+}
+
+$spacer: 0.25rem;
+@for $i from 1 through 10 {
+  .ml-#{$i} {
+    margin-left: ($i * $spacer) !important;
+  }
+
+  .mt-#{$i} {
+    margin-top: ($i * $spacer) !important;
+  }
+}
+
+.ml-p40 {
+  margin-left: 40px !important;
+}
+
+
+// End utilities
+
 body {
   padding: 0;
   margin: 0;
@@ -140,26 +174,6 @@ $opTableCornerRadius: 4px;
   }
 }
 
-// Utilities
-
-.m-auto {
-  margin: auto !important;
-}
-
-$spacer: 0.25rem;
-@for $i from 1 through 10 {
-  .ml-#{$i} {
-    margin-left: ($i * $spacer) !important;
-  }
-
-  .mt-#{$i} {
-    margin-top: ($i * $spacer) !important;
-  }
-}
-
-.ml-p40 {
-  margin-left: 40px !important;
-}
 
 // Font
 
@@ -203,7 +217,6 @@ $spacer: 0.25rem;
     margin-right: 6px;
   }
 }
-
 .op-info-box {
   border: solid 1px #C1C1C1;
   border-radius: $opTableCornerRadius;

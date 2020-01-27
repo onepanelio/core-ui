@@ -1,14 +1,30 @@
 <div class="page">
-  <a *ngIf="this.workflowTemplate" [routerLink]="['/', this.namespace, 'workflow-templates', this.workflowTemplate.uid]" >Workflow Template {{this.workflowTemplate.name}}</a>
 
-  <div class="page-header">
-    <h1 class="page-title">Workflow</h1>
+  <div class="page">
+    <div class="page-header">
+      <div class="page-links">
+        <a *ngIf="this.workflowTemplate" [routerLink]="['/', this.namespace, 'workflow-templates', this.workflowTemplate.uid]" class="op-back-link">
+          <i class="fas fa-chevron-left"></i>
+          <span>Back to workflow details</span>
+        </a>
+      </div>
+      <div class="page-title">
+      <div class="page-title-text">Workflow view</div>
+    </div>
   </div>
 
+
   <div #pageContent class="page-body">
-    <div class="d-flex" [style.height]="height">
+
+    <div class="op-border border-primary bg-primary-dark mt-4" style="height: 40px;">
+    </div>
+
+    <div class="op-info-box mt-4" [style.height]="height">
+      <div class="header">
+        <div class="title">{{workflow.name}}</div>
+      </div>
       <app-dag
-        class="flex-grow-1"
+        class="flex-grow-1 mt-4"
         (nodeClicked)="handleNodeClicked($event)"
         [identifier]="dagIdentifier">
       </app-dag>

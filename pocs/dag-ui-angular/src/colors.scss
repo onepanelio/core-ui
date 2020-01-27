@@ -1,7 +1,17 @@
 $primary: #01579b;
+$primary-dark: rgba(1,87,155,0.1);
 $secondary: #ff9100;
 $danger: #d32345;
 $light-gray: #f5f6fa;
 $medium-gray: #888888;
 
 $background-color: $light-gray;
+
+$colors: (
+  "primary": $primary,
+  "primary-dark": $primary-dark,
+  "secondary": $secondary,
+  "danger": $danger,
+  "light-gray": $light-gray,
+  "medium-gray": $medium-gray,
+)
