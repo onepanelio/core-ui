@@ -1,15 +1,41 @@
 <div class="page">
-  <div class="page-header">
-    <h1 class="page-title">Workflow Templates List</h1>
-    <div class="page-action-bar">
-      <a mat-raised-button color="accent" [routerLink]="['/', this.namespace, 'workflow-templates', 'create']">Create</a>
+  <div class="page-header m-auto m-w-standard">
+    <div class="page-title">
+      <div class="page-title-text">Workflow templates</div>
+      <div class="page-action-bar">
+        <a href="#">How to use</a>
+        <a mat-flat-button color="accent" class="op-rounded op-button ml-p40" [routerLink]="['/', this.namespace, 'workflow-templates', 'create']">
+          <mat-icon id="create-button" class="icon">add_circle</mat-icon>
+          <span class="ml-1">Create Template</span>
+        </a>
+      </div>
     </div>
   </div>
 
-  <div class="page-body">
-    <app-workflow-template-list
-      *ngIf="namespace"
-      [namespace]="namespace">
-    </app-workflow-template-list>
+  <div class="page-body m-auto m-w-standard mt-3">
+    <table mat-table [dataSource]="workflowTemplates" class="op-table w-standard">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef> Name </th>
+        <td mat-cell class="bold" *matCellDef="let element"> {{element.name}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef></th>
+        <td mat-cell class="text-right" *matCellDef="let element">
+          <a class="link-button" [routerLink]="['/', this.namespace, 'workflow-templates', element.uid, 'edit']">
+            <i class="fas fa-pencil-alt"></i>
+            <span class="ml-2">Edit</span>
+          </a>
+
+          <a class="link-button ml-10" [routerLink]="['/', this.namespace, 'workflow-templates', element.uid, 'edit']">
+            <i class="fas fa-trash-alt"></i>
+            <span class="ml-2">Delete</span>
+          </a>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
   </div>
 </div>

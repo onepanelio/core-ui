@@ -1,22 +1,265 @@
-
 @import "colors";
-@import "~bootstrap";
 
 body {
   padding: 0;
   margin: 0;
+  background-color: $light-gray;
 }
 
 .page {
-  padding: 20px;
+  margin: 40px 40px 40px 40px;
 
   .page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     width: 100%;
+
+    .page-links {
+      margin-bottom: 15px;
+    }
+
+    .page-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .page-title-text {
+        font-family: 'Proxima Nova Regular', sans-serif;
+        font-size: 30px;
+        color: $primary;
+      }
+    }
+  }
+}
+
+a {
+  &:visited {
+    color: black;
+  }
+}
+
+.m-w-standard {
+  max-width: 1050px;
+}
+
+.w-standard {
+  width: 1050px;
+}
+
+.m-w-large {
+  max-width: 1200px;
+}
+
+.m-w-xlarge {
+  max-width: 1400px;
+}
+
+.op-rounded {
+  border-radius: 2px !important;;
+}
+
+.op-button {
+  height: 44px;
+  text-transform: uppercase;
+
+  .mat-button-wrapper {
+    line-height: 44px;
+    font-size: 16px;
   }
 }
 
 
+$opTableCornerRadius: 4px;
 
+.op-table.mat-table {
+  background-color: transparent;
+  border-collapse: collapse;
+
+  td.mat-cell {
+    border-bottom-color: #C1C1C1;
+    font-size: 16px;
+  }
+
+  thead {
+    color: $medium-gray;
+    background-color: $light-gray;
+
+    th {
+      font-size: 16px;
+      border-bottom: none;
+    }
+  }
+
+  tbody {
+    box-shadow: 0 0 0 1px #C1C1C1;
+    border-radius: $opTableCornerRadius;
+    background-color: white;
+
+    tr:first-of-type {
+      td:first-of-type {
+        border-top: none;
+        border-top-left-radius: $opTableCornerRadius;
+      }
+
+      td:last-of-type {
+        border-top: none;
+        border-top-right-radius: $opTableCornerRadius;
+      }
+    }
+
+    tr:last-of-type {
+      td:first-of-type {
+        border-bottom: none;
+        border-bottom-left-radius: $opTableCornerRadius;
+      }
+
+      td:last-of-type {
+        border-bottom: none;
+        border-bottom-right-radius: $opTableCornerRadius;
+      }
+    }
+  }
+}
+
+.op-select .mat-form-field-outline {
+  background-color: white;
+}
+
+.link-button {
+  color: $primary;
+  font-weight: bold;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 16px;
+  font-family: 'Proxima Nova Bold', sans-serif;
+
+  &:visited {
+    color: $primary;
+    font-weight: bold;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 16px;
+  }
+}
+
+// Utilities
+
+.m-auto {
+  margin: auto !important;
+}
+
+$spacer: 0.25rem;
+@for $i from 1 through 10 {
+  .ml-#{$i} {
+    margin-left: ($i * $spacer) !important;
+  }
+
+  .mt-#{$i} {
+    margin-top: ($i * $spacer) !important;
+  }
+}
+
+.ml-p40 {
+  margin-left: 40px !important;
+}
+
+// Font
+
+.bold {
+  font-weight: bold;
+}
+
+.text-right {
+  text-align: right;
+}
+
+// Display
+
+.d-flex {
+  display: flex !important;;
+}
+
+.align-items-baseline {
+  align-items: baseline;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.flex-grow-1 {
+  flex-grow: 1;
+}
+
+.op-back-link {
+  color: $medium-gray;
+  font-size: 16px;
+  font-family: 'Proxima Nova Regular', sans-serif;
+
+
+  &:visited {
+    color: $medium-gray;
+  }
+
+  i {
+    margin-right: 6px;
+  }
+}
+
+.op-info-box {
+  border: solid 1px #C1C1C1;
+  border-radius: $opTableCornerRadius;
+  background-color: white;
+  padding: 22px 30px;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .title {
+      font-size: 24px;
+      font-family: 'Proxima Nova Regular', sans-serif;
+      color: $primary;
+    }
+
+    .actions {
+    }
+  }
+
+  .info {
+    font-size: 14px;
+    color: $medium-gray;
+  }
+}
+
+.font-proxima {
+  font-family: 'Proxima Nova Regular', sans-serif;
+}
+
+.font-size-regular {
+  font-size: 16px;
+}
+
+.header-text {
+  color: $primary;
+  font-size: 30px;
+  font-family: 'Proxima Nova Regular', sans-serif;
+}
+
+.header-2-text {
+  color: $primary;
+  font-size: 24px;
+  font-family: 'Proxima Nova Regular', sans-serif;
+}
+
+.op-border {
+  border: solid 1px #C1C1C1;
+  border-radius: $opTableCornerRadius;
+}
+
+.op-border-bottom {
+  border-bottom: solid 1px #C1C1C1;
+}
+
+.hide-overflow {
+  overflow: hidden;
+}

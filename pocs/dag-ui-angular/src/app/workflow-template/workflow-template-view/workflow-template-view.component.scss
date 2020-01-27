@@ -1,19 +1,23 @@
 @import "../../../colors";
 
+.definition-header {
+  background-color: #F5F5F5;
+  height: 40px;
+}
+
 .two-panels {
   display: flex;
   height: 500px;
+  overflow: hidden;
 
   div {
     flex-grow: 1;
     resize: none;
     width: 50%;
   }
-
   app-dag {
+    background-color: white;
     flex-grow: 1;
-    margin-left: 20px;
     width: 50%;
   }
-
 }

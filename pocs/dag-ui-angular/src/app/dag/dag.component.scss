@@ -2,10 +2,6 @@
   display: block;
 }
 
-svg {
-  border: solid 1px gray;
-}
-
 /* This sets the color for "TK" nodes to a light blue green. */
 /deep/ g.type-TK > rect {
   fill: #00ffd0;

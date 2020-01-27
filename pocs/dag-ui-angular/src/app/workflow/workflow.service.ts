@@ -6,6 +6,7 @@ import { NodeInfo, NodeStatus } from '../node/node.service';
 
 export interface Workflow {
   uid: string;
+  createdAt: string;
   name: string;
   status?: string;
 }

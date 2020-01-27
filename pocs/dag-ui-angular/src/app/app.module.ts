@@ -12,7 +12,6 @@ import { WorkflowTemplateListComponent } from './workflow-template/workflow-temp
 import { HttpClientModule } from '@angular/common/http';
 import { WorkflowTemplateViewComponent } from './workflow-template/workflow-template-view/workflow-template-view.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AlertModule } from 'ngx-bootstrap/alert';
 import {
   MatButtonModule,
   MatExpansionModule,
@@ -29,6 +28,9 @@ import { WorkflowListComponent } from './workflow/workflow-list/workflow-list.co
 import { MomentModule } from 'ngx-moment';
 import { WorkflowTemplateEditComponent } from './workflow-template/workflow-template-edit/workflow-template-edit.component';
 import { NamespaceSelectComponent } from "./namespace-select/namespace-select.component";
+import { MatIconModule } from "@angular/material/icon";
+import { MatTableModule } from "@angular/material/table";
+import { WorkflowExecutionsListComponent } from "./workflow/workflow-executions-list/workflow-executions-list.component";
 
 @NgModule({
   declarations: [
@@ -45,25 +47,27 @@ import { NamespaceSelectComponent } from "./namespace-select/namespace-select.co
     WorkflowTemplateCreateComponent,
     WorkflowNodeInfoComponent,
     WorkflowListComponent,
+    WorkflowExecutionsListComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    HttpClientModule,
-    BrowserAnimationsModule,
-    AlertModule.forRoot(),
-    MatButtonModule,
-    MatRadioModule,
-    FormsModule,
-    MatExpansionModule,
-    AceEditorModule,
-    MomentModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatSnackBarModule,
-    MatToolbarModule,
-    MatTabsModule,
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        HttpClientModule,
+        BrowserAnimationsModule,
+        MatButtonModule,
+        MatRadioModule,
+        FormsModule,
+        MatExpansionModule,
+        AceEditorModule,
+        MomentModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatSnackBarModule,
+        MatToolbarModule,
+        MatTabsModule,
+        MatIconModule,
+        MatTableModule,
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

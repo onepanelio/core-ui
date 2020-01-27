@@ -81,7 +81,6 @@ export class WorkflowTemplateViewComponent implements OnInit {
   getWorkflowTemplate() {
     this.workflowTemplateService.getWorkflowTemplate(this.namespace, this.uid)
       .subscribe(res => {
-        console.log('Got workflow template');
         this.workflowTemplate = res;
       });
   }
@@ -116,9 +115,6 @@ export class WorkflowTemplateViewComponent implements OnInit {
   }
 
   executeWorkflow() {
-
-    // TODO - on save update the template so the execution here is the latest
-
     const request: CreateWorkflow = {
         namespace: this.namespace,
         workflowTemplate: this.workflowTemplate,
@@ -126,12 +122,10 @@ export class WorkflowTemplateViewComponent implements OnInit {
 
     this.workflowService.executeWorkflow(this.namespace, request)
       .subscribe(res => {
-        console.log(res);
         this.router.navigate(['/', this.namespace, 'workflows', res.name]);
       }, err => {
 
       });
-    // on success navigate to new workflow page
   }
 
   showDag() {

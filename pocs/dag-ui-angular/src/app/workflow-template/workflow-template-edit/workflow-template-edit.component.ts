@@ -139,7 +139,6 @@ export class WorkflowTemplateEditComponent implements OnInit {
 
     this.workflowService.executeWorkflow(this.namespace, request)
       .subscribe(res => {
-        console.log(res);
         this.router.navigate(['/', this.namespace, 'workflows', res.name]);
       }, err => {
 

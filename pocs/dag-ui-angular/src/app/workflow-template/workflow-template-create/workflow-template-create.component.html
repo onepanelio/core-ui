@@ -1,8 +1,5 @@
 <div class="page">
   <a [routerLink]="['/', this.namespace, 'workflow-templates']" >Workflow Templates</a>
-  <alert *ngIf="error" type="danger">
-    <strong>{{error.title}}</strong> {{error.description}}
-  </alert>
 
   <div class="page-header">
     <h1 class="page-title">Workflow Template Create</h1>

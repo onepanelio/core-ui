@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 export interface WorkflowTemplateBase {
   uid: string;
+  createdAt: string;
   name: string;
   version: number;
   isLatest?: boolean;

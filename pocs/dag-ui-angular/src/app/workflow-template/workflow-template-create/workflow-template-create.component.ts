@@ -44,7 +44,6 @@ export class WorkflowTemplateCreateComponent implements OnInit {
       const g = NodeRenderer.createGraphFromManifest(newManifest);
       this.dag.display(g);
     } catch (e) {
-      // console.log(e);
       this.yamlError = 'error';
     }
   }
