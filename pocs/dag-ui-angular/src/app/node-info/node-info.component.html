@@ -1,35 +1,52 @@
-<table>
-  <thead>
+<div class="op-border hide-overflow bg-white">
+  <div class="bg-primary-light summary-box">
+    <div class="d-flex flex-row-reverse">
+      <button mat-icon-button class="close-button" aria-label="close icon" (click)="onCloseClick()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <div class="d-flex flex-column">
+      <app-status class="font-primary font-roboto-bold font-size-large line-height-large" [status]="workflowStatus.phase">
+      </app-status>
+      <div class="font-size-large font-roboto font-black">{{formatDuration()}}</div>
+      <div *ngIf="workflowStatus.startedAt" class="font-size-small font-medium-gray">
+        Started {{workflowStatus.startedAt | date:'h:mm a M/d/yyyy'}}
+      </div>
+      <div *ngIf="workflowStatus.finishedAt" class="font-size-small font-medium-gray">
+        Finished {{workflowStatus.finishedAt | date:'h:mm a M/d/yyyy'}}
+      </div>
+      <div>
+        <hr class="divider border-top border-primary-lighter"/>
+        <button mat-button color="primary" class="w-50">Yaml</button>
+        <button mat-button color="primary" class="w-50">Logs</button>
+      </div>
+    </div>
+  </div>
+  <div class="additional-info-block font-roboto">
+    <table class="w-100">
+      <thead>
+      <tr class="text-left">
+        <th>Name</th>
+        <th>Type</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td class="w-50">{{node.name}}</td>
+        <td class="w-50">{{node.type}}</td>
+      </tr>
+      </tbody>
+    </table>
+    <mat-expansion-panel hideToggle="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title >
+          Parameters
+          <mat-icon>{{'keyboard_arrow_down'}}</mat-icon>
 
-  </thead>
-  <tbody>
-    <tr>
-      <td>Name</td>
-      <td>{{node.displayName}}</td>
-    </tr>
-    <tr>
-      <td>Type</td>
-      <td>{{node.type}}</td>
-    </tr>
-    <tr>
-      <td>Phase</td>
-      <td>{{node.phase}}</td>
-    </tr>
-    <tr>
-      <td>Start Time</td>
-      <td>{{node.startedAt}}</td>
-    </tr>
-    <tr>
-      <td>End Time</td>
-      <td>{{node.finishedAt}}</td>
-    </tr>
-    <tr>
-      <td>Duration</td>
-      <td>
-        <ng-container *ngIf="formatDuration()">
-          {{formatDuration()}} min
-        </ng-container>
-      </td>
-    </tr>
-  </tbody>
-</table>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <h1>Content</h1>
+    </mat-expansion-panel>
+  </div>
+</div>

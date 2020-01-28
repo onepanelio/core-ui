@@ -1,5 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NodeInfo, NodeStatus } from '../node/node.service';
+import { Workflow, WorkflowStatus } from "../workflow/workflow.service";
 
 @Component({
   selector: 'app-node-info',
@@ -8,7 +9,10 @@ import { NodeInfo, NodeStatus } from '../node/node.service';
 })
 export class NodeInfoComponent implements OnInit {
 
+  @Input() workflow: Workflow;
+  @Input() workflowStatus: WorkflowStatus;
   @Input() node: NodeStatus;
+  @Output() closeClicked = new EventEmitter();
 
   constructor() { }
 
@@ -35,5 +39,9 @@ export class NodeInfoComponent implements OnInit {
     }
 
     return `${minutes}:${remainingSeconds}`;
+  }
+
+  onCloseClick() {
+    this.closeClicked.emit();
   }
 }

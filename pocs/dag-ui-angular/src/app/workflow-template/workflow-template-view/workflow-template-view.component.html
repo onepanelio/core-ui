@@ -56,6 +56,7 @@
       <mat-tab label="Executions">
         <app-workflow-executions-list
             *ngIf="workflows"
+            [namespace]="namespace"
             [workflows]="workflows">
         </app-workflow-executions-list>
       </mat-tab>

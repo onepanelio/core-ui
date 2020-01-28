@@ -14,6 +14,10 @@
   .bg-#{$name} {
     background-color: $color;
   }
+
+  .font-#{$name} {
+    color: $color;
+  }
 }
 
 $spacer: 0.25rem;
@@ -25,12 +29,32 @@ $spacer: 0.25rem;
   .mt-#{$i} {
     margin-top: ($i * $spacer) !important;
   }
+
+  .mb-#{$i} {
+    margin-bottom: ($i * $spacer) !important;
+  }
+}
+
+.mb-0 {
+  margin-bottom: 0 !important;
+}
+
+.mr-0 {
+  margin-right: 0 !important;;
+}
+
+.pr-0 {
+  padding-right: 0 !important;;
 }
 
 .ml-p40 {
   margin-left: 40px !important;
 }
 
+
+.h-100 {
+  height: 100%;
+}
 
 // End utilities
 
@@ -68,6 +92,22 @@ a {
   &:visited {
     color: black;
   }
+}
+
+.w-50 {
+  width: 50%;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.h-1 {
+  height: 1px;
+}
+
+.divider {
+  border-style: solid;
 }
 
 .m-w-standard {
@@ -181,6 +221,10 @@ $opTableCornerRadius: 4px;
   font-weight: bold;
 }
 
+.text-left {
+  text-align: left;
+}
+
 .text-right {
   text-align: right;
 }
@@ -188,7 +232,11 @@ $opTableCornerRadius: 4px;
 // Display
 
 .d-flex {
-  display: flex !important;;
+  display: flex !important;
+}
+
+.d-inline-flex {
+  display: inline-flex !important;
 }
 
 .align-items-baseline {
@@ -201,6 +249,14 @@ $opTableCornerRadius: 4px;
 
 .flex-grow-1 {
   flex-grow: 1;
+}
+
+.flex-row-reverse {
+  flex-direction: row-reverse;
+}
+
+.flex-column {
+  flex-direction: column;
 }
 
 .op-back-link {
@@ -248,8 +304,28 @@ $opTableCornerRadius: 4px;
   font-family: 'Proxima Nova Regular', sans-serif;
 }
 
+.font-roboto {
+  font-family: 'Roboto', sans-serif;
+}
+
+.font-roboto-bold {
+  font-family: 'Roboto Bold', sans-serif;
+}
+
+.font-size-small {
+  font-size: 14px;
+}
+
 .font-size-regular {
   font-size: 16px;
+}
+
+.font-size-large {
+  font-size: 20px;
+}
+
+.line-height-large {
+  line-height: 20px;
 }
 
 .header-text {
@@ -264,9 +340,19 @@ $opTableCornerRadius: 4px;
   font-family: 'Proxima Nova Regular', sans-serif;
 }
 
+.header-3-text {
+  color: $primary;
+  font-size: 20px;
+  font-family: 'Proxima Nova Regular', sans-serif;
+}
+
 .op-border {
   border: solid 1px #C1C1C1;
   border-radius: $opTableCornerRadius;
+}
+
+.op-border-top {
+  border-top: solid 1px #C1C1C1;
 }
 
 .op-border-bottom {

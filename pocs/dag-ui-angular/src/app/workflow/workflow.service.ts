@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { WorkflowTemplateBase, WorkflowTemplateDetail } from '../workflow-template/workflow-template.service';
 import { NodeInfo, NodeStatus } from '../node/node.service';
+import { map } from "rxjs/operators";
 
 export interface Workflow {
   uid: string;
@@ -32,6 +33,40 @@ export interface CreateWorkflow {
   workflowTemplate: WorkflowTemplateDetail;
 }
 
+export class SimpleWorkflowDetail implements WorkflowDetail{
+  private parsedWorkflowStatus: WorkflowStatus|null = null;
+
+  uid: string;
+  createdAt: string;
+  name: string;
+  status?: string;
+  workflowTemplate: WorkflowTemplateDetail;
+
+  constructor(workflowDetail: WorkflowDetail) {
+    this.uid = workflowDetail.uid;
+    this.createdAt = workflowDetail.createdAt;
+    this.name = workflowDetail.name;
+    this.status = workflowDetail.status;
+    this.workflowTemplate = workflowDetail.workflowTemplate;
+  }
+
+  getWorkflowStatus(): WorkflowStatus|null {
+    if(!this.status) {
+      return null;
+    }
+
+    if (!this.parsedWorkflowStatus) {
+      this.parsedWorkflowStatus = JSON.parse(this.status);
+    }
+
+    return this.parsedWorkflowStatus;
+  }
+
+  updateWorkflowStatus(status: string) {
+    this.parsedWorkflowStatus = JSON.parse(status);
+  }
+}
+
 @Injectable()
 export class WorkflowService {
 
@@ -46,7 +81,12 @@ export class WorkflowService {
   }
 
   getWorkflow(namespace: string, uid: string) {
-    return this.client.get<WorkflowDetail>(`${this.baseUrl}/apis/v1beta1/${namespace}/workflows/${uid}`);
+    return this.client.get<SimpleWorkflowDetail>(`${this.baseUrl}/apis/v1beta1/${namespace}/workflows/${uid}`)
+        .pipe(
+            map(res => {
+              return new SimpleWorkflowDetail(res);
+            })
+        );
   }
 
   listWorkflows(namespace: string, workflowTemplateUid?: string, version?: number): Observable<WorkflowResponse> {

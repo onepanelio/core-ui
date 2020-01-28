@@ -31,6 +31,7 @@ import { NamespaceSelectComponent } from "./namespace-select/namespace-select.co
 import { MatIconModule } from "@angular/material/icon";
 import { MatTableModule } from "@angular/material/table";
 import { WorkflowExecutionsListComponent } from "./workflow/workflow-executions-list/workflow-executions-list.component";
+import { StatusComponent } from "./status/status.component";
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { WorkflowExecutionsListComponent } from "./workflow/workflow-executions-
     WorkflowNodeInfoComponent,
     WorkflowListComponent,
     WorkflowExecutionsListComponent,
+    StatusComponent,
   ],
     imports: [
         BrowserModule,

@@ -1,3 +1,5 @@
+$primary-light: #EDF2FD;
+$primary-lighter: #BED2FE;
 $primary: #01579b;
 $primary-dark: rgba(1,87,155,0.1);
 $secondary: #ff9100;
@@ -8,6 +10,10 @@ $medium-gray: #888888;
 $background-color: $light-gray;
 
 $colors: (
+  "white": white,
+  "black": black,
+  "primary-light": $primary-light,
+  "primary-lighter": $primary-lighter,
   "primary": $primary,
   "primary-dark": $primary-dark,
   "secondary": $secondary,

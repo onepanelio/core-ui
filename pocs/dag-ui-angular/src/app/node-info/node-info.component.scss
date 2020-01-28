@@ -1,0 +1,20 @@
+@import "../../colors";
+
+:host {
+  display: block;
+}
+
+.summary-box {
+  padding: 0 16px 16px 16px;
+  text-align: center;
+}
+
+.close-button {
+  margin-right: -16px;
+  color: $medium-gray;
+}
+
+.additional-info-block {
+  padding: 30px 30px 0 30px;
+  overflow: scroll;
+}

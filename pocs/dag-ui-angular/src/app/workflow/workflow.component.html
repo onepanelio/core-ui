@@ -1,12 +1,10 @@
-<div class="page">
-
-  <div class="page">
-    <div class="page-header">
-      <div class="page-links">
-        <a *ngIf="this.workflowTemplate" [routerLink]="['/', this.namespace, 'workflow-templates', this.workflowTemplate.uid]" class="op-back-link">
-          <i class="fas fa-chevron-left"></i>
-          <span>Back to workflow details</span>
-        </a>
+<div class="page mb-0">
+  <div class="page-header">
+    <div class="page-links">
+      <a *ngIf="this.workflowTemplate" [routerLink]="['/', this.namespace, 'workflow-templates', this.workflowTemplate.uid]" class="op-back-link">
+        <i class="fas fa-chevron-left"></i>
+        <span>Back to workflow details</span>
+      </a>
       </div>
       <div class="page-title">
       <div class="page-title-text">Workflow view</div>
@@ -14,25 +12,33 @@
   </div>
 
 
-  <div #pageContent class="page-body">
-
-    <div class="op-border border-primary bg-primary-dark mt-4" style="height: 40px;">
+  <div class="page-body">
+    <div class="header-bar op-border border-primary bg-primary-dark mt-4 mb-4">
+      <app-status class="font-size-regular font-black font-roboto-bold" [status]="workflow.getWorkflowStatus().phase"></app-status>
     </div>
 
-    <div class="op-info-box mt-4" [style.height]="height">
+    <div id="info-box" class="op-info-box">
       <div class="header">
-        <div class="title">{{workflow.name}}</div>
+        <div *ngIf="workflow" class="title">{{workflow.name}}</div>
       </div>
-      <app-dag
-        class="flex-grow-1 mt-4"
-        (nodeClicked)="handleNodeClicked($event)"
-        [identifier]="dagIdentifier">
-      </app-dag>
-      <app-node-info
-        class="flex-grow-1 ml-3"
-        *ngIf="nodeInfo"
-        [node]="nodeInfo">
-      </app-node-info>
+      <div #pageContent>
+        <app-dag
+          class="mt-4 h-100"
+          [style.height]="height"
+          (nodeClicked)="handleNodeClicked($event)"
+          [identifier]="dagIdentifier">
+        </app-dag>
+      </div>
     </div>
+    <app-node-info
+       class="ml-3"
+       *ngIf="nodeInfo"
+       [style.height]="nodeInfoHeight"
+       [style.minHeight]="nodeInfoHeight"
+       [workflow]="workflow"
+       [workflowStatus]="workflow.getWorkflowStatus()"
+       [node]="nodeInfo"
+       (closeClicked)="onNodeInfoClosed()">
+    </app-node-info>
   </div>
 </div>

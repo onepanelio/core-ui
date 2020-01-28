@@ -8,6 +8,13 @@ g.type-TK > rect {
   fill: #00ffd0;
 }
 
+app-status {
+  display: block;
+  height: 40px;
+  line-height: 40px;
+  padding-left: 20px;
+}
+
 text {
   font-weight: 300;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -24,3 +31,15 @@ text {
   stroke: #333;
   stroke-width: 1.5px;
 }
+
+app-node-info {
+  width: 420px;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+
+  div {
+    height: 100%;
+  }
+}
+
