@@ -1,44 +1,89 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { CreateWorkflowTemplate, WorkflowTemplateBase, WorkflowTemplateService } from '../workflow-template.service';
+import {
+  CreateWorkflowTemplate,
+  WorkflowTemplateBase,
+  WorkflowTemplateDetail,
+  WorkflowTemplateService
+} from '../workflow-template.service';
 import { DagComponent } from '../../dag/dag.component';
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import { fromEvent } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { NodeRenderer } from '../../node/node.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { CreateWorkflow, WorkflowService } from "../../workflow/workflow.service";
+import { WorkflowTemplateSelected } from "../../workflow-template-select/workflow-template-select.component";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-workflow-template-create',
   templateUrl: './workflow-template-create.component.html',
   styleUrls: ['./workflow-template-create.component.scss'],
-  providers: [ WorkflowTemplateService ]
+  providers: [WorkflowService, WorkflowTemplateService]
 })
 export class WorkflowTemplateCreateComponent implements OnInit {
+  @ViewChild('templateName', {static: false}) templateNameInput: ElementRef;
   @ViewChild(DagComponent, {static: false}) dag: DagComponent;
-  @ViewChild('templateNameInput', {static: false}) templateNameInput: ElementRef;
 
-  error: {title: string, description: string} = null;
-
+  manifestText: string;
+  manifestTextCurrent: string;
   yamlError: string|null = null;
 
-  manifestText = '';
-  manifestTextCurrent = '';
   namespace: string;
+  uid: string;
+
+  private workflowTemplateDetail: WorkflowTemplateDetail;
+
+  get workflowTemplate(): WorkflowTemplateDetail {
+    return this.workflowTemplateDetail;
+  }
+
+  set workflowTemplate(value: WorkflowTemplateDetail) {
+    if (!this.dag) {
+      setTimeout( () => this.workflowTemplate = value, 500);
+      return;
+    }
+
+    this.workflowTemplateDetail = value;
+    const g = NodeRenderer.createGraphFromManifest(value.manifest);
+    this.dag.display(g);
+
+    this.manifestText = value.manifest;
+    this.manifestTextCurrent = value.manifest;
+  }
 
   constructor(
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private workflowTemplateService: WorkflowTemplateService) { }
+      private router: Router,
+      private activatedRoute: ActivatedRoute,
+      private workflowService: WorkflowService,
+      private workflowTemplateService: WorkflowTemplateService,
+      private snackBar: MatSnackBar) { }
 
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(next => {
       this.namespace = next.get('namespace');
+      this.uid = next.get('uid');
+
+      this.getWorkflowTemplate();
     });
   }
 
+  getWorkflowTemplate() {
+    this.workflowTemplateService.getWorkflowTemplate(this.namespace, this.uid)
+        .subscribe(res => {
+          this.workflowTemplate = res;
+        });
+  }
+
   onManifestChange(newManifest: string) {
-    this.manifestTextCurrent = newManifest;
     this.yamlError = null;
+
+    this.manifestTextCurrent = newManifest;
+
+    if(newManifest === '') {
+      this.dag.clear();
+      return;
+    }
 
     try {
       const g = NodeRenderer.createGraphFromManifest(newManifest);
@@ -48,141 +93,54 @@ export class WorkflowTemplateCreateComponent implements OnInit {
     }
   }
 
-  templates(name: string): string {
-    if (name === 'hello-world') {
-      return `apiVersion: argoproj.io/v1alpha1
-kind: Workflow
-metadata:
-  generateName: hello-world-
-spec:
-  entrypoint: whalesay
-  templates:
-  - name: whalesay
-    container:
-      image: docker/whalesay:latest
-      command: [cowsay]
-      args: ["hello world"]`
-        ;
-    }
-
-    if (name === 'coin-flip') {
-      return `# The coinflip example combines the use of a script result,
-# along with conditionals, to take a dynamic path in the
-# workflow. In this example, depending on the result of the
-# first step, 'flip-coin', the template will either run the
-# 'heads' step or the 'tails' step.
-apiVersion: argoproj.io/v1alpha1
-kind: Workflow
-metadata:
-  generateName: coinflip-
-spec:
-  entrypoint: coinflip
-  templates:
-  - name: coinflip
-    steps:
-    - - name: flip-coin
-        template: flip-coin
-    - - name: heads
-        template: heads
-        when: "{{steps.flip-coin.outputs.result}} == heads"
-      - name: tails
-        template: tails
-        when: "{{steps.flip-coin.outputs.result}} == tails"
-  - name: flip-coin
-    script:
-      image: python:alpine3.6
-      command: [python]
-      source: |
-        import random
-        result = "heads" if random.randint(0,1) == 0 else "tails"
-        print(result)
-  - name: heads
-    container:
-      image: alpine:3.6
-      command: [sh, -c]
-      args: ["echo \\"it was heads\\""]
-  - name: tails
-    container:
-      image: alpine:3.6
-      command: [sh, -c]
-      args: ["echo \\"it was tails\\""]`;
-    }
-
-    if (name === 'loops-map') {
-      return `apiVersion: argoproj.io/v1alpha1
-kind: Workflow
-metadata:
-  generateName: loops-maps-
-spec:
-  entrypoint: loop-map-example
-  templates:
-  - name: loop-map-example
-    steps:
-    - - name: test-linux
-        template: cat-os-release
-        arguments:
-          parameters:
-          - name: image
-            value: "{{item.image}}"
-          - name: tag
-            value: "{{item.tag}}"
-        withItems:
-        - { image: 'debian', tag: '9.1' }
-        - { image: 'debian', tag: '8.9' }
-        - { image: 'alpine', tag: '3.6' }
-        - { image: 'ubuntu', tag: '17.10' }
-
-  - name: cat-os-release
-    inputs:
-      parameters:
-      - name: image
-      - name: tag
-    container:
-      image: "{{inputs.parameters.image}}:{{inputs.parameters.tag}}"
-      command: [cat]
-      args: [/etc/os-release]
-      `;
-    }
-
-    return '';
-  }
-
-  setManifestTemplate(name: string) {
-    const newManifest = this.templates(name);
-    this.manifestText = newManifest;
-    this.onManifestChange(newManifest);
-  }
-
-  clearManifest() {
-    this.manifestText = '';
-    this.dag.clear();
-  }
-
   save() {
-    this.error = null;
+    if (this.yamlError !== null) {
+      this.snackBar.open('Unable to update - the definition is not valid YAML', 'OK');
+      return;
+    }
 
-    const data: CreateWorkflowTemplate = {
-        name: this.templateNameInput.nativeElement.value,
-        manifest: this.manifestTextCurrent
-    };
+    const templateName = this.templateNameInput.nativeElement.value;
 
-    this.workflowTemplateService.create(this.namespace, data)
-      .subscribe(res => {
-        this.router.navigate(['/', this.namespace, 'workflow-templates', res.uid]);
-      }, (err: HttpErrorResponse)  => {
-        if (err.status === 409) {
-          this.error = {
-            title: 'Conflict',
-            description: 'There is already a template with that name',
-          };
+    if(!templateName) {
+      this.snackBar.open('Unable to update - template name is invalid', 'OK');
 
-          return;
-        }
+      return;
+    }
 
-        this.error = {
-          title: 'Error',
-          description: 'Unable to create workflow template',
-        };
-      });
+    this.workflowTemplateService
+        .create(this.namespace, {
+          name: templateName,
+          manifest: this.manifestTextCurrent,
+        })
+        .subscribe(res => {
+          this.router.navigate(['/', this.namespace, 'workflow-templates', res.uid]);
+        });
+  }
+
+  saveAndPublish() {
+    if (this.yamlError !== null) {
+      this.snackBar.open('Unable to update - the definition is not valid YAML', 'OK');
+      return;
+    }
+
+    this.workflowTemplateService
+        .createWorkflowTemplateVersion(
+            this.namespace,
+            this.workflowTemplateDetail.uid,
+            {
+              name: this.workflowTemplateDetail.name,
+              manifest: this.manifestTextCurrent,
+            })
+        .subscribe(res => {
+          this.router.navigate(['/', this.namespace, 'workflow-templates', res.uid]);
+        });
+  }
+
+  cancel() {
+    this.router.navigate(['/', this.namespace, 'workflow-templates']);
+  }
+
+  onTemplateSelected(template: WorkflowTemplateSelected) {
+    this.manifestText = template.manifest;
   }
 }

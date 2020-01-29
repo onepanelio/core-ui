@@ -12,11 +12,11 @@
   }
 
   .bg-#{$name} {
-    background-color: $color;
+    background-color: $color !important;
   }
 
   .font-#{$name} {
-    color: $color;
+    color: $color !important;
   }
 }
 
@@ -78,12 +78,13 @@ body {
       display: flex;
       justify-content: space-between;
       align-items: center;
+    }
 
-      .page-title-text {
-        font-family: 'Proxima Nova Regular', sans-serif;
-        font-size: 30px;
-        color: $primary;
-      }
+
+    .page-title-text {
+      font-family: 'Proxima Nova Regular', sans-serif;
+      font-size: 30px;
+      color: $primary;
     }
   }
 }
@@ -229,6 +230,10 @@ $opTableCornerRadius: 4px;
   text-align: right;
 }
 
+.text-center {
+  text-align: center;
+}
+
 // Display
 
 .d-flex {
@@ -241,6 +246,10 @@ $opTableCornerRadius: 4px;
 
 .align-items-baseline {
   align-items: baseline;
+}
+
+.align-items-center {
+  align-items: center;
 }
 
 .justify-content-between {
@@ -304,6 +313,10 @@ $opTableCornerRadius: 4px;
   font-family: 'Proxima Nova Regular', sans-serif;
 }
 
+.font-proxima-bold {
+  font-family: 'Proxima Nova Bold', sans-serif;
+}
+
 .font-roboto {
   font-family: 'Roboto', sans-serif;
 }
@@ -346,9 +359,14 @@ $opTableCornerRadius: 4px;
   font-family: 'Proxima Nova Regular', sans-serif;
 }
 
-.op-border {
+
+@mixin op-border() {
   border: solid 1px #C1C1C1;
   border-radius: $opTableCornerRadius;
+}
+
+.op-border {
+  @include op-border();
 }
 
 .op-border-top {
@@ -361,4 +379,12 @@ $opTableCornerRadius: 4px;
 
 .hide-overflow {
   overflow: hidden;
+}
+
+@mixin op-selected-box($padding:0, $border-width: 2px) {
+  @include op-border();
+  padding: $padding;
+  border-color: $primary;
+  border-width: $border-width;
+  background-color: $primary-light;
 }

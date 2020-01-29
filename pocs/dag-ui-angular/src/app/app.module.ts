@@ -32,6 +32,8 @@ import { MatIconModule } from "@angular/material/icon";
 import { MatTableModule } from "@angular/material/table";
 import { WorkflowExecutionsListComponent } from "./workflow/workflow-executions-list/workflow-executions-list.component";
 import { StatusComponent } from "./status/status.component";
+import { MatInputModule } from "@angular/material/input";
+import { WorkflowTemplateSelectComponent } from './workflow-template-select/workflow-template-select.component';
 
 @NgModule({
   declarations: [
@@ -50,6 +52,7 @@ import { StatusComponent } from "./status/status.component";
     WorkflowListComponent,
     WorkflowExecutionsListComponent,
     StatusComponent,
+    WorkflowTemplateSelectComponent,
   ],
     imports: [
         BrowserModule,
@@ -69,6 +72,7 @@ import { StatusComponent } from "./status/status.component";
         MatTabsModule,
         MatIconModule,
         MatTableModule,
+        MatInputModule,
     ],
   providers: [],
   bootstrap: [AppComponent]

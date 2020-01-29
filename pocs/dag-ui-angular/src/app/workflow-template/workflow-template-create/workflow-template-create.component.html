@@ -1,53 +1,45 @@
 <div class="page">
-  <a [routerLink]="['/', this.namespace, 'workflow-templates']" >Workflow Templates</a>
-
   <div class="page-header">
-    <h1 class="page-title">Workflow Template Create</h1>
+    <div class="page-title-text text-center">Create workflow template</div>
   </div>
 
   <div class="page-body">
-    <div>
-      Namespace <strong>{{namespace}}</strong>
-    </div>
-
-    <div class="mt-2">
-      <input #templateNameInput matInput placeholder="template name"/>
-    </div>
-
-    <div class="mt-2 d-flex align-items-center">
-      <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <mat-panel-title>Choose from a template</mat-panel-title>
-        </mat-expansion-panel-header>
-        <div class="d-flex flex-column">
-          <button mat-raised-button (click)="setManifestTemplate('hello-world')">Argo: Hello World!</button>
-          <button mat-raised-button class="mt-2" (click)="setManifestTemplate('coin-flip')">Argo: Coin-Flip</button>
-          <button mat-raised-button class="mt-2" (click)="setManifestTemplate('loops-map')">Argo: Loops map</button>
+    <div class="op-info-box mt-8">
+      <div class="header">
+        <mat-form-field appearance="outline">
+          <mat-label>Template name</mat-label>
+          <input #templateName matInput/>
+        </mat-form-field>
+        <div>Need help? <a href="#">How to define workflows</a></div>
+      </div>
+      <div class="d-flex">
+        <app-workflow-template-select
+                (templateSelected)="onTemplateSelected($event)"></app-workflow-template-select>
+        <div class="ml-8 flex-grow-1">
+          <div class="two-panels op-border">
+            <div ace-editor
+                 [mode]="'yaml'"
+                 [text]="manifestText"
+                 (textChanged)="onManifestChange($event)"
+                 [options]="{
+                    showInvisibles: false,
+                    showPrintMargin: false,
+                    scrollPastEnd: 1,
+                    showLineNumbers: true
+                  }"
+            ></div>
+            <app-dag></app-dag>
+          </div>
+          <div class="mt-5 d-flex justify-content-between">
+            <button mat-button class="font-medium-gray" (click)="cancel()">Cancel</button>
+            <div>
+              <button mat-stroked-button color="accent" class="op-rounded op-button border-secondary" (click)="save()">Save</button>
+              <button mat-flat-button color="accent" class="ml-3 op-rounded op-button" (click)="saveAndPublish()">Save & Publish</button>
+            </div>
+          </div>
         </div>
-      </mat-expansion-panel>
 
-      <div class="ml-4">
-        <button mat-raised-button color="warn" (click)="clearManifest()">Clear</button>
       </div>
     </div>
-
-    <div class="two-panels mt-3">
-      <div #manifestYaml
-           ace-editor
-           [mode]="'yaml'"
-           [text]="manifestText"
-           (textChanged)="onManifestChange($event)"
-           [durationBeforeCallback]="500"
-           [options]="{
-            showInvisibles: false,
-            showPrintMargin: false,
-            scrollPastEnd: 1,
-            showLineNumbers: true
-          }"
-      ></div>
-      <app-dag></app-dag>
-    </div>
-
-    <button mat-raised-button color="accent" class="mt-2" (click)="save()">Save</button>
   </div>
 </div>
