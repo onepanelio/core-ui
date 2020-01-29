@@ -14,7 +14,7 @@
 
   <div class="page-body">
     <div class="header-bar op-border border-primary bg-primary-dark mt-4 mb-4">
-      <app-status class="font-size-regular font-black font-roboto-bold" [status]="workflow.getWorkflowStatus().phase"></app-status>
+      <app-status *ngIf="workflow" class="font-size-regular font-black font-roboto-bold" [status]="workflow.getWorkflowStatus().phase"></app-status>
     </div>
 
     <div id="info-box" class="op-info-box">
@@ -36,7 +36,6 @@
        [style.height]="nodeInfoHeight"
        [style.minHeight]="nodeInfoHeight"
        [workflow]="workflow"
-       [workflowStatus]="workflow.getWorkflowStatus()"
        [node]="nodeInfo"
        (closeClicked)="onNodeInfoClosed()">
     </app-node-info>

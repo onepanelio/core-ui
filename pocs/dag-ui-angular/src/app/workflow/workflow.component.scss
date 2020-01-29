@@ -38,8 +38,9 @@ app-node-info {
   right: 0;
   bottom: 0;
 
-  div {
+  /deep/ .root-element {
     height: 100%;
+    overflow: scroll;
   }
 }
 

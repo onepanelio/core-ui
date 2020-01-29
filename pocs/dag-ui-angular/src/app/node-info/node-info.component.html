@@ -1,4 +1,4 @@
-<div class="op-border hide-overflow bg-white">
+<div class="root-element op-border hide-overflow bg-white">
   <div class="bg-primary-light summary-box">
     <div class="d-flex flex-row-reverse">
       <button mat-icon-button class="close-button" aria-label="close icon" (click)="onCloseClick()">
@@ -6,14 +6,14 @@
       </button>
     </div>
     <div class="d-flex flex-column">
-      <app-status class="font-primary font-roboto-bold font-size-large line-height-large" [status]="workflowStatus.phase">
+      <app-status class="font-primary font-roboto-bold font-size-large line-height-large" [status]="this.workflow.getWorkflowStatus().phase">
       </app-status>
-      <div class="font-size-large font-roboto font-black">{{formatDuration()}}</div>
-      <div *ngIf="workflowStatus.startedAt" class="font-size-small font-medium-gray">
-        Started {{workflowStatus.startedAt | date:'h:mm a M/d/yyyy'}}
+      <div *ngIf="formatDuration()" class="font-size-large font-roboto font-black">{{formatDuration()}}</div>
+      <div *ngIf="node.startedAt" class="font-size-small font-medium-gray">
+        Started {{node.startedAt | date:'h:mm a M/d/yyyy'}}
       </div>
-      <div *ngIf="workflowStatus.finishedAt" class="font-size-small font-medium-gray">
-        Finished {{workflowStatus.finishedAt | date:'h:mm a M/d/yyyy'}}
+      <div *ngIf="node.finishedAt" class="font-size-small font-medium-gray">
+        Finished {{node.finishedAt | date:'h:mm a M/d/yyyy'}}
       </div>
       <div>
         <hr class="divider border-top border-primary-lighter"/>
@@ -37,16 +37,16 @@
       </tr>
       </tbody>
     </table>
-    <mat-expansion-panel hideToggle="true">
-      <mat-expansion-panel-header>
-        <mat-panel-title >
-          Parameters
-          <mat-icon>{{'keyboard_arrow_down'}}</mat-icon>
+<!--    <mat-expansion-panel hideToggle="true">-->
+<!--      <mat-expansion-panel-header>-->
+<!--        <mat-panel-title >-->
+<!--          Parameters-->
+<!--          <mat-icon>{{'keyboard_arrow_down'}}</mat-icon>-->
 
-        </mat-panel-title>
-      </mat-expansion-panel-header>
+<!--        </mat-panel-title>-->
+<!--      </mat-expansion-panel-header>-->
 
-      <h1>Content</h1>
-    </mat-expansion-panel>
+<!--      <h1>Content</h1>-->
+<!--    </mat-expansion-panel>-->
   </div>
 </div>

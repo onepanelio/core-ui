@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NodeInfo, NodeStatus } from '../node/node.service';
-import { Workflow, WorkflowStatus } from "../workflow/workflow.service";
+import { SimpleWorkflowDetail, Workflow, WorkflowStatus } from "../workflow/workflow.service";
 
 @Component({
   selector: 'app-node-info',
@@ -9,8 +9,7 @@ import { Workflow, WorkflowStatus } from "../workflow/workflow.service";
 })
 export class NodeInfoComponent implements OnInit {
 
-  @Input() workflow: Workflow;
-  @Input() workflowStatus: WorkflowStatus;
+  @Input() workflow: SimpleWorkflowDetail;
   @Input() node: NodeStatus;
   @Output() closeClicked = new EventEmitter();
 
@@ -26,7 +25,12 @@ export class NodeInfoComponent implements OnInit {
 
     const finished = new Date(this.node.finishedAt);
     const started = new Date(this.node.startedAt);
-    const seconds = finished.getUTCSeconds() - started.getUTCSeconds();
+    const seconds = (finished.getTime() - started.getTime()) / 1000.0;
+
+    if(seconds < 0) {
+      return null;
+    }
+
     let minutes = Math.floor(seconds / 60).toFixed(0);
 
     if (minutes === '0') {
@@ -37,6 +41,7 @@ export class NodeInfoComponent implements OnInit {
     if (remainingSeconds < 10) {
       remainingSeconds = '0' + remainingSeconds;
     }
+
 
     return `${minutes}:${remainingSeconds}`;
   }

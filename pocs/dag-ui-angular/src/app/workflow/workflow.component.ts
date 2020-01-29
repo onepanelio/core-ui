@@ -103,6 +103,8 @@ export class WorkflowComponent implements OnInit, OnDestroy {
 
     this.workflow.updateWorkflowStatus(data.result.status);
     const status = this.workflow.getWorkflowStatus();
+    this.nodeInfo = status.nodes[event.nodeId];
+
     if(status) {
       const graph = NodeRenderer.createGraphFromWorkflowStatus(status);
       this.dag.display(graph);
