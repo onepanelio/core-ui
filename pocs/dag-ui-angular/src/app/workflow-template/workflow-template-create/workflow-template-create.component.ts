@@ -14,6 +14,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { CreateWorkflow, WorkflowService } from "../../workflow/workflow.service";
 import { WorkflowTemplateSelected } from "../../workflow-template-select/workflow-template-select.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
 
 @Component({
   selector: 'app-workflow-template-create',
@@ -22,7 +23,6 @@ import { MatSnackBar } from "@angular/material/snack-bar";
   providers: [WorkflowService, WorkflowTemplateService]
 })
 export class WorkflowTemplateCreateComponent implements OnInit {
-  @ViewChild('templateName', {static: false}) templateNameInput: ElementRef;
   @ViewChild(DagComponent, {static: false}) dag: DagComponent;
 
   manifestText: string;
@@ -31,6 +31,9 @@ export class WorkflowTemplateCreateComponent implements OnInit {
 
   namespace: string;
   uid: string;
+
+  templateNameInput: AbstractControl;
+  form: FormGroup;
 
   private workflowTemplateDetail: WorkflowTemplateDetail;
 
@@ -53,6 +56,7 @@ export class WorkflowTemplateCreateComponent implements OnInit {
   }
 
   constructor(
+      private formBuilder: FormBuilder,
       private router: Router,
       private activatedRoute: ActivatedRoute,
       private workflowService: WorkflowService,
@@ -60,6 +64,16 @@ export class WorkflowTemplateCreateComponent implements OnInit {
       private snackBar: MatSnackBar) { }
 
   ngOnInit() {
+    this.form = this.formBuilder.group({
+      templateNameInput: [
+        '',
+        Validators.compose([
+          Validators.required,
+        ]),
+      ]});
+
+    this.templateNameInput = this.form.get('templateNameInput');
+
     this.activatedRoute.paramMap.subscribe(next => {
       this.namespace = next.get('namespace');
       this.uid = next.get('uid');
@@ -99,7 +113,7 @@ export class WorkflowTemplateCreateComponent implements OnInit {
       return;
     }
 
-    const templateName = this.templateNameInput.nativeElement.value;
+    const templateName = this.templateNameInput.value;
 
     if(!templateName) {
       this.snackBar.open('Unable to update - template name is invalid', 'OK');

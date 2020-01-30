@@ -3,12 +3,13 @@
     <div class="page-title-text text-center">Create workflow template</div>
   </div>
 
-  <div class="page-body">
+  <form [formGroup]="form" class="page-body">
     <div class="op-info-box mt-8">
       <div class="header">
         <mat-form-field appearance="outline">
           <mat-label>Template name</mat-label>
-          <input #templateName matInput/>
+          <input formControlName="templateNameInput" matInput/>
+          <mat-error>Name must not be empty</mat-error>
         </mat-form-field>
         <div>Need help? <a href="#">How to define workflows</a></div>
       </div>
@@ -41,5 +42,5 @@
 
       </div>
     </div>
-  </div>
+  </form>
 </div>

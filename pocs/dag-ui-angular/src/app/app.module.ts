@@ -21,7 +21,7 @@ import {
   MatSnackBarModule, MatTabsModule, MatToolbarModule
 } from '@angular/material';
 import { WorkflowTemplateCreateComponent } from './workflow-template/workflow-template-create/workflow-template-create.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AceEditorModule } from 'ng2-ace-editor';
 import { WorkflowNodeInfoComponent } from './workflow/workflow-node-info/workflow-node-info.component';
 import { WorkflowListComponent } from './workflow/workflow-list/workflow-list.component';
@@ -62,6 +62,7 @@ import { WorkflowTemplateSelectComponent } from './workflow-template-select/work
         MatButtonModule,
         MatRadioModule,
         FormsModule,
+        ReactiveFormsModule,
         MatExpansionModule,
         AceEditorModule,
         MomentModule,
