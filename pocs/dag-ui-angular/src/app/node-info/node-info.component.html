@@ -6,14 +6,14 @@
       </button>
     </div>
     <div class="d-flex flex-column">
-      <app-status *ngIf="node" class="font-primary font-roboto-bold font-size-large line-height-large" [status]="this.node.phase">
+      <app-status *ngIf="status" class="font-primary font-roboto-bold font-size-large line-height-large" [status]="status">
       </app-status>
-      <div *ngIf="node && formatDuration()" class="font-size-large font-roboto font-black">{{formatDuration()}}</div>
-      <div *ngIf="node && node.startedAt" class="font-size-small font-medium-gray">
-        Started {{node && node.startedAt | date:'h:mm a M/d/yyyy'}}
+      <div *ngIf="duration" class="font-size-large font-roboto font-black">{{duration}}</div>
+      <div *ngIf="startedAt" class="font-size-small font-medium-gray">
+        Started {{startedAt| date:'h:mm a M/d/yyyy'}}
       </div>
-      <div *ngIf="node && node.finishedAt" class="font-size-small font-medium-gray">
-        Finished {{node && node.finishedAt | date:'h:mm a M/d/yyyy'}}
+      <div *ngIf="finishedAt" class="font-size-small font-medium-gray">
+        Finished {{finishedAt | date:'h:mm a M/d/yyyy'}}
       </div>
       <div>
         <hr class="divider border-top border-primary-lighter"/>

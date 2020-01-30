@@ -1,36 +1,75 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { NodeInfo, NodeStatus } from '../node/node.service';
 import { SimpleWorkflowDetail, Workflow, WorkflowStatus } from "../workflow/workflow.service";
+import { setInterval } from "timers";
 
 @Component({
   selector: 'app-node-info',
   templateUrl: './node-info.component.html',
   styleUrls: ['./node-info.component.scss']
 })
-export class NodeInfoComponent implements OnInit {
-
+export class NodeInfoComponent implements OnInit, OnDestroy {
   @Input() workflow: SimpleWorkflowDetail;
   @Output() closeClicked = new EventEmitter();
-  @Input() node: NodeStatus;
+  private node: NodeStatus;
+
+  startedAt = null;
+  finishedAt = null;
+  duration: string|null = null;
+  status: string;
+
+  timer = null;
 
   constructor() { }
 
   ngOnInit() {
   }
 
-  formatDuration() {
-    if(!this.node) {
+  ngOnDestroy() {
+    this.cleanUpTimer();
+  }
+
+  cleanUpTimer() {
+    if(this.timer) {
+
+    }
+  }
+
+  updateNodeStatus(node: NodeStatus) {
+    this.node = node;
+    this.cleanUpTimer();
+
+    if(node.startedAt) {
+      this.startedAt = new Date(node.startedAt);
+    }
+
+    if(node.finishedAt) {
+      this.finishedAt = new Date(node.finishedAt);
+    }
+
+    if(!node.finishedAt) {
+      this.timer = setInterval(this.formatDurationToNow, 1000);
+    }
+
+    this.status = node.phase;
+
+    if(this.startedAt && this.finishedAt) {
+      this.duration = this.formatDuration(this.startedAt, this.finishedAt);
+    } else if(this.startedAt && !this.finishedAt) {
+      this.formatDurationToNow();
+    }
+  }
+
+  formatDurationToNow() {
+    if(!this.startedAt) {
       return;
     }
 
-    if (!this.node.startedAt || !this.node.finishedAt) {
-      return null;
-    }
+    this.duration = this.formatDuration(this.startedAt, new Date());
+  }
 
-    const finished = new Date(this.node.finishedAt);
-    const started = new Date(this.node.startedAt);
-    const seconds = (finished.getTime() - started.getTime()) / 1000.0;
-
+  formatDuration(started: Date, finished: Date): string|null {
+    const seconds = Math.floor((finished.getTime() - started.getTime()) / 1000.0);
     if(seconds < 0) {
       return null;
     }
@@ -45,7 +84,6 @@ export class NodeInfoComponent implements OnInit {
     if (remainingSeconds < 10) {
       remainingSeconds = '0' + remainingSeconds;
     }
-
 
     return `${minutes}:${remainingSeconds}`;
   }

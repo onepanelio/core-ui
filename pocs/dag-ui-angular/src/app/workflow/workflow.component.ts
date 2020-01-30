@@ -113,6 +113,10 @@ export class WorkflowComponent implements OnInit, OnDestroy {
 
     if(this.selectedNodeId) {
       this.nodeInfo = status.nodes[this.selectedNodeId];
+
+      if(this._nodeInfoElement) {
+        this._nodeInfoElement.updateNodeStatus(this.nodeInfo);
+      }
     }
 
     if(status) {
@@ -129,6 +133,10 @@ export class WorkflowComponent implements OnInit, OnDestroy {
 
     this.showNodeInfo = true;
     this.nodeInfo = status.nodes[event.nodeId];
+
+    if(this._nodeInfoElement) {
+      this._nodeInfoElement.updateNodeStatus(this.nodeInfo);
+    }
     this.selectedNodeId = event.nodeId;
   }
 
