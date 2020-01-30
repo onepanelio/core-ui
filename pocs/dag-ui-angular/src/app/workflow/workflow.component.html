@@ -32,7 +32,7 @@
     </div>
     <app-node-info
        class="ml-3"
-       *ngIf="nodeInfo"
+       [ngClass]="{ 'visible': showNodeInfo, 'hidden': !showNodeInfo }"
        [style.height]="nodeInfoHeight"
        [style.minHeight]="nodeInfoHeight"
        [workflow]="workflow"

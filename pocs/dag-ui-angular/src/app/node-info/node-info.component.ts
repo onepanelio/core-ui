@@ -10,8 +10,8 @@ import { SimpleWorkflowDetail, Workflow, WorkflowStatus } from "../workflow/work
 export class NodeInfoComponent implements OnInit {
 
   @Input() workflow: SimpleWorkflowDetail;
-  @Input() node: NodeStatus;
   @Output() closeClicked = new EventEmitter();
+  @Input() node: NodeStatus;
 
   constructor() { }
 
@@ -19,6 +19,10 @@ export class NodeInfoComponent implements OnInit {
   }
 
   formatDuration() {
+    if(!this.node) {
+      return;
+    }
+
     if (!this.node.startedAt || !this.node.finishedAt) {
       return null;
     }

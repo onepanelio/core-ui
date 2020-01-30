@@ -2,10 +2,12 @@ import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } fro
 import * as d3 from 'd3';
 import * as dagre from 'dagre';
 import * as dagreD3 from 'dagre-d3';
+import { NodeInfo } from "../node/node.service";
 
 export interface DagClickEvent {
   nodeId: string;
   identifier: any;
+  info: NodeInfo;
 }
 
 @Component({
@@ -27,6 +29,8 @@ export class DagComponent implements OnInit {
 
   private init = false;
 
+  private selectedNodeId: string|null = null;
+
   constructor() { }
 
   ngOnInit() {
@@ -42,26 +46,36 @@ export class DagComponent implements OnInit {
   display(g: any) {
     this.currentGraph = g;
 
+    // Clear old listeners
+    this.svg.selectAll('g.node').on('click', null);
+
     // Run the renderer. This is what draws the final graph.
     try {
       this.render(this.inner, g);
+
+      // Persist the node selection.
+      if(this.selectedNodeId) {
+        this.svg.select(`#${this.selectedNodeId}`).classed('selected', true);
+      }
     } catch (e) {
       console.error(e);
     }
 
-    // Clear old listeners
-    this.svg.selectAll('g.node').on('click', null);
-
     this.svg.selectAll('g.node').on('click', (id: any, selectedIndex: any, nodes: any) => {
+      this.selectedNodeId = id;
+
       this.svg.selectAll('g.node.selected').classed('selected', false);
-      const selectedNode = nodes[selectedIndex];
-      const selection = d3.select(selectedNode);
-      selection.classed('selected', true);
+      this.svg.select(`#${this.selectedNodeId}`).classed('selected', true);
+
+      const nodeData = g.node(id);
 
       this.nodeClicked.emit({
         nodeId: id,
-        identifier: this.identifier
+        identifier: this.identifier,
+        info: nodeData.info,
       });
+
+      console.log(nodeData.info);
     });
   }
 

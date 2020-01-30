@@ -44,6 +44,8 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   nodeInfo?: NodeStatus = null;
   height = '1000px'; // Dummy large value.
   nodeInfoHeight = '1000px'; // Dummy large value.
+  showNodeInfo = false;
+  selectedNodeId = null;
 
   get dagIdentifier() {
     return {
@@ -103,7 +105,15 @@ export class WorkflowComponent implements OnInit, OnDestroy {
 
     this.workflow.updateWorkflowStatus(data.result.status);
     const status = this.workflow.getWorkflowStatus();
-    this.nodeInfo = status.nodes[event.nodeId];
+
+    // It is possible there is no node data yet. In which case, we can't display a dag.
+    if(!status.nodes) {
+      return;
+    }
+
+    if(this.selectedNodeId) {
+      this.nodeInfo = status.nodes[this.selectedNodeId];
+    }
 
     if(status) {
       const graph = NodeRenderer.createGraphFromWorkflowStatus(status);
@@ -117,7 +127,9 @@ export class WorkflowComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.showNodeInfo = true;
     this.nodeInfo = status.nodes[event.nodeId];
+    this.selectedNodeId = event.nodeId;
   }
 
   onNodeInfoClosed() {

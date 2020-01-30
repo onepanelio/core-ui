@@ -259,6 +259,7 @@ export class NodeRenderer {
       NodeRenderer.populateInfoFromNodeStatus(info, nodeStatus);
 
       graph.setNode(nodeStatus.id, {
+        id: nodeStatus.id,
         labelType: 'html',
         label: NodeRenderer.nodeTemplate(nodeStatus),
         padding: 0,
