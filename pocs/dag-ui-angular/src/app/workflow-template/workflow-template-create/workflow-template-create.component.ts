@@ -137,16 +137,29 @@ export class WorkflowTemplateCreateComponent implements OnInit {
       return;
     }
 
+    const templateName = this.templateNameInput.value;
+
+    if(!templateName) {
+      this.snackBar.open('Unable to update - template name is invalid', 'OK');
+
+      return;
+    }
+
     this.workflowTemplateService
-        .createWorkflowTemplateVersion(
-            this.namespace,
-            this.workflowTemplateDetail.uid,
-            {
-              name: this.workflowTemplateDetail.name,
-              manifest: this.manifestTextCurrent,
-            })
+        .create(this.namespace, {
+          name: templateName,
+          manifest: this.manifestTextCurrent,
+        })
         .subscribe(res => {
-          this.router.navigate(['/', this.namespace, 'workflow-templates', res.uid]);
+          this.workflowTemplateService
+              .createWorkflowTemplateVersion(this.namespace, res.uid, {
+                name: templateName,
+                manifest: this.manifestTextCurrent,
+              })
+              .subscribe(res => {
+                this.router.navigate(['/', this.namespace, 'workflow-templates', res.uid]);
+              })
+          ;
         });
   }
 
