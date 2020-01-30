@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { NodeInfo, NodeStatus } from '../node/node.service';
 import { SimpleWorkflowDetail, Workflow, WorkflowStatus } from "../workflow/workflow.service";
-import { setInterval } from "timers";
 
 @Component({
   selector: 'app-node-info',
