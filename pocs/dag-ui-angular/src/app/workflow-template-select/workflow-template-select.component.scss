@@ -1,0 +1,31 @@
+@import "../../styles";
+
+ul {
+  list-style-type: none;
+  padding-inline-start: 0;
+}
+
+img {
+  height: 24px;
+  width: 24px;
+}
+
+.selected {
+  @include op-selected-box(10px);
+}
+
+li {
+  padding: 10px;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.template-header {
+  padding-left: 10px;
+}
+
+.template-name {
+  padding-left: 34px;
+}
