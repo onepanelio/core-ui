@@ -1,10 +1,11 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { WorkflowTemplateBase, WorkflowTemplateDetail, WorkflowTemplateService } from '../workflow-template.service';
 import { DagComponent } from '../../dag/dag.component';
 import { NodeRenderer } from '../../node/node.service';
 import { CreateWorkflow, Workflow, WorkflowService } from '../../workflow/workflow.service';
 import { MatTabChangeEvent } from '@angular/material';
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-workflow-template-view',
@@ -23,8 +24,6 @@ export class WorkflowTemplateViewComponent implements OnInit {
   }
 
   manifestText: string;
-  yamlError: string|null = null;
-
   namespace: string;
   uid: string;
 
@@ -55,7 +54,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
         this.workflowTemplate = res;
       });
 
-    this.getWorkflows(value);
+    this.getWorkflows();
   }
 
   get selectedWorkflowTemplateVersionValue(): number {
@@ -63,6 +62,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
   }
 
   constructor(
+    private snackBar: MatSnackBar,
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private workflowService: WorkflowService,
@@ -75,6 +75,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
 
       this.getWorkflowTemplate();
       this.getWorkflowTemplateVersions();
+      this.getWorkflows();
     });
   }
 
@@ -107,8 +108,8 @@ export class WorkflowTemplateViewComponent implements OnInit {
       });
   }
 
-  getWorkflows(version: number) {
-    this.workflowService.listWorkflows(this.namespace, this.uid, version)
+  getWorkflows() {
+    this.workflowService.listWorkflows(this.namespace, this.uid)
       .subscribe(res => {
         this.workflows = res.workflows;
       });
@@ -145,5 +146,9 @@ export class WorkflowTemplateViewComponent implements OnInit {
     if (event.index === 1) {
       this.showDag();
     }
+  }
+
+  editSelectedWorkflowTemplateVersion() {
+    this.router.navigate(['/', this.namespace, 'workflow-templates', this.workflowTemplateDetail.uid, 'edit']);
   }
 }

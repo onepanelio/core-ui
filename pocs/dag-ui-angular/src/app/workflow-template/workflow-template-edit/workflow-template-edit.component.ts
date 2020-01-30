@@ -1,10 +1,11 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { WorkflowTemplateBase, WorkflowTemplateDetail, WorkflowTemplateService } from '../workflow-template.service';
 import { DagComponent } from '../../dag/dag.component';
 import { NodeRenderer } from '../../node/node.service';
 import { CreateWorkflow, WorkflowService } from '../../workflow/workflow.service';
 import { MatSnackBar } from '@angular/material';
+import { WorkflowTemplateSelected } from "../../workflow-template-select/workflow-template-select.component";
 
 @Component({
   selector: 'app-workflow-template-edit',
@@ -55,13 +56,9 @@ export class WorkflowTemplateEditComponent implements OnInit {
         this.workflowTemplate = res;
 
         if (!res.isLatest) {
-          this.router.navigate(['/', this.namespace, 'workflow-templates', res.uid]);
+          // this.router.navigate(['/', this.namespace, 'workflow-templates', res.uid]);
         }
       });
-  }
-
-  get selectedWorkflowTemplateVersionValue(): number {
-    return this._selectedWorkflowTemplateVersionValue;
   }
 
   constructor(
@@ -78,7 +75,6 @@ export class WorkflowTemplateEditComponent implements OnInit {
 
       this.getWorkflowTemplate();
       this.getWorkflowTemplateVersions();
-      this.getWorkflows();
     });
   }
 
@@ -112,16 +108,15 @@ export class WorkflowTemplateEditComponent implements OnInit {
       });
   }
 
-  getWorkflows() {
-    this.workflowService.listWorkflows(this.namespace, this.uid)
-      .subscribe(res => {
-      });
-  }
-
   onManifestChange(newManifest: string) {
     this.yamlError = null;
 
     this.manifestTextCurrent = newManifest;
+
+    if(newManifest === '') {
+      this.dag.clear();
+      return;
+    }
 
     try {
       const g = NodeRenderer.createGraphFromManifest(newManifest);
@@ -131,43 +126,7 @@ export class WorkflowTemplateEditComponent implements OnInit {
     }
   }
 
-  executeWorkflow() {
-    const request: CreateWorkflow = {
-      namespace: this.namespace,
-      workflowTemplate: this.workflowTemplate,
-    };
-
-    this.workflowService.executeWorkflow(this.namespace, request)
-      .subscribe(res => {
-        this.router.navigate(['/', this.namespace, 'workflows', res.name]);
-      }, err => {
-
-      });
-    // on success navigate to new workflow page
-  }
-
   update() {
-    if (this.yamlError !== null) {
-      this.snackBar.open('Unable to update - the definition is not valid YAML', 'OK');
-      return;
-    }
-
-    this.workflowTemplateService
-      .updateWorkflowTemplateForVersion(
-        this.namespace,
-        this.workflowTemplateDetail.uid,
-        this.workflowTemplateDetail.version,
-        {
-          manifest: this.manifestTextCurrent,
-        })
-      .subscribe(res => {
-        this.snackBar.open('Update successful', 'OK', {
-          duration: 2000
-        });
-      });
-  }
-
-  updateAndPublish() {
     if (this.yamlError !== null) {
       this.snackBar.open('Unable to update - the definition is not valid YAML', 'OK');
       return;
@@ -182,11 +141,11 @@ export class WorkflowTemplateEditComponent implements OnInit {
           manifest: this.manifestTextCurrent,
         })
       .subscribe(res => {
-        this.getWorkflowTemplateVersions();
-
-        this.snackBar.open('Update successful', 'OK', {
-          duration: 2000
-        });
+        this.router.navigate(['/', this.namespace, 'workflow-templates', this.workflowTemplateDetail.uid]);
       });
+  }
+
+  cancel() {
+    this.router.navigate(['/', this.namespace, 'workflow-templates', this.workflowTemplateDetail.uid]);
   }
 }

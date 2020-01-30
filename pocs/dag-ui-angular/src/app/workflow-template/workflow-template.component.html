@@ -16,7 +16,9 @@
     <table mat-table [dataSource]="workflowTemplates" class="op-table w-standard">
       <ng-container matColumnDef="name">
         <th mat-header-cell *matHeaderCellDef> Name </th>
-        <td mat-cell class="bold" *matCellDef="let element"> {{element.name}} </td>
+        <td mat-cell class="bold" *matCellDef="let element">
+          <a class="font-black" [routerLink]="['/', this.namespace, 'workflow-templates', element.uid]">{{element.name}}</a>
+        </td>
       </ng-container>
 
       <ng-container matColumnDef="actions">

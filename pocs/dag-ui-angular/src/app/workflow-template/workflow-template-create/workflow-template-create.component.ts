@@ -131,38 +131,6 @@ export class WorkflowTemplateCreateComponent implements OnInit {
         });
   }
 
-  saveAndPublish() {
-    if (this.yamlError !== null) {
-      this.snackBar.open('Unable to update - the definition is not valid YAML', 'OK');
-      return;
-    }
-
-    const templateName = this.templateNameInput.value;
-
-    if(!templateName) {
-      this.snackBar.open('Unable to update - template name is invalid', 'OK');
-
-      return;
-    }
-
-    this.workflowTemplateService
-        .create(this.namespace, {
-          name: templateName,
-          manifest: this.manifestTextCurrent,
-        })
-        .subscribe(res => {
-          this.workflowTemplateService
-              .createWorkflowTemplateVersion(this.namespace, res.uid, {
-                name: templateName,
-                manifest: this.manifestTextCurrent,
-              })
-              .subscribe(res => {
-                this.router.navigate(['/', this.namespace, 'workflow-templates', res.uid]);
-              })
-          ;
-        });
-  }
-
   cancel() {
     this.router.navigate(['/', this.namespace, 'workflow-templates']);
   }

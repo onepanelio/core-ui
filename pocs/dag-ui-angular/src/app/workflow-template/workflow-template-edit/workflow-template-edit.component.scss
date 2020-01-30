@@ -1,5 +1,10 @@
 @import "../../../colors";
 
+.op-info-box {
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
 .two-panels {
   display: flex;
   height: 500px;
@@ -16,4 +21,8 @@
     width: 50%;
   }
 
+}
+
+app-workflow-template-select {
+  flex-basis: 240px;
 }

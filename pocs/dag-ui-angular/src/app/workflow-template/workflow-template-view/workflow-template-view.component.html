@@ -16,7 +16,7 @@
       <div class="header">
         <div *ngIf="workflowTemplate" class="title">{{workflowTemplate.name}}</div>
         <div *ngIf="workflowTemplate" class="actions">
-          <a class="link-button" [routerLink]="['/', this.namespace, 'workflow-templates', workflowTemplate.uid, 'edit']">
+          <a class="link-button" (click)="editSelectedWorkflowTemplateVersion()">
             <i class="fas fa-pencil-alt"></i>
             <span class="ml-2">Edit</span>
           </a>
@@ -40,14 +40,6 @@
 
     <div class="d-flex align-items-baseline mt-5">
       <div class="header-2-text">Activity</div>
-      <div class="font-proxima ml-5 font-size-regular">Showing</div>
-      <mat-form-field appearance="outline" class="ml-2 op-select">
-        <mat-select [panelClass]="'op-select'" [(value)]="this.selectedWorkflowTemplateVersionValue">
-          <mat-option *ngFor="let workflowTemplateVersion of workflowTemplateVersions" [value]="workflowTemplateVersion.version">
-            {{workflowTemplateVersion.version}} <ng-container *ngIf="workflowTemplateVersion.isLatest">(unpublished)</ng-container>
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
       <div class="flex-grow-1"></div>
       <button mat-flat-button color="accent" class="op-rounded op-button" (click)="executeWorkflow()">Execute Workflow</button>
     </div>
