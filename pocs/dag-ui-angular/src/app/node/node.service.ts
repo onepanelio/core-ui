@@ -159,7 +159,6 @@ export class NodeRenderer {
     parentFullPath: string
   ): void {
 
-    console.log(graph);
     const root = templates.get(rootTemplateId);
 
     if (root && root.nodeType === 'DAG') {
