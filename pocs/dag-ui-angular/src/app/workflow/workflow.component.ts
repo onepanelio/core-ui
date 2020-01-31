@@ -10,7 +10,10 @@ import { NodeInfoComponent } from "../node-info/node-info.component";
   selector: 'app-workflow',
   templateUrl: './workflow.component.html',
   styleUrls: ['./workflow.component.scss'],
-  providers: [WorkflowService]
+  providers: [WorkflowService],
+  host: {
+    '(window:resize)': 'onPageBodyResize($event)',
+  },
 })
 export class WorkflowComponent implements OnInit, OnDestroy {
   startedYeah = new Date();
@@ -32,7 +35,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     setTimeout( () => {
       this._nodeInfoElement = value;
 
-      this.nodeInfoHeight = (document.getElementById('info-box').offsetHeight ) + 'px';
+      this.nodeInfoHeight = (document.getElementById('info-box').offsetHeight - 2) + 'px';
     });
   }
 
@@ -144,5 +147,11 @@ export class WorkflowComponent implements OnInit, OnDestroy {
 
   onNodeInfoClosed() {
     this.nodeInfo = null;
+  }
+
+  onPageBodyResize(event) {
+    setTimeout( () => {
+      this.nodeInfoHeight = (document.getElementById('info-box').offsetHeight -2) + 'px';
+    });
   }
 }

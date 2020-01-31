@@ -399,6 +399,10 @@ $opTableCornerRadius: 4px;
   overflow: hidden;
 }
 
+.scroll-overflow {
+  overflow: scroll;
+}
+
 @mixin op-selected-box($padding:0, $border-width: 2px) {
   @include op-border();
   padding: $padding;

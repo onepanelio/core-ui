@@ -20,7 +20,6 @@
                  class="ml-1"
                  [startedAt]="workflow.getWorkflowStatus().startedAt"
                  [finishedAt]="workflow.getWorkflowStatus().finishedAt">
-
       </app-clock>
     </div>
 
@@ -38,7 +37,7 @@
       </div>
     </div>
     <app-node-info
-       class="ml-3"
+       class="ml-3 op-border scroll-overflow"
        [ngClass]="{ 'visible': showNodeInfo, 'hidden': !showNodeInfo }"
        [style.height]="nodeInfoHeight"
        [style.minHeight]="nodeInfoHeight"
