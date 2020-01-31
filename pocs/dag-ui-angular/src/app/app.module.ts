@@ -34,6 +34,7 @@ import { WorkflowExecutionsListComponent } from "./workflow/workflow-executions-
 import { StatusComponent } from "./status/status.component";
 import { MatInputModule } from "@angular/material/input";
 import { WorkflowTemplateSelectComponent } from './workflow-template-select/workflow-template-select.component';
+import { ClockComponent } from './clock/clock.component';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { WorkflowTemplateSelectComponent } from './workflow-template-select/work
     WorkflowExecutionsListComponent,
     StatusComponent,
     WorkflowTemplateSelectComponent,
+    ClockComponent,
   ],
     imports: [
         BrowserModule,

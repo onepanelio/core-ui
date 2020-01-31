@@ -17,12 +17,25 @@ export class StatusComponent implements OnInit {
     static statusMap = {
         'Succeeded': StatusComponent.completeImageSource,
         'succeeded': StatusComponent.completeImageSource,
+        'Pending': StatusComponent.notRunImageSource,
+        'pending': StatusComponent.notRunImageSource,
+        'Running': StatusComponent.runningBlueImageSource,
+        'running': StatusComponent.runningBlueImageSource,
+    };
+
+    static statusPhraseMap = {
+        'Succeeded': 'Completed',
+        'succeeded': 'Completed',
+        'Pending': 'pending',
+        'pending': 'pending',
+        'Running': 'Running',
+        'running': 'running',
     };
 
     private _status: string;
 
     @Input() set status(value: string) {
-        this._status = value;
+        this._status = StatusComponent.statusPhraseMap[value];
         let imageSource = StatusComponent.statusMap[value];
 
         if (!imageSource) {

@@ -13,6 +13,8 @@ import { NodeInfoComponent } from "../node-info/node-info.component";
   providers: [WorkflowService]
 })
 export class WorkflowComponent implements OnInit, OnDestroy {
+  startedYeah = new Date();
+
   @ViewChild(DagComponent, {static: false}) dag: DagComponent;
   @ViewChild('pageContent', {static: false}) set pageContent(value: ElementRef) {
     setTimeout( () => {

@@ -8,7 +8,11 @@
     <div class="d-flex flex-column">
       <app-status *ngIf="status" class="font-primary font-roboto-bold font-size-large line-height-large" [status]="status">
       </app-status>
-      <div *ngIf="duration" class="font-size-large font-roboto font-black">{{duration}}</div>
+      <app-clock *ngIf="startedAt"
+                 class="font-size-large font-roboto font-black"
+                 [startedAt]="startedAt"
+                 [finishedAt]="finishedAt">
+      </app-clock>
       <div *ngIf="startedAt" class="font-size-small font-medium-gray">
         Started {{startedAt| date:'h:mm a M/d/yyyy'}}
       </div>

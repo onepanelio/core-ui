@@ -13,8 +13,15 @@
 
 
   <div class="page-body">
-    <div class="header-bar op-border border-primary bg-primary-dark mt-4 mb-4">
-      <app-status *ngIf="workflow" class="font-size-regular font-black font-roboto-bold" [status]="workflow.getWorkflowStatus().phase"></app-status>
+    <div class="header-bar op-border border-primary bg-primary-dark mt-4 mb-4 font-size-regular font-black font-roboto d-flex align-items-center">
+      <app-status *ngIf="workflow" class="font-roboto-bold font-weight-bold" [status]="workflow.getWorkflowStatus().phase"></app-status>
+      <span *ngIf="workflow && workflow.getWorkflowStatus().phase === 'Succeeded'" class="ml-1"> in </span>
+      <app-clock *ngIf="workflow"
+                 class="ml-1"
+                 [startedAt]="workflow.getWorkflowStatus().startedAt"
+                 [finishedAt]="workflow.getWorkflowStatus().finishedAt">
+
+      </app-clock>
     </div>
 
     <div id="info-box" class="op-info-box">

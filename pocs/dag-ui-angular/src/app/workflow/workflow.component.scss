@@ -1,5 +1,4 @@
 app-status {
-  display: block;
   height: 40px;
   line-height: 40px;
   padding-left: 20px;
@@ -22,26 +21,3 @@ app-node-info {
     overflow: scroll;
   }
 }
-
-
-
-///* You can add global styles to this file, and also import other style files */
-//g {
-//  background-color: green;
-//}
-//
-///* This sets the color for "TK" nodes to a light blue green. */
-//g.type-TK > rect {
-//  fill: #00ffd0;
-//}
-//
-//.node rect {
-//  stroke: #999;
-//  fill: #fff;
-//  stroke-width: 1.5px;
-//}
-//
-//.edgePath path {
-//  stroke: #333;
-//  stroke-width: 1.5px;
-//}
