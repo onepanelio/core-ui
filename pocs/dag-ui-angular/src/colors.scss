@@ -1,9 +1,10 @@
 $primary-light: #EDF2FD;
 $primary-lighter: #BED2FE;
 $primary: #01579b;
-$primary-dark: rgba(1,87,155,0.1);
+$primary-dark: rgb(1,87,155);
 $secondary: #ff9100;
 $danger: #d32345;
+$danger-light: lighten(#d32345, 50%);
 $light-gray: #f5f6fa;
 $medium-gray: #888888;
 $success-light: #EBF6EE;
@@ -20,6 +21,7 @@ $colors: (
   "primary-dark": $primary-dark,
   "secondary": $secondary,
   "danger": $danger,
+  "danger-light": $danger-light,
   "light-gray": $light-gray,
   "medium-gray": $medium-gray,
   "success-light": $success-light,

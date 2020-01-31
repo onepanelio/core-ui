@@ -35,6 +35,7 @@ import { StatusComponent } from "./status/status.component";
 import { MatInputModule } from "@angular/material/input";
 import { WorkflowTemplateSelectComponent } from './workflow-template-select/workflow-template-select.component';
 import { ClockComponent } from './clock/clock.component';
+import { ActivityBarComponent } from './activity-bar/activity-bar.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { ClockComponent } from './clock/clock.component';
     StatusComponent,
     WorkflowTemplateSelectComponent,
     ClockComponent,
+    ActivityBarComponent,
   ],
     imports: [
         BrowserModule,

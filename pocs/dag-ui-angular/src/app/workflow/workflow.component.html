@@ -13,7 +13,7 @@
 
 
   <div class="page-body">
-    <div class="header-bar op-border border-primary bg-primary-dark mt-4 mb-4 font-size-regular font-black font-roboto d-flex align-items-center">
+    <app-activity-bar *ngIf="workflow" [status]="workflow.getWorkflowStatus().phase" class="mt-4">
       <app-status *ngIf="workflow" class="font-roboto-bold font-weight-bold" [status]="workflow.getWorkflowStatus().phase"></app-status>
       <span *ngIf="workflow && workflow.getWorkflowStatus().phase === 'Succeeded'" class="ml-1"> in </span>
       <app-clock *ngIf="workflow"
@@ -21,9 +21,9 @@
                  [startedAt]="workflow.getWorkflowStatus().startedAt"
                  [finishedAt]="workflow.getWorkflowStatus().finishedAt">
       </app-clock>
-    </div>
+    </app-activity-bar>
 
-    <div id="info-box" class="op-info-box">
+    <div id="info-box" class="op-info-box mt-4">
       <div class="header">
         <div *ngIf="workflow" class="title">{{workflow.name}}</div>
       </div>

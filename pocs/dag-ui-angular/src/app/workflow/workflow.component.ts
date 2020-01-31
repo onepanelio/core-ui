@@ -147,11 +147,12 @@ export class WorkflowComponent implements OnInit, OnDestroy {
 
   onNodeInfoClosed() {
     this.nodeInfo = null;
+    this.showNodeInfo = false;
   }
 
   onPageBodyResize(event) {
     setTimeout( () => {
-      this.nodeInfoHeight = (document.getElementById('info-box').offsetHeight -2) + 'px';
+      this.nodeInfoHeight = (document.getElementById('info-box').offsetHeight - 2) + 'px';
     });
   }
 }
