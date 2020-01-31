@@ -50,10 +50,15 @@
   height: 20px;
 }
 
-/deep/ .node .node-root {
+/deep/ .node .node-root.rect {
   width: 200px;
   height: 42px;
   line-height:42px;
+}
+
+/deep/ .node .node-root.dashed-circle {
+  width: 30px;
+  height: 30px;
 }
 
 /deep/ .node.skipped .name {
@@ -61,24 +66,21 @@
   border-radius: 4px;
 }
 
-/deep/ .node .dashed-circle {
-  border-radius: 50%;
-  border: 1px dashed #bbb;
-  width: 20px;
-  height: 20px;
-  position: relative;
-  top: 8px;
-  margin: auto;
-}
-
 /deep/ .node rect {
   fill: #fff;
+}
+
+/deep/ .node circle {
+  stroke: #bbb;
+  stroke-dasharray: 3;
+  fill: none;
+  stroke-width: 2px;
 }
 
 /deep/ .edgePath path {
   stroke: #bbb;
   fill: #bbb;
-  stroke-width: 1px;
+  stroke-width: 2px;
   stroke-dasharray: 3;
 }
 
@@ -106,6 +108,11 @@
 }
 
 /deep/ .node.selected rect {
+  stroke: #F6881F;
+  stroke-width: 2px;
+}
+
+/deep/ .node.selected circle {
   stroke: #F6881F;
   stroke-width: 2px;
 }

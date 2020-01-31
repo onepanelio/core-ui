@@ -8,6 +8,8 @@ export interface KeyValue<T> extends Array<any> {
   1?: T;
 }
 
+export type NodeShape = 'Rectangle' | 'Dashed-Circle';
+
 export interface NodeStatus {
   id: string;
   name: string;
@@ -103,9 +105,15 @@ export class NodeRenderer {
   }
 
   static nodeTemplate(node: any) {
-    let html = `<div id="${node.id}" class="node-root">`;
+    let nodeRootClasses = 'node-root ';
     if (node.type === 'StepGroup' || node.type === 'DAG') {
-      html += '<div class=dashed-circle></div>';
+      nodeRootClasses += ' dashed-circle';
+    } else {
+      nodeRootClasses += ' rect';
+    }
+
+    let html = `<div id="${node.id}" class="${nodeRootClasses}">`;
+    if (node.type === 'StepGroup' || node.type === 'DAG') {
     } else {
       if(node.phase === 'Succeeded') {
         html += '<img class="status-icon" src="/assets/images/status-icons/completed.svg"/>';
@@ -227,13 +235,13 @@ export class NodeRenderer {
         }
 
         info.nodeType = child.nodeType;
+
         graph.setNode(nodeId, {
           labelType: 'html',
           label: NodeRenderer.nodeTemplate(task),
           padding: 0,
           class: 'skipped',
-          height: NodeRenderer.nodeHeight,
-          width: NodeRenderer.nodeWidth,
+          ...NodeRenderer.getNodeDisplayProperties(task),
           info
         });
 
@@ -280,8 +288,7 @@ export class NodeRenderer {
         label: NodeRenderer.nodeTemplate(nodeStatus),
         padding: 0,
         class: nodeStatus.phase.toLowerCase(),
-        height: NodeRenderer.nodeHeight,
-        width: NodeRenderer.nodeWidth,
+        ...NodeRenderer.getNodeDisplayProperties(nodeStatus),
         info
       });
     });
@@ -356,6 +363,34 @@ export class NodeRenderer {
     }
 
     return graph;
+  }
+
+  static getNodeShape(node: any): NodeShape {
+    if (node.type === 'StepGroup' || node.type === 'DAG') {
+      return 'Dashed-Circle';
+    }
+
+    return 'Rectangle';
+  }
+
+  static getNodeDisplayProperties(node: any): object {
+    const shape = NodeRenderer.getNodeShape(node);
+
+    if (shape === 'Rectangle') {
+      return {
+        height: NodeRenderer.nodeHeight,
+        width: NodeRenderer.nodeWidth,
+        shape: 'rect',
+      }
+    }
+
+    if (shape === 'Dashed-Circle') {
+      return {
+        height: 30,
+        width: 30,
+        shape: 'circle',
+      }
+    }
   }
 }
 
