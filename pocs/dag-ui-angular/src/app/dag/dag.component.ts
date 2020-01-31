@@ -74,8 +74,6 @@ export class DagComponent implements OnInit {
         identifier: this.identifier,
         info: nodeData.info,
       });
-
-      console.log(nodeData.info);
     });
   }
 
