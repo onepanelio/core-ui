@@ -1,3 +1,5 @@
+@import "../../colors";
+
 :host {
   display: block;
 }
@@ -29,22 +31,29 @@
   height: 30px;
 }
 
-/deep/ .node .phase {
-  height: 30px;
-  width: 14px;
-  display: block;
-  float: left;
-  border-radius: 4px 0 0 4px;
+/deep/ .node .name {
+  height: 100%;
+  vertical-align: middle;
+  margin-left: 10px;
 }
 
-/deep/ .node .name {
-  height: 30px;
-  padding: 5px;
-  display: block;
-  float: left;
-  border: 1px solid #ddd;
-  border-left: none;
-  border-radius: 0 4px 4px 0;
+/deep/ .node .status-icon {
+  vertical-align: middle;
+  padding-left: 20px;
+}
+
+/deep/ .node .status-pending {
+  margin-left: 20px;
+  border-radius: 50%;
+  border: 1px solid #bbb;
+  width: 20px;
+  height: 20px;
+}
+
+/deep/ .node .node-root {
+  width: 200px;
+  height: 42px;
+  line-height:42px;
 }
 
 /deep/ .node.skipped .name {
@@ -57,6 +66,9 @@
   border: 1px dashed #bbb;
   width: 20px;
   height: 20px;
+  position: relative;
+  top: 8px;
+  margin: auto;
 }
 
 /deep/ .node rect {
@@ -74,12 +86,14 @@
   display: none;
 }
 
-/deep/ .node.succeeded .phase {
-  background-color: green;
+/deep/ .node.succeeded rect {
+  stroke: $success;
+  fill: $success-light;
 }
 
-/deep/ .node.running .phase {
-  background-color: blue;
+/deep/ .node.running rect {
+  stroke: $primary;
+  fill: $primary-light;
 }
 
 /deep/ .node.pending .phase {
@@ -92,8 +106,6 @@
 }
 
 /deep/ .node.selected rect {
-  stroke: red;
+  stroke: #F6881F;
   stroke-width: 2px;
-  rx: 1%;
-  ry: 2%;
 }

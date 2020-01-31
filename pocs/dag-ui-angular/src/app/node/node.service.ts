@@ -47,6 +47,10 @@ export class NodeInfo {
 }
 
 export class NodeRenderer {
+  static nodeHeight = 50;
+  static nodeWidth = 200;
+
+
   static populateNodeInfoFromTemplate(info: NodeInfo, template?: any): NodeInfo {
     if (!template || (!template.container && !template.resource && !template.script)) {
       return info;
@@ -99,12 +103,19 @@ export class NodeRenderer {
   }
 
   static nodeTemplate(node: any) {
-    let html = `<div id="${node.id}">`;
+    let html = `<div id="${node.id}" class="node-root">`;
     if (node.type === 'StepGroup' || node.type === 'DAG') {
       html += '<div class=dashed-circle></div>';
     } else {
-      html += '<span class=phase></span>';
-      html += `<span class=name>
+      if(node.phase === 'Succeeded') {
+        html += '<img class="status-icon" src="/assets/images/status-icons/completed.svg"/>';
+      } else if (node.phase === 'Running') {
+        html += '<img class="status-icon" src="/assets/images/status-icons/running-blue.svg"/>';
+      } else {
+        html += '<img class="status-icon" src="/assets/images/status-icons/notrun.svg"/>';
+      }
+
+      html += `<span class="name font-roboto">
       ${
         node.type === 'StepGroup' || node.type === undefined
           ? node.name
@@ -139,6 +150,8 @@ export class NodeRenderer {
     alreadyVisited: Map<string, string>,
     parentFullPath: string
   ): void {
+
+    console.log(graph);
     const root = templates.get(rootTemplateId);
 
     if (root && root.nodeType === 'DAG') {
@@ -219,6 +232,8 @@ export class NodeRenderer {
           label: NodeRenderer.nodeTemplate(task),
           padding: 0,
           class: 'skipped',
+          height: NodeRenderer.nodeHeight,
+          width: NodeRenderer.nodeWidth,
           info
         });
 
@@ -245,6 +260,7 @@ export class NodeRenderer {
     }
 
     const graph = new dagre.graphlib.Graph();
+    console.log(graph);
     graph.setGraph({});
     graph.setDefaultEdgeLabel(() => ({}));
 
@@ -264,6 +280,8 @@ export class NodeRenderer {
         label: NodeRenderer.nodeTemplate(nodeStatus),
         padding: 0,
         class: nodeStatus.phase.toLowerCase(),
+        height: NodeRenderer.nodeHeight,
+        width: NodeRenderer.nodeWidth,
         info
       });
     });
