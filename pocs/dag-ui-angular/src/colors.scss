@@ -6,6 +6,7 @@ $secondary: #ff9100;
 $danger: #d32345;
 $danger-light: lighten(#d32345, 50%);
 $light-gray: #f5f6fa;
+$gray: #C1C1C1;
 $medium-gray: #888888;
 $success-light: #EBF6EE;
 $success: #37AD58;
@@ -23,6 +24,7 @@ $colors: (
   "danger": $danger,
   "danger-light": $danger-light,
   "light-gray": $light-gray,
+  "gray": $gray,
   "medium-gray": $medium-gray,
   "success-light": $success-light,
   "success": $success,

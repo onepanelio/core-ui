@@ -21,17 +21,21 @@
 }
 
 $spacer: 0.25rem;
-@for $i from 1 through 10 {
-  .ml-#{$i} {
-    margin-left: ($i * $spacer) !important;
-  }
-
+@for $i from 1 through 20 {
   .mt-#{$i} {
     margin-top: ($i * $spacer) !important;
   }
 
+  .mr-#{$i} {
+    margin-right: ($i * $spacer) !important;
+  }
+
   .mb-#{$i} {
     margin-bottom: ($i * $spacer) !important;
+  }
+
+  .ml-#{$i} {
+    margin-left: ($i * $spacer) !important;
   }
 }
 
@@ -78,15 +82,30 @@ body {
       display: flex;
       justify-content: space-between;
       align-items: center;
-    }
 
-
-    .page-title-text {
-      font-family: 'Proxima Nova Regular', sans-serif;
-      font-size: 30px;
-      color: $primary;
+      .page-title-text {
+        font-family: 'Proxima Nova Regular', sans-serif;
+        font-size: 30px;
+        color: $primary;
+      }
     }
   }
+}
+
+.op-h1 {
+  font-size: 30px;
+  font-family: 'Proxima Nova Regular', sans-serif;
+  color: $primary;
+}
+
+.op-h2 {
+  font-size: 24px;
+  font-family: 'Proxima Nova Regular', sans-serif;
+  color: $primary;
+}
+
+.dialog {
+  margin: 35px 50px;
 }
 
 a {
@@ -149,7 +168,7 @@ $opTableCornerRadius: 4px;
   border-collapse: collapse;
 
   td.mat-cell {
-    border-bottom-color: #C1C1C1;
+    border-bottom-color: $gray;
     font-size: 16px;
   }
 
@@ -164,7 +183,7 @@ $opTableCornerRadius: 4px;
   }
 
   tbody {
-    box-shadow: 0 0 0 1px #C1C1C1;
+    box-shadow: 0 0 0 1px $gray;
     border-radius: $opTableCornerRadius;
     background-color: white;
 
@@ -297,7 +316,7 @@ $opTableCornerRadius: 4px;
   }
 }
 .op-info-box {
-  border: solid 1px #C1C1C1;
+  border: solid 1px $gray;
   border-radius: $opTableCornerRadius;
   background-color: white;
   padding: 22px 30px;
@@ -379,7 +398,7 @@ $opTableCornerRadius: 4px;
 
 
 @mixin op-border() {
-  border: solid 1px #C1C1C1;
+  border: solid 1px $gray;
   border-radius: $opTableCornerRadius;
 }
 
@@ -387,12 +406,21 @@ $opTableCornerRadius: 4px;
   @include op-border();
 }
 
+.no-borders {
+  border: none;
+}
+
 .op-border-top {
-  border-top: solid 1px #C1C1C1;
+  border-top: solid 1px $gray;
+}
+
+.op-just-border-top {
+  border: none;
+  border-top: solid 1px $gray;
 }
 
 .op-border-bottom {
-  border-bottom: solid 1px #C1C1C1;
+  border-bottom: solid 1px $gray;
 }
 
 .hide-overflow {

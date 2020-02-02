@@ -31,6 +31,8 @@ export interface WorkflowResponse {
 export interface CreateWorkflow {
   namespace: string;
   workflowTemplate: WorkflowTemplateDetail;
+  parameters: Array<{name:string, value: string}>;
+  environment: boolean;
 }
 
 export class SimpleWorkflowDetail implements WorkflowDetail{
