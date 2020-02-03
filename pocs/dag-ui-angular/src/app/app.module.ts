@@ -39,6 +39,7 @@ import { ActivityBarComponent } from './activity-bar/activity-bar.component';
 import { WorkflowExecuteDialogComponent } from './workflow/workflow-execute-dialog/workflow-execute-dialog.component';
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatCheckboxModule } from "@angular/material/checkbox";
+import { NamespaceService } from "./namespace/namespace.service";
 
 @NgModule({
   declarations: [
@@ -88,7 +89,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
         MatDialogModule,
         MatCheckboxModule
     ],
-  providers: [],
+  providers: [NamespaceService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
