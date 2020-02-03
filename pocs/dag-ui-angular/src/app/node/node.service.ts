@@ -267,7 +267,6 @@ export class NodeRenderer {
     }
 
     const graph = new dagre.graphlib.Graph();
-    console.log(graph);
     graph.setGraph({});
     graph.setDefaultEdgeLabel(() => ({}));
 

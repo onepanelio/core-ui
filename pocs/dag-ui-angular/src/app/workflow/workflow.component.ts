@@ -16,8 +16,6 @@ import { NodeInfoComponent } from "../node-info/node-info.component";
   },
 })
 export class WorkflowComponent implements OnInit, OnDestroy {
-  startedYeah = new Date();
-
   @ViewChild(DagComponent, {static: false}) dag: DagComponent;
   @ViewChild('pageContent', {static: false}) set pageContent(value: ElementRef) {
     setTimeout( () => {
@@ -51,6 +49,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   nodeInfoHeight = '1000px'; // Dummy large value.
   showNodeInfo = false;
   selectedNodeId = null;
+  showLogs = false;
 
   get dagIdentifier() {
     return {
@@ -154,5 +153,10 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     setTimeout( () => {
       this.nodeInfoHeight = (document.getElementById('info-box').offsetHeight - 2) + 'px';
     });
+  }
+
+  onLogsClicked() {
+    console.log('logs clicked');
+    this.showLogs = true;
   }
 }
