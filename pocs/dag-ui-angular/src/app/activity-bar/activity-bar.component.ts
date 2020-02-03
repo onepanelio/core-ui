@@ -48,7 +48,7 @@ export class ActivityBarComponent implements OnInit {
       return 'success';
     }
 
-    if(value === 'Pending' || value === 'pending') {
+    if(value === 'Pending' || value === 'pending' || value === 'Running' || value === 'running') {
       return 'progress';
     }
 
