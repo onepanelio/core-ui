@@ -1,6 +1,7 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { WorkflowExecuteComponent } from "../workflow-execute/workflow-execute.component";
+import * as yaml from 'js-yaml';
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
 export interface WorkflowExecuteDialogData {
   manifest: string;
@@ -12,13 +13,70 @@ export interface WorkflowExecuteDialogData {
   styleUrls: ['./workflow-execute-dialog.component.scss']
 })
 export class WorkflowExecuteDialogComponent implements OnInit {
-  @ViewChild(WorkflowExecuteComponent, {static: false}) workflowExecute: WorkflowExecuteComponent;
+  public static pluckParameters(manifest) {
+    const res = yaml.safeLoad(manifest);
+    const parameters = [];
+
+    if(res && res.spec && res.spec.arguments && res.spec.arguments.parameters) {
+      for(const param of res.spec.arguments.parameters) {
+        parameters.push({
+          name: param.name,
+          value: param.value,
+        });
+      }
+    }
+
+    return parameters;
+  }
+
+  form: FormGroup;
+  parameters: Array<{name: string, value: string}> = [];
 
   constructor(
+      private formBuilder: FormBuilder,
       public dialogRef: MatDialogRef<WorkflowExecuteDialogComponent>,
-      @Inject(MAT_DIALOG_DATA) public data: WorkflowExecuteDialogData) { }
+      @Inject(MAT_DIALOG_DATA) public data: WorkflowExecuteDialogData) {
+    this.setManifest(data.manifest);
+  }
 
   ngOnInit() {
+  }
+
+  private setManifest(value: string) {
+    this.parameters = WorkflowExecuteDialogComponent.pluckParameters(value);
+
+    let controlsConfig = {};
+    for(let parameter of this.parameters) {
+      controlsConfig[parameter.name] = [
+        '',
+        Validators.compose([
+          Validators.required,
+        ])
+      ]
+    }
+
+    this.form = this.formBuilder.group(controlsConfig);
+  }
+
+  getData() {
+    let hasErrors = false;
+
+    for(let parameter of this.parameters) {
+      if (!parameter.value || parameter.value.length === 0) {
+        hasErrors = true;
+        break;
+      }
+    }
+
+    if (hasErrors) {
+      return null;
+    }
+
+    const data = {
+      parameters: this.parameters,
+    };
+
+    return data;
   }
 
   cancel() {
@@ -26,7 +84,11 @@ export class WorkflowExecuteDialogComponent implements OnInit {
   }
 
   execute() {
-    const data = this.workflowExecute.getData();
+    const data = this.getData();
+
+    if(!data) {
+      return;
+    }
 
     this.dialogRef.close(data);
   }

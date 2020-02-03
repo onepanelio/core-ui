@@ -6,7 +6,6 @@ import { NodeRenderer } from '../../node/node.service';
 import { CreateWorkflow, Workflow, WorkflowService } from '../../workflow/workflow.service';
 import { MatTabChangeEvent } from '@angular/material';
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { WorkflowExecuteComponent } from "../../workflow/workflow-execute/workflow-execute.component";
 import { MatDialog } from "@angular/material/dialog";
 import { WorkflowExecuteDialogComponent } from "../../workflow/workflow-execute-dialog/workflow-execute-dialog.component";
 
@@ -127,11 +126,14 @@ export class WorkflowTemplateViewComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      if (!result) {
+        return;
+      }
+
       const request: CreateWorkflow = {
           namespace: this.namespace,
           workflowTemplate: this.workflowTemplate,
           parameters: result.parameters,
-          environment: result.environment,
       };
 
       this.workflowService.executeWorkflow(this.namespace, request)

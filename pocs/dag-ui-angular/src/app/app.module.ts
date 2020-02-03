@@ -36,9 +36,8 @@ import { MatInputModule } from "@angular/material/input";
 import { WorkflowTemplateSelectComponent } from './workflow-template-select/workflow-template-select.component';
 import { ClockComponent } from './clock/clock.component';
 import { ActivityBarComponent } from './activity-bar/activity-bar.component';
-import { WorkflowExecuteComponent } from "./workflow/workflow-execute/workflow-execute.component";
 import { WorkflowExecuteDialogComponent } from './workflow/workflow-execute-dialog/workflow-execute-dialog.component';
-import { MatDialog, MatDialogModule } from "@angular/material/dialog";
+import { MatDialogModule } from "@angular/material/dialog";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 
 @NgModule({
@@ -61,7 +60,6 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
     WorkflowTemplateSelectComponent,
     ClockComponent,
     ActivityBarComponent,
-    WorkflowExecuteComponent,
     WorkflowExecuteDialogComponent,
   ],
     entryComponents: [
