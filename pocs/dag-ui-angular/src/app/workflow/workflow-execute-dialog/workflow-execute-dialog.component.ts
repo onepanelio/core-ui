@@ -1,7 +1,7 @@
 import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import * as yaml from 'js-yaml';
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
 
 export interface WorkflowExecuteDialogData {
   manifest: string;
@@ -31,6 +31,7 @@ export class WorkflowExecuteDialogComponent implements OnInit {
 
   form: FormGroup;
   parameters: Array<{name: string, value: string}> = [];
+  inputControls: Array<AbstractControl> = [];
 
   constructor(
       private formBuilder: FormBuilder,
@@ -44,6 +45,7 @@ export class WorkflowExecuteDialogComponent implements OnInit {
 
   private setManifest(value: string) {
     this.parameters = WorkflowExecuteDialogComponent.pluckParameters(value);
+    this.inputControls = [];
 
     let controlsConfig = {};
     for(let parameter of this.parameters) {
@@ -56,15 +58,19 @@ export class WorkflowExecuteDialogComponent implements OnInit {
     }
 
     this.form = this.formBuilder.group(controlsConfig);
+
+    for(let parameter of this.parameters) {
+      this.inputControls.push(this.form.get(parameter.name));
+    }
   }
 
   getData() {
     let hasErrors = false;
 
-    for(let parameter of this.parameters) {
-      if (!parameter.value || parameter.value.length === 0) {
+    for(let control of this.inputControls) {
+      if (!control.value || control.value.length === 0) {
         hasErrors = true;
-        break;
+        control.markAllAsTouched();
       }
     }
 
