@@ -142,6 +142,8 @@ export class WorkflowComponent implements OnInit, OnDestroy {
       this._nodeInfoElement.updateNodeStatus(this.nodeInfo);
     }
     this.selectedNodeId = event.nodeId;
+
+    this.showLogs = false;
   }
 
   onNodeInfoClosed() {
@@ -156,7 +158,10 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   }
 
   onLogsClicked() {
-    console.log('logs clicked');
+    if(!this.nodeInfo) {
+      return;
+    }
+
     this.showLogs = true;
   }
 }
