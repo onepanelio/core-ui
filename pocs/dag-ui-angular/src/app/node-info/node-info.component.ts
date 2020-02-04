@@ -10,6 +10,8 @@ import { SimpleWorkflowDetail, } from "../workflow/workflow.service";
 export class NodeInfoComponent implements OnInit, OnDestroy {
   @Input() workflow: SimpleWorkflowDetail;
   @Output() closeClicked = new EventEmitter();
+  @Output() logsClicked = new EventEmitter();
+
   private node: NodeStatus;
 
   startedAt = null;
@@ -40,5 +42,9 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
   onCloseClick() {
     this.closeClicked.emit();
+  }
+
+  openLogs() {
+    this.logsClicked.emit();
   }
 }

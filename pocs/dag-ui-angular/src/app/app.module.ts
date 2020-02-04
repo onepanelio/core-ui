@@ -40,6 +40,7 @@ import { WorkflowExecuteDialogComponent } from './workflow/workflow-execute-dial
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { NamespaceService } from "./namespace/namespace.service";
+import { LogsComponent } from './logs/logs.component';
 
 @NgModule({
   declarations: [
@@ -62,6 +63,7 @@ import { NamespaceService } from "./namespace/namespace.service";
     ClockComponent,
     ActivityBarComponent,
     WorkflowExecuteDialogComponent,
+    LogsComponent,
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,

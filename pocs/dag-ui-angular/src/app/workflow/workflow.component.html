@@ -42,7 +42,16 @@
        [style.height]="nodeInfoHeight"
        [style.minHeight]="nodeInfoHeight"
        [workflow]="workflow"
-       (closeClicked)="onNodeInfoClosed()">
+       (closeClicked)="onNodeInfoClosed()"
+       (logsClicked)="onLogsClicked()">
     </app-node-info>
   </div>
+  <app-logs
+    *ngIf="showLogs && nodeInfo"
+    [style.height]="nodeInfoHeight"
+    [style.minHeight]="nodeInfoHeight"
+    [namespace]="namespace"
+    [workflowName]="workflow.name"
+    [podId]="nodeInfo.id">
+  </app-logs>
 </div>
