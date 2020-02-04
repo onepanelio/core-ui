@@ -3,15 +3,23 @@
   height: 100%;
 }
 
-.title {
-  color: white;
+.toolbar {
   padding-left: 27px;
+}
 
+.title {
   strong {
     font-weight: bold;
   }
 }
 
+.loading {
+  width: 20px;
+  height: 20px;
+  padding-top: 3px;
+  margin-right: 10px;
+  margin-left: -10px;
+}
 
 [ace-editor] {
   height: 100%;

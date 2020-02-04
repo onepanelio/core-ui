@@ -19,9 +19,11 @@ export class LogsComponent implements OnInit, OnDestroy {
     this._nodeInfo = value;
 
     if (value.phase === 'Running' || value.phase === 'Succeeded') {
+      this.information = '';
       this.getLogs();
     } else {
-      this.logText = 'Node is not running yet.';
+      this.information = 'Node is not running yet.';
+      this.loading = true;
     }
   }
   get nodeInfo(): NodeStatus {
@@ -32,6 +34,8 @@ export class LogsComponent implements OnInit, OnDestroy {
   private gettingLogsForNodeId: string;
 
   logText = '';
+  loading = true;
+  information = '';
 
   constructor(private logsService: LogsService) { }
 
@@ -65,8 +69,9 @@ export class LogsComponent implements OnInit, OnDestroy {
     };
 
     this.socket.onclose = (event) => {
+      this.loading = false;
       if (this.logText === '') {
-        this.logText = 'No logs generated';
+        this.information = 'No logs generated';
       }
     };
   }
