@@ -19,7 +19,7 @@ export class NamespaceSelectComponent implements OnInit {
         this.namespaceService.listNamespaces()
             .subscribe(namespaceResponse => {
                 let newNamespace = 'default';
-                if (namespaceResponse.count !== 0) {
+                if (namespaceResponse.count) {
                     newNamespace = namespaceResponse.namespaces[0].name;
                 } else {
                     this.snackbar.open(`Unable to get activate namespace from API. Resorting to 'default'.`, 'OK');
