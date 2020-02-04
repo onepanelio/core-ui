@@ -1,5 +1,5 @@
 <div class="logs-root">
-    <div class="d-flex align-items-center toolbar">
+    <div class="d-flex align-items-center toolbar font-roboto">
         <img *ngIf="loading" class="loading" src="/assets/images/spinner.svg"/>
         <div class="title font-white">
             <strong>LOGS: </strong>
@@ -12,7 +12,7 @@
         </button>
     </div>
     <div ace-editor
-         [mode]="'yaml'"
+         [mode]="'text'"
          [text]="logText"
          [readOnly]="true"
          [options]="{
