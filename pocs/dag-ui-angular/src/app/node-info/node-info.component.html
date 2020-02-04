@@ -13,16 +13,16 @@
                  [startedAt]="startedAt"
                  [finishedAt]="finishedAt">
       </app-clock>
-      <div *ngIf="startedAt" class="font-size-small font-medium-gray">
+      <div *ngIf="startedAt" class="font-size-small font-medium-gray font-roboto">
         Started {{startedAt| date:'h:mm a M/d/yyyy'}}
       </div>
-      <div *ngIf="finishedAt" class="font-size-small font-medium-gray">
+      <div *ngIf="finishedAt" class="font-size-small font-medium-gray font-roboto">
         Finished {{finishedAt | date:'h:mm a M/d/yyyy'}}
       </div>
       <div>
         <hr class="divider border-top border-primary-lighter"/>
-        <button mat-button color="primary" class="w-50">Yaml</button>
-        <button *ngIf="logsAvailable" mat-button color="primary" class="w-50" (click)="openLogs()">Logs</button>
+        <button mat-button color="primary" class="w-50">YAML</button>
+        <button *ngIf="logsAvailable" mat-button color="primary" class="w-50" (click)="openLogs()">LOGS</button>
       </div>
     </div>
   </div>
@@ -36,21 +36,21 @@
       </thead>
       <tbody>
       <tr>
-        <td class="w-50">{{node && node.name}}</td>
-        <td class="w-50">{{node && node.type}}</td>
+        <td *ngIf="node" class="w-50">{{node.id}}</td>
+        <td *ngIf="node" class="w-50">{{node.type}}</td>
       </tr>
       </tbody>
     </table>
-<!--    <mat-expansion-panel hideToggle="true">-->
-<!--      <mat-expansion-panel-header>-->
-<!--        <mat-panel-title >-->
-<!--          Parameters-->
-<!--          <mat-icon>{{'keyboard_arrow_down'}}</mat-icon>-->
+    <mat-expansion-panel hideToggle="true">
+      <mat-expansion-panel-header>
+        <mat-panel-title >
+          Parameters
+          <mat-icon>{{'keyboard_arrow_down'}}</mat-icon>
 
-<!--        </mat-panel-title>-->
-<!--      </mat-expansion-panel-header>-->
+        </mat-panel-title>
+      </mat-expansion-panel-header>
 
-<!--      <h1>Content</h1>-->
-<!--    </mat-expansion-panel>-->
+      <h1>Content</h1>
+    </mat-expansion-panel>
   </div>
 </div>
