@@ -18,6 +18,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   finishedAt = null;
   status: string;
   logsAvailable: boolean = false;
+  statusClass = {};
 
   constructor() { }
 
@@ -39,6 +40,11 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
     }
 
     this.status = node.phase;
+
+    this.statusClass = {
+      'font-primary': ['Pending', 'Running'].indexOf(this.status) > -1,
+      'font-success': this.status === 'Succeeded'
+    };
 
     this.logsAvailable = node.type === 'Pod';
   }

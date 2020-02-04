@@ -6,23 +6,23 @@
       </button>
     </div>
     <div class="d-flex flex-column">
-      <app-status *ngIf="status" class="font-primary font-roboto-bold font-size-large line-height-large" [status]="status">
+      <app-status *ngIf="status" class="font-roboto-bold font-size-large line-height-large" [ngClass]="statusClass" [status]="status">
       </app-status>
       <app-clock *ngIf="startedAt"
                  class="font-size-large font-roboto font-black"
                  [startedAt]="startedAt"
                  [finishedAt]="finishedAt">
       </app-clock>
-      <div *ngIf="startedAt" class="font-size-small font-medium-gray font-roboto">
+      <div *ngIf="startedAt" class="font-size-small font-medium-gray font-roboto-bold">
         Started {{startedAt| date:'h:mm a M/d/yyyy'}}
       </div>
-      <div *ngIf="finishedAt" class="font-size-small font-medium-gray font-roboto">
+      <div *ngIf="finishedAt" class="font-size-small font-medium-gray font-roboto-bold">
         Finished {{finishedAt | date:'h:mm a M/d/yyyy'}}
       </div>
       <div>
         <hr class="divider border-top border-primary-lighter"/>
-        <button mat-button color="primary" class="w-50">YAML</button>
-        <button *ngIf="logsAvailable" mat-button color="primary" class="w-50" (click)="openLogs()">LOGS</button>
+        <button mat-button color="primary" class="w-50 font-size-regular">YAML</button>
+        <button *ngIf="logsAvailable" mat-button color="primary" class="w-50 font-size-regular" (click)="openLogs()">LOGS</button>
       </div>
     </div>
   </div>
@@ -41,16 +41,16 @@
       </tr>
       </tbody>
     </table>
-    <mat-expansion-panel hideToggle="true">
-      <mat-expansion-panel-header>
-        <mat-panel-title >
-          Parameters
-          <mat-icon>{{'keyboard_arrow_down'}}</mat-icon>
+<!--    <mat-expansion-panel hideToggle="true">-->
+<!--      <mat-expansion-panel-header>-->
+<!--        <mat-panel-title >-->
+<!--          Parameters-->
+<!--          <mat-icon>{{'keyboard_arrow_down'}}</mat-icon>-->
 
-        </mat-panel-title>
-      </mat-expansion-panel-header>
+<!--        </mat-panel-title>-->
+<!--      </mat-expansion-panel-header>-->
 
-      <h1>Content</h1>
-    </mat-expansion-panel>
-  </div>
+<!--      <h1>Content</h1>-->
+<!--    </mat-expansion-panel>-->
+<!--  </div>-->
 </div>
