@@ -26,10 +26,10 @@ export class StatusComponent implements OnInit {
     static statusPhraseMap = {
         'Succeeded': 'Completed',
         'succeeded': 'Completed',
-        'Pending': 'pending',
-        'pending': 'pending',
+        'Pending': 'Pending',
+        'pending': 'Pending',
         'Running': 'Running',
-        'running': 'running',
+        'running': 'Running',
     };
 
     private _status: string;
