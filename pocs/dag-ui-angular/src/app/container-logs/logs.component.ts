@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { LogsService } from "./logs.service";
 import { NodeStatus } from "../node/node.service";
 
@@ -12,6 +12,7 @@ export class LogsComponent implements OnInit, OnDestroy {
   @Input() namespace: string;
   @Input() workflowName: string;
   @Input() podId: string;
+  @Output() closeClicked = new EventEmitter();
 
   private _nodeInfo;
   @Input() set nodeInfo(value: NodeStatus) {
@@ -71,10 +72,12 @@ export class LogsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    console.log('destroyed');
-
     if (this.socket) {
       this.socket.close();
     }
+  }
+
+  onCloseClick() {
+    this.closeClicked.emit();
   }
 }

@@ -1,3 +1,18 @@
+.logs-root {
+  background-color: rgb(47, 49, 41);
+  height: 100%;
+}
+
+.title {
+  color: white;
+  padding-left: 27px;
+
+  strong {
+    font-weight: bold;
+  }
+}
+
+
 [ace-editor] {
   height: 100%;
 }

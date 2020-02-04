@@ -164,4 +164,8 @@ export class WorkflowComponent implements OnInit, OnDestroy {
 
     this.showLogs = true;
   }
+
+  onLogsClosed() {
+    this.showLogs = false;
+  }
 }
