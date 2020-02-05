@@ -41,6 +41,7 @@ import { MatDialogModule } from "@angular/material/dialog";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { NamespaceService } from "./namespace/namespace.service";
 import { LogsComponent } from "./container-logs/logs.component";
+import { AlertComponent } from './alert/alert.component';
 
 @NgModule({
   declarations: [
@@ -64,6 +65,7 @@ import { LogsComponent } from "./container-logs/logs.component";
     ActivityBarComponent,
     WorkflowExecuteDialogComponent,
     LogsComponent,
+    AlertComponent,
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,

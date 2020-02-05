@@ -16,8 +16,10 @@
       </div>
       <div class="d-flex">
         <div class="flex-grow-1">
-          <div class="two-panels op-border">
+          <app-alert [autoDismiss]="false" [alert]="serverError"></app-alert>
+          <div class="two-panels op-border mt-3">
             <div ace-editor
+                 class="w-50 panel"
                  [mode]="'yaml'"
                  [text]="manifestText"
                  (textChanged)="onManifestChange($event)"
@@ -28,7 +30,7 @@
                     showLineNumbers: true
                   }"
             ></div>
-            <app-dag></app-dag>
+            <app-dag class="w-50 panel"></app-dag>
           </div>
           <div class="mt-5 d-flex justify-content-between">
             <button mat-button class="font-medium-gray cancel-button" (click)="cancel()">CANCEL</button>

@@ -5,7 +5,10 @@ import { DagComponent } from '../../dag/dag.component';
 import { NodeRenderer } from '../../node/node.service';
 import { CreateWorkflow, WorkflowService } from '../../workflow/workflow.service';
 import { MatSnackBar } from '@angular/material';
-import { WorkflowTemplateSelected } from "../../workflow-template-select/workflow-template-select.component";
+import { HttpErrorResponse } from "@angular/common/http";
+import { Alert } from "../../alert/alert.component";
+import * as yaml from 'js-yaml';
+import { AceEditorComponent, AceEditorModule } from "ng2-ace-editor";
 
 @Component({
   selector: 'app-workflow-template-edit',
@@ -15,10 +18,11 @@ import { WorkflowTemplateSelected } from "../../workflow-template-select/workflo
 })
 export class WorkflowTemplateEditComponent implements OnInit {
   @ViewChild(DagComponent, {static: false}) dag: DagComponent;
+  @ViewChild(AceEditorComponent, {static: false}) aceEditor: AceEditorComponent;
 
   manifestText: string;
   manifestTextCurrent: string;
-  yamlError: string|null = null;
+  serverError: Alert;
 
   namespace: string;
   uid: string;
@@ -85,6 +89,31 @@ export class WorkflowTemplateEditComponent implements OnInit {
       });
   }
 
+  onManifestChange(newManifest: string) {
+    this.manifestTextCurrent = newManifest;
+
+    if(newManifest === '') {
+      this.dag.clear();
+      return;
+    }
+
+    try {
+      const g = NodeRenderer.createGraphFromManifest(newManifest);
+      this.dag.display(g);
+    }
+    catch (e) {
+      if(e instanceof yaml.YAMLException) {
+          const line = e.mark.line;
+          const column = e.mark.column;
+
+          this.serverError = {
+              message: e.reason + " at line: " + (line + 1) + " column: " + (column + 1),
+              type: 'danger'
+          };
+      }
+    }
+  }
+
   getWorkflowTemplateVersions() {
     this.workflowTemplateService.listWorkflowTemplateVersions(this.namespace, this.uid)
       .subscribe(res => {
@@ -108,30 +137,7 @@ export class WorkflowTemplateEditComponent implements OnInit {
       });
   }
 
-  onManifestChange(newManifest: string) {
-    this.yamlError = null;
-
-    this.manifestTextCurrent = newManifest;
-
-    if(newManifest === '') {
-      this.dag.clear();
-      return;
-    }
-
-    try {
-      const g = NodeRenderer.createGraphFromManifest(newManifest);
-      this.dag.display(g);
-    } catch (e) {
-      this.yamlError = 'error';
-    }
-  }
-
   update() {
-    if (this.yamlError !== null) {
-      this.snackBar.open('Unable to update - the definition is not valid YAML', 'OK');
-      return;
-    }
-
     this.workflowTemplateService
       .createWorkflowTemplateVersion(
         this.namespace,
@@ -142,6 +148,11 @@ export class WorkflowTemplateEditComponent implements OnInit {
         })
       .subscribe(res => {
         this.router.navigate(['/', this.namespace, 'workflow-templates', this.workflowTemplateDetail.uid]);
+      }, (err: HttpErrorResponse) => {
+        this.serverError = {
+          message: err.error.message,
+          type: 'danger',
+        };
       });
   }
 
