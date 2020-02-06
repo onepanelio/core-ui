@@ -41,12 +41,12 @@
       </tr>
       </tbody>
     </table>
-    <mat-expansion-panel hideToggle="true">
+    <mat-expansion-panel class="op-expansion-panel mt-5" hideToggle="true" (expandedChange)="onParametersExpandChange($event)">
       <mat-expansion-panel-header>
-        <mat-panel-title >
+        <mat-panel-title class="font-size-larger font-primary justify-content-between align-items-center">
           Parameters
-          <mat-icon>{{'keyboard_arrow_down'}}</mat-icon>
-
+          <mat-icon *ngIf="!parametersExpanded">{{'keyboard_arrow_down'}}</mat-icon>
+          <mat-icon *ngIf="parametersExpanded">{{'keyboard_arrow_up'}}</mat-icon>
         </mat-panel-title>
       </mat-expansion-panel-header>
 

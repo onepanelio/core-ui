@@ -18,3 +18,10 @@
   padding: 30px 30px 0 30px;
   overflow: scroll;
 }
+
+.op-expansion-panel.mat-expansion-panel:not([class*='mat-elevation-z']) {
+  margin-left: -30px;
+  margin-right: -30px;
+  border-top: $gray solid 1px;
+  border-radius: 0;
+}

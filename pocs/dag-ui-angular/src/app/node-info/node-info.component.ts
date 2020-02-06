@@ -22,6 +22,8 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   inputs = [];
   outputs = [];
 
+  parametersExpanded = false;
+
   constructor() { }
 
   ngOnInit() {
@@ -52,10 +54,14 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
     if (node.inputs && node.inputs.parameters) {
       this.inputs = node.inputs.parameters;
+    } else {
+      this.inputs = [];
     }
 
     if (node.outputs && node.outputs.parameters) {
       this.outputs = node.outputs.parameters;
+    } else {
+      this.outputs = [];
     }
   }
 
@@ -65,5 +71,9 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
   openLogs() {
     this.logsClicked.emit();
+  }
+
+  onParametersExpandChange(expanded: boolean) {
+    this.parametersExpanded = expanded;
   }
 }
