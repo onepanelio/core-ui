@@ -18,7 +18,7 @@ export class LogsComponent implements OnInit, OnDestroy {
   @Input() set nodeInfo(value: NodeStatus) {
     this._nodeInfo = value;
 
-    if (value.phase === 'Running' || value.phase === 'Succeeded') {
+    if (value.phase === 'Running' || value.phase === 'Succeeded' || value.phase === 'Failed') {
       this.information = '';
       this.getLogs();
     } else {
