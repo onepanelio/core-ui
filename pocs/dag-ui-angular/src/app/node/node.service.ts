@@ -10,6 +10,12 @@ export interface KeyValue<T> extends Array<any> {
 
 export type NodeShape = 'Rectangle' | 'Dashed-Circle';
 
+export interface NodeParameter {
+  name: string;
+  value: any;
+}
+
+// TODO - to class, and add isReady, etc methods.
 export interface NodeStatus {
   id: string;
   name: string;
@@ -22,6 +28,8 @@ export interface NodeStatus {
   finishedAt: string;
   children: string[];
   outboundNodes: string[];
+  inputs: { parameters: Array<NodeParameter>, artifacts: [] };
+  outputs: { parameters: Array<NodeParameter>, artifacts: [] };
 }
 
 export class NodeInfo {

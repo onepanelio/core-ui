@@ -19,6 +19,8 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   status: string;
   logsAvailable: boolean = false;
   statusClass = {};
+  inputs = [];
+  outputs = [];
 
   constructor() { }
 
@@ -47,6 +49,14 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
     };
 
     this.logsAvailable = node.type === 'Pod';
+
+    if (node.inputs && node.inputs.parameters) {
+      this.inputs = node.inputs.parameters;
+    }
+
+    if (node.outputs && node.outputs.parameters) {
+      this.outputs = node.outputs.parameters;
+    }
   }
 
   onCloseClick() {

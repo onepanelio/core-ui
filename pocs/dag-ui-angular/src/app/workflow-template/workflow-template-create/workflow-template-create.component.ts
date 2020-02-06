@@ -1,20 +1,18 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
-  CreateWorkflowTemplate,
-  WorkflowTemplateBase,
   WorkflowTemplateDetail,
   WorkflowTemplateService
 } from '../workflow-template.service';
 import { DagComponent } from '../../dag/dag.component';
 import { ActivatedRoute, Route, Router } from '@angular/router';
-import { fromEvent } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
 import { NodeRenderer } from '../../node/node.service';
-import { HttpErrorResponse } from '@angular/common/http';
-import { CreateWorkflow, WorkflowService } from "../../workflow/workflow.service";
+import { WorkflowService } from "../../workflow/workflow.service";
 import { WorkflowTemplateSelected } from "../../workflow-template-select/workflow-template-select.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { Alert } from "../../alert/alert.component";
+import { HttpErrorResponse } from "@angular/common/http";
+import * as yaml from 'js-yaml';
 
 @Component({
   selector: 'app-workflow-template-create',
@@ -27,7 +25,7 @@ export class WorkflowTemplateCreateComponent implements OnInit {
 
   manifestText: string;
   manifestTextCurrent: string;
-  yamlError: string|null = null;
+  serverError: Alert;
 
   namespace: string;
   uid: string;
@@ -90,8 +88,6 @@ export class WorkflowTemplateCreateComponent implements OnInit {
   }
 
   onManifestChange(newManifest: string) {
-    this.yamlError = null;
-
     this.manifestTextCurrent = newManifest;
 
     if(newManifest === '') {
@@ -102,17 +98,23 @@ export class WorkflowTemplateCreateComponent implements OnInit {
     try {
       const g = NodeRenderer.createGraphFromManifest(newManifest);
       this.dag.display(g);
+      setTimeout( () => {
+        this.serverError = null;
+      });
     } catch (e) {
-      this.yamlError = 'error';
+      if(e instanceof yaml.YAMLException) {
+        const line = e.mark.line;
+        const column = e.mark.column;
+
+        this.serverError = {
+          message: e.reason + " at line: " + (line + 1) + " column: " + (column + 1),
+          type: 'danger'
+        };
+      }
     }
   }
 
   save() {
-    if (this.yamlError !== null) {
-      this.snackBar.open('Unable to update - the definition is not valid YAML', 'OK');
-      return;
-    }
-
     const templateName = this.templateNameInput.value;
 
     if(!templateName) {
@@ -128,7 +130,12 @@ export class WorkflowTemplateCreateComponent implements OnInit {
         })
         .subscribe(res => {
           this.router.navigate(['/', this.namespace, 'workflow-templates', res.uid]);
-        });
+        }, (err: HttpErrorResponse) => {
+          this.serverError = {
+            message: err.error.message,
+            type: 'danger',
+          };
+    });
   }
 
   cancel() {

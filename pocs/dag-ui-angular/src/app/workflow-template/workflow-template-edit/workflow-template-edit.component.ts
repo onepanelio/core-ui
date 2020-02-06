@@ -100,6 +100,9 @@ export class WorkflowTemplateEditComponent implements OnInit {
     try {
       const g = NodeRenderer.createGraphFromManifest(newManifest);
       this.dag.display(g);
+      setTimeout( () => {
+         this.serverError = null;
+      });
     }
     catch (e) {
       if(e instanceof yaml.YAMLException) {
