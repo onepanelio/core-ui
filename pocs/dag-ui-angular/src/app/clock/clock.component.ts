@@ -25,10 +25,13 @@ export class ClockComponent implements OnInit, OnDestroy {
     } else {
       this._startedAt = value;
     }
+
+    this.updateDuration();
   }
 
   @Input() set finishedAt(value: string|Date|null) {
     if(!value) {
+      this._finishedAt = null;
       return
     }
 
@@ -38,8 +41,7 @@ export class ClockComponent implements OnInit, OnDestroy {
       this._finishedAt = value;
     }
 
-    this.clearTimer();
-    this.updateDuration(this._finishedAt);
+    this.updateDuration();
   }
 
   /**
@@ -59,13 +61,10 @@ export class ClockComponent implements OnInit, OnDestroy {
   constructor() { }
 
   ngOnInit() {
-    if(this._finishedAt) {
-      this.updateDuration(this._finishedAt);
-      return;
-    }
+    this.updateDuration();
 
     this.timer = setInterval(() => {
-      this.updateDuration(new Date());
+      this.updateDuration();
     }, this.interval)
   }
 
@@ -75,10 +74,15 @@ export class ClockComponent implements OnInit, OnDestroy {
     }
   }
 
-  private updateDuration(finishedAt: Date) {
-    if(!this._startedAt) {
+  private updateDuration() {
+    if (!this._startedAt) {
       this.durationString = this.defaultString;
       return;
+    }
+
+    let finishedAt = new Date();
+    if (this._finishedAt) {
+      finishedAt = this._finishedAt;
     }
 
     this.durationString = this.durationFormatter(this._startedAt, finishedAt);
