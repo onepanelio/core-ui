@@ -76,9 +76,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
 
           this.socket = this.workflowService.watchWorkflow(this.namespace, this.name);
           this.socket.onmessage = (event) => {this.onSocketMessage(event)};
-          this.socket.onclose = (event) => {
-            console.log('closed socket');
-          };
+          this.socket.onclose = (event) => {};
 
           this.workflowTemplate = res.workflowTemplate;
         }, err => {
