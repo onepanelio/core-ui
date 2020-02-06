@@ -12,7 +12,8 @@
             <mat-icon>close</mat-icon>
         </button>
     </div>
-    <div ace-editor
+    <ace-editor
+         class="h-100 w-100"
          [mode]="'text'"
          [text]="logText"
          [readOnly]="true"
@@ -22,5 +23,5 @@
                         scrollPastEnd: 1,
                         showLineNumbers: true
                       }"
-    ></div>
+    ></ace-editor>
 </div>

@@ -1,6 +1,7 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { LogsService } from "./logs.service";
 import { NodeStatus } from "../node/node.service";
+import { AceEditorComponent } from "ng2-ace-editor";
 
 @Component({
   selector: 'app-logs',
@@ -9,6 +10,8 @@ import { NodeStatus } from "../node/node.service";
   providers: [LogsService]
 })
 export class LogsComponent implements OnInit, OnDestroy {
+  @ViewChild(AceEditorComponent, {static:false}) aceEditor: AceEditorComponent;
+
   @Input() namespace: string;
   @Input() workflowName: string;
   @Input() podId: string;
@@ -68,6 +71,10 @@ export class LogsComponent implements OnInit, OnDestroy {
 
         if(jsonData.result && jsonData.result.content) {
           this.logText += jsonData.result.content + '\n';
+
+          const numberLines = this.aceEditor.getEditor().session.getDocument().getLength();
+          const goToLine = Math.max(numberLines - 10, 0);
+          this.aceEditor.getEditor().scrollToLine(goToLine, true, true, () => {});
         }
 
       } catch (e) {
