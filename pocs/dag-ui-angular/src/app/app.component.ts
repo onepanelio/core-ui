@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import 'brace';
 import 'brace/mode/yaml';
 import { NamespaceService } from "./namespace/namespace.service";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
@@ -16,6 +16,7 @@ export class AppComponent implements OnInit {
   namespaces = [];
 
   constructor(private namespaceService: NamespaceService,
+              private activatedRoute: ActivatedRoute,
               private router: Router,
               private snackbar: MatSnackBar) {
     this.selectedNamespace = namespaceService.activeNamespace;
@@ -30,7 +31,14 @@ export class AppComponent implements OnInit {
           this.namespaces = res.namespaces;
         }, err => {
           this.namespaces = [{name: 'default'}];
-        })
+        }, () => {
+          const namespace = this.activatedRoute.snapshot.firstChild.paramMap.get('namespace');
+
+          if(namespace) {
+            this.selectedNamespace = namespace;
+            this.namespaceService.activeNamespace = namespace;
+          }
+        });
   }
 
 
