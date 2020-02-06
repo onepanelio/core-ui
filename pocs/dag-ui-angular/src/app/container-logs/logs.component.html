@@ -1,11 +1,13 @@
 <div class="logs-root">
-    <div class="d-flex align-items-center justify-content-between toolbar font-roboto">
+    <div class="d-flex align-items-center toolbar font-roboto">
         <img *ngIf="loading" class="loading" src="/assets/images/spinner.svg"/>
         <div class="title font-white">
             <strong>LOGS: </strong>
             <span class="node-name">{{nodeInfo.displayName}}</span>
         </div>
+        <div class="flex-grow-1"></div>
         <span class="information font-white ml-2">{{information}}</span>
+        <div class="flex-grow-1"></div>
         <button mat-icon-button class="close-button font-white" aria-label="close icon" (click)="onCloseClick()">
             <mat-icon>close</mat-icon>
         </button>
