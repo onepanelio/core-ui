@@ -93,6 +93,11 @@
   fill: $primary-light;
 }
 
+/deep/ .node.failed rect {
+  stroke: $danger;
+  fill: $danger-light;
+}
+
 /deep/ .node.pending .phase {
   background-color: orange;
 }
