@@ -41,6 +41,7 @@
        [ngClass]="{ 'visible': showNodeInfo, 'hidden': !showNodeInfo }"
        [style.height]="nodeInfoHeight"
        [style.minHeight]="nodeInfoHeight"
+       [style.top]="nodeInfoTop"
        [workflow]="workflow"
        (closeClicked)="onNodeInfoClosed()"
        (logsClicked)="onLogsClicked()">
@@ -50,10 +51,12 @@
     *ngIf="showLogs && nodeInfo"
     [style.height]="nodeInfoHeight"
     [style.minHeight]="nodeInfoHeight"
+    [style.top]="nodeInfoTop"
     [namespace]="namespace"
     [workflowName]="workflow.name"
     [podId]="nodeInfo.id"
     [nodeInfo]="nodeInfo"
     (closeClicked)="onLogsClosed()">
   </app-logs>
+
 </div>

@@ -15,9 +15,9 @@ text {
 
 app-node-info {
   width: 420px;
-  position: fixed;
+  position: absolute;
   right: 0;
-  bottom: 0;
+  top: 0;
 
   /deep/ .root-element {
     height: 100%;
@@ -27,7 +27,8 @@ app-node-info {
 
 app-logs {
   width: 60vw;
-  position: fixed;
+  position: absolute;
   right: 0;
-  bottom: 0;
+  top: 0;
+  overflow: scroll;
 }

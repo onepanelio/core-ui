@@ -32,8 +32,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
 
     setTimeout( () => {
       this._nodeInfoElement = value;
-
-      this.nodeInfoHeight = (document.getElementById('info-box').offsetHeight - 2) + 'px';
+      this.updateNodeInfoProperties();
     });
   }
 
@@ -47,6 +46,8 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   nodeInfo?: NodeStatus = null;
   height = '1000px'; // Dummy large value.
   nodeInfoHeight = '1000px'; // Dummy large value.
+  nodeInfoTop = '0'; //Dummy initial value
+
   showNodeInfo = false;
   selectedNodeId = null;
   showLogs = false;
@@ -153,7 +154,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
 
   onPageBodyResize(event) {
     setTimeout( () => {
-      this.nodeInfoHeight = (document.getElementById('info-box').offsetHeight - 2) + 'px';
+      this.updateNodeInfoProperties();
     });
   }
 
@@ -167,5 +168,10 @@ export class WorkflowComponent implements OnInit, OnDestroy {
 
   onLogsClosed() {
     this.showLogs = false;
+  }
+
+  updateNodeInfoProperties() {
+    this.nodeInfoHeight = (document.getElementById('info-box').offsetHeight - 2) + 'px';
+    this.nodeInfoTop = (document.getElementById('info-box').offsetTop) + 'px';
   }
 }
