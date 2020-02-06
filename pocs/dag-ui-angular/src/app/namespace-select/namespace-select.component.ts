@@ -1,7 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
 import { NamespaceService } from "../namespace/namespace.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { HttpErrorResponse } from "@angular/common/http";
 
 @Component({
     selector: 'app-namespace-select',
@@ -16,15 +17,25 @@ export class NamespaceSelectComponent implements OnInit {
     }
 
     ngOnInit() {
+        let newNamespace = 'default';
+
         this.namespaceService.listNamespaces()
             .subscribe(namespaceResponse => {
-                let newNamespace = 'default';
                 if (namespaceResponse.count) {
                     newNamespace = namespaceResponse.namespaces[0].name;
                 } else {
                     this.snackbar.open(`Unable to get activate namespace from API. Resorting to 'default'.`, 'OK');
                 }
 
+                this.namespaceService.activateNamespace = newNamespace;
+                this.onNamespaceSelected(this.namespaceService.activateNamespace);
+            }, (err: HttpErrorResponse) => {
+                let errorMessage = 'Unable to get activate namespace from API.';
+                if (err.status === 0) {
+                    errorMessage = 'Unable to connect to API. Is it running?'
+                }
+
+                this.snackbar.open(`${errorMessage} Resorting to '${newNamespace}'.`, 'OK');
                 this.namespaceService.activateNamespace = newNamespace;
                 this.onNamespaceSelected(this.namespaceService.activateNamespace);
             });
