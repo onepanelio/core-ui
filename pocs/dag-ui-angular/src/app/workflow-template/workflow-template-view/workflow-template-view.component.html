@@ -33,7 +33,7 @@
       <div>
         <div *ngIf="workflowTemplate" class="info mt-2">
           <i class="far fa-calendar-check"></i>
-          <span class="ml-2">Created {{workflowTemplate.createdAt|date:'mediumDate'}}</span>
+          <app-date class="ml-2" [dateTime]="workflowTemplate.createdAt"></app-date>
         </div>
       </div>
     </div>

@@ -43,6 +43,7 @@ import { NamespaceService } from "./namespace/namespace.service";
 import { LogsComponent } from "./container-logs/logs.component";
 import { AlertComponent } from './alert/alert.component';
 import { ParameterComponent } from './node-info/parameter/parameter.component';
+import { DateComponent } from './date/date.component';
 
 @NgModule({
   declarations: [
@@ -68,6 +69,7 @@ import { ParameterComponent } from './node-info/parameter/parameter.component';
     LogsComponent,
     AlertComponent,
     ParameterComponent,
+    DateComponent,
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,

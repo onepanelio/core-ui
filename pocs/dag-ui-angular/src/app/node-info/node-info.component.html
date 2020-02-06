@@ -14,10 +14,10 @@
                  [finishedAt]="finishedAt">
       </app-clock>
       <div *ngIf="startedAt" class="font-size-small font-medium-gray font-roboto-bold">
-        Started {{startedAt| date:'h:mm a M/d/yyyy'}}
+        Started <app-date [dateTime]="startedAt"></app-date>
       </div>
       <div *ngIf="finishedAt" class="font-size-small font-medium-gray font-roboto-bold">
-        Finished {{finishedAt | date:'h:mm a M/d/yyyy'}}
+        Finished <app-date [dateTime]="finishedAt"></app-date>
       </div>
       <div>
         <hr class="divider border-top border-primary-lighter"/>
