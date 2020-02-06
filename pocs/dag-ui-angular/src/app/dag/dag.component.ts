@@ -20,6 +20,8 @@ export class DagComponent implements OnInit {
   private svg;
   private inner;
   private currentGraph;
+  private bufferSvg;
+  private bufferInner;
 
   @Input() maxWidth = -1;
   @Input() maxHeight = -1;
@@ -35,11 +37,15 @@ export class DagComponent implements OnInit {
 
   ngOnInit() {
     this.render = new dagreD3.render();
-    this.svg = d3.select('svg');
+    this.svg = d3.select('svg.content');
     this.svg.attr('height', '100%');
     this.svg.attr('width', '100%');
     this.inner = this.svg.select('g');
     this.init = true;
+
+    this.bufferSvg = d3.select('svg.buffer');
+    this.bufferInner = this.bufferSvg.select('g');
+
     this.setupZoom();
   }
 
@@ -51,7 +57,13 @@ export class DagComponent implements OnInit {
 
     // Run the renderer. This is what draws the final graph.
     try {
-      this.render(this.inner, g);
+      this.render(this.bufferInner, g);
+
+      // Copy the buffer into the actual display. This avoids zooming issues while we constantly
+      // update the dag.
+      this.inner.select('.output').remove();
+      const node = this.inner.node();
+      node.append(this.bufferInner.select('.output').node().cloneNode(true));
 
       // Persist the node selection.
       if(this.selectedNodeId) {
@@ -61,7 +73,8 @@ export class DagComponent implements OnInit {
       console.error(e);
     }
 
-    this.svg.selectAll('g.node').on('click', (id: any, selectedIndex: any, nodes: any) => {
+    this.svg.selectAll('g.node').on('click', (datum: any, selectedIndex: any, nodes: any) => {
+      const id = nodes[selectedIndex].id;
       this.selectedNodeId = id;
 
       this.svg.selectAll('g.node.selected').classed('selected', false);
@@ -69,6 +82,7 @@ export class DagComponent implements OnInit {
 
       const nodeData = g.node(id);
 
+      console.log(nodeData);
       this.nodeClicked.emit({
         nodeId: id,
         identifier: this.identifier,
@@ -84,10 +98,8 @@ export class DagComponent implements OnInit {
   }
 
   setupZoom() {
-    const inner = this.inner;
-
     const zoom = d3.zoom().on('zoom', () => {
-      inner.attr('transform', d3.event.transform);
+      this.inner.attr('transform', d3.event.transform);
     });
 
     this.svg.call(zoom);

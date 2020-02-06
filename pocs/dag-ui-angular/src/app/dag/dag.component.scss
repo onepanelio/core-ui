@@ -4,6 +4,14 @@
   display: block;
 }
 
+.buffer {
+  visibility: hidden;
+  position: fixed;
+  top: 0;
+  right: 10000px;
+  z-index: -999999;
+}
+
 /* This sets the color for "TK" nodes to a light blue green. */
 /deep/ g.type-TK > rect {
   fill: #00ffd0;
