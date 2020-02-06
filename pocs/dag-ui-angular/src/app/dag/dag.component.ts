@@ -82,7 +82,6 @@ export class DagComponent implements OnInit {
 
       const nodeData = g.node(id);
 
-      console.log(nodeData);
       this.nodeClicked.emit({
         nodeId: id,
         identifier: this.identifier,
