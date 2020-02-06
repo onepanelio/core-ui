@@ -23,7 +23,8 @@ export class LogsComponent implements OnInit, OnDestroy {
       this.getLogs();
     } else if(value.phase === 'Failed') {
       this.loading = false;
-      this.information = 'Node failed'
+      this.information = 'Node failed';
+      this.getLogs();
     } else {
       this.information = 'Node is not running yet';
       this.loading = true;
