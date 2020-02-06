@@ -127,7 +127,7 @@ export class NodeRenderer {
         html += '<img class="status-icon" src="/assets/images/status-icons/completed.svg"/>';
       } else if (node.phase === 'Running') {
         html += '<img class="status-icon" src="/assets/images/status-icons/running-blue.svg"/>';
-      } else if (node.phase === 'Failed') {
+      } else if (node.phase === 'Failed' || node.phase === 'Error') {
         html += '<img class="status-icon" src="/assets/images/status-icons/failed.svg"/>';
       } else {
         html += '<img class="status-icon" src="/assets/images/status-icons/notrun.svg"/>';
