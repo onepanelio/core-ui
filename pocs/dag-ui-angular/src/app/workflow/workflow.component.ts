@@ -112,7 +112,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     const status = this.workflow.getWorkflowStatus();
 
     // It is possible there is no node data yet. In which case, we can't display a dag.
-    if(!status.nodes) {
+    if(!status || !status.nodes) {
       return;
     }
 
@@ -124,10 +124,8 @@ export class WorkflowComponent implements OnInit, OnDestroy {
       }
     }
 
-    if(status) {
-      const graph = NodeRenderer.createGraphFromWorkflowStatus(status);
-      this.dag.display(graph);
-    }
+    const graph = NodeRenderer.createGraphFromWorkflowStatus(status);
+    this.dag.display(graph);
   }
 
   handleNodeClicked(event: DagClickEvent) {
