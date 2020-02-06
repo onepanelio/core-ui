@@ -17,6 +17,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   startedAt = null;
   finishedAt = null;
   status: string;
+  message: string;
   logsAvailable: boolean = false;
   statusClass = {};
   inputs = [];
@@ -46,6 +47,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
     }
 
     this.status = node.phase;
+    this.message = node.message;
 
     this.statusClass = {
       'font-primary': ['Pending', 'Running'].indexOf(this.status) > -1,
