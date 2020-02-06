@@ -426,6 +426,11 @@ $opTableCornerRadius: 4px;
   border-top: solid 1px $gray;
 }
 
+.op-just-border-bottom {
+  border: none;
+  border-bottom: solid 1px $gray !important;
+}
+
 .op-border-bottom {
   border-bottom: solid 1px $gray;
 }
