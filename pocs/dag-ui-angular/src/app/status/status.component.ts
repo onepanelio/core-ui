@@ -23,6 +23,8 @@ export class StatusComponent implements OnInit {
         'running': StatusComponent.runningBlueImageSource,
         'Failed': StatusComponent.failedImageSource,
         'failed': StatusComponent.failedImageSource,
+        'Error': StatusComponent.failedImageSource,
+        'error': StatusComponent.failedImageSource,
     };
 
     static statusPhraseMap = {
@@ -34,6 +36,8 @@ export class StatusComponent implements OnInit {
         'running': 'Running',
         'Failed': 'Failed',
         'failed': 'Failed',
+        'Error': 'Error',
+        'error': 'Error',
     };
 
     private _status: string;

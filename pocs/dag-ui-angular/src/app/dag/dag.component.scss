@@ -98,6 +98,11 @@
   fill: $danger-light;
 }
 
+/deep/ .node.error rect {
+  stroke: $danger;
+  fill: $danger-light;
+}
+
 /deep/ .node.pending .phase {
   background-color: orange;
 }
