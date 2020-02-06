@@ -23,6 +23,8 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   outputs = [];
 
   parametersExpanded = false;
+  containersExpanded = false;
+  artifactsExpanded = false;
 
   constructor() { }
 
@@ -75,5 +77,13 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
   onParametersExpandChange(expanded: boolean) {
     this.parametersExpanded = expanded;
+  }
+
+  onContainersExpandChange(expanded: boolean) {
+    this.containersExpanded = expanded;
+  }
+
+  onArtifactsExpandChange(expanded: boolean) {
+    this.artifactsExpanded = expanded;
   }
 }

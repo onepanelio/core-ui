@@ -63,7 +63,28 @@
         <app-parameter *ngFor="let parameter of outputs" [parameter]="parameter">
         </app-parameter>
       </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel class="op-expansion-panel" hideToggle="true" (expandedChange)="onContainersExpandChange($event)">
+      <mat-expansion-panel-header>
+        <mat-panel-title class="font-size-larger font-primary justify-content-between align-items-center">
+          Containers
+          <mat-icon *ngIf="!containersExpanded">{{'keyboard_arrow_down'}}</mat-icon>
+          <mat-icon *ngIf="containersExpanded">{{'keyboard_arrow_up'}}</mat-icon>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
 
+     <div>Placeholder</div>
+    </mat-expansion-panel>
+    <mat-expansion-panel class="op-expansion-panel" hideToggle="true" (expandedChange)="onArtifactsExpandChange($event)">
+      <mat-expansion-panel-header>
+        <mat-panel-title class="font-size-larger font-primary justify-content-between align-items-center">
+          Artifacts
+          <mat-icon *ngIf="!artifactsExpanded">{{'keyboard_arrow_down'}}</mat-icon>
+          <mat-icon *ngIf="artifactsExpanded">{{'keyboard_arrow_up'}}</mat-icon>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div>Placeholder</div>
     </mat-expansion-panel>
   </div>
 </div>
