@@ -23,6 +23,7 @@ export interface NodeStatus {
   type: string;
   templateName: string;
   phase: string;
+  message: string;
   boundaryID: string;
   startedAt: string;
   finishedAt: string;
