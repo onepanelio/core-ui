@@ -27,17 +27,17 @@ export class NamespaceSelectComponent implements OnInit {
                     this.snackbar.open(`Unable to get activate namespace from API. Resorting to 'default'.`, 'OK');
                 }
 
-                this.namespaceService.activateNamespace = newNamespace;
-                this.onNamespaceSelected(this.namespaceService.activateNamespace);
+                this.namespaceService.activeNamespace = newNamespace;
+                this.onNamespaceSelected(this.namespaceService.activeNamespace);
             }, (err: HttpErrorResponse) => {
                 let errorMessage = 'Unable to get activate namespace from API.';
                 if (err.status === 0) {
                     errorMessage = 'Unable to connect to API. Is it running?'
                 }
 
-                this.snackbar.open(`${errorMessage} Resorting to '${newNamespace}'.`, 'OK');
-                this.namespaceService.activateNamespace = newNamespace;
-                this.onNamespaceSelected(this.namespaceService.activateNamespace);
+                this.snackbar.open(`${errorMessage} Resorting to namespace '${newNamespace}'.`, 'OK');
+                this.namespaceService.activeNamespace = newNamespace;
+                this.onNamespaceSelected(this.namespaceService.activeNamespace);
             });
     }
 

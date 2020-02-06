@@ -12,7 +12,7 @@ export class NamespaceService {
     private baseUrl = 'http://localhost:8888';
     private baseRPCUrl = 'localhost:8888';
 
-    activateNamespace: string = 'default';
+    activeNamespace: string = 'default';
 
     constructor(private client: HttpClient) {
     }
