@@ -2,6 +2,17 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+export interface ContainerDefinition {
+  image: string;
+  command: Array<string>;
+  args: Array<string>;
+}
+
+export interface TemplateDefinition {
+  name: string;
+  container?: ContainerDefinition;
+}
+
 export interface WorkflowTemplateBase {
   uid: string;
   createdAt: string;

@@ -43,14 +43,14 @@
     </table>
     <table class="w-100" *ngIf="node && node.message">
       <thead>
-      <tr class="text-left">
-        <th>Message</th>
-      </tr>
+        <tr class="text-left">
+          <th>Message</th>
+        </tr>
       </thead>
       <tbody>
-      <tr>
-        <td class="w-100">{{node.message}}</td>
-      </tr>
+        <tr>
+          <td class="w-100">{{node.message}}</td>
+        </tr>
       </tbody>
     </table>
     <mat-expansion-panel class="op-expansion-panel mt-5" hideToggle="true" (expandedChange)="onParametersExpandChange($event)">
@@ -85,7 +85,24 @@
         </mat-panel-title>
       </mat-expansion-panel-header>
 
-     <div>Placeholder</div>
+      <div *ngIf="template">
+        <div>
+          <div class="font-weight-bold">Name</div>
+          <div class="w-50">{{template.name}}</div>
+        </div>
+        <div class="mt-2">
+          <div class="font-weight-bold w-50">Image</div>
+          <div class="w-50">{{template.container?.image}}</div>
+        </div>
+        <div class="mt-2">
+          <div class="font-weight-bold w-50">Command</div>
+          <div class="w-50">{{template.container?.command.join(" ")}}</div>
+        </div>
+        <div class="mt-2">
+          <div class="font-weight-bold w-50">Args</div>
+          <div class="w-50">{{template.container?.args.join(" ")}}</div>
+        </div>
+      </div>
     </mat-expansion-panel>
     <mat-expansion-panel class="op-expansion-panel" hideToggle="true" (expandedChange)="onArtifactsExpandChange($event)">
       <mat-expansion-panel-header>

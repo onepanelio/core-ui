@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { NodeInfo, NodeStatus } from '../node/node.service';
 import { SimpleWorkflowDetail, } from "../workflow/workflow.service";
+import * as yaml from 'js-yaml';
+import { TemplateDefinition } from "../workflow-template/workflow-template.service";
 
 @Component({
   selector: 'app-node-info',
@@ -26,6 +28,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   parametersExpanded = false;
   containersExpanded = false;
   artifactsExpanded = false;
+  template: TemplateDefinition;
 
   constructor() { }
 
@@ -70,6 +73,19 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
       this.outputs = node.outputs.parameters;
     } else {
       this.outputs = [];
+    }
+
+
+    try {
+      const manifest = this.workflow.workflowTemplate.manifest;
+      const loaded = yaml.safeLoad(manifest);
+      for (let template of loaded.spec.templates) {
+        if (template.name === node.templateName) {
+          this.template = template;
+        }
+      }
+    } catch (e) {
+      this.template = null;
     }
   }
 
