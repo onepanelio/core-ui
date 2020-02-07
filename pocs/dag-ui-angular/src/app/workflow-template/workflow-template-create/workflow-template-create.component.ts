@@ -12,7 +12,10 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Alert } from "../../alert/alert.component";
 import { HttpErrorResponse } from "@angular/common/http";
+import { AceEditorComponent } from "ng2-ace-editor";
 import * as yaml from 'js-yaml';
+import * as ace from 'brace';
+const aceRange = ace.acequire('ace/range').Range;
 
 @Component({
   selector: 'app-workflow-template-create',
@@ -21,6 +24,7 @@ import * as yaml from 'js-yaml';
   providers: [WorkflowService, WorkflowTemplateService]
 })
 export class WorkflowTemplateCreateComponent implements OnInit {
+  @ViewChild(AceEditorComponent, {static:false}) codeEditor: AceEditorComponent;
   @ViewChild(DagComponent, {static: false}) dag: DagComponent;
 
   manifestText: string;
@@ -32,6 +36,8 @@ export class WorkflowTemplateCreateComponent implements OnInit {
 
   templateNameInput: AbstractControl;
   form: FormGroup;
+
+  private errorMarkerId;
 
   private workflowTemplateDetail: WorkflowTemplateDetail;
 
@@ -95,6 +101,10 @@ export class WorkflowTemplateCreateComponent implements OnInit {
       return;
     }
 
+    if(this.errorMarkerId) {
+      this.codeEditor.getEditor().session.removeMarker(this.errorMarkerId)
+    }
+
     try {
       const g = NodeRenderer.createGraphFromManifest(newManifest);
       this.dag.display(g);
@@ -103,11 +113,14 @@ export class WorkflowTemplateCreateComponent implements OnInit {
       });
     } catch (e) {
       if(e instanceof yaml.YAMLException) {
-        const line = e.mark.line;
-        const column = e.mark.column;
+        const line = e.mark.line + 1;
+        const column = e.mark.column + 1;
+
+        const codeErrorRange = new aceRange(line - 1, 0, line - 1, column);
+        this.errorMarkerId = this.codeEditor.getEditor().session.addMarker(codeErrorRange, "highlight-error", "fullLine");
 
         this.serverError = {
-          message: e.reason + " at line: " + (line + 1) + " column: " + (column + 1),
+          message: e.reason + " at line: " + line + " column: " + column,
           type: 'danger'
         };
       }

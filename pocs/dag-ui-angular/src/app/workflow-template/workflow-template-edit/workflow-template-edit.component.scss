@@ -25,3 +25,9 @@
 app-workflow-template-select {
   flex-basis: 240px;
 }
+
+/deep/ .highlight-error {
+  position:absolute;
+  background: #d32345AA;
+  z-index:20
+}

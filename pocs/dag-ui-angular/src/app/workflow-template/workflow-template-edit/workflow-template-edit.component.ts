@@ -7,8 +7,10 @@ import { CreateWorkflow, WorkflowService } from '../../workflow/workflow.service
 import { MatSnackBar } from '@angular/material';
 import { HttpErrorResponse } from "@angular/common/http";
 import { Alert } from "../../alert/alert.component";
+import { AceEditorComponent } from "ng2-ace-editor";
 import * as yaml from 'js-yaml';
-import { AceEditorComponent, AceEditorModule } from "ng2-ace-editor";
+import * as ace from 'brace';
+const aceRange = ace.acequire('ace/range').Range;
 
 @Component({
   selector: 'app-workflow-template-edit',
@@ -28,6 +30,7 @@ export class WorkflowTemplateEditComponent implements OnInit {
   uid: string;
 
   private workflowTemplateDetail: WorkflowTemplateDetail;
+  private errorMarkerId;
 
   get workflowTemplate(): WorkflowTemplateDetail {
     return this.workflowTemplateDetail;
@@ -97,6 +100,10 @@ export class WorkflowTemplateEditComponent implements OnInit {
       return;
     }
 
+    if(this.errorMarkerId) {
+      this.aceEditor.getEditor().session.removeMarker(this.errorMarkerId)
+    }
+
     try {
       const g = NodeRenderer.createGraphFromManifest(newManifest);
       this.dag.display(g);
@@ -106,11 +113,14 @@ export class WorkflowTemplateEditComponent implements OnInit {
     }
     catch (e) {
       if(e instanceof yaml.YAMLException) {
-          const line = e.mark.line;
-          const column = e.mark.column;
+          const line = e.mark.line + 1;
+          const column = e.mark.column + 1;
+
+          const codeErrorRange = new aceRange(line - 1, 0, line - 1, column);
+          this.errorMarkerId = this.aceEditor.getEditor().session.addMarker(codeErrorRange, "highlight-error", "fullLine");
 
           this.serverError = {
-              message: e.reason + " at line: " + (line + 1) + " column: " + (column + 1),
+              message: e.reason + " at line: " + line + " column: " + column,
               type: 'danger'
           };
       }
