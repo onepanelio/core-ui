@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { NodeInfo, NodeStatus } from '../node/node.service';
-import { SimpleWorkflowDetail, } from "../workflow/workflow.service";
+import { SimpleWorkflowDetail, WorkflowPhase, } from "../workflow/workflow.service";
 import * as yaml from 'js-yaml';
 import { TemplateDefinition } from "../workflow-template/workflow-template.service";
 
@@ -19,7 +19,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
   startedAt = null;
   finishedAt = null;
-  status: string;
+  status: WorkflowPhase;
   message: string;
   logsAvailable: boolean = false;
   statusClass = {};

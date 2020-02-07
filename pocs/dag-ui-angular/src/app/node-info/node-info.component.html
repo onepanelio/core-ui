@@ -6,7 +6,7 @@
       </button>
     </div>
     <div class="d-flex flex-column">
-      <app-status *ngIf="status" class="font-roboto-bold font-size-large line-height-large" [ngClass]="statusClass" [status]="status">
+      <app-status *ngIf="status" class="font-roboto-bold font-size-large line-height-large" [ngClass]="statusClass" [phase]="status">
       </app-status>
       <app-clock *ngIf="startedAt"
                  class="font-size-large font-roboto font-black"

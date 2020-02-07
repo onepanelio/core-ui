@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { WorkflowPhase } from "../workflow/workflow.service";
 
 @Component({
     selector: 'app-status',
@@ -14,37 +15,27 @@ export class StatusComponent implements OnInit {
     static stoppedImageSource = '/assets/images/status-icons/stopped.svg';
     static notRunImageSource = '/assets/images/status-icons/notrun.svg';
 
-    static statusMap = {
-        'Succeeded': StatusComponent.completeImageSource,
-        'succeeded': StatusComponent.completeImageSource,
-        'Pending': StatusComponent.notRunImageSource,
-        'pending': StatusComponent.notRunImageSource,
-        'Running': StatusComponent.runningBlueImageSource,
-        'running': StatusComponent.runningBlueImageSource,
-        'Failed': StatusComponent.failedImageSource,
-        'failed': StatusComponent.failedImageSource,
-        'Error': StatusComponent.failedImageSource,
-        'error': StatusComponent.failedImageSource,
-    };
+    static statusMap = new Map<WorkflowPhase, string>([
+        ['Succeeded', StatusComponent.completeImageSource],
+        ['Pending', StatusComponent.notRunImageSource],
+        ['Running', StatusComponent.runningBlueImageSource],
+        ['Failed', StatusComponent.failedImageSource],
+        ['Error', StatusComponent.failedImageSource],
+    ]);
 
-    static statusPhraseMap = {
-        'Succeeded': 'Completed',
-        'succeeded': 'Completed',
-        'Pending': 'Pending',
-        'pending': 'Pending',
-        'Running': 'Running',
-        'running': 'Running',
-        'Failed': 'Failed',
-        'failed': 'Failed',
-        'Error': 'Error',
-        'error': 'Error',
-    };
+    static statusPhraseMap = new Map<WorkflowPhase, string>([
+        ['Succeeded', 'Completed'],
+        ['Pending', 'Pending'],
+        ['Running', 'Running'],
+        ['Failed', 'Failed'],
+        ['Error', 'Error'],
+    ]);
 
     private _status: string;
 
-    @Input() set status(value: string) {
-        this._status = StatusComponent.statusPhraseMap[value];
-        let imageSource = StatusComponent.statusMap[value];
+    @Input() set phase(value: WorkflowPhase) {
+        this._status = StatusComponent.statusPhraseMap.get(value);
+        let imageSource = StatusComponent.statusMap.get(value);
 
         if (!imageSource) {
             imageSource = StatusComponent.notRunImageSource;

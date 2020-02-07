@@ -3,7 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 import { SimpleWorkflowDetail, WorkflowService } from './workflow.service';
 import { NodeRenderer, NodeStatus } from '../node/node.service';
 import { DagClickEvent, DagComponent } from '../dag/dag.component';
-import { WorkflowTemplateDetail } from '../workflow-template/workflow-template.service';
 import { NodeInfoComponent } from "../node-info/node-info.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
 
@@ -40,11 +39,10 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   namespace: string;
   name: string;
   workflow: SimpleWorkflowDetail;
-  workflowTemplate: WorkflowTemplateDetail;
 
   socket: WebSocket;
 
-  nodeInfo?: NodeStatus = null;
+  nodeInfo?: NodeStatus;
   height = '1000px'; // Dummy large value.
   nodeInfoHeight = '1000px'; // Dummy large value.
   nodeInfoTop = '0'; //Dummy initial value
@@ -52,15 +50,6 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   showNodeInfo = false;
   selectedNodeId = null;
   showLogs = false;
-
-  get workflowRunning(): boolean {
-    if (!this.workflow) {
-      return false;
-    }
-
-    const phase = this.workflow.getWorkflowStatus().phase;
-    return phase === 'Running' || phase === 'Pending';
-  }
 
   get dagIdentifier() {
     return {
@@ -88,8 +77,6 @@ export class WorkflowComponent implements OnInit, OnDestroy {
           this.socket = this.workflowService.watchWorkflow(this.namespace, this.name);
           this.socket.onmessage = (event) => {this.onSocketMessage(event)};
           this.socket.onclose = (event) => {};
-
-          this.workflowTemplate = res.workflowTemplate;
         }, err => {
 
         });
@@ -118,7 +105,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     }
 
     this.workflow.updateWorkflowStatus(data.result.status);
-    const status = this.workflow.getWorkflowStatus();
+    const status = this.workflow.workflowStatus;
 
     // It is possible there is no node data yet. In which case, we can't display a dag.
     if(!status || !status.nodes) {
@@ -138,13 +125,13 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   }
 
   handleNodeClicked(event: DagClickEvent) {
-    const status = this.workflow.getWorkflowStatus();
-    if(!status) {
+    const newNodeInfo = this.workflow.getNodeStatus(event.nodeId);
+    if(!newNodeInfo) {
       return;
     }
 
+    this.nodeInfo = newNodeInfo;
     this.showNodeInfo = true;
-    this.nodeInfo = status.nodes[event.nodeId];
 
     if(this._nodeInfoElement) {
       this._nodeInfoElement.updateNodeStatus(this.nodeInfo);

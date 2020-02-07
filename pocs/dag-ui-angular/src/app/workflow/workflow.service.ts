@@ -12,8 +12,11 @@ export interface Workflow {
   status?: string;
 }
 
+// https://github.com/argoproj/argo/issues/1849#issuecomment-565640866
+export type WorkflowPhase = 'Pending' | 'Running' | 'Succeeded' | 'Skipped' | 'Failed' | 'Error';
+
 export interface WorkflowStatus {
-  phase: string;
+  phase: WorkflowPhase;
   startedAt: string;
   finishedAt: string;
   nodes: {string: NodeStatus};
@@ -35,6 +38,11 @@ export interface CreateWorkflow {
 }
 
 export class SimpleWorkflowDetail implements WorkflowDetail{
+  static activePhases = {
+    'Pending': true,
+    'Running': true
+  };
+
   private parsedWorkflowStatus: WorkflowStatus|null = null;
 
   uid: string;
@@ -49,22 +57,53 @@ export class SimpleWorkflowDetail implements WorkflowDetail{
     this.name = workflowDetail.name;
     this.status = workflowDetail.status;
     this.workflowTemplate = workflowDetail.workflowTemplate;
+
+    if(this.status) {
+      this.updateWorkflowStatus(this.status);
+    }
   }
 
-  getWorkflowStatus(): WorkflowStatus|null {
-    if(!this.status) {
+  get workflowStatus(): WorkflowStatus|null {
+    return this.parsedWorkflowStatus;
+  }
+
+  get phase(): WorkflowPhase|null {
+    if(!this.parsedWorkflowStatus) {
       return null;
     }
 
-    if (!this.parsedWorkflowStatus) {
-      this.parsedWorkflowStatus = JSON.parse(this.status);
+    return this.parsedWorkflowStatus.phase;
+  }
+
+  get active(): boolean {
+    const phase = this.phase;
+    if(!phase) {
+      return false;
     }
 
-    return this.parsedWorkflowStatus;
+    return SimpleWorkflowDetail.activePhases[phase];
+  }
+
+  get succeeded(): boolean {
+    const phase = this.phase;
+    if(!phase) {
+      return false;
+    }
+
+    return this.phase === 'Succeeded';
   }
 
   updateWorkflowStatus(status: string) {
     this.parsedWorkflowStatus = JSON.parse(status);
+  }
+
+  getNodeStatus(nodeId: string): NodeStatus|null {
+    const status = this.workflowStatus;
+    if(!status) {
+      return null;
+    }
+
+    return status.nodes[nodeId];
   }
 }
 

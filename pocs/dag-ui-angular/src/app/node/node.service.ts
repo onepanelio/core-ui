@@ -1,5 +1,6 @@
 import * as dagre from 'dagre';
 import * as yaml from 'js-yaml';
+import { WorkflowPhase } from "../workflow/workflow.service";
 
 export type NodeType = 'Pod' | 'Resource' | 'DAG' | 'Unknown';
 
@@ -22,7 +23,7 @@ export interface NodeStatus {
   displayName: string;
   type: string;
   templateName: string;
-  phase: string;
+  phase: WorkflowPhase;
   message: string;
   boundaryID: string;
   startedAt: string;
