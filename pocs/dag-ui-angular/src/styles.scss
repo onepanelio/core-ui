@@ -454,3 +454,16 @@ $opTableCornerRadius: 4px;
 .cancel-button {
   text-transform: uppercase !important;
 }
+
+.mat-form-white-outline {
+  &.mat-form-field-appearance-outline {
+    .mat-form-field-outline {
+      color: white;
+    }
+
+    &.mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+      color: white;
+    }
+  }
+}
+

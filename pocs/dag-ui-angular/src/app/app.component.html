@@ -1,6 +1,6 @@
-<mat-toolbar color="primary" class="justify-content-between">
+<mat-toolbar color="primary" class="justify-content-between app-toolbar">
   <a style="height: 32px;" [routerLink]="['/']"><img src="/assets/images/onepanel-logo-white.svg"/></a>
-  <mat-form-field appearance="outline" class="font-size-small">
+  <mat-form-field appearance="outline" class="font-size-small mat-form-white-outline">
     <mat-label>Namespace</mat-label>
     <mat-select [(value)]="selectedNamespace" (valueChange)="onNamespaceChange()">
       <mat-option *ngFor="let namespace of namespaces" [value]="namespace.name">{{namespace.name}}</mat-option>
