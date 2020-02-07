@@ -50,6 +50,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   showNodeInfo = false;
   selectedNodeId = null;
   showLogs = false;
+  showYaml = false;
 
   get dagIdentifier() {
     return {
@@ -152,6 +153,14 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     });
   }
 
+  onYamlClicked() {
+    if(!this.workflow) {
+      return;
+    }
+
+    this.showYaml = true;
+  }
+
   onLogsClicked() {
     if(!this.nodeInfo) {
       return;
@@ -176,5 +185,9 @@ export class WorkflowComponent implements OnInit, OnDestroy {
         }, err => {
           this.snackbar.open('Unable to stop workflow', 'OK');
         })
+  }
+
+  onYamlClose() {
+    this.showYaml = false;
   }
 }

@@ -50,6 +50,7 @@
        [style.top]="nodeInfoTop"
        [workflow]="workflow"
        (closeClicked)="onNodeInfoClosed()"
+       (yamlClicked)="onYamlClicked()"
        (logsClicked)="onLogsClicked()">
     </app-node-info>
   </div>
@@ -64,4 +65,29 @@
     [nodeInfo]="nodeInfo"
     (closeClicked)="onLogsClosed()">
   </app-logs>
+
+  <div *ngIf="workflow && showYaml" class="yaml-root">
+    <div class="d-flex align-items-center toolbar font-roboto">
+      <div class="title font-white">
+        <strong>YAML: </strong>
+        <span class="node-name">{{workflow.name}}</span>
+      </div>
+      <div class="flex-grow-1"></div>
+      <button mat-icon-button class="close-button font-white" aria-label="close icon" (click)="onYamlClose()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <ace-editor
+        class="w-100 h-100"
+        [mode]="'yaml'"
+        [readOnly]="true"
+        [text]="workflow.workflowTemplate.manifest"
+        [options]="{
+                    showInvisibles: false,
+                    showPrintMargin: false,
+                    scrollPastEnd: 1,
+                    showLineNumbers: true
+                  }"
+    ></ace-editor>
+  </div>
 </div>

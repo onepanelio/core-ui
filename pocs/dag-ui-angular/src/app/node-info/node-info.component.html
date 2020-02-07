@@ -21,7 +21,7 @@
       </div>
       <div>
         <hr class="divider border-top border-primary-lighter"/>
-        <button mat-button color="primary" class="w-50 font-size-regular">YAML</button>
+        <button mat-button color="primary" class="w-50 font-size-regular" (click)="openYaml()" >YAML</button>
         <button *ngIf="logsAvailable" mat-button color="primary" class="w-50 font-size-regular" (click)="openLogs()">LOGS</button>
       </div>
     </div>

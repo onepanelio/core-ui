@@ -12,6 +12,7 @@ import { TemplateDefinition } from "../workflow-template/workflow-template.servi
 export class NodeInfoComponent implements OnInit, OnDestroy {
   @Input() visible = true;
   @Input() workflow: SimpleWorkflowDetail;
+  @Output() yamlClicked = new EventEmitter();
   @Output() closeClicked = new EventEmitter();
   @Output() logsClicked = new EventEmitter();
 
@@ -92,6 +93,10 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
   onCloseClick() {
     this.closeClicked.emit();
+  }
+
+  openYaml() {
+    this.yamlClicked.emit();
   }
 
   openLogs() {
