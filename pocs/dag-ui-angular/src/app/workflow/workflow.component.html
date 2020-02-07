@@ -11,16 +11,21 @@
     </div>
   </div>
 
-
   <div class="page-body">
     <app-activity-bar *ngIf="workflow" [status]="workflow.getWorkflowStatus().phase" class="mt-4">
-      <app-status *ngIf="workflow" class="font-roboto-bold font-weight-bold" [status]="workflow.getWorkflowStatus().phase"></app-status>
-      <span *ngIf="workflow && workflow.getWorkflowStatus().phase === 'Succeeded'" class="ml-1"> in </span>
-      <app-clock *ngIf="workflow"
-                 class="ml-1"
-                 [startedAt]="workflow.getWorkflowStatus().startedAt"
-                 [finishedAt]="workflow.getWorkflowStatus().finishedAt">
-      </app-clock>
+      <div class="d-inline-flex align-items-center">
+        <app-status *ngIf="workflow" class="font-roboto-bold font-weight-bold" [status]="workflow.getWorkflowStatus().phase"></app-status>
+        <span *ngIf="workflow && workflow.getWorkflowStatus().phase === 'Succeeded'" class="ml-1"> in </span>
+        <app-clock *ngIf="workflow"
+                   class="ml-1"
+                   [startedAt]="workflow.getWorkflowStatus().startedAt"
+                   [finishedAt]="workflow.getWorkflowStatus().finishedAt">
+        </app-clock>
+      </div>
+
+      <div>
+        <button *ngIf="workflowRunning" mat-button color="primary" class="font-size-regular" (click)="onTerminate()">Terminate</button>
+      </div>
     </app-activity-bar>
 
     <div id="info-box" class="op-info-box mt-4">
@@ -59,5 +64,4 @@
     [nodeInfo]="nodeInfo"
     (closeClicked)="onLogsClosed()">
   </app-logs>
-
 </div>

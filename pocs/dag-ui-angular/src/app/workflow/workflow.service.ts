@@ -107,4 +107,10 @@ export class WorkflowService {
     const url = `${this.baseUrl}/apis/v1beta1/${namespace}/workflows`;
     return this.client.post<any>(url, request);
   }
+
+  terminateWorkflow(namespace: string, name: string) {
+    const url = `${this.baseUrl}/apis/v1beta1/${namespace}/workflows/${name}/terminate`;
+
+    return this.client.put(url, {});
+  }
 }

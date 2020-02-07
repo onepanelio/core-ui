@@ -5,6 +5,7 @@ import { NodeRenderer, NodeStatus } from '../node/node.service';
 import { DagClickEvent, DagComponent } from '../dag/dag.component';
 import { WorkflowTemplateDetail } from '../workflow-template/workflow-template.service';
 import { NodeInfoComponent } from "../node-info/node-info.component";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-workflow',
@@ -52,6 +53,15 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   selectedNodeId = null;
   showLogs = false;
 
+  get workflowRunning(): boolean {
+    if (!this.workflow) {
+      return false;
+    }
+
+    const phase = this.workflow.getWorkflowStatus().phase;
+    return phase === 'Running' || phase === 'Pending';
+  }
+
   get dagIdentifier() {
     return {
       type: 'workflow',
@@ -63,6 +73,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   constructor(
     private activatedRoute: ActivatedRoute,
     private workflowService: WorkflowService,
+    private snackbar: MatSnackBar
   ) {
   }
 
@@ -169,5 +180,14 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   updateNodeInfoProperties() {
     this.nodeInfoHeight = (document.getElementById('info-box').offsetHeight - 2) + 'px';
     this.nodeInfoTop = (document.getElementById('info-box').offsetTop) + 'px';
+  }
+
+  onTerminate() {
+    this.workflowService.terminateWorkflow(this.namespace, this.workflow.name)
+        .subscribe(res => {
+          this.snackbar.open('Workflow stopped', 'OK');
+        }, err => {
+          this.snackbar.open('Unable to stop workflow', 'OK');
+        })
   }
 }
