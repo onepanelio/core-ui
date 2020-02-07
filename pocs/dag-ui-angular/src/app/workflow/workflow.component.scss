@@ -15,9 +15,10 @@ text {
 
 app-node-info {
   width: 420px;
-  position: absolute;
+  position: fixed;
   right: 0;
   top: 0;
+  height: 100vh;
 
   /deep/ .root-element {
     height: 100%;
@@ -27,9 +28,10 @@ app-node-info {
 
 app-logs {
   width: 60vw;
-  position: absolute;
+  position: fixed;
   right: 0;
   top: 0;
+  height: 100vh;
   overflow: scroll;
 }
 
@@ -41,7 +43,6 @@ app-logs {
   height: 100vh;
 
   background-color: rgb(47, 49, 41);
-  height: 100%;
 
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
@@ -54,5 +55,9 @@ app-logs {
     strong {
       font-weight: bold;
     }
+  }
+
+  .highlight {
+    background-color: red;
   }
 }

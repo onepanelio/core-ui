@@ -45,9 +45,6 @@
        class="ml-3 op-border scroll-overflow"
        [ngClass]="{ 'visible': showNodeInfo, 'hidden': !showNodeInfo }"
        [visible]="showNodeInfo"
-       [style.height]="nodeInfoHeight"
-       [style.minHeight]="nodeInfoHeight"
-       [style.top]="nodeInfoTop"
        [workflow]="workflow"
        (closeClicked)="onNodeInfoClosed()"
        (yamlClicked)="onYamlClicked()"
@@ -56,9 +53,6 @@
   </div>
   <app-logs
     *ngIf="showLogs && nodeInfo"
-    [style.height]="nodeInfoHeight"
-    [style.minHeight]="nodeInfoHeight"
-    [style.top]="nodeInfoTop"
     [namespace]="namespace"
     [workflowName]="workflow.name"
     [podId]="nodeInfo.id"
@@ -78,6 +72,7 @@
       </button>
     </div>
     <ace-editor
+        #yamlEditor
         class="w-100 h-100"
         [mode]="'yaml'"
         [readOnly]="true"
