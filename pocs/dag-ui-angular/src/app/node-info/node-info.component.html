@@ -1,4 +1,4 @@
-<div class="root-element bg-white">
+<div class="root-element bg-white" [class.invisible-node-info]="!visible">
   <div class="bg-primary-light summary-box">
     <div class="d-flex flex-row-reverse">
       <button mat-icon-button class="close-button" aria-label="close icon" (click)="onCloseClick()">
@@ -26,7 +26,7 @@
       </div>
     </div>
   </div>
-  <div class="additional-info-block font-roboto">
+  <div *ngIf="visible" class="additional-info-block font-roboto">
     <table class="w-100">
       <thead>
       <tr class="text-left">

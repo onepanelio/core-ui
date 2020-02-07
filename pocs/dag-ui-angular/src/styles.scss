@@ -245,11 +245,11 @@ $opTableCornerRadius: 4px;
 // Visibility
 
 .visible {
-  visibility: visible;
+  visibility: visible !important;
 }
 
 .hidden {
-  visibility: hidden;
+  visibility: hidden !important;
 }
 
 

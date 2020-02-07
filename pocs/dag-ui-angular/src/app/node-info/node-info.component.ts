@@ -10,6 +10,7 @@ import { TemplateDefinition } from "../workflow-template/workflow-template.servi
   styleUrls: ['./node-info.component.scss']
 })
 export class NodeInfoComponent implements OnInit, OnDestroy {
+  @Input() visible = true;
   @Input() workflow: SimpleWorkflowDetail;
   @Output() closeClicked = new EventEmitter();
   @Output() logsClicked = new EventEmitter();
