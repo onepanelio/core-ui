@@ -10,7 +10,16 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class WorkflowExecutionsListComponent implements OnInit {
     @Input() namespace: string;
-    @Input() workflows: Workflow[] = [];
+    @Input() set workflows(value: Workflow[]) {
+        this.orderedWorkflows = value.sort((a: Workflow, b: Workflow) => {
+           const aDate = new Date(a.createdAt);
+           const bDate = new Date(b.createdAt);
+
+           return bDate.getTime() - aDate.getTime();
+        });
+    }
+
+    orderedWorkflows: Workflow[] = [];
 
     constructor(
         private activatedRoute: ActivatedRoute,

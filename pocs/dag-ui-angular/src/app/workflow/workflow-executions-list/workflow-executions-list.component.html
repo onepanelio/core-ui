@@ -1,5 +1,5 @@
 <div class="workflow-executions-list">
-    <div *ngFor="let workflow of workflows" class="d-flex justify-content-between align-items-baseline workflow-execution-item op-border">
+    <div *ngFor="let workflow of orderedWorkflows" class="d-flex justify-content-between align-items-baseline workflow-execution-item op-border">
         <div class="d-inline-flex">
             <div class="font-size-regular name"><a [routerLink]="['/', this.namespace, 'workflows', workflow.name]">{{workflow.name}}</a></div>
             <app-date class="ml-3" [dateTime]="workflow.createdAt"></app-date>
