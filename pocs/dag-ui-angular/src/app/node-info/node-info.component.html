@@ -88,19 +88,19 @@
       <div *ngIf="template">
         <div>
           <div class="font-weight-bold">Name</div>
-          <div class="w-50">{{template.name}}</div>
+          <div>{{template.name}}</div>
         </div>
         <div class="mt-2">
           <div class="font-weight-bold w-50">Image</div>
-          <div class="w-50">{{template.container?.image}}</div>
+          <div>{{template.container?.image}}</div>
         </div>
         <div class="mt-2">
           <div class="font-weight-bold w-50">Command</div>
-          <div class="w-50">{{template.container?.command.join(" ")}}</div>
+          <div>{{template.container?.command.join(" ")}}</div>
         </div>
         <div class="mt-2">
           <div class="font-weight-bold w-50">Args</div>
-          <div class="w-50">{{template.container?.args.join(" ")}}</div>
+          <div>{{template.container?.args.join(" ")}}</div>
         </div>
       </div>
     </mat-expansion-panel>
