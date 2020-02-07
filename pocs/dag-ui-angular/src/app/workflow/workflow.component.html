@@ -45,6 +45,9 @@
        class="ml-3 op-border scroll-overflow"
        [ngClass]="{ 'visible': showNodeInfo, 'hidden': !showNodeInfo }"
        [visible]="showNodeInfo"
+       [style.height]="nodeInfoHeight"
+       [style.minHeight]="nodeInfoHeight"
+       [style.top]="nodeInfoTop"
        [workflow]="workflow"
        (closeClicked)="onNodeInfoClosed()"
        (yamlClicked)="onYamlClicked()"
@@ -59,8 +62,7 @@
     [nodeInfo]="nodeInfo"
     (closeClicked)="onLogsClosed()">
   </app-logs>
-
-  <div *ngIf="workflow && showYaml" class="yaml-root">
+  <div [ngClass]="{ 'visible': showYaml, 'hidden': !showYaml }" class="yaml-root">
     <div class="d-flex align-items-center toolbar font-roboto">
       <div class="title font-white">
         <strong>YAML: </strong>
@@ -76,7 +78,7 @@
         class="w-100 h-100"
         [mode]="'yaml'"
         [readOnly]="true"
-        [text]="workflow.workflowTemplate.manifest"
+        [text]="workflow?.workflowTemplate.manifest"
         [options]="{
                     showInvisibles: false,
                     showPrintMargin: false,

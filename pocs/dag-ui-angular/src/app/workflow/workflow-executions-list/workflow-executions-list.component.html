@@ -1,6 +1,9 @@
 <div class="workflow-executions-list">
     <div *ngFor="let workflow of workflows" class="d-flex justify-content-between align-items-baseline workflow-execution-item op-border">
-        <div class="font-size-regular name"><a [routerLink]="['/', this.namespace, 'workflows', workflow.name]">{{workflow.name}}</a></div>
+        <div class="d-inline-flex">
+            <div class="font-size-regular name"><a [routerLink]="['/', this.namespace, 'workflows', workflow.name]">{{workflow.name}}</a></div>
+            <app-date class="ml-3" [dateTime]="workflow.createdAt"></app-date>
+        </div>
         <div></div>
         <div><a [routerLink]="['/', this.namespace, 'workflows', workflow.name]" class="link-button">View</a></div>
     </div>
