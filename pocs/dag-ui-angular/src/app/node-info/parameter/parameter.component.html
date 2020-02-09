@@ -1,4 +1,4 @@
-<div *ngFor="let item of items" class="font-roboto" [ngClass]="getItemDepthClass(item.depth)">
+<div *ngFor="let item of items" class="font-roboto mt-2" [ngClass]="getItemDepthClass(item.depth)">
     <div class="key font-weight-bold">{{item.key}}</div>
     <div *ngIf="item.value" class="value">{{item.value}}</div>
 </div>
