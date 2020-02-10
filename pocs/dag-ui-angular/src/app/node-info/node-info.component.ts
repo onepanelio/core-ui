@@ -41,6 +41,8 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   }
 
   updateNodeStatus(node: NodeStatus) {
+    let loaded = null;
+
     this.node = node;
 
     if(node.startedAt) {
@@ -52,7 +54,12 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
     if(node.finishedAt) {
       this.finishedAt = new Date(node.finishedAt);
     } else {
-      this.finishedAt = node.finishedAt;
+      // Error phase has no finished date
+      if (node.phase === 'Error') {
+        this.finishedAt = node.startedAt;
+      } else {
+        this.finishedAt = node.finishedAt;
+      }
     }
 
     this.status = node.phase;
@@ -65,22 +72,9 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
     this.logsAvailable = node.type === 'Pod';
 
-    if (node.inputs && node.inputs.parameters) {
-      this.inputs = node.inputs.parameters;
-    } else {
-      this.inputs = [];
-    }
-
-    if (node.outputs && node.outputs.parameters) {
-      this.outputs = node.outputs.parameters;
-    } else {
-      this.outputs = [];
-    }
-
-
     try {
       const manifest = this.workflow.workflowTemplate.manifest;
-      const loaded = yaml.safeLoad(manifest);
+      loaded = yaml.safeLoad(manifest);
       for (let template of loaded.spec.templates) {
         if (template.name === node.templateName) {
           this.template = template;
@@ -88,6 +82,22 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
       }
     } catch (e) {
       this.template = null;
+    }
+
+    if ((node.type === 'DAG' || node.type === 'Steps') 
+      && node.templateName === loaded.spec.entrypoint
+      && loaded && loaded.spec.arguments.parameters) {
+      this.inputs = loaded.spec.arguments.parameters;
+    } else if (node.type == 'Pod' && node.inputs && node.inputs.parameters) {
+      this.inputs = node.inputs.parameters;
+    } else {
+      this.inputs = [];
+    }
+
+    if (node.type !== 'DAG' && node.type !== 'Steps' && node.outputs && node.outputs.parameters) {
+      this.outputs = node.outputs.parameters;
+    } else {
+      this.outputs = [];
     }
   }
 

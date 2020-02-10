@@ -13,10 +13,10 @@
                  [startedAt]="startedAt"
                  [finishedAt]="finishedAt">
       </app-clock>
-      <div *ngIf="startedAt" class="font-size-small font-medium-gray font-roboto-bold">
+      <div *ngIf="startedAt" class="font-size-small font-medium-gray font-roboto-bold mt-1">
         Started <app-date [dateTime]="startedAt"></app-date>
       </div>
-      <div *ngIf="finishedAt" class="font-size-small font-medium-gray font-roboto-bold">
+      <div *ngIf="finishedAt" class="font-size-small font-medium-gray font-roboto-bold mt-1">
         Finished <app-date [dateTime]="finishedAt"></app-date>
       </div>
       <div>
@@ -63,20 +63,18 @@
       </mat-expansion-panel-header>
 
       <div class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold">INPUTS</div>
-      <hr class="divider op-just-border-top border-gray"/>
       <div>
         <app-parameter *ngFor="let parameter of inputs" [parameter]="parameter">
         </app-parameter>
       </div>
 
-      <div class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold mt-5">OUTPUTS</div>
-      <hr class="divider op-just-border-top border-gray"/>
+      <div class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold mt-5" *ngIf="node.type === 'Pod'">OUTPUTS</div>
       <div>
         <app-parameter *ngFor="let parameter of outputs" [parameter]="parameter">
         </app-parameter>
       </div>
     </mat-expansion-panel>
-    <mat-expansion-panel class="op-expansion-panel" hideToggle="true" (expandedChange)="onContainersExpandChange($event)">
+    <mat-expansion-panel class="op-expansion-panel" hideToggle="true" *ngIf="node.type === 'Pod'" (expandedChange)="onContainersExpandChange($event)">
       <mat-expansion-panel-header>
         <mat-panel-title class="font-size-larger font-primary justify-content-between align-items-center">
           Containers
@@ -104,7 +102,7 @@
         </div>
       </div>
     </mat-expansion-panel>
-    <mat-expansion-panel class="op-expansion-panel op-just-border-bottom" hideToggle="true" (expandedChange)="onArtifactsExpandChange($event)">
+    <mat-expansion-panel class="op-expansion-panel op-just-border-bottom" hideToggle="true" *ngIf="node.type === 'Pod'" (expandedChange)="onArtifactsExpandChange($event)">
       <mat-expansion-panel-header>
         <mat-panel-title class="font-size-larger font-primary justify-content-between align-items-center">
           Artifacts
