@@ -86,6 +86,9 @@ export class LogsComponent implements OnInit, OnDestroy {
   // If true, the UI should scroll the user to the bottom as more log data is added.
   scrollToBottom = true;
 
+  // Utility to determine if we can change the scrollToBottom value.
+  canChangeScrollToBottom = true;
+
   constructor(private logsService: LogsService) { }
 
   ngOnInit(): void {
@@ -145,22 +148,32 @@ export class LogsComponent implements OnInit, OnDestroy {
   onScrollChange(newScrollPosition: number, oldScrollPosition: number) {
     const diff = newScrollPosition - oldScrollPosition;
 
-    // Ignore scrolling in 'place' and if we scroll up by a large amount (-50 here), ignore that
-    // as it is probably the system scrolling us automatically up to the last line if we overscrolled.
-    // This is not a good detection method, and should be updated.
-    if(diff !== 0 && (diff > -50) ) {
+    // Ignore scrolling in 'place'
+    if(diff !== 0) {
       const scrollingUp = diff < 0;
 
       // When we scroll up, stop the automatic scrolling to the bottom of the logs.
       if (scrollingUp) {
-        this.scrollToBottom = false;
+        if(this.canChangeScrollToBottom) {
+          this.scrollToBottom = false;
+        }
       } else { // Scrolling down
         const lastVisibleRow = this.aceEditor.getEditor().getLastVisibleRow();
         const totalRows = this.aceEditor.getEditor().session.getLength();
         const rowsFromBottom = totalRows - lastVisibleRow;
 
         if(rowsFromBottom < 10) {
-          this.scrollToBottom = true;
+          if(this.canChangeScrollToBottom) {
+            this.scrollToBottom = true;
+          }
+          this.canChangeScrollToBottom = false;
+
+
+          // This is to handle the case where the system is scrolling us automatically up to the last line
+          // if we overscrolled.
+          setTimeout(() => {
+            this.canChangeScrollToBottom = true;
+          }, 500);
         }
       }
     }
