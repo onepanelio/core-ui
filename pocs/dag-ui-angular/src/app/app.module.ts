@@ -45,6 +45,7 @@ import { AlertComponent } from './alert/alert.component';
 import { ParameterComponent } from './node-info/parameter/parameter.component';
 import { DateComponent } from './date/date.component';
 import { CdkTableModule } from "@angular/cdk/table";
+import { ClosableSnackComponent } from './closable-snack/closable-snack.component';
 
 @NgModule({
   declarations: [
@@ -71,9 +72,11 @@ import { CdkTableModule } from "@angular/cdk/table";
     AlertComponent,
     ParameterComponent,
     DateComponent,
+    ClosableSnackComponent,
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,
+        ClosableSnackComponent
     ],
     imports: [
         BrowserModule,
