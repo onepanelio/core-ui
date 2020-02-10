@@ -230,7 +230,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
         firstNameIndentation = nameIndex;
       }
 
-      if(templateStartLineNumber === -1 && nameIndex > 0) {
+      if(templateStartLineNumber === -1 && nameIndex > 0 && nameIndex == firstNameIndentation) {
         if(line.indexOf(this.nodeInfo.templateName) > 0) {
           templateStartLineNumber = i;
         }
