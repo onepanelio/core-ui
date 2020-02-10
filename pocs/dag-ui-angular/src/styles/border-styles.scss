@@ -13,12 +13,12 @@
 }
 
 .op-just-border-top {
-  border: none;
-  border-top: solid 1px $gray;
+  border: none !important;
+  border-top: solid 1px $gray !important;
 }
 
 .op-just-border-bottom {
-  border: none;
+  border: none !important;
   border-bottom: solid 1px $gray !important;
 }
 
