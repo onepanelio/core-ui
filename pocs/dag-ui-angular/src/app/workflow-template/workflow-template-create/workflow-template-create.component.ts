@@ -145,7 +145,7 @@ export class WorkflowTemplateCreateComponent implements OnInit {
   }
 
   onTemplateSelected(template: WorkflowTemplateSelected) {
-    if(!this.manifestTextCurrent) {
+    if(!this.manifestTextCurrent || (this.manifestText === this.manifestTextCurrent)) {
       this.manifestText = template.manifest;
       this.manifestTextCurrent = template.manifest;
       return;
