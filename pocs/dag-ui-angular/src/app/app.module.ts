@@ -44,6 +44,7 @@ import { LogsComponent } from "./container-logs/logs.component";
 import { AlertComponent } from './alert/alert.component';
 import { ParameterComponent } from './node-info/parameter/parameter.component';
 import { DateComponent } from './date/date.component';
+import { CdkTableModule } from "@angular/cdk/table";
 
 @NgModule({
   declarations: [
@@ -95,7 +96,8 @@ import { DateComponent } from './date/date.component';
         MatTableModule,
         MatInputModule,
         MatDialogModule,
-        MatCheckboxModule
+        MatCheckboxModule,
+        CdkTableModule,
     ],
   providers: [NamespaceService],
   bootstrap: [AppComponent]
