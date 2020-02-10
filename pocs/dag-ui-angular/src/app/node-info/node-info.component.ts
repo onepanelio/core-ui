@@ -84,7 +84,9 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
       this.template = null;
     }
 
-    if ((node.type === 'DAG' || node.type === 'Steps') && loaded && loaded.spec.arguments.parameters) {
+    if ((node.type === 'DAG' || node.type === 'Steps') 
+      && node.templateName === loaded.spec.entrypoint
+      && loaded && loaded.spec.arguments.parameters) {
       this.inputs = loaded.spec.arguments.parameters;
     } else if (node.type == 'Pod' && node.inputs && node.inputs.parameters) {
       this.inputs = node.inputs.parameters;
