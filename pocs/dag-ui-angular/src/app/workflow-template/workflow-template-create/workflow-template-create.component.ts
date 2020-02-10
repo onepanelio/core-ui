@@ -27,6 +27,7 @@ export class WorkflowTemplateCreateComponent implements OnInit {
   @ViewChild(AceEditorComponent, {static:false}) codeEditor: AceEditorComponent;
   @ViewChild(DagComponent, {static: false}) dag: DagComponent;
 
+  previousManifestText: string;
   manifestText: string;
   manifestTextCurrent: string;
   serverError: Alert;
@@ -156,6 +157,23 @@ export class WorkflowTemplateCreateComponent implements OnInit {
   }
 
   onTemplateSelected(template: WorkflowTemplateSelected) {
+    if(!this.manifestTextCurrent) {
+      this.manifestText = template.manifest;
+      this.manifestTextCurrent = template.manifest;
+      return;
+    }
+
+    this.previousManifestText = this.manifestTextCurrent;
     this.manifestText = template.manifest;
+    this.manifestTextCurrent = template.manifest;
+
+    const snackUndo = this.snackBar.open('Your manifest has been updated.', 'Undo', {
+      duration: 5000,
+    });
+
+    snackUndo.onAction().subscribe(res => {
+      this.manifestText = this.previousManifestText;
+      this.manifestTextCurrent = this.previousManifestText;
+    })
   }
 }
