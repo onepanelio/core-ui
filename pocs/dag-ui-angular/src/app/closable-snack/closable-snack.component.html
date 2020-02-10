@@ -1,0 +1,8 @@
+<div class="d-flex align-items-center font-size-small closable-snack">
+    <div class="font-roboto">{{data.message}}</div>
+    <div class="flex-grow-1"></div>
+    <div class="actions">
+        <button mat-button color="accent" (click)="onAction()">{{data.action}}</button>
+        <button mat-icon-button (click)="onClose()"><mat-icon>close</mat-icon></button>
+    </div>
+</div>

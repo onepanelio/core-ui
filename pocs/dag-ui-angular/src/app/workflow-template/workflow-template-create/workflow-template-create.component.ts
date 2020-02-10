@@ -15,6 +15,7 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { AceEditorComponent } from "ng2-ace-editor";
 import * as yaml from 'js-yaml';
 import * as ace from 'brace';
+import { ClosableSnackComponent } from "../../closable-snack/closable-snack.component";
 const aceRange = ace.acequire('ace/range').Range;
 
 @Component({
@@ -27,12 +28,12 @@ export class WorkflowTemplateCreateComponent implements OnInit {
   @ViewChild(AceEditorComponent, {static:false}) codeEditor: AceEditorComponent;
   @ViewChild(DagComponent, {static: false}) dag: DagComponent;
 
+  previousManifestText: string;
   manifestText: string;
   manifestTextCurrent: string;
   serverError: Alert;
 
   namespace: string;
-  uid: string;
 
   templateNameInput: AbstractControl;
   form: FormGroup;
@@ -80,17 +81,7 @@ export class WorkflowTemplateCreateComponent implements OnInit {
 
     this.activatedRoute.paramMap.subscribe(next => {
       this.namespace = next.get('namespace');
-      this.uid = next.get('uid');
-
-      this.getWorkflowTemplate();
     });
-  }
-
-  getWorkflowTemplate() {
-    this.workflowTemplateService.getWorkflowTemplate(this.namespace, this.uid)
-        .subscribe(res => {
-          this.workflowTemplate = res;
-        });
   }
 
   onManifestChange(newManifest: string) {
@@ -108,9 +99,7 @@ export class WorkflowTemplateCreateComponent implements OnInit {
     try {
       const g = NodeRenderer.createGraphFromManifest(newManifest);
       this.dag.display(g);
-      setTimeout( () => {
-        this.serverError = null;
-      });
+      this.setServerError(null);
     } catch (e) {
       if(e instanceof yaml.YAMLException) {
         const line = e.mark.line + 1;
@@ -119,10 +108,10 @@ export class WorkflowTemplateCreateComponent implements OnInit {
         const codeErrorRange = new aceRange(line - 1, 0, line - 1, column);
         this.errorMarkerId = this.codeEditor.getEditor().session.addMarker(codeErrorRange, "highlight-error", "fullLine");
 
-        this.serverError = {
+        this.setServerError({
           message: e.reason + " at line: " + line + " column: " + column,
           type: 'danger'
-        };
+        });
       }
     }
   }
@@ -156,6 +145,36 @@ export class WorkflowTemplateCreateComponent implements OnInit {
   }
 
   onTemplateSelected(template: WorkflowTemplateSelected) {
+    if(!this.manifestTextCurrent) {
+      this.manifestText = template.manifest;
+      this.manifestTextCurrent = template.manifest;
+      return;
+    }
+
+    this.previousManifestText = this.manifestTextCurrent;
     this.manifestText = template.manifest;
+    this.manifestTextCurrent = template.manifest;
+
+    // We have to update this because just changing the variable above
+    // does not always update the value in the editor.
+    this.codeEditor.getEditor().session.setValue(template.manifest);
+
+    const snackUndo = this.snackBar.openFromComponent(ClosableSnackComponent, {
+      data: {
+        message: 'Template changed',
+        action: 'Undo',
+      },
+    });
+
+    snackUndo.onAction().subscribe(res => {
+      this.manifestText = this.previousManifestText;
+      this.manifestTextCurrent = this.previousManifestText;
+    })
+  }
+
+  setServerError(message: Alert) {
+    setTimeout( () => {
+      this.serverError = null;
+    });
   }
 }
