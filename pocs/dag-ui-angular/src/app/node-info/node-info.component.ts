@@ -54,7 +54,12 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
     if(node.finishedAt) {
       this.finishedAt = new Date(node.finishedAt);
     } else {
-      this.finishedAt = node.finishedAt;
+      // Error phase has no finished date
+      if (node.phase === 'Error') {
+        this.finishedAt = node.startedAt;
+      } else {
+        this.finishedAt = node.finishedAt;
+      }
     }
 
     this.status = node.phase;
