@@ -9,6 +9,8 @@ import { ActivatedRoute } from '@angular/router';
     providers: [ WorkflowService ]
 })
 export class WorkflowExecutionsListComponent implements OnInit {
+    displayedColumns = ['name', 'createdAt', 'spacer', 'actions'];
+
     @Input() namespace: string;
     @Input() set workflows(value: Workflow[]) {
         this.orderedWorkflows = value.sort((a: Workflow, b: Workflow) => {

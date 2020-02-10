@@ -1,10 +1,33 @@
 <div class="workflow-executions-list">
-    <div *ngFor="let workflow of orderedWorkflows" class="d-flex justify-content-between align-items-baseline workflow-execution-item op-border">
-        <div class="d-inline-flex">
-            <div class="font-size-regular name"><a [routerLink]="['/', this.namespace, 'workflows', workflow.name]">{{workflow.name}}</a></div>
-            <app-date class="ml-3" [dateTime]="workflow.createdAt"></app-date>
-        </div>
-        <div></div>
-        <div><a [routerLink]="['/', this.namespace, 'workflows', workflow.name]" class="link-button">View</a></div>
-    </div>
+    <cdk-table [dataSource]="orderedWorkflows">
+        <ng-container cdkColumnDef="name">
+            <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+            <cdk-cell *cdkCellDef="let row"  >{{row.name}} </cdk-cell>
+        </ng-container>
+
+        <ng-container cdkColumnDef="createdAt">
+            <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+            <cdk-cell *cdkCellDef="let row">
+                <app-date class="ml-3" [dateTime]="row.createdAt"></app-date>
+            </cdk-cell>
+        </ng-container>
+
+        <ng-container cdkColumnDef="actions">
+            <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+            <cdk-cell *cdkCellDef="let workflow">
+                <a [routerLink]="['/', this.namespace, 'workflows', workflow.name]" class="link-button">View</a>
+            </cdk-cell>
+        </ng-container>
+
+        <ng-container cdkColumnDef="spacer">
+            <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+            <cdk-cell *cdkCellDef="let workflow" class="flex-grow-1"></cdk-cell>
+        </ng-container>
+
+        <!-- Header and Row Declarations -->
+        <cdk-header-row *cdkHeaderRowDef="displayedColumns"></cdk-header-row>
+        <cdk-row *cdkRowDef="let row; columns: displayedColumns"
+                 class="d-flex align-items-baseline workflow-execution-item op-border">
+        </cdk-row>
+    </cdk-table>
 </div>
