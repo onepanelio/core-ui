@@ -1,0 +1,21 @@
+@import "font-variables";
+
+@each $name, $size in $fontSizes {
+  .font-size-#{$name} {
+    font-size: $size !important;
+  }
+
+  .line-height-#{$name} {
+    line-height: $size !important;;
+  }
+}
+
+@each $name, $fontFamily in $fontFamilies {
+  .font-#{$name} {
+    font-family: $fontFamily !important;
+  }
+}
+
+.font-weight-bold {
+  font-weight: bold;
+}

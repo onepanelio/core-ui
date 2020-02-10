@@ -1,0 +1,6 @@
+@import "colors";
+
+@mixin op-border($radius:4) {
+  border: solid 1px $gray;
+  border-radius: $radius;
+}

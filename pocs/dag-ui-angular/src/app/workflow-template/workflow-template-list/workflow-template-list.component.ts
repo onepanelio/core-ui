@@ -9,6 +9,8 @@ import { DagComponent } from '../../dag/dag.component';
   providers: [ WorkflowTemplateService ]
 })
 export class WorkflowTemplateListComponent implements OnInit {
+  displayedColumns = ['name', 'createdAt', 'actions'];
+
   @ViewChild(DagComponent, {static: false}) dag: DagComponent;
   @Input() namespace: string;
 

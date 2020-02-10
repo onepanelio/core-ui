@@ -1,0 +1,27 @@
+@import "border-mixins";
+
+.no-borders {
+  border: none;
+}
+
+.op-border {
+  @include op-border();
+}
+
+.op-border-top {
+  border-top: solid 1px $gray;
+}
+
+.op-just-border-top {
+  border: none;
+  border-top: solid 1px $gray;
+}
+
+.op-just-border-bottom {
+  border: none;
+  border-bottom: solid 1px $gray !important;
+}
+
+.op-border-bottom {
+  border-bottom: solid 1px $gray;
+}

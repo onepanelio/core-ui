@@ -1,3 +1,4 @@
+$white: white;
 $primary-light: #EDF2FD;
 $primary-lighter: #BED2FE;
 $primary: #01579b;
@@ -14,7 +15,7 @@ $success: #37AD58;
 $background-color: $light-gray;
 
 $colors: (
-  "white": white,
+  "white": $white,
   "black": black,
   "primary-light": $primary-light,
   "primary-lighter": $primary-lighter,

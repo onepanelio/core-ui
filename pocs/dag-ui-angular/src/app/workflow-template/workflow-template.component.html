@@ -1,5 +1,5 @@
 <div class="page">
-  <div class="page-header m-auto m-w-standard">
+  <div class="page-header">
     <div class="page-title">
       <div class="page-title-text">Workflow templates</div>
       <div class="page-action-bar">
@@ -12,32 +12,39 @@
     </div>
   </div>
 
-  <div class="page-body m-auto m-w-standard mt-3">
-    <table mat-table [dataSource]="workflowTemplates" class="op-table w-standard">
-      <ng-container matColumnDef="name">
-        <th mat-header-cell *matHeaderCellDef> Name </th>
-        <td mat-cell class="bold" *matCellDef="let element">
-          <a class="font-black" [routerLink]="['/', this.namespace, 'workflow-templates', element.uid]">{{element.name}}</a>
-        </td>
+  <div class="page-body mt-3 workflow-list">
+    <cdk-table [dataSource]="workflowTemplates">
+      <ng-container cdkColumnDef="name">
+        <cdk-header-cell *cdkHeaderCellDef>Name</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let workflowTemplate" class="op-table-row-strong">
+          <a class="name-link" [routerLink]="['/', this.namespace, 'workflow-templates', workflowTemplate.uid]">{{workflowTemplate.name}}</a>
+        </cdk-cell>
       </ng-container>
 
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell class="text-right" *matCellDef="let element">
-          <a class="link-button" [routerLink]="['/', this.namespace, 'workflow-templates', element.uid, 'edit']">
-            <i class="fas fa-pencil-alt"></i>
-            <span class="ml-2">Edit</span>
-          </a>
-
-          <a class="link-button ml-10" [routerLink]="['/', this.namespace, 'workflow-templates', element.uid, 'edit']">
-            <i class="fas fa-trash-alt"></i>
-            <span class="ml-2">Delete</span>
-          </a>
-        </td>
+      <ng-container cdkColumnDef="createdAt">
+        <cdk-header-cell *cdkHeaderCellDef>Created</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let workflowTemplate">
+          <app-date [dateTime]="workflowTemplate.createdAt"></app-date>
+        </cdk-cell>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
+      <ng-container cdkColumnDef="actions">
+        <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+        <cdk-cell *cdkCellDef="let workflowTemplate">
+          <a class="link-button" [routerLink]="['/', this.namespace, 'workflow-templates', workflowTemplate.uid]">Open</a>
+        </cdk-cell>
+      </ng-container>
+
+      <ng-container cdkColumnDef="spacer">
+        <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+        <cdk-cell *cdkCellDef="let workflow" class="flex-grow-1"></cdk-cell>
+      </ng-container>
+
+      <!-- Header and Row Declarations -->
+      <cdk-header-row *cdkHeaderRowDef="displayedColumns" class="d-flex align-items-baseline op-table-header"></cdk-header-row>
+      <cdk-row *cdkRowDef="let workflowTemplate; columns: displayedColumns"
+               class="d-flex align-items-baseline op-table-row">
+      </cdk-row>
+    </cdk-table>
   </div>
 </div>

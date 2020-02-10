@@ -12,7 +12,8 @@ export class WorkflowTemplateComponent implements OnInit {
 
   namespace: string;
 
-  displayedColumns: string[] = ['name', 'actions'];
+  displayedColumns = ['name', 'createdAt', 'spacer', 'actions'];
+
   workflowTemplates: WorkflowTemplateBase[] = [];
 
   constructor(

@@ -2,7 +2,9 @@
     <cdk-table [dataSource]="orderedWorkflows">
         <ng-container cdkColumnDef="name">
             <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
-            <cdk-cell *cdkCellDef="let row"  >{{row.name}} </cdk-cell>
+            <cdk-cell *cdkCellDef="let workflow">
+                <a class="name-link" [routerLink]="['/', this.namespace, 'workflows', workflow.name]" >{{workflow.name}}</a>
+            </cdk-cell>
         </ng-container>
 
         <ng-container cdkColumnDef="createdAt">
@@ -25,9 +27,9 @@
         </ng-container>
 
         <!-- Header and Row Declarations -->
-        <cdk-header-row *cdkHeaderRowDef="displayedColumns"></cdk-header-row>
+        <cdk-header-row *cdkHeaderRowDef="displayedColumns" class="op-table-header"></cdk-header-row>
         <cdk-row *cdkRowDef="let row; columns: displayedColumns"
-                 class="d-flex align-items-baseline workflow-execution-item op-border">
+                 class="d-flex align-items-baseline op-table-row">
         </cdk-row>
     </cdk-table>
 </div>

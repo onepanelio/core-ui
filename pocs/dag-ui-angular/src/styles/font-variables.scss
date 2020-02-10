@@ -1,0 +1,25 @@
+$fontSmall: 14px;
+$fontRegular: 16px;
+$fontLarge: 20px;
+$fontLarger: 24px;
+$fontXL: 30px;
+
+$fontSizes: (
+  "small": $fontSmall,
+  "regular": $fontRegular,
+  "large": $fontLarge,
+  "larger": $fontLarger,
+  "XL": $fontXL,
+);
+
+$fontProxima: 'Proxima Nova Regular', sans-serif;
+$fontProximaBold: 'Proxima Nova Bold', sans-serif;
+$fontRoboto: 'Roboto', sans-serif;
+$fontRobotoBold: 'Roboto Bold', sans-serif;
+
+$fontFamilies: (
+  "proxima": $fontProxima,
+  "proxima-bold": $fontProximaBold,
+  "roboto": $fontRoboto,
+  "roboto-bold": $fontRobotoBold,
+);
