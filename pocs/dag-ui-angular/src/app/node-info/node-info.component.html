@@ -13,10 +13,10 @@
                  [startedAt]="startedAt"
                  [finishedAt]="finishedAt">
       </app-clock>
-      <div *ngIf="startedAt" class="font-size-small font-medium-gray font-roboto-bold">
+      <div *ngIf="startedAt" class="font-size-small font-medium-gray font-roboto-bold mt-1">
         Started <app-date [dateTime]="startedAt"></app-date>
       </div>
-      <div *ngIf="finishedAt" class="font-size-small font-medium-gray font-roboto-bold">
+      <div *ngIf="finishedAt" class="font-size-small font-medium-gray font-roboto-bold mt-1">
         Finished <app-date [dateTime]="finishedAt"></app-date>
       </div>
       <div>
