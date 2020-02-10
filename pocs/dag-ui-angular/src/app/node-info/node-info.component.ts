@@ -73,7 +73,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
     this.logsAvailable = node.type === 'Pod';
 
     try {
-      const manifest = this.workflow.workflowTemplate.manifest;
+      const manifest = this.workflow.manifest;
       loaded = yaml.safeLoad(manifest);
       for (let template of loaded.spec.templates) {
         if (template.name === node.templateName) {

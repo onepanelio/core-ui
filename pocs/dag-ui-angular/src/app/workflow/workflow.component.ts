@@ -105,7 +105,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.workflow.updateWorkflowStatus(data.result.status);
+    this.workflow.updateWorkflowStatus(data.result.manifest);
     const status = this.workflow.workflowStatus;
 
     // It is possible there is no node data yet. In which case, we can't display a dag.
