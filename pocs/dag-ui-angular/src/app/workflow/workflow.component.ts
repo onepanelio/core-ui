@@ -5,6 +5,10 @@ import { NodeRenderer, NodeStatus } from '../node/node.service';
 import { DagClickEvent, DagComponent } from '../dag/dag.component';
 import { NodeInfoComponent } from "../node-info/node-info.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { AceEditorComponent } from "ng2-ace-editor";
+import * as yaml from 'js-yaml';
+import * as ace from 'brace';
+const aceRange = ace.acequire('ace/range').Range;
 
 @Component({
   selector: 'app-workflow',
@@ -16,6 +20,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
   },
 })
 export class WorkflowComponent implements OnInit, OnDestroy {
+  @ViewChild('yamlEditor', {static: true}) yamlEditor: AceEditorComponent;
   @ViewChild(DagComponent, {static: false}) dag: DagComponent;
   @ViewChild('pageContent', {static: false}) set pageContent(value: ElementRef) {
     setTimeout( () => {
@@ -140,6 +145,10 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     this.selectedNodeId = event.nodeId;
 
     this.showLogs = false;
+
+    if(this.showYaml) {
+      this.updateYamlSelection();
+    }
   }
 
   onNodeInfoClosed() {
@@ -153,12 +162,100 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     });
   }
 
+
+  private markerId;
+
   onYamlClicked() {
     if(!this.workflow) {
       return;
     }
 
+    if(!this.nodeInfo) {
+      return;
+    }
+
     this.showYaml = true;
+
+    this.updateYamlSelection();
+  }
+
+  updateYamlSelection() {
+    const manifest = this.workflow.workflowTemplate.manifest;
+    const parsedYaml = yaml.safeLoad(this.workflow.workflowTemplate.manifest);
+    const templates = parsedYaml.spec.templates;
+
+    let templateNames = [];
+    let selectedTemplate = null;
+    for(let template of templates) {
+      templateNames.push(template.name);
+      if(template.name === this.nodeInfo.templateName) {
+        selectedTemplate = template;
+      }
+    }
+
+    const manifestLines = manifest.split('\n');
+
+
+    let templatesLineNumber = -1;
+    let templatesIndentation = 0;
+    for(let i = 0; i < manifestLines.length; i++) {
+      const line = manifestLines[i];
+      const templateIndex = line.indexOf('templates');
+      if(templateIndex > 0) {
+        templatesLineNumber = i;
+        templatesIndentation = templateIndex;
+        break;
+      }
+    }
+
+    let templateStartLineNumber = -1;
+    let templateEndLineNumber = -1;
+    let firstNameIndentation = -1;
+
+    for(let i = templatesLineNumber; i < manifestLines.length; i++) {
+      const line = manifestLines[i];
+      const trimmedLine = line.trimLeft();
+      if (trimmedLine.length === 0) {
+        continue;
+      }
+
+      const indentation = line.length - trimmedLine.length;
+
+      if(indentation < templatesIndentation) {
+        break;
+      }
+
+      const nameIndex = line.indexOf('name');
+      if (firstNameIndentation === -1) {
+        firstNameIndentation = nameIndex;
+      }
+
+      if(templateStartLineNumber === -1 && nameIndex > 0) {
+        if(line.indexOf(this.nodeInfo.templateName) > 0) {
+          templateStartLineNumber = i;
+        }
+        continue;
+      }
+
+      if (templateEndLineNumber === -1 && nameIndex > 0 && nameIndex <= firstNameIndentation ) {
+        templateEndLineNumber = i - 1;
+        break;
+      }
+    }
+
+    if(templateStartLineNumber !== -1 && templateEndLineNumber === -1) {
+      templateEndLineNumber = manifestLines.length;
+    }
+
+    const from = templateStartLineNumber;
+    const to = templateEndLineNumber;
+
+
+    if(this.markerId) {
+      this.yamlEditor.getEditor().session.removeMarker(this.markerId);
+    }
+
+    this.markerId = this.yamlEditor.getEditor().session.addMarker(new aceRange(from, 0, to, 100), "highlight", "fullLine");
   }
 
   onLogsClicked() {
