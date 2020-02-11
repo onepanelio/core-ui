@@ -5,6 +5,7 @@ import { NodeRenderer, NodeStatus } from '../node/node.service';
 import { DagClickEvent, DagComponent } from '../dag/dag.component';
 import { NodeInfoComponent } from "../node-info/node-info.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import * as yaml from 'js-yaml';
 
 @Component({
   selector: 'app-workflow',
@@ -105,7 +106,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.workflow.updateWorkflowStatus(data.result.manifest);
+    this.workflow.updateWorkflowManifest(data.result.manifest);
     const status = this.workflow.workflowStatus;
 
     // It is possible there is no node data yet. In which case, we can't display a dag.

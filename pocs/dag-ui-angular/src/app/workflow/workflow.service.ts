@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import * as yaml from 'js-yaml';
 import { WorkflowTemplateBase, WorkflowTemplateDetail } from '../workflow-template/workflow-template.service';
 import { NodeInfo, NodeStatus } from '../node/node.service';
 import { map } from "rxjs/operators";
@@ -47,12 +48,13 @@ export class SimpleWorkflowDetail implements WorkflowDetail{
     'Running': true
   };
 
-  private parsedWorkflowManifest: WorkflowManifest|null = null;
+  private jsonWorkflowManifest: WorkflowManifest|null = null;
 
   uid: string;
   createdAt: string;
   name: string;
   manifest?: string;
+  yamlManifest?: string;
   workflowTemplate: WorkflowTemplateDetail;
 
   constructor(workflowDetail: WorkflowDetail) {
@@ -63,20 +65,20 @@ export class SimpleWorkflowDetail implements WorkflowDetail{
     this.workflowTemplate = workflowDetail.workflowTemplate;
 
     if(this.manifest) {
-      this.updateWorkflowStatus(this.manifest);
+      this.updateWorkflowManifest(this.manifest);
     }
   }
 
   get workflowStatus(): WorkflowStatus|null {
-    return this.parsedWorkflowManifest.status;
+    return this.jsonWorkflowManifest.status;
   }
 
   get phase(): WorkflowPhase|null {
-    if(!this.parsedWorkflowManifest) {
+    if(!this.jsonWorkflowManifest) {
       return null;
     }
 
-    return this.parsedWorkflowManifest.status.phase;
+    return this.jsonWorkflowManifest.status.phase;
   }
 
   get active(): boolean {
@@ -97,8 +99,10 @@ export class SimpleWorkflowDetail implements WorkflowDetail{
     return this.phase === 'Succeeded';
   }
 
-  updateWorkflowStatus(manifest: string) {
-    this.parsedWorkflowManifest = JSON.parse(manifest);
+  updateWorkflowManifest(manifest: string) {
+    this.jsonWorkflowManifest = JSON.parse(manifest);
+    this.yamlManifest = yaml.safeDump(this.jsonWorkflowManifest);
+    console.log(this.yamlManifest)
   }
 
   getNodeStatus(nodeId: string): NodeStatus|null {
