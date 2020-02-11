@@ -180,8 +180,8 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   }
 
   updateYamlSelection() {
-    const manifest = this.workflow.workflowTemplate.manifest;
-    const parsedYaml = yaml.safeLoad(this.workflow.workflowTemplate.manifest);
+    const manifest = this.workflow.yamlManifest;
+    const parsedYaml = yaml.safeLoad(this.workflow.yamlManifest);
     const templates = parsedYaml.spec.templates;
 
     let templateNames = [];
