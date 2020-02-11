@@ -24,6 +24,7 @@ export interface WorkflowStatus {
 }
 
 export interface WorkflowManifest {
+  spec: any;
   status: WorkflowStatus;
 }
 
@@ -102,9 +103,11 @@ export class SimpleWorkflowDetail implements WorkflowDetail{
   updateWorkflowManifest(manifest: string) {
     this.jsonManifest = JSON.parse(manifest);
     
-    let jsonManifestNoStatus = Object.assign({}, this.jsonManifest);
-    delete jsonManifestNoStatus.status;
-    this.yamlManifest = yaml.safeDump(jsonManifestNoStatus);
+    let jsonTemplateManifest = yaml.safeLoad(this.workflowTemplate.manifest);
+    if (this.jsonManifest.spec.arguments && this.jsonManifest.spec.arguments.parameters) {
+      jsonTemplateManifest.spec.arguments.parameters = this.jsonManifest.spec.arguments.parameters;
+    }
+    this.yamlManifest = yaml.safeDump(jsonTemplateManifest);
   }
 
   getNodeStatus(nodeId: string): NodeStatus|null {
