@@ -71,6 +71,10 @@ export class SimpleWorkflowDetail implements WorkflowDetail{
   }
 
   get workflowStatus(): WorkflowStatus|null {
+    if(!this.jsonManifest) {
+      return null;
+    }
+    
     return this.jsonManifest.status;
   }
 
