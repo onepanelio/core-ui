@@ -16,7 +16,7 @@
     <cdk-table [dataSource]="workflowTemplates">
       <ng-container cdkColumnDef="name">
         <cdk-header-cell *cdkHeaderCellDef>Name</cdk-header-cell>
-        <cdk-cell *cdkCellDef="let workflowTemplate" class="op-table-row-strong">
+        <cdk-cell *cdkCellDef="let workflowTemplate">
           <a class="name-link" [routerLink]="['/', this.namespace, 'workflow-templates', workflowTemplate.uid]">{{workflowTemplate.name}}</a>
         </cdk-cell>
       </ng-container>
