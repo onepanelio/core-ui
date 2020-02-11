@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import * as yaml from 'js-yaml';
 import { WorkflowTemplateBase, WorkflowTemplateDetail } from '../workflow-template/workflow-template.service';
 import { NodeInfo, NodeStatus } from '../node/node.service';
 import { map } from "rxjs/operators";
@@ -9,7 +10,7 @@ export interface Workflow {
   uid: string;
   createdAt: string;
   name: string;
-  status?: string;
+  manifest?: string;
 }
 
 // https://github.com/argoproj/argo/issues/1849#issuecomment-565640866
@@ -20,6 +21,11 @@ export interface WorkflowStatus {
   startedAt: string;
   finishedAt: string;
   nodes: {string: NodeStatus};
+}
+
+export interface WorkflowManifest {
+  spec: any;
+  status: WorkflowStatus;
 }
 
 export interface WorkflowDetail extends Workflow {
@@ -43,36 +49,41 @@ export class SimpleWorkflowDetail implements WorkflowDetail{
     'Running': true
   };
 
-  private parsedWorkflowStatus: WorkflowStatus|null = null;
+  private jsonManifest: WorkflowManifest|null = null;
 
   uid: string;
   createdAt: string;
   name: string;
-  status?: string;
+  manifest?: string;
+  yamlManifest?: string;
   workflowTemplate: WorkflowTemplateDetail;
 
   constructor(workflowDetail: WorkflowDetail) {
     this.uid = workflowDetail.uid;
     this.createdAt = workflowDetail.createdAt;
     this.name = workflowDetail.name;
-    this.status = workflowDetail.status;
+    this.manifest = workflowDetail.manifest;
     this.workflowTemplate = workflowDetail.workflowTemplate;
 
-    if(this.status) {
-      this.updateWorkflowStatus(this.status);
+    if(this.manifest) {
+      this.updateWorkflowManifest(this.manifest);
     }
   }
 
   get workflowStatus(): WorkflowStatus|null {
-    return this.parsedWorkflowStatus;
+    if(!this.jsonManifest) {
+      return null;
+    }
+    
+    return this.jsonManifest.status;
   }
 
   get phase(): WorkflowPhase|null {
-    if(!this.parsedWorkflowStatus) {
+    if(!this.jsonManifest) {
       return null;
     }
 
-    return this.parsedWorkflowStatus.phase;
+    return this.jsonManifest.status.phase;
   }
 
   get active(): boolean {
@@ -93,8 +104,14 @@ export class SimpleWorkflowDetail implements WorkflowDetail{
     return this.phase === 'Succeeded';
   }
 
-  updateWorkflowStatus(status: string) {
-    this.parsedWorkflowStatus = JSON.parse(status);
+  updateWorkflowManifest(manifest: string) {
+    this.jsonManifest = JSON.parse(manifest);
+    
+    let jsonTemplateManifest = yaml.safeLoad(this.workflowTemplate.manifest);
+    if (this.jsonManifest.spec.arguments && this.jsonManifest.spec.arguments.parameters) {
+      jsonTemplateManifest.spec.arguments.parameters = this.jsonManifest.spec.arguments.parameters;
+    }
+    this.yamlManifest = yaml.safeDump(jsonTemplateManifest);
   }
 
   getNodeStatus(nodeId: string): NodeStatus|null {
