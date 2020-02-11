@@ -48,7 +48,7 @@ export class SimpleWorkflowDetail implements WorkflowDetail{
     'Running': true
   };
 
-  private jsonWorkflowManifest: WorkflowManifest|null = null;
+  private jsonManifest: WorkflowManifest|null = null;
 
   uid: string;
   createdAt: string;
@@ -70,15 +70,15 @@ export class SimpleWorkflowDetail implements WorkflowDetail{
   }
 
   get workflowStatus(): WorkflowStatus|null {
-    return this.jsonWorkflowManifest.status;
+    return this.jsonManifest.status;
   }
 
   get phase(): WorkflowPhase|null {
-    if(!this.jsonWorkflowManifest) {
+    if(!this.jsonManifest) {
       return null;
     }
 
-    return this.jsonWorkflowManifest.status.phase;
+    return this.jsonManifest.status.phase;
   }
 
   get active(): boolean {
@@ -100,9 +100,11 @@ export class SimpleWorkflowDetail implements WorkflowDetail{
   }
 
   updateWorkflowManifest(manifest: string) {
-    this.jsonWorkflowManifest = JSON.parse(manifest);
-    this.yamlManifest = yaml.safeDump(this.jsonWorkflowManifest);
-    console.log(this.yamlManifest)
+    this.jsonManifest = JSON.parse(manifest);
+    
+    let jsonManifestNoStatus = Object.assign({}, this.jsonManifest);
+    delete jsonManifestNoStatus.status;
+    this.yamlManifest = yaml.safeDump(jsonManifestNoStatus);
   }
 
   getNodeStatus(nodeId: string): NodeStatus|null {
