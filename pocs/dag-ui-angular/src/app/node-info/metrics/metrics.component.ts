@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Metric, MetricsService } from "./metrics.service";
+import { WorkflowPhase } from "../../workflow/workflow.service";
 
 @Component({
   selector: 'app-metrics',
@@ -11,6 +12,7 @@ import { Metric, MetricsService } from "./metrics.service";
 export class MetricsComponent implements OnChanges {
     @Input() workflowName: string;
     @Input() podId: string;
+    @Input() nodePhase: WorkflowPhase;
 
     protected namespace: string;
     protected metrics: Metric[];
