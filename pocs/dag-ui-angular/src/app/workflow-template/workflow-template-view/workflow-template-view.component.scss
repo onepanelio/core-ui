@@ -1,4 +1,5 @@
 @import "../../../styles/colors";
+@import "../../../styles/font-variables";
 
 .definition-header {
   background-color: #F5F5F5;
@@ -28,4 +29,25 @@
 
 /deep/ app-workflow-executions-list cdk-header-row {
   display: none;
+}
+
+/deep/ .mat-tab-labels {
+  opacity: 1;
+
+  .mat-tab-label {
+    .mat-tab-label-content {
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+  }
+
+  .mat-tab-label-active {
+    opacity: 1;
+
+    .mat-tab-label-content {
+      font-family: $fontRobotoBold;
+      font-size: $fontRegular;
+      color: $primary;
+    }
+  }
 }
