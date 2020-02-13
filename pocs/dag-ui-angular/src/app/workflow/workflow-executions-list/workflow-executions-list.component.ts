@@ -7,6 +7,7 @@ import {
     WorkflowService
 } from '../workflow.service';
 import { ActivatedRoute } from '@angular/router';
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
     selector: 'app-workflow-executions-list',
@@ -40,7 +41,8 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
 
     constructor(
         private activatedRoute: ActivatedRoute,
-        private workflowService: WorkflowService) { }
+        private workflowService: WorkflowService,
+        private snackbar: MatSnackBar) { }
 
     ngOnInit(): void {
     }
@@ -61,5 +63,14 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
                 workflowDetail.updateWorkflowManifest(parsedData.result.manifest);
             }
         }
+    }
+
+    onTerminate(workflow: WorkflowExecution) {
+        this.workflowService.terminateWorkflow(this.namespace, workflow.name)
+            .subscribe(res => {
+                this.snackbar.open('Workflow stopped', 'OK');
+            }, err => {
+                this.snackbar.open('Unable to stop workflow', 'OK');
+            })
     }
 }

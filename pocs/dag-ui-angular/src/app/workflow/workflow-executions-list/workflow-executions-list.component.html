@@ -30,7 +30,10 @@
         <ng-container cdkColumnDef="actions">
             <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
             <cdk-cell *cdkCellDef="let workflow">
-                <a [routerLink]="['/', this.namespace, 'workflows', workflow.name]" class="link-button">View</a>
+                <div>
+                    <a [routerLink]="['/', this.namespace, 'workflows', workflow.name]" class="link-button">View</a>
+                    <button [class.hidden]="!workflow?.active" mat-button color="primary" class="font-proxima-bold font-size-regular" (click)="onTerminate(workflow)">TERMINATE</button>
+                </div>
             </cdk-cell>
         </ng-container>
 
