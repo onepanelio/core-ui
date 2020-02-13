@@ -51,7 +51,7 @@
             [namespace]="namespace"
             [workflows]="workflows">
         </app-workflow-executions-list>
-        <mat-paginator class="no-background"
+        <mat-paginator class="no-background font-size-small"
                 *ngIf="workflowResponse"
                 (page)="onWorkflowPageChange($event)"
                 [pageIndex]="1"
