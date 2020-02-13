@@ -138,7 +138,6 @@ export class WorkflowTemplateViewComponent implements OnInit {
       .subscribe(res => {
         this.workflowResponse = res;
         this.workflows = res.workflows;
-        // this.workflowPagination
       });
   }
 
