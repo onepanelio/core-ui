@@ -1,6 +1,16 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 
+export class Metric {
+    name: string;
+    value: number;
+    format: string;
+}
+
+export class GetMetricsResponse {
+    metrics: Metric[];
+}
+
 @Injectable()
 export class MetricsService {
 
@@ -12,6 +22,6 @@ export class MetricsService {
     getWorkflowMetrics(namespace: string, workflowName: string, podId: string) {
         const url = `${this.baseUrl}/apis/v1beta1/${namespace}/workflows/${workflowName}/pods/${podId}/metrics`;
 
-        return this.client.get(url, {});
+        return this.client.get<GetMetricsResponse>(url, {});
     }
 }

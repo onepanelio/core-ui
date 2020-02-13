@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MetricsService } from "./metrics.service";
+import { Metric, MetricsService } from "./metrics.service";
 
 @Component({
   selector: 'app-metrics',
@@ -13,7 +13,7 @@ export class MetricsComponent implements OnChanges {
     @Input() podId: string;
 
     protected namespace: string;
-    protected metrics: any;
+    protected metrics: Metric[];
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -22,11 +22,12 @@ export class MetricsComponent implements OnChanges {
 
     ngOnChanges() {
         this.activatedRoute.paramMap.subscribe(next => {
+            this.metrics = [];
             this.namespace = next.get('namespace');
 
             this.metricsService.getWorkflowMetrics(this.namespace, this.workflowName, this.podId)
             .subscribe(res => {
-                this.metrics = JSON.stringify(res);
+                this.metrics = res.metrics;
             });
           });
     }
