@@ -44,13 +44,21 @@
       <button mat-flat-button color="accent" class="op-rounded op-button" (click)="executeWorkflow()">Execute Workflow</button>
     </div>
 
-    <mat-tab-group (selectedTabChange)="onTabChange($event)" [dynamicHeight]="true">
+    <mat-tab-group class="no-bottom-border" (selectedTabChange)="onTabChange($event)" [dynamicHeight]="true">
       <mat-tab label="Executions">
         <app-workflow-executions-list
             *ngIf="workflows"
             [namespace]="namespace"
             [workflows]="workflows">
         </app-workflow-executions-list>
+        <mat-paginator class="no-background font-size-small"
+                *ngIf="workflowResponse"
+                (page)="onWorkflowPageChange($event)"
+                [pageIndex]="1"
+                [length]="this.workflowResponse.totalCount"
+                [pageSize]="this.workflowPagination.pageSize"
+                [pageSizeOptions]="[5, 10, 25, 100]">
+        </mat-paginator>
       </mat-tab>
       <mat-tab label="Definition">
         <ng-template matTabContent>

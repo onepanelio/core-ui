@@ -299,3 +299,11 @@ a {
   font-size: $fontSmallRegular;
 }
 
+.no-background {
+  background-color: transparent !important;
+}
+
+
+mat-tab-group.no-bottom-border .mat-tab-header {
+  border-bottom: none !important;;
+}

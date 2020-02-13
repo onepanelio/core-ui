@@ -25,7 +25,11 @@ export class WorkflowListComponent implements OnInit {
   }
 
   private getWorkflows() {
-    this.workflowService.listWorkflows(this.namespace)
+    const request = {
+      namespace: this.namespace
+    };
+
+    this.workflowService.listWorkflows(request)
       .subscribe(res => {
         this.workflows = res.workflows;
       }, err => {

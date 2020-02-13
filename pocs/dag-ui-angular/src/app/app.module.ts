@@ -46,6 +46,9 @@ import { ParameterComponent } from './node-info/parameter/parameter.component';
 import { DateComponent } from './date/date.component';
 import { CdkTableModule } from "@angular/cdk/table";
 import { ClosableSnackComponent } from './closable-snack/closable-snack.component';
+import { MatPaginatorModule } from "@angular/material/paginator";
+import { PhaseImagePipe } from "./pipes/phase-image/phase-image.pipe";
+import { PhaseTranslatePipe } from './pipes/phase-translate/phase-translate.pipe';
 
 @NgModule({
   declarations: [
@@ -73,6 +76,8 @@ import { ClosableSnackComponent } from './closable-snack/closable-snack.componen
     ParameterComponent,
     DateComponent,
     ClosableSnackComponent,
+    PhaseImagePipe,
+    PhaseTranslatePipe
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,
@@ -101,6 +106,7 @@ import { ClosableSnackComponent } from './closable-snack/closable-snack.componen
         MatDialogModule,
         MatCheckboxModule,
         CdkTableModule,
+        MatPaginatorModule,
     ],
   providers: [NamespaceService],
   bootstrap: [AppComponent]
