@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import * as yaml from 'js-yaml';
-import { WorkflowTemplateBase, WorkflowTemplateDetail } from '../workflow-template/workflow-template.service';
-import { NodeInfo, NodeStatus } from '../node/node.service';
+import { WorkflowTemplateDetail } from '../workflow-template/workflow-template.service';
+import { NodeStatus } from '../node/node.service';
 import { map } from "rxjs/operators";
 
 export interface Workflow {
@@ -253,5 +253,11 @@ export class WorkflowService {
     const url = `${this.baseUrl}/apis/v1beta1/${namespace}/workflows/${name}/terminate`;
 
     return this.client.put(url, {});
+  }
+
+  getWorkflowMetrics(namespace: string, workflowName: string, podId: string) {
+    const url = `${this.baseUrl}/apis/v1beta1/${namespace}/workflows/${workflowName}/pods/${podId}/metrics`;
+
+    return this.client.get(url, {});
   }
 }
