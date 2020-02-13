@@ -1,5 +1,5 @@
 <div class="workflow-executions-list">
-    <cdk-table [dataSource]="orderedWorkflows">
+    <cdk-table [dataSource]="executionWorkflows">
         <ng-container cdkColumnDef="name">
             <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
             <cdk-cell *cdkCellDef="let workflow">
@@ -11,6 +11,19 @@
             <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
             <cdk-cell *cdkCellDef="let row">
                 <app-date class="ml-3" [dateTime]="row.createdAt"></app-date>
+            </cdk-cell>
+        </ng-container>
+
+        <ng-container cdkColumnDef="status">
+            <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+            <cdk-cell *cdkCellDef="let workflow" class="d-inline-flex">
+                <app-status *ngIf="workflow" class="ml-3 font-roboto-bold font-weight-bold" [phase]="workflow.phase"></app-status>
+                <span *ngIf="workflow && workflow.succeeded" class="ml-1"> in </span>
+                <app-clock *ngIf="workflow"
+                           class="ml-1"
+                           [startedAt]="workflow.startedAt"
+                           [finishedAt]="workflow.finishedAt">
+                </app-clock>
             </cdk-cell>
         </ng-container>
 
@@ -29,7 +42,7 @@
         <!-- Header and Row Declarations -->
         <cdk-header-row *cdkHeaderRowDef="displayedColumns" class="op-table-header"></cdk-header-row>
         <cdk-row *cdkRowDef="let row; columns: displayedColumns"
-                 class="d-flex align-items-baseline op-table-row">
+                 class="d-flex op-table-row">
         </cdk-row>
     </cdk-table>
 </div>

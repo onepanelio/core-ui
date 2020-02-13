@@ -9,8 +9,10 @@ import { map } from "rxjs/operators";
 export interface Workflow {
   uid: string;
   createdAt: string;
+  finishedAt?: string;
   name: string;
   manifest?: string;
+  phase?: string;
 }
 
 // https://github.com/argoproj/argo/issues/1849#issuecomment-565640866
@@ -121,6 +123,66 @@ export class SimpleWorkflowDetail implements WorkflowDetail{
     }
 
     return status.nodes[nodeId];
+  }
+}
+
+export class WorkflowExecution {
+  uid: string;
+  createdAt: string;
+
+  startedAt: string;
+  finishedAt: string;
+
+  name: string;
+  phase?: string;
+
+  private jsonManifest: WorkflowManifest|null = null;
+
+  constructor(workflow: Workflow) {
+    this.uid = workflow.uid;
+    this.createdAt = workflow.createdAt;
+    this.startedAt = workflow.createdAt;
+    this.finishedAt = workflow.finishedAt;
+    this.name = workflow.name;
+    this.phase = workflow.phase;
+  }
+
+  get active(): boolean {
+    const phase = this.phase;
+    if(!phase) {
+      return false;
+    }
+
+    return SimpleWorkflowDetail.activePhases[phase];
+  }
+
+  get succeeded(): boolean {
+    const phase = this.phase;
+    if(!phase) {
+      return false;
+    }
+
+    return this.phase === 'Succeeded';
+  }
+
+  updateWorkflowManifest(manifest: string) {
+    this.jsonManifest = JSON.parse(manifest);
+    const status = this.jsonManifest.status;
+
+    this.startedAt = status.startedAt;
+    this.finishedAt = status.finishedAt;
+    this.phase = status.phase;
+
+    // this.startedAt = this.jsonManifest.
+  }
+
+
+  get workflowStatus(): WorkflowStatus|null {
+    if(!this.jsonManifest) {
+      return null;
+    }
+
+    return this.jsonManifest.status;
   }
 }
 
