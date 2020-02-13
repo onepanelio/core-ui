@@ -54,11 +54,11 @@
       </tbody>
     </table>
     <mat-expansion-panel class="op-expansion-panel mt-5" hideToggle="true" (expandedChange)="onParametersExpandChange($event)">
-      <mat-expansion-panel-header>
+      <mat-expansion-panel-header [expandedHeight]="'48px'">
         <mat-panel-title class="font-size-larger font-primary justify-content-between align-items-center">
           Parameters
-          <mat-icon *ngIf="!parametersExpanded">{{'keyboard_arrow_down'}}</mat-icon>
-          <mat-icon *ngIf="parametersExpanded">{{'keyboard_arrow_up'}}</mat-icon>
+          <mat-icon *ngIf="!parametersExpanded" [fontSet]="'fas'" [fontIcon]="'fa-plus'"></mat-icon>
+          <mat-icon *ngIf="parametersExpanded" [fontSet]="'fas'" [fontIcon]="'fa-minus'" ></mat-icon>
         </mat-panel-title>
       </mat-expansion-panel-header>
 
@@ -75,11 +75,11 @@
       </div>
     </mat-expansion-panel>
     <mat-expansion-panel class="op-expansion-panel" hideToggle="true" *ngIf="node.type === 'Pod'" (expandedChange)="onContainersExpandChange($event)">
-      <mat-expansion-panel-header>
+      <mat-expansion-panel-header [expandedHeight]="'48px'">
         <mat-panel-title class="font-size-larger font-primary justify-content-between align-items-center">
           Containers
-          <mat-icon *ngIf="!containersExpanded">{{'keyboard_arrow_down'}}</mat-icon>
-          <mat-icon *ngIf="containersExpanded">{{'keyboard_arrow_up'}}</mat-icon>
+          <mat-icon *ngIf="!containersExpanded" [fontSet]="'fas'" [fontIcon]="'fa-plus'"></mat-icon>
+          <mat-icon *ngIf="containersExpanded" [fontSet]="'fas'" [fontIcon]="'fa-minus'" ></mat-icon>
         </mat-panel-title>
       </mat-expansion-panel-header>
 
@@ -103,11 +103,11 @@
       </div>
     </mat-expansion-panel>
     <mat-expansion-panel class="op-expansion-panel" hideToggle="true" *ngIf="node.type === 'Pod'" (expandedChange)="onArtifactsExpandChange($event)">
-      <mat-expansion-panel-header>
+      <mat-expansion-panel-header [expandedHeight]="'48px'">
         <mat-panel-title class="font-size-larger font-primary justify-content-between align-items-center">
           Artifacts
-          <mat-icon *ngIf="!artifactsExpanded">{{'keyboard_arrow_down'}}</mat-icon>
-          <mat-icon *ngIf="artifactsExpanded">{{'keyboard_arrow_up'}}</mat-icon>
+          <mat-icon *ngIf="!artifactsExpanded" [fontSet]="'fas'" [fontIcon]="'fa-plus'"></mat-icon>
+          <mat-icon *ngIf="artifactsExpanded" [fontSet]="'fas'" [fontIcon]="'fa-minus'" ></mat-icon>
         </mat-panel-title>
       </mat-expansion-panel-header>
 
