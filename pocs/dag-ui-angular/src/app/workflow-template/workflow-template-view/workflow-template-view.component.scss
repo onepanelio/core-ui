@@ -37,6 +37,7 @@
   .mat-tab-label {
     .mat-tab-label-content {
       font-weight: bold;
+      font-size: $fontRegular;
       text-transform: uppercase;
     }
   }
@@ -46,7 +47,6 @@
 
     .mat-tab-label-content {
       font-family: $fontRobotoBold;
-      font-size: $fontRegular;
       color: $primary;
     }
   }
