@@ -7,20 +7,21 @@
             </cdk-cell>
         </ng-container>
 
-        <ng-container cdkColumnDef="createdAt">
+        <ng-container cdkColumnDef="timestamps">
             <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
-            <cdk-cell *cdkCellDef="let row">
-                <app-date class="ml-3" [dateTime]="row.createdAt"></app-date>
+            <cdk-cell *cdkCellDef="let workflow" class="font-size-small font-roboto font-medium-gray">
+                <div *ngIf="workflow.startedAt"><span class="timestamp d-inline-block">Started:</span><app-date class="" [dateTime]="workflow.startedAt"></app-date></div>
+                <div *ngIf="workflow.finishedAt" class="mt-1"><span class="timestamp d-inline-block">Finished:</span><app-date class="" [dateTime]="workflow.finishedAt"></app-date></div>
             </cdk-cell>
         </ng-container>
 
         <ng-container cdkColumnDef="status">
             <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
             <cdk-cell *cdkCellDef="let workflow" class="d-inline-flex align-items-end">
-                <img *ngIf="workflow?.phase" [src]="workflow.phase | phaseImage"/>
+                <img *ngIf="workflow.phase" [src]="workflow.phase | phaseImage"/>
                 <div class="ml-2 font-roboto-bold font-weight-bold">{{workflow.phase | phaseTranslate}}</div>
                 <span *ngIf="workflow && workflow.succeeded" class="ml-1"> in </span>
-                <app-clock *ngIf="workflow"
+                <app-clock
                            class="ml-2"
                            [startedAt]="workflow.startedAt"
                            [finishedAt]="workflow.finishedAt">

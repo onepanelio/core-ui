@@ -3,7 +3,11 @@
     flex-basis: 200px;
   }
 
-  .cdk-column-createdAt {
-    flex-basis: 220px;
+  .cdk-column-timestamps {
+    flex-basis: 250px;
+  }
+
+  .timestamp {
+    min-width: 60px;
   }
 }
