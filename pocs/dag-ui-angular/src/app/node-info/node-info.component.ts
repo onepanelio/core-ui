@@ -98,7 +98,6 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
       this.outputArtifacts = node.inputs.artifacts;
     }
 
-    console.log(node);
     if (node.type !== 'DAG' && node.type !== 'Steps' && node.outputs) {
       this.outputParameters = node.outputs.parameters;
       this.outputArtifacts = node.outputs.artifacts;
