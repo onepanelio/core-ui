@@ -25,3 +25,7 @@
 /deep/ mat-paginator .mat-icon-button {
   line-height: 27px !important;
 }
+
+/deep/ app-workflow-executions-list cdk-header-row {
+  display: none;
+}
