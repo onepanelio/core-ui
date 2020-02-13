@@ -44,7 +44,7 @@
       <button mat-flat-button color="accent" class="op-rounded op-button" (click)="executeWorkflow()">Execute Workflow</button>
     </div>
 
-    <mat-tab-group (selectedTabChange)="onTabChange($event)" [dynamicHeight]="true">
+    <mat-tab-group class="no-bottom-border" (selectedTabChange)="onTabChange($event)" [dynamicHeight]="true">
       <mat-tab label="Executions">
         <app-workflow-executions-list
             *ngIf="workflows"
