@@ -46,6 +46,7 @@ import { ParameterComponent } from './node-info/parameter/parameter.component';
 import { DateComponent } from './date/date.component';
 import { CdkTableModule } from "@angular/cdk/table";
 import { ClosableSnackComponent } from './closable-snack/closable-snack.component';
+import { MatPaginatorModule } from "@angular/material/paginator";
 
 @NgModule({
   declarations: [
@@ -101,6 +102,7 @@ import { ClosableSnackComponent } from './closable-snack/closable-snack.componen
         MatDialogModule,
         MatCheckboxModule,
         CdkTableModule,
+        MatPaginatorModule,
     ],
   providers: [NamespaceService],
   bootstrap: [AppComponent]

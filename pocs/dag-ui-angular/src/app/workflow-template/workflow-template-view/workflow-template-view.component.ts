@@ -3,11 +3,23 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { WorkflowTemplateBase, WorkflowTemplateDetail, WorkflowTemplateService } from '../workflow-template.service';
 import { DagComponent } from '../../dag/dag.component';
 import { NodeRenderer } from '../../node/node.service';
-import { CreateWorkflow, Workflow, WorkflowService } from '../../workflow/workflow.service';
+import {
+  CreateWorkflow,
+  ListWorkflowRequest,
+  Workflow,
+  WorkflowResponse,
+  WorkflowService
+} from '../../workflow/workflow.service';
 import { MatTabChangeEvent } from '@angular/material';
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatDialog } from "@angular/material/dialog";
 import { WorkflowExecuteDialogComponent } from "../../workflow/workflow-execute-dialog/workflow-execute-dialog.component";
+import { PageEvent } from "@angular/material/paginator";
+
+export class Pagination {
+  page: number = 1;
+  pageSize: number = 15;
+}
 
 @Component({
   selector: 'app-workflow-template-view',
@@ -30,6 +42,8 @@ export class WorkflowTemplateViewComponent implements OnInit {
   uid: string;
 
   workflows: Workflow[] = [];
+  workflowResponse: WorkflowResponse;
+  workflowPagination = new Pagination();
 
   private workflowTemplateDetail: WorkflowTemplateDetail;
 
@@ -113,9 +127,18 @@ export class WorkflowTemplateViewComponent implements OnInit {
   }
 
   getWorkflows() {
-    this.workflowService.listWorkflows(this.namespace, this.uid)
+    const request: ListWorkflowRequest = {
+      namespace: this.namespace,
+      workflowTemplateUid: this.uid,
+      pageSize: this.workflowPagination.pageSize,
+      page: this.workflowPagination.page,
+    };
+
+    this.workflowService.listWorkflows(request)
       .subscribe(res => {
+        this.workflowResponse = res;
         this.workflows = res.workflows;
+        // this.workflowPagination
       });
   }
 
@@ -166,5 +189,12 @@ export class WorkflowTemplateViewComponent implements OnInit {
 
   editSelectedWorkflowTemplateVersion() {
     this.router.navigate(['/', this.namespace, 'workflow-templates', this.workflowTemplateDetail.uid, 'edit']);
+  }
+
+  onWorkflowPageChange(event: PageEvent) {
+    this.workflowPagination.page = event.pageIndex;
+    this.workflowPagination.pageSize = event.pageSize;
+
+    this.getWorkflows();
   }
 }

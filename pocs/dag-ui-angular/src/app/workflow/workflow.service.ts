@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import * as yaml from 'js-yaml';
 import { WorkflowTemplateBase, WorkflowTemplateDetail } from '../workflow-template/workflow-template.service';
@@ -37,6 +37,9 @@ export interface WorkflowDetail extends Workflow {
 export interface WorkflowResponse {
   count: number;
   workflows: Workflow[];
+  page: number;
+  pages: number;
+  totalCount: number;
 }
 
 export interface CreateWorkflow {
@@ -186,6 +189,14 @@ export class WorkflowExecution {
   }
 }
 
+export interface ListWorkflowRequest {
+  namespace: string;
+  workflowTemplateUid?: string;
+  workflowTemplateVersion?: number;
+  pageSize?: number;
+  page?: number;
+}
+
 @Injectable()
 export class WorkflowService {
 
@@ -208,17 +219,29 @@ export class WorkflowService {
         );
   }
 
-  listWorkflows(namespace: string, workflowTemplateUid?: string, version?: number): Observable<WorkflowResponse> {
-    let url = `${this.baseUrl}/apis/v1beta1/${namespace}/workflows`;
-    if (workflowTemplateUid) {
-      url += `?workflowTemplateUid=${workflowTemplateUid}`;
+  listWorkflows(request: ListWorkflowRequest): Observable<WorkflowResponse> {
+    const url = `${this.baseUrl}/apis/v1beta1/${request.namespace}/workflows`;
+    let query = new HttpParams();
 
-      if (version) {
-        url += `&workflowTemplateVersion=${version}`;
-      }
+    if (request.workflowTemplateUid) {
+      query = query.append('workflowTemplateUid', request.workflowTemplateUid);
     }
 
-    return this.client.get<WorkflowResponse>(url);
+    if (request.workflowTemplateVersion) {
+      query = query.append('workflowTemplateVersion', request.workflowTemplateVersion.toString());
+    }
+
+    if(request.page) {
+      query = query.append('page', request.page.toString());
+    }
+
+    if(request.pageSize) {
+      query = query.append('pageSize', request.pageSize.toString());
+    }
+
+    return this.client.get<WorkflowResponse>(url, {
+      params: query
+    });
   }
 
   executeWorkflow(namespace: string, request: CreateWorkflow) {

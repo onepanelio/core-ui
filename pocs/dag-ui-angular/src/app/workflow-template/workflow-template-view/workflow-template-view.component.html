@@ -51,6 +51,14 @@
             [namespace]="namespace"
             [workflows]="workflows">
         </app-workflow-executions-list>
+        <mat-paginator class="no-background"
+                *ngIf="workflowResponse"
+                (page)="onWorkflowPageChange($event)"
+                [pageIndex]="1"
+                [length]="this.workflowResponse.totalCount"
+                [pageSize]="this.workflowPagination.pageSize"
+                [pageSizeOptions]="[5, 10, 25, 100]">
+        </mat-paginator>
       </mat-tab>
       <mat-tab label="Definition">
         <ng-template matTabContent>
