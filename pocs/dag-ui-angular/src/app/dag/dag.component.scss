@@ -104,6 +104,12 @@
   display: none;
 }
 
+/deep/ .node {
+  .root-element {
+    margin: 1px 0 0 0;
+  }
+}
+
 /deep/ .node.succeeded {
   rect {
     stroke: $success;
@@ -126,8 +132,6 @@
   }
 }
 
-///deep/ .node .node-root.summary
-
 /deep/ .node.failed {
   rect {
     stroke: $danger;
@@ -139,9 +143,11 @@
   }
 }
 
-/deep/ .node.error rect {
-  stroke: $danger;
-  fill: $danger-light;
+/deep/ .node.error {
+  rect {
+    stroke: $danger;
+    fill: $danger-light;
+  }
 
   .root-element {
     background-color: $danger;
@@ -157,9 +163,15 @@
   background-color: red;
 }
 
-/deep/ .node.selected rect {
-  stroke: #F6881F;
-  stroke-width: 2px;
+/deep/ .node.selected {
+  rect {
+    stroke: #F6881F;
+    stroke-width: 2px;
+  }
+
+  .root-element {
+    margin: 1px 1px 0 1px;
+  }
 }
 
 /deep/ .node.selected circle {
