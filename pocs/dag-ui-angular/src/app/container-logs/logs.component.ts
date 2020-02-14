@@ -10,6 +10,9 @@ import { AceEditorComponent } from "ng2-ace-editor";
   providers: [LogsService]
 })
 export class LogsComponent implements OnInit, OnDestroy {
+  private biggestScrollDown = 0;
+  private biggestScrollUp = 0;
+
   private _aceEditor;
   @ViewChild(AceEditorComponent, {static:false}) set aceEditor(aceEditor: AceEditorComponent) {
     this._aceEditor = aceEditor;
@@ -95,7 +98,7 @@ export class LogsComponent implements OnInit, OnDestroy {
   }
 
   getLogs() {
-    if(this.gettingLogsForNodeId && this.gettingLogsForNodeId === this.nodeInfo.id) {
+    if (this.gettingLogsForNodeId && this.gettingLogsForNodeId === this.nodeInfo.id) {
       return;
     }
 
@@ -148,6 +151,22 @@ export class LogsComponent implements OnInit, OnDestroy {
   onScrollChange(newScrollPosition: number, oldScrollPosition: number) {
     const diff = newScrollPosition - oldScrollPosition;
 
+    if(diff < this.biggestScrollUp) {
+      this.biggestScrollUp = diff;
+    }
+
+    if(diff > this.biggestScrollDown) {
+      this.biggestScrollDown = diff;
+    }
+
+    if(diff < 0 && diff < (this.biggestScrollUp  * 0.70)) {
+      return;
+    }
+
+    if(diff > 0 && diff > (this.biggestScrollDown * 0.70)) {
+      return;
+    }
+
     // Ignore scrolling in 'place'
     if(diff !== 0) {
       const scrollingUp = diff < 0;
@@ -167,7 +186,6 @@ export class LogsComponent implements OnInit, OnDestroy {
             this.scrollToBottom = true;
           }
           this.canChangeScrollToBottom = false;
-
 
           // This is to handle the case where the system is scrolling us automatically up to the last line
           // if we overscrolled.
@@ -215,7 +233,7 @@ export class LogsComponent implements OnInit, OnDestroy {
     }
 
     const numberLines = this.aceEditor.getEditor().session.getDocument().getLength();
-    const goToLine = Math.max(numberLines, 0);
-    this.aceEditor.getEditor().scrollToLine(goToLine, true, true, () => {});
+
+    this.aceEditor.getEditor().scrollToLine(numberLines, false, false);
   }
 }
