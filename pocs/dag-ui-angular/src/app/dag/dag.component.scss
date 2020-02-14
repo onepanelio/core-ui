@@ -64,6 +64,19 @@
   line-height:42px;
 }
 
+/deep/ .node .node-root.summary {
+  width: 200px;
+  height: 82px;
+
+  .not-root {
+    text-align: center;
+  }
+
+  .status-icon {
+    padding-left: 0;
+  }
+}
+
 /deep/ .node .node-root.dashed-circle {
   width: 30px;
   height: 30px;
@@ -91,24 +104,48 @@
   display: none;
 }
 
-/deep/ .node.succeeded rect {
-  stroke: $success;
-  fill: $success-light;
+/deep/ .node.succeeded {
+  rect {
+    stroke: $success;
+    fill: $success-light;
+  }
+
+  .root-element {
+    background-color: $success;
+  }
 }
 
-/deep/ .node.running rect {
-  stroke: $primary;
-  fill: $primary-light;
+/deep/ .node.running {
+  rect {
+    stroke: $primary;
+    fill: $primary-light;
+  }
+
+  .root-element {
+    background-color: $primary;
+  }
 }
 
-/deep/ .node.failed rect {
-  stroke: $danger;
-  fill: $danger-light;
+///deep/ .node .node-root.summary
+
+/deep/ .node.failed {
+  rect {
+    stroke: $danger;
+    fill: $danger-light;
+  }
+
+  .root-element {
+    background-color: $danger;
+  }
 }
 
 /deep/ .node.error rect {
   stroke: $danger;
   fill: $danger-light;
+
+  .root-element {
+    background-color: $danger;
+  }
 }
 
 /deep/ .node.pending .phase {

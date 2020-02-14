@@ -60,6 +60,7 @@ export class NodeInfo {
 
 export class NodeRenderer {
   static nodeHeight = 50;
+  static summaryNodeHeight = 82;
   static nodeWidth = 200;
 
 
@@ -114,7 +115,7 @@ export class NodeRenderer {
     return info;
   }
 
-  static nodeTemplate(node: any) {
+  static nodeTemplate(node: any, root = false) {
     let nodeRootClasses = 'node-root ';
     if (node.type === 'StepGroup' || node.type === 'DAG') {
       nodeRootClasses += ' dashed-circle';
@@ -122,7 +123,16 @@ export class NodeRenderer {
       nodeRootClasses += ' rect';
     }
 
+    if(root) {
+      nodeRootClasses += ' summary';
+    }
+
     let html = `<div id="${node.id}" class="${nodeRootClasses}">`;
+
+    if(root) {
+      html += '<div class="text-center font-roboto font-weight-bold root-element">WORKFLOW SUMMARY</div><div class="not-root">';
+    }
+
     if (node.type === 'StepGroup' || node.type === 'DAG') {
     } else {
       if(node.phase === 'Succeeded') {
@@ -143,6 +153,11 @@ export class NodeRenderer {
       }
       </span>`;
     }
+
+    if(root) {
+      html += '</div>';
+    }
+
     html += '</div>';
 
     return html;
@@ -292,13 +307,15 @@ export class NodeRenderer {
       const info = new NodeInfo();
       NodeRenderer.populateInfoFromNodeStatus(info, nodeStatus);
 
+      const root = graph.nodes().length === 0;
+
       graph.setNode(nodeStatus.id, {
         id: nodeStatus.id,
         labelType: 'html',
-        label: NodeRenderer.nodeTemplate(nodeStatus),
+        label: NodeRenderer.nodeTemplate(nodeStatus, root),
         padding: 0,
         class: nodeStatus.phase.toLowerCase(),
-        ...NodeRenderer.getNodeDisplayProperties(nodeStatus),
+        ...NodeRenderer.getNodeDisplayProperties(nodeStatus, root),
         info
       });
     });
@@ -383,12 +400,18 @@ export class NodeRenderer {
     return 'Rectangle';
   }
 
-  static getNodeDisplayProperties(node: any): object {
+  static getNodeDisplayProperties(node: any, root = false): object {
     const shape = NodeRenderer.getNodeShape(node);
 
     if (shape === 'Rectangle') {
+
+      let height = NodeRenderer.nodeHeight;
+      if(root) {
+        height = NodeRenderer.summaryNodeHeight;
+      }
+
       return {
-        height: NodeRenderer.nodeHeight,
+        height: height,
         width: NodeRenderer.nodeWidth,
         shape: 'rect',
       }
