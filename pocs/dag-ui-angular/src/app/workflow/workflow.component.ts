@@ -256,6 +256,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     }
 
     this.markerId = this.yamlEditor.getEditor().session.addMarker(new aceRange(from, 0, to, 100), "highlight", "fullLine");
+    this.yamlEditor.getEditor().scrollToLine(from, true, true, () => {});
   }
 
   onLogsClicked() {
