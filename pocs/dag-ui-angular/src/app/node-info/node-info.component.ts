@@ -24,8 +24,10 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   message: string;
   logsAvailable: boolean = false;
   statusClass = {};
-  inputs = [];
-  outputs = [];
+  inputParameters = [];
+  outputParameters = [];
+  inputArtifacts = [];
+  outputArtifacts = [];
 
   parametersExpanded = false;
   containersExpanded = false;
@@ -42,6 +44,9 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
   updateNodeStatus(node: NodeStatus) {
     let loaded = null;
+
+    this.inputParameters = [];
+    this.inputArtifacts = [];
 
     this.node = node;
 
@@ -87,17 +92,15 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
     if ((node.type === 'DAG' || node.type === 'Steps') 
       && node.templateName === loaded.spec.entrypoint
       && loaded && loaded.spec.arguments.parameters) {
-      this.inputs = loaded.spec.arguments.parameters;
-    } else if (node.type == 'Pod' && node.inputs && node.inputs.parameters) {
-      this.inputs = node.inputs.parameters;
-    } else {
-      this.inputs = [];
+      this.inputParameters = loaded.spec.arguments.parameters;
+    } else if (node.type == 'Pod' && node.inputs) {
+      this.inputParameters = node.inputs.parameters;
+      this.outputArtifacts = node.inputs.artifacts;
     }
 
-    if (node.type !== 'DAG' && node.type !== 'Steps' && node.outputs && node.outputs.parameters) {
-      this.outputs = node.outputs.parameters;
-    } else {
-      this.outputs = [];
+    if (node.type !== 'DAG' && node.type !== 'Steps' && node.outputs) {
+      this.outputParameters = node.outputs.parameters;
+      this.outputArtifacts = node.outputs.artifacts;
     }
   }
 

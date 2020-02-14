@@ -64,13 +64,13 @@
 
       <div class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold">INPUTS</div>
       <div>
-        <app-parameter *ngFor="let parameter of inputs" [parameter]="parameter">
+        <app-parameter *ngFor="let parameter of inputParameters" [parameter]="parameter">
         </app-parameter>
       </div>
 
       <div class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold mt-5" *ngIf="node.type === 'Pod'">OUTPUTS</div>
       <div>
-        <app-parameter *ngFor="let parameter of outputs" [parameter]="parameter">
+        <app-parameter *ngFor="let parameter of outputParameters" [parameter]="parameter">
         </app-parameter>
       </div>
     </mat-expansion-panel>
@@ -111,7 +111,10 @@
         </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <div>Placeholder</div>
+      <div>
+        <app-metrics [workflowName]="workflow.name" [podId]="node.id" [nodePhase]="node.phase">
+        </app-metrics>
+      </div>
     </mat-expansion-panel>
   </div>
 </div>

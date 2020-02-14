@@ -49,6 +49,7 @@ import { ClosableSnackComponent } from './closable-snack/closable-snack.componen
 import { MatPaginatorModule } from "@angular/material/paginator";
 import { PhaseImagePipe } from "./pipes/phase-image/phase-image.pipe";
 import { PhaseTranslatePipe } from './pipes/phase-translate/phase-translate.pipe';
+import { MetricsComponent } from './node-info/metrics/metrics.component';
 
 @NgModule({
   declarations: [
@@ -77,7 +78,8 @@ import { PhaseTranslatePipe } from './pipes/phase-translate/phase-translate.pipe
     DateComponent,
     ClosableSnackComponent,
     PhaseImagePipe,
-    PhaseTranslatePipe
+    PhaseTranslatePipe,
+    MetricsComponent
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,
