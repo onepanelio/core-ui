@@ -403,8 +403,7 @@ export class NodeRenderer {
   static getNodeDisplayProperties(node: any, root = false): object {
     const shape = NodeRenderer.getNodeShape(node);
 
-    if (shape === 'Rectangle') {
-
+    if (shape === 'Rectangle' || root) {
       let height = NodeRenderer.nodeHeight;
       if(root) {
         height = NodeRenderer.summaryNodeHeight;
