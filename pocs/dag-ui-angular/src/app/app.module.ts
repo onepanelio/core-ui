@@ -50,6 +50,9 @@ import { MatPaginatorModule } from "@angular/material/paginator";
 import { PhaseImagePipe } from "./pipes/phase-image/phase-image.pipe";
 import { PhaseTranslatePipe } from './pipes/phase-translate/phase-translate.pipe';
 import { MetricsComponent } from './node-info/metrics/metrics.component';
+import { ApiModule as WorkflowApiModule, BASE_PATH as WORKFLOW_BASE_PATH } from "../workflow-api";
+import { ApiModule as NamespaceApiModule, BASE_PATH as NAMESPACE_BASE_PATH } from "../namespace-api";
+import { ApiModule as SecretApiModule, BASE_PATH as SECRET_BASE_PATH } from "../secret-api";
 
 @NgModule({
   declarations: [
@@ -109,8 +112,15 @@ import { MetricsComponent } from './node-info/metrics/metrics.component';
         MatCheckboxModule,
         CdkTableModule,
         MatPaginatorModule,
+        WorkflowApiModule,
+        NamespaceApiModule,
+        SecretApiModule
     ],
-  providers: [NamespaceService],
+  providers: [NamespaceService,
+      {provide: NAMESPACE_BASE_PATH, useValue: 'http://localhost:8888'},
+      {provide: WORKFLOW_BASE_PATH, useValue: 'http://localhost:8888'},
+      {provide: SECRET_BASE_PATH, useValue: 'http://localhost:8888'},
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
