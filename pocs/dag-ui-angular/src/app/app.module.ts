@@ -53,6 +53,7 @@ import { MetricsComponent } from './node-info/metrics/metrics.component';
 import { ApiModule as WorkflowApiModule, BASE_PATH as WORKFLOW_BASE_PATH } from "../workflow-api";
 import { ApiModule as NamespaceApiModule, BASE_PATH as NAMESPACE_BASE_PATH } from "../namespace-api";
 import { ApiModule as SecretApiModule, BASE_PATH as SECRET_BASE_PATH } from "../secret-api";
+import { environment } from "../environments/environment";
 
 @NgModule({
   declarations: [
@@ -117,9 +118,8 @@ import { ApiModule as SecretApiModule, BASE_PATH as SECRET_BASE_PATH } from "../
         SecretApiModule
     ],
   providers: [NamespaceService,
-      {provide: NAMESPACE_BASE_PATH, useValue: 'http://localhost:8888'},
-      {provide: WORKFLOW_BASE_PATH, useValue: 'http://localhost:8888'},
-      {provide: SECRET_BASE_PATH, useValue: 'http://localhost:8888'},
+      {provide: NAMESPACE_BASE_PATH, useValue: environment.baseUrl},
+      {provide: SECRET_BASE_PATH, useValue: environment.baseUrl},
   ],
   bootstrap: [AppComponent]
 })

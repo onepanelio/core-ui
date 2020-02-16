@@ -5,6 +5,7 @@ import * as yaml from 'js-yaml';
 import { WorkflowTemplateDetail } from '../workflow-template/workflow-template.service';
 import { NodeStatus } from '../node/node.service';
 import { map } from "rxjs/operators";
+import { environment } from "../../environments/environment";
 
 export interface Workflow {
   uid: string;
@@ -199,19 +200,15 @@ export interface ListWorkflowRequest {
 
 @Injectable()
 export class WorkflowService {
-
-  private baseUrl = 'http://localhost:8888';
-  private baseRPCUrl = 'localhost:8888';
-
   constructor(private client: HttpClient) {
   }
 
   watchWorkflow(namespace: string, name: string) {
-    return new WebSocket(`ws://${this.baseRPCUrl}/apis/v1beta1/${namespace}/workflows/${name}/watch`);
+    return new WebSocket(`ws://${environment.baseUrl}/apis/v1beta1/${namespace}/workflows/${name}/watch`);
   }
 
   getWorkflow(namespace: string, uid: string) {
-    return this.client.get<SimpleWorkflowDetail>(`${this.baseUrl}/apis/v1beta1/${namespace}/workflows/${uid}`)
+    return this.client.get<SimpleWorkflowDetail>(`${environment.baseUrl}/apis/v1beta1/${namespace}/workflows/${uid}`)
         .pipe(
             map(res => {
               return new SimpleWorkflowDetail(res);
@@ -220,7 +217,7 @@ export class WorkflowService {
   }
 
   listWorkflows(request: ListWorkflowRequest): Observable<WorkflowResponse> {
-    const url = `${this.baseUrl}/apis/v1beta1/${request.namespace}/workflows`;
+    const url = `${environment.baseUrl}/apis/v1beta1/${request.namespace}/workflows`;
     let query = new HttpParams();
 
     if (request.workflowTemplateUid) {
@@ -245,18 +242,18 @@ export class WorkflowService {
   }
 
   executeWorkflow(namespace: string, request: CreateWorkflow) {
-    const url = `${this.baseUrl}/apis/v1beta1/${namespace}/workflows`;
+    const url = `${environment.baseUrl}/apis/v1beta1/${namespace}/workflows`;
     return this.client.post<any>(url, request);
   }
 
   terminateWorkflow(namespace: string, name: string) {
-    const url = `${this.baseUrl}/apis/v1beta1/${namespace}/workflows/${name}/terminate`;
+    const url = `${environment.baseUrl}/apis/v1beta1/${namespace}/workflows/${name}/terminate`;
 
     return this.client.put(url, {});
   }
 
   getWorkflowMetrics(namespace: string, workflowName: string, podId: string) {
-    const url = `${this.baseUrl}/apis/v1beta1/${namespace}/workflows/${workflowName}/pods/${podId}/metrics`;
+    const url = `${environment.baseUrl}/apis/v1beta1/${namespace}/workflows/${workflowName}/pods/${podId}/metrics`;
 
     return this.client.get(url, {});
   }
