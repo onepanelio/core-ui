@@ -11,6 +11,7 @@ import { ApiSecret, SecretServiceService } from "../../../secret-api";
 export class EditSecretComponent implements OnInit {
   namespace: string = '';
   secretName: string = '';
+  secretKey: string = '';
 
   form: FormGroup;
   keyName: AbstractControl;
@@ -27,6 +28,7 @@ export class EditSecretComponent implements OnInit {
     this.activatedRoute.paramMap.subscribe(next => {
       this.namespace = next.get('namespace');
       this.secretName = next.get('secret-name');
+      this.secretKey = next.get('secret-key');
 
       this.form = this.formBuilder.group({
         keyName: ['', Validators.compose([
@@ -39,7 +41,7 @@ export class EditSecretComponent implements OnInit {
       this.keyName = this.form.get('keyName');
       this.keyName.disable();
 
-      this.keyName.setValue(this.secretName);
+      this.keyName.setValue(this.secretKey);
 
       this.value = this.form.get('value');
 
@@ -50,8 +52,9 @@ export class EditSecretComponent implements OnInit {
   getSecret() {
     this.secretService.getSecret(this.namespace, this.secretName)
         .subscribe(apiSecret =>{
-          if(apiSecret.data[this.secretName]) {
-            this.value.setValue(apiSecret.data[this.secretName]);
+          if(apiSecret.data[this.secretKey]) {
+            const secretValue = atob(apiSecret.data[this.secretKey]);
+            this.value.setValue(secretValue);
           }
         })
   }
@@ -61,15 +64,7 @@ export class EditSecretComponent implements OnInit {
   }
 
   save() {
-    const key = this.keyName.value;
-    const data: ApiSecret = {
-      name: key,
-      data: {
-        key: this.value.value,
-      }
-    };
-
-    this.secretService.updateSecretKeyValue(this.namespace, this.secretName)
+    this.secretService.updateSecretKeyValue(this.namespace, this.secretKey)
         .subscribe(res => {
           console.log(res);
         }, err => {

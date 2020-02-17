@@ -10,6 +10,7 @@ import { ApiSecret, SecretServiceService } from "../../../secret-api";
 })
 export class CreateSecretComponent implements OnInit {
   namespace: string = '';
+  secretName: string = '';
 
   form: FormGroup;
   keyName: AbstractControl;
@@ -25,6 +26,7 @@ export class CreateSecretComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(next => {
       this.namespace = next.get('namespace');
+      this.secretName = next.get('secret-name');
     });
 
     this.form = this.formBuilder.group({
@@ -46,15 +48,16 @@ export class CreateSecretComponent implements OnInit {
   create() {
     const key = this.keyName.value;
     const data: ApiSecret = {
-      name: key,
+      name: this.secretName,
       data: {
-        key: this.value.value,
       }
     };
 
-    this.secretService.createSecret(data, this.namespace)
+    data.data[key] = this.value.value;
+
+    this.secretService.addSecretKeyValue(data, this.namespace, this.secretName)
         .subscribe(res => {
-          this.router.navigate(['/', this.namespace, 'secrets', key, 'edit']);
+          this.router.navigate(['/', this.namespace, 'secrets', this.secretName, key, 'edit']);
         }, err => {
           console.error(err);
         })

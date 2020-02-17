@@ -41,11 +41,11 @@ const routes: Routes = [
     component: SecretsComponent
   },
   {
-    path: ':namespace/secrets/create',
+    path: ':namespace/secrets/:secret-name/create',
     component: CreateSecretComponent
   },
   {
-    path: ':namespace/secrets/:secret-name/edit',
+    path: ':namespace/secrets/:secret-name/:secret-key/edit',
     component: EditSecretComponent
   },
   {
