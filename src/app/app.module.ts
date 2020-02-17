@@ -53,6 +53,8 @@ import { MetricsComponent } from './node-info/metrics/metrics.component';
 import { ApiModule as NamespaceApiModule, BASE_PATH as NAMESPACE_BASE_PATH } from "../namespace-api";
 import { ApiModule as SecretApiModule, BASE_PATH as SECRET_BASE_PATH } from "../secret-api";
 import { environment } from "../environments/environment";
+import { SecretsComponent } from './secrets/secrets.component';
+import { SecretListComponent } from './secrets/secret-list/secret-list.component';
 
 @NgModule({
   declarations: [
@@ -82,7 +84,9 @@ import { environment } from "../environments/environment";
     ClosableSnackComponent,
     PhaseImagePipe,
     PhaseTranslatePipe,
-    MetricsComponent
+    MetricsComponent,
+    SecretsComponent,
+    SecretListComponent
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,

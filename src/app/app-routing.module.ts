@@ -6,7 +6,8 @@ import { WorkflowTemplateViewComponent } from './workflow-template/workflow-temp
 import { WorkflowTemplateCreateComponent } from './workflow-template/workflow-template-create/workflow-template-create.component';
 import { WorkflowListComponent } from './workflow/workflow-list/workflow-list.component';
 import { WorkflowTemplateEditComponent } from './workflow-template/workflow-template-edit/workflow-template-edit.component';
-import {NamespaceSelectComponent} from "./namespace-select/namespace-select.component";
+import { NamespaceSelectComponent } from "./namespace-select/namespace-select.component";
+import { SecretsComponent } from "./secrets/secrets.component";
 
 const routes: Routes = [
   {
@@ -32,6 +33,10 @@ const routes: Routes = [
   {
     path: ':namespace/workflows/:name',
     component: WorkflowComponent
+  },
+  {
+    path: ':namespace/secrets',
+    component: SecretsComponent
   },
   {
     path: '**',

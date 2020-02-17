@@ -1,3 +1,4 @@
+$black: black;
 $white: white;
 $primary-light: #EDF2FD;
 $primary-lighter: #BED2FE;
@@ -16,7 +17,7 @@ $background-color: $light-gray;
 
 $colors: (
   "white": $white,
-  "black": black,
+  "black": $black,
   "primary-light": $primary-light,
   "primary-lighter": $primary-lighter,
   "primary": $primary,
