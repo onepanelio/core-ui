@@ -55,6 +55,7 @@ import { ApiModule as SecretApiModule, BASE_PATH as SECRET_BASE_PATH } from "../
 import { environment } from "../environments/environment";
 import { SecretsComponent } from './secrets/secrets.component';
 import { SecretListComponent } from './secrets/secret-list/secret-list.component';
+import { SecretValueViewComponent } from './secrets/secret-value-view/secret-value-view.component';
 
 @NgModule({
   declarations: [
@@ -86,7 +87,8 @@ import { SecretListComponent } from './secrets/secret-list/secret-list.component
     PhaseTranslatePipe,
     MetricsComponent,
     SecretsComponent,
-    SecretListComponent
+    SecretListComponent,
+    SecretValueViewComponent
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,
