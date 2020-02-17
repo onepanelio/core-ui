@@ -8,6 +8,8 @@ import { WorkflowListComponent } from './workflow/workflow-list/workflow-list.co
 import { WorkflowTemplateEditComponent } from './workflow-template/workflow-template-edit/workflow-template-edit.component';
 import { NamespaceSelectComponent } from "./namespace-select/namespace-select.component";
 import { SecretsComponent } from "./secrets/secrets.component";
+import { CreateSecretComponent } from "./secrets/create-secret/create-secret.component";
+import { EditSecretComponent } from "./secrets/edit-secret/edit-secret.component";
 
 const routes: Routes = [
   {
@@ -37,6 +39,14 @@ const routes: Routes = [
   {
     path: ':namespace/secrets',
     component: SecretsComponent
+  },
+  {
+    path: ':namespace/secrets/create',
+    component: CreateSecretComponent
+  },
+  {
+    path: ':namespace/secrets/:secret-name/edit',
+    component: EditSecretComponent
   },
   {
     path: '**',

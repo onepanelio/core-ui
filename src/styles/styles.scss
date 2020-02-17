@@ -307,3 +307,21 @@ a {
 mat-tab-group.no-bottom-border .mat-tab-header {
   border-bottom: none !important;;
 }
+
+
+
+.op-form {
+  @include op-info-box-base();
+
+  .header {
+    font-family: $fontProxima;
+    font-size: $fontLarger;
+    color: $primary;
+    margin-bottom: 10px;
+  }
+
+  form {
+
+  }
+
+}

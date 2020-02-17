@@ -56,6 +56,8 @@ import { environment } from "../environments/environment";
 import { SecretsComponent } from './secrets/secrets.component';
 import { SecretListComponent } from './secrets/secret-list/secret-list.component';
 import { SecretValueViewComponent } from './secrets/secret-value-view/secret-value-view.component';
+import { CreateSecretComponent } from './secrets/create-secret/create-secret.component';
+import { EditSecretComponent } from './secrets/edit-secret/edit-secret.component';
 
 @NgModule({
   declarations: [
@@ -88,7 +90,9 @@ import { SecretValueViewComponent } from './secrets/secret-value-view/secret-val
     MetricsComponent,
     SecretsComponent,
     SecretListComponent,
-    SecretValueViewComponent
+    SecretValueViewComponent,
+    CreateSecretComponent,
+    EditSecretComponent
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,

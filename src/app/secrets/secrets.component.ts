@@ -17,8 +17,6 @@ export class SecretsComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(next => {
       this.namespace = next.get('namespace');
-
     });
   }
-
 }
