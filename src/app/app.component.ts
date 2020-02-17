@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import 'brace';
 import 'brace/mode/yaml';
-import { NamespaceService } from "./namespace/namespace.service";
+import { NamespaceTracker } from "./namespace/namespace-tracker.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { NamespaceServiceService } from "../namespace-api";
 
 @Component({
   selector: 'app-root',
@@ -15,11 +16,12 @@ export class AppComponent implements OnInit {
   selectedNamespace: string;
   namespaces = [];
 
-  constructor(private namespaceService: NamespaceService,
+  constructor(private namespaceTracker: NamespaceTracker,
+              private namespaceService: NamespaceServiceService,
               private activatedRoute: ActivatedRoute,
               private router: Router,
               private snackbar: MatSnackBar) {
-    this.selectedNamespace = namespaceService.activeNamespace;
+    this.selectedNamespace = namespaceTracker.activeNamespace;
   }
 
   ngOnInit(): void {
@@ -36,19 +38,19 @@ export class AppComponent implements OnInit {
 
           if(namespace) {
             this.selectedNamespace = namespace;
-            this.namespaceService.activeNamespace = namespace;
+            this.namespaceTracker.activeNamespace = namespace;
           }
         });
   }
 
 
   onNamespaceChange() {
-    if (this.namespaceService.activeNamespace === this.selectedNamespace) {
+    if (this.namespaceTracker.activeNamespace === this.selectedNamespace) {
       return;
     }
 
-    this.namespaceService.activeNamespace = this.selectedNamespace;
+    this.namespaceTracker.activeNamespace = this.selectedNamespace;
     this.snackbar.open(`Switched to namespace '${this.selectedNamespace}'`, 'OK');
-    this.router.navigate(['/', this.namespaceService.activeNamespace, 'workflow-templates'])
+    this.router.navigate(['/', this.namespaceTracker.activeNamespace, 'workflow-templates'])
   }
 }

@@ -39,7 +39,7 @@ import { ActivityBarComponent } from './activity-bar/activity-bar.component';
 import { WorkflowExecuteDialogComponent } from './workflow/workflow-execute-dialog/workflow-execute-dialog.component';
 import { MatDialogModule } from "@angular/material/dialog";
 import { MatCheckboxModule } from "@angular/material/checkbox";
-import { NamespaceService } from "./namespace/namespace.service";
+import { NamespaceTracker } from "./namespace/namespace-tracker.service";
 import { LogsComponent } from "./container-logs/logs.component";
 import { AlertComponent } from './alert/alert.component';
 import { ParameterComponent } from './node-info/parameter/parameter.component';
@@ -115,7 +115,7 @@ import { environment } from "../environments/environment";
         NamespaceApiModule,
         SecretApiModule
     ],
-  providers: [NamespaceService,
+  providers: [NamespaceTracker,
       {provide: NAMESPACE_BASE_PATH, useValue: environment.baseUrl},
       {provide: SECRET_BASE_PATH, useValue: environment.baseUrl},
   ],

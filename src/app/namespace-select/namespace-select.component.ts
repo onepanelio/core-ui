@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
-import { NamespaceService } from "../namespace/namespace.service";
+import { NamespaceTracker } from "../namespace/namespace-tracker.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { HttpErrorResponse } from "@angular/common/http";
 import { NamespaceServiceService } from "../../namespace-api";
@@ -12,7 +12,7 @@ import { NamespaceServiceService } from "../../namespace-api";
 })
 export class NamespaceSelectComponent implements OnInit {
     constructor(
-        private namespaceService: NamespaceService,
+        private namespaceService: NamespaceTracker,
         private namespaceApiService: NamespaceServiceService,
         private router: Router,
         private snackbar: MatSnackBar) {
