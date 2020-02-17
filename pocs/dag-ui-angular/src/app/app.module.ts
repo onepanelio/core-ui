@@ -112,7 +112,6 @@ import { environment } from "../environments/environment";
         MatCheckboxModule,
         CdkTableModule,
         MatPaginatorModule,
-        WorkflowApiModule,
         NamespaceApiModule,
         SecretApiModule
     ],
