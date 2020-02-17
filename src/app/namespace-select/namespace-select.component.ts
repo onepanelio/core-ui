@@ -41,27 +41,6 @@ export class NamespaceSelectComponent implements OnInit {
                 this.namespaceService.activeNamespace = newNamespace;
                 this.onNamespaceSelected(this.namespaceService.activeNamespace);
             });
-
-        // this.namespaceService.listNamespaces()
-        //     .subscribe(namespaceResponse => {
-        //         if (namespaceResponse.count) {
-        //             newNamespace = namespaceResponse.namespaces[0].name;
-        //         } else {
-        //             this.snackbar.open(`Unable to get activate namespace from API. Resorting to 'default'.`, 'OK');
-        //         }
-        //
-        //         this.namespaceService.activeNamespace = newNamespace;
-        //         this.onNamespaceSelected(this.namespaceService.activeNamespace);
-        //     }, (err: HttpErrorResponse) => {
-        //         let errorMessage = 'Unable to get activate namespace from API.';
-        //         if (err.status === 0) {
-        //             errorMessage = 'Unable to connect to API. Is it running?'
-        //         }
-        //
-        //         this.snackbar.open(`${errorMessage} Resorting to namespace '${newNamespace}'.`, 'OK');
-        //         this.namespaceService.activeNamespace = newNamespace;
-        //         this.onNamespaceSelected(this.namespaceService.activeNamespace);
-        //     });
     }
 
     onNamespaceSelected(namespace: string) {
