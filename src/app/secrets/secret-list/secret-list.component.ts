@@ -9,7 +9,7 @@ import { ActivatedRoute } from "@angular/router";
 })
 export class SecretListComponent implements OnInit {
   @Input() namespace: string;
-  secrets: ApiSecret[] = [];
+  secrets = Array<{name: string, value: string}>();
 
   displayedColumns = ['key', 'value', 'actions'];
   secretShown = new Map<string, boolean>();
@@ -23,15 +23,20 @@ export class SecretListComponent implements OnInit {
   }
 
   getSecrets() {
-    this.secretService.listSecrets(this.namespace)
-        .subscribe(res => {
-          if(!res.secrets) {
-            return;
-          }
+      // Currently we only support secrets for 'onepanel-default-env'.
+    this.secretService.getSecret(this.namespace, 'onepanel-default-env')
+        .subscribe(apiSecret => {
+            let newSecrets = [];
 
-          this.secrets = res.secrets;
+            for(let key in apiSecret.data) {
+                newSecrets.push({
+                    name: key,
+                    value: apiSecret.data[key]
+                })
+            }
 
-          console.log(res.secrets);
+            this.secrets = newSecrets;
+
         }, err => {
           // Alright, keep your secrets...
           console.error(err);

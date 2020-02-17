@@ -55,9 +55,9 @@ import { ApiModule as SecretApiModule, BASE_PATH as SECRET_BASE_PATH } from "../
 import { environment } from "../environments/environment";
 import { SecretsComponent } from './secrets/secrets.component';
 import { SecretListComponent } from './secrets/secret-list/secret-list.component';
-import { SecretValueViewComponent } from './secrets/secret-value-view/secret-value-view.component';
 import { CreateSecretComponent } from './secrets/create-secret/create-secret.component';
 import { EditSecretComponent } from './secrets/edit-secret/edit-secret.component';
+import { Base64DecodePipe } from './pipes/base64/base64-decode.pipe';
 
 @NgModule({
   declarations: [
@@ -90,9 +90,9 @@ import { EditSecretComponent } from './secrets/edit-secret/edit-secret.component
     MetricsComponent,
     SecretsComponent,
     SecretListComponent,
-    SecretValueViewComponent,
     CreateSecretComponent,
-    EditSecretComponent
+    EditSecretComponent,
+    Base64DecodePipe
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,
