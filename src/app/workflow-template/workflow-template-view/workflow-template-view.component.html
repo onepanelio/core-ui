@@ -54,7 +54,7 @@
         <mat-paginator class="no-background font-size-small"
                 *ngIf="workflowResponse"
                 (page)="onWorkflowPageChange($event)"
-                [pageIndex]="1"
+                [pageIndex]="0"
                 [length]="this.workflowResponse.totalCount"
                 [pageSize]="this.workflowPagination.pageSize"
                 [pageSizeOptions]="[5, 10, 25, 100]">
