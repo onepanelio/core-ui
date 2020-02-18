@@ -20,10 +20,6 @@
             <i class="fas fa-pencil-alt"></i>
             <span class="ml-2">Edit</span>
           </a>
-          <a class="link-button ml-10" [routerLink]="['/', this.namespace, 'workflow-templates', workflowTemplate.uid, 'edit']">
-            <i class="far fa-copy"></i>
-            <span class="ml-2">Clone</span>
-          </a>
           <button mat-button color="primary" class="link-button font-size-regular ml-10" (click)="deleteWorkflowTemplate()">
             <mat-icon [fontSet]="'fas'" [fontIcon]="'fa-trash-alt'"></mat-icon>
             Delete
