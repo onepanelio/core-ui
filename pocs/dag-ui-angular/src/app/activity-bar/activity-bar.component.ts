@@ -52,7 +52,7 @@ export class ActivityBarComponent implements OnInit {
       return 'progress';
     }
 
-    if(value === 'Failed' || value === 'failed') {
+    if(value === 'Failed' || value === 'failed' || value === 'Error' || value === 'error') {
       return 'failed';
     }
   }

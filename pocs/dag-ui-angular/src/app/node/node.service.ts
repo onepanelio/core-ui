@@ -60,6 +60,7 @@ export class NodeInfo {
 
 export class NodeRenderer {
   static nodeHeight = 50;
+  static summaryNodeHeight = 82;
   static nodeWidth = 200;
 
 
@@ -114,35 +115,51 @@ export class NodeRenderer {
     return info;
   }
 
-  static nodeTemplate(node: any) {
+  static nodeTemplate(node: any, root = false) {
     let nodeRootClasses = 'node-root ';
-    if (node.type === 'StepGroup' || node.type === 'DAG') {
+    if ( (node.type === 'StepGroup' || node.type === 'DAG') && !root) {
       nodeRootClasses += ' dashed-circle';
     } else {
       nodeRootClasses += ' rect';
     }
 
+    if(root) {
+      nodeRootClasses += ' summary';
+    }
+
     let html = `<div id="${node.id}" class="${nodeRootClasses}">`;
-    if (node.type === 'StepGroup' || node.type === 'DAG') {
-    } else {
-      if(node.phase === 'Succeeded') {
-        html += '<img class="status-icon" src="/assets/images/status-icons/completed.svg"/>';
-      } else if (node.phase === 'Running') {
-        html += '<img class="status-icon" src="/assets/images/status-icons/running-blue.svg"/>';
-      } else if (node.phase === 'Failed' || node.phase === 'Error') {
-        html += '<img class="status-icon" src="/assets/images/status-icons/failed.svg"/>';
-      } else {
-        html += '<img class="status-icon" src="/assets/images/status-icons/notrun.svg"/>';
+
+    if(root) {
+      html += '<div class="text-center font-roboto font-weight-bold root-element">WORKFLOW SUMMARY</div><div class="not-root">';
+    }
+
+    const showInfo = root || !(node.type === 'StepGroup' || node.type === 'DAG');
+
+    if(showInfo) {
+      if (!root) {
+        if (node.phase === 'Succeeded') {
+          html += '<img class="status-icon" src="/assets/images/status-icons/completed.svg"/>';
+        } else if (node.phase === 'Running') {
+          html += '<img class="status-icon" src="/assets/images/status-icons/running-blue.svg"/>';
+        } else if (node.phase === 'Failed' || node.phase === 'Error') {
+          html += '<img class="status-icon" src="/assets/images/status-icons/failed.svg"/>';
+        } else {
+          html += '<img class="status-icon" src="/assets/images/status-icons/notrun.svg"/>';
+        }
       }
 
-      html += `<span class="name font-roboto">
-      ${
-        node.type === 'StepGroup' || node.type === undefined
-          ? node.name
-          : node.displayName
+      let nameToShow = node.displayName;
+      if(!node.type || node.type === 'StepGroup' || node.type === 'DAG') {
+        nameToShow = node.name;
       }
-      </span>`;
+
+      html += `<span class="name font-roboto">${nameToShow}</span>`;
     }
+
+    if(root) {
+      html += '</div>';
+    }
+
     html += '</div>';
 
     return html;
@@ -171,6 +188,7 @@ export class NodeRenderer {
     parentFullPath: string
   ): void {
 
+    console.log('build dag');
     const root = templates.get(rootTemplateId);
 
     if (root && root.nodeType === 'DAG') {
@@ -286,19 +304,58 @@ export class NodeRenderer {
       return;
     }
 
+    console.log(status);
+
+    let childrenNodes = {};
+
+    Object.keys(status.nodes).forEach(key => {
+      const nodeStatus = status.nodes[key];
+
+      if(nodeStatus.children) {
+        for (let childId of nodeStatus.children) {
+          childrenNodes[childId] = true;
+        }
+      }
+    });
+
+
+    let rootsMap = {};
+    if(status.nodes.length === 1) {
+      rootsMap[status.nodes[0]] = true;
+    }
+
+    for(let key in status.nodes) {
+      const nodeStatus = status.nodes[key];
+
+      // Can't be a root without children.
+      if(!nodeStatus.children || nodeStatus.children.length == 0) {
+        continue;
+      }
+
+      if(key in childrenNodes) {
+        continue;
+      }
+
+      rootsMap[key] = true;
+    }
+
     Object.keys(status.nodes).forEach(key => {
       const nodeStatus = status.nodes[key];
 
       const info = new NodeInfo();
       NodeRenderer.populateInfoFromNodeStatus(info, nodeStatus);
 
+
+      // Key might not exist, so we double negate to typecast to boolean.
+      const root = !!(rootsMap[key]);
+
       graph.setNode(nodeStatus.id, {
         id: nodeStatus.id,
         labelType: 'html',
-        label: NodeRenderer.nodeTemplate(nodeStatus),
+        label: NodeRenderer.nodeTemplate(nodeStatus, root),
         padding: 0,
         class: nodeStatus.phase.toLowerCase(),
-        ...NodeRenderer.getNodeDisplayProperties(nodeStatus),
+        ...NodeRenderer.getNodeDisplayProperties(nodeStatus, root),
         info
       });
     });
@@ -317,6 +374,8 @@ export class NodeRenderer {
   }
 
   static createGraphFromManifest(manifestRaw: string): dagre.graphlib.Graph {
+    console.log('createGraphFromManifest');
+
     const graph = new dagre.graphlib.Graph();
     graph.setGraph({});
     graph.setDefaultEdgeLabel(() => ({}));
@@ -383,12 +442,17 @@ export class NodeRenderer {
     return 'Rectangle';
   }
 
-  static getNodeDisplayProperties(node: any): object {
+  static getNodeDisplayProperties(node: any, root = false): object {
     const shape = NodeRenderer.getNodeShape(node);
 
-    if (shape === 'Rectangle') {
+    if (shape === 'Rectangle' || root) {
+      let height = NodeRenderer.nodeHeight;
+      if(root) {
+        height = NodeRenderer.summaryNodeHeight;
+      }
+
       return {
-        height: NodeRenderer.nodeHeight,
+        height: height,
         width: NodeRenderer.nodeWidth,
         shape: 'rect',
       }
