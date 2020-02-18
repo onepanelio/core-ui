@@ -204,7 +204,7 @@ export class WorkflowService {
   }
 
   watchWorkflow(namespace: string, name: string) {
-    return new WebSocket(`ws://${environment.baseUrl}/apis/v1beta1/${namespace}/workflows/${name}/watch`);
+    return new WebSocket(`${environment.baseWsUrl}/apis/v1beta1/${namespace}/workflows/${name}/watch`);
   }
 
   getWorkflow(namespace: string, uid: string) {
