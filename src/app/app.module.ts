@@ -58,6 +58,7 @@ import { SecretListComponent } from './secrets/secret-list/secret-list.component
 import { CreateSecretComponent } from './secrets/create-secret/create-secret.component';
 import { EditSecretComponent } from './secrets/edit-secret/edit-secret.component';
 import { Base64DecodePipe } from './pipes/base64/base64-decode.pipe';
+import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
 
 @NgModule({
   declarations: [
@@ -92,10 +93,12 @@ import { Base64DecodePipe } from './pipes/base64/base64-decode.pipe';
     SecretListComponent,
     CreateSecretComponent,
     EditSecretComponent,
-    Base64DecodePipe
+    Base64DecodePipe,
+    ConfirmationDialogComponent
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,
+        ConfirmationDialogComponent,
         ClosableSnackComponent
     ],
     imports: [

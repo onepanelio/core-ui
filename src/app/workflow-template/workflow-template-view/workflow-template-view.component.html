@@ -15,7 +15,7 @@
     <div class="op-info-box mt-8">
       <div class="header">
         <div *ngIf="workflowTemplate" class="title">{{workflowTemplate.name}}</div>
-        <div *ngIf="workflowTemplate" class="actions">
+        <div *ngIf="workflowTemplate" class="actions font-roboto">
           <a class="link-button" (click)="editSelectedWorkflowTemplateVersion()">
             <i class="fas fa-pencil-alt"></i>
             <span class="ml-2">Edit</span>
@@ -24,10 +24,10 @@
             <i class="far fa-copy"></i>
             <span class="ml-2">Clone</span>
           </a>
-          <a class="link-button ml-10" [routerLink]="['/', this.namespace, 'workflow-templates', workflowTemplate.uid, 'edit']">
-            <i class="fas fa-trash-alt"></i>
-            <span class="ml-2">Delete</span>
-          </a>
+          <button mat-button color="primary" class="link-button font-size-regular ml-10" (click)="deleteWorkflowTemplate()">
+            <mat-icon [fontSet]="'fas'" [fontIcon]="'fa-trash-alt'"></mat-icon>
+            Delete
+          </button>
         </div>
       </div>
       <div>

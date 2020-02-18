@@ -15,6 +15,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatDialog } from "@angular/material/dialog";
 import { WorkflowExecuteDialogComponent } from "../../workflow/workflow-execute-dialog/workflow-execute-dialog.component";
 import { PageEvent } from "@angular/material/paginator";
+import { ConfirmationDialogComponent } from "../../confirmation-dialog/confirmation-dialog.component";
 
 export class Pagination {
   page: number = 1;
@@ -195,5 +196,29 @@ export class WorkflowTemplateViewComponent implements OnInit {
     this.workflowPagination.pageSize = event.pageSize;
 
     this.getWorkflows();
+  }
+
+  deleteWorkflowTemplate() {
+    const dialog = this.dialog.open(ConfirmationDialogComponent, {
+      width: '500px',
+      data: {
+        title: 'Are you sure you want to delete this template?',
+        message: 'Once deleted, this template can not be brought back',
+        confirmText: 'YES, DELETE TEMPLATE',
+        type: 'delete'
+      }
+    });
+
+    dialog.afterClosed().subscribe(res => {
+      if (!res) {
+        return;
+      }
+
+      this.workflowTemplateService.archiveWorkflowTemplate(this.namespace, this.uid)
+          .subscribe(res => {
+            this.router.navigate(['/', this.namespace, 'workflow-templates']);
+            this.snackBar.open(`Workflow template ${this.uid} has been deleted.`, 'OK');
+          })
+    });
   }
 }

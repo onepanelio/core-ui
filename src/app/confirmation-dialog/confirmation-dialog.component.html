@@ -1,0 +1,11 @@
+<div class="confirmation-dialog font-roboto">
+    <div mat-dialog-title>{{ data.title}}</div>
+
+    <div mat-dialog-content>{{data.message}}</div>
+
+    <div mat-dialog-actions class="d-flex justify-content-between mt-6">
+        <button mat-button class="font-medium-gray op-button cancel-button" (click)="onCancel()">{{data.cancelText}}</button>
+        <button *ngIf="data.type == 'confirm'" mat-flat-button color="accent" class="op-rounded op-button border-secondary" (click)="onConfirm()">{{data.confirmText}}</button>
+        <button *ngIf="data.type == 'delete'" mat-flat-button class="op-rounded op-button border-secondary bg-danger font-white" (click)="onConfirm()">{{data.confirmText}}</button>
+    </div>
+</div>
