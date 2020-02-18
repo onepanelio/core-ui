@@ -199,6 +199,12 @@ a {
   &:hover {
     cursor: pointer;
   }
+
+  &.mat-button {
+    mat-icon {
+      vertical-align: baseline !important;
+    }
+  }
 }
 
 // Visibility
