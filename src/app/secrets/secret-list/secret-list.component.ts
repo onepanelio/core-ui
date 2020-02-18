@@ -55,4 +55,8 @@ export class SecretListComponent implements OnInit {
   hideSecret(key: string) {
       this.secretShown.set(key, false);
   }
+
+  deleteSecret(key: string) {
+      // this.secretService.deleteSecretKey(this.namespace, this.)
+  }
 }
