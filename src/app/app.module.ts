@@ -41,7 +41,7 @@ import { MatDialogModule } from "@angular/material/dialog";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { NamespaceTracker } from "./namespace/namespace-tracker.service";
 import { LogsComponent } from "./container-logs/logs.component";
-import { AlertComponent } from './alert/alert.component';
+import { AlertComponent } from './alert/alert/alert.component';
 import { ParameterComponent } from './node-info/parameter/parameter.component';
 import { DateComponent } from './date/date.component';
 import { CdkTableModule } from "@angular/cdk/table";
@@ -59,6 +59,8 @@ import { CreateSecretComponent } from './secrets/create-secret/create-secret.com
 import { EditSecretComponent } from './secrets/edit-secret/edit-secret.component';
 import { Base64DecodePipe } from './pipes/base64/base64-decode.pipe';
 import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
+import { AlertPanelComponent } from './alert/alert-panel/alert-panel.component';
+import { AlertService } from "./alert/alert.service";
 
 @NgModule({
   declarations: [
@@ -94,7 +96,8 @@ import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-
     CreateSecretComponent,
     EditSecretComponent,
     Base64DecodePipe,
-    ConfirmationDialogComponent
+    ConfirmationDialogComponent,
+    AlertPanelComponent
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,
@@ -128,7 +131,9 @@ import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-
         NamespaceApiModule,
         SecretApiModule
     ],
-  providers: [NamespaceTracker,
+  providers: [
+      NamespaceTracker,
+      AlertService,
       {provide: NAMESPACE_BASE_PATH, useValue: environment.baseUrl},
       {provide: SECRET_BASE_PATH, useValue: environment.baseUrl},
   ],

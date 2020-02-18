@@ -17,6 +17,10 @@
     border-color: $color !important;
   }
 
+  .color-#{$name} {
+    color: $color !important;
+  }
+
   .bg-#{$name} {
     background-color: $color !important;
   }

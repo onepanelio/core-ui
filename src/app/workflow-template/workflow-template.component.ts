@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { WorkflowTemplateBase, WorkflowTemplateService } from "./workflow-template.service";
+import { AlertService } from "../alert/alert.service";
+import { Alert } from "../alert/alert";
 
 @Component({
   selector: 'app-workflow-template',
@@ -18,7 +20,7 @@ export class WorkflowTemplateComponent implements OnInit {
 
   constructor(
       private activatedRoute: ActivatedRoute,
-      private workflowTemplateService: WorkflowTemplateService
+      private workflowTemplateService: WorkflowTemplateService,
   ) { }
 
   ngOnInit() {

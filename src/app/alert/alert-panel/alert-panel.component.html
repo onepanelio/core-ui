@@ -1,0 +1,9 @@
+<div *ngFor="let wrapper of alerts">
+    <app-alert
+            [alert]="wrapper.alert"
+            [autoDismiss]="wrapper.config.autoDismiss"
+            [autoDismissDelay]="wrapper.config.autoDismissDelay"
+            [showCloseButton]="wrapper.config.showCloseButton"
+            [showIcon]="wrapper.config.showIcon"
+            (alertAction)="onAlertAction($event)"></app-alert>
+</div>

@@ -10,12 +10,12 @@ import { WorkflowService } from "../../workflow/workflow.service";
 import { WorkflowTemplateSelected } from "../../workflow-template-select/workflow-template-select.component";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { Alert } from "../../alert/alert.component";
 import { HttpErrorResponse } from "@angular/common/http";
 import { AceEditorComponent } from "ng2-ace-editor";
 import * as yaml from 'js-yaml';
 import * as ace from 'brace';
 import { ClosableSnackComponent } from "../../closable-snack/closable-snack.component";
+import { Alert } from "../../alert/alert";
 const aceRange = ace.acequire('ace/range').Range;
 
 @Component({

@@ -1,9 +1,17 @@
-@import "../../styles/colors";
-@import "../../styles/styles";
+@import "../../../styles/colors";
+@import "../../../styles/styles";
 
 .alert {
   @include op-border();
-  padding: 4px 20px;
+  padding: 10px 20px;
+
+  button {
+    opacity: 0.6;
+  }
+}
+
+.alert-title {
+  font-weight: bold;
 }
 
 .alert-success {
@@ -15,10 +23,6 @@
   border-color: $danger;
   background-color: $danger-light;
   color: $danger;
-
-  .alert-title {
-    font-weight: bold;
-  }
 }
 
 .alert-action {

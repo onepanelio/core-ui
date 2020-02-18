@@ -16,6 +16,8 @@ import { MatDialog } from "@angular/material/dialog";
 import { WorkflowExecuteDialogComponent } from "../../workflow/workflow-execute-dialog/workflow-execute-dialog.component";
 import { PageEvent } from "@angular/material/paginator";
 import { ConfirmationDialogComponent } from "../../confirmation-dialog/confirmation-dialog.component";
+import { AlertService } from "../../alert/alert.service";
+import { Alert } from "../../alert/alert";
 
 export class Pagination {
   page: number = 1;
@@ -84,7 +86,8 @@ export class WorkflowTemplateViewComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private workflowService: WorkflowService,
     private workflowTemplateService: WorkflowTemplateService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private alertService: AlertService
   ) { }
 
   ngOnInit() {
@@ -217,7 +220,11 @@ export class WorkflowTemplateViewComponent implements OnInit {
       this.workflowTemplateService.archiveWorkflowTemplate(this.namespace, this.uid)
           .subscribe(res => {
             this.router.navigate(['/', this.namespace, 'workflow-templates']);
-            this.snackBar.open(`Workflow template ${this.uid} has been deleted.`, 'OK');
+
+            this.alertService.storeAlert(new Alert({
+              message: `Workflow template '${this.workflowTemplate.name}' has been deleted`,
+              type: 'success'
+            }));
           })
     });
   }
