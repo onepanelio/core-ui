@@ -15,6 +15,9 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { MatDialog } from "@angular/material/dialog";
 import { WorkflowExecuteDialogComponent } from "../../workflow/workflow-execute-dialog/workflow-execute-dialog.component";
 import { PageEvent } from "@angular/material/paginator";
+import { ConfirmationDialogComponent } from "../../confirmation-dialog/confirmation-dialog.component";
+import { AlertService } from "../../alert/alert.service";
+import { Alert } from "../../alert/alert";
 
 export class Pagination {
   page: number = 1;
@@ -83,7 +86,8 @@ export class WorkflowTemplateViewComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private workflowService: WorkflowService,
     private workflowTemplateService: WorkflowTemplateService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private alertService: AlertService
   ) { }
 
   ngOnInit() {
@@ -195,5 +199,33 @@ export class WorkflowTemplateViewComponent implements OnInit {
     this.workflowPagination.pageSize = event.pageSize;
 
     this.getWorkflows();
+  }
+
+  deleteWorkflowTemplate() {
+    const dialog = this.dialog.open(ConfirmationDialogComponent, {
+      width: '500px',
+      data: {
+        title: 'Are you sure you want to delete this template?',
+        message: 'Once deleted, this template can not be brought back',
+        confirmText: 'YES, DELETE TEMPLATE',
+        type: 'delete'
+      }
+    });
+
+    dialog.afterClosed().subscribe(res => {
+      if (!res) {
+        return;
+      }
+
+      this.workflowTemplateService.archiveWorkflowTemplate(this.namespace, this.uid)
+          .subscribe(res => {
+            this.router.navigate(['/', this.namespace, 'workflow-templates']);
+
+            this.alertService.storeAlert(new Alert({
+              message: `Workflow template '${this.workflowTemplate.name}' has been deleted`,
+              type: 'success'
+            }));
+          })
+    });
   }
 }

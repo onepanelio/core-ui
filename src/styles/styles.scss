@@ -17,6 +17,10 @@
     border-color: $color !important;
   }
 
+  .color-#{$name} {
+    color: $color !important;
+  }
+
   .bg-#{$name} {
     background-color: $color !important;
   }
@@ -199,6 +203,12 @@ a {
   &:hover {
     cursor: pointer;
   }
+
+  &.mat-button {
+    mat-icon {
+      vertical-align: baseline !important;
+    }
+  }
 }
 
 // Visibility
@@ -306,4 +316,22 @@ a {
 
 mat-tab-group.no-bottom-border .mat-tab-header {
   border-bottom: none !important;;
+}
+
+
+
+.op-form {
+  @include op-info-box-base();
+
+  .header {
+    font-family: $fontProxima;
+    font-size: $fontLarger;
+    color: $primary;
+    margin-bottom: 10px;
+  }
+
+  form {
+
+  }
+
 }

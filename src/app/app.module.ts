@@ -41,7 +41,7 @@ import { MatDialogModule } from "@angular/material/dialog";
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { NamespaceTracker } from "./namespace/namespace-tracker.service";
 import { LogsComponent } from "./container-logs/logs.component";
-import { AlertComponent } from './alert/alert.component';
+import { AlertComponent } from './alert/alert/alert.component';
 import { ParameterComponent } from './node-info/parameter/parameter.component';
 import { DateComponent } from './date/date.component';
 import { CdkTableModule } from "@angular/cdk/table";
@@ -53,6 +53,14 @@ import { MetricsComponent } from './node-info/metrics/metrics.component';
 import { ApiModule as NamespaceApiModule, BASE_PATH as NAMESPACE_BASE_PATH } from "../namespace-api";
 import { ApiModule as SecretApiModule, BASE_PATH as SECRET_BASE_PATH } from "../secret-api";
 import { environment } from "../environments/environment";
+import { SecretsComponent } from './secrets/secrets.component';
+import { SecretListComponent } from './secrets/secret-list/secret-list.component';
+import { CreateSecretComponent } from './secrets/create-secret/create-secret.component';
+import { EditSecretComponent } from './secrets/edit-secret/edit-secret.component';
+import { Base64DecodePipe } from './pipes/base64/base64-decode.pipe';
+import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
+import { AlertPanelComponent } from './alert/alert-panel/alert-panel.component';
+import { AlertService } from "./alert/alert.service";
 
 @NgModule({
   declarations: [
@@ -82,10 +90,18 @@ import { environment } from "../environments/environment";
     ClosableSnackComponent,
     PhaseImagePipe,
     PhaseTranslatePipe,
-    MetricsComponent
+    MetricsComponent,
+    SecretsComponent,
+    SecretListComponent,
+    CreateSecretComponent,
+    EditSecretComponent,
+    Base64DecodePipe,
+    ConfirmationDialogComponent,
+    AlertPanelComponent
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,
+        ConfirmationDialogComponent,
         ClosableSnackComponent
     ],
     imports: [
@@ -115,7 +131,9 @@ import { environment } from "../environments/environment";
         NamespaceApiModule,
         SecretApiModule
     ],
-  providers: [NamespaceTracker,
+  providers: [
+      NamespaceTracker,
+      AlertService,
       {provide: NAMESPACE_BASE_PATH, useValue: environment.baseUrl},
       {provide: SECRET_BASE_PATH, useValue: environment.baseUrl},
   ],

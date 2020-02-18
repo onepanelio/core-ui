@@ -1,11 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Alert } from "../alert";
 
-export type AlertType = 'success' | 'warning' | 'danger' | 'info';
-
-export interface Alert {
-  title?: string;
-  message: string;
-  type?: AlertType;
+export class AlertActionEvent {
+  alert: Alert;
+  action: string;
 }
 
 @Component({
@@ -20,11 +18,11 @@ export class AlertComponent implements OnInit {
     return this._alert;
   }
   @Input() set alert(alert: Alert) {
-    if (alert && !alert.type) {
-      alert.type = 'success';
-    }
-
     this._alert = alert;
+
+    if(!alert) {
+      return;
+    }
 
     setTimeout(() => {
       if(alert && this.autoDismiss) {
@@ -36,6 +34,8 @@ export class AlertComponent implements OnInit {
   @Input() autoDismiss: boolean = true;
   @Input() autoDismissDelay: number = 5000; //In milliseconds
   @Input() showCloseButton: boolean = true;
+  @Input() showIcon = true;
+  @Output() alertAction = new EventEmitter<AlertActionEvent>();
 
   public constructor() {
   }
@@ -44,6 +44,11 @@ export class AlertComponent implements OnInit {
   }
 
   public dismiss() {
+    this.alertAction.emit({
+      alert: this.alert,
+      action: 'dismiss',
+    });
+
     this.alert = null;
   }
 }

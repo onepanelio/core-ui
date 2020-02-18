@@ -6,10 +6,10 @@ import { NodeRenderer } from '../../node/node.service';
 import { CreateWorkflow, WorkflowService } from '../../workflow/workflow.service';
 import { MatSnackBar } from '@angular/material';
 import { HttpErrorResponse } from "@angular/common/http";
-import { Alert } from "../../alert/alert.component";
 import { AceEditorComponent } from "ng2-ace-editor";
 import * as yaml from 'js-yaml';
 import * as ace from 'brace';
+import { Alert } from "../../alert/alert";
 const aceRange = ace.acequire('ace/range').Range;
 
 @Component({

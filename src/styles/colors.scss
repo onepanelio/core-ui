@@ -1,3 +1,4 @@
+$black: black;
 $white: white;
 $primary-light: #EDF2FD;
 $primary-lighter: #BED2FE;
@@ -7,6 +8,7 @@ $secondary: #ff9100;
 $danger: #d32345;
 $danger-light: #FEE9ED;
 $light-gray: #f5f6fa;
+$light-medium-gray: #d1d1d5;
 $gray: #C1C1C1;
 $medium-gray: #888888;
 $success-light: #EBF6EE;
@@ -16,7 +18,7 @@ $background-color: $light-gray;
 
 $colors: (
   "white": $white,
-  "black": black,
+  "black": $black,
   "primary-light": $primary-light,
   "primary-lighter": $primary-lighter,
   "primary": $primary,
@@ -25,6 +27,7 @@ $colors: (
   "danger": $danger,
   "danger-light": $danger-light,
   "light-gray": $light-gray,
+  "light-medium-gray": $light-medium-gray,
   "gray": $gray,
   "medium-gray": $medium-gray,
   "success-light": $success-light,

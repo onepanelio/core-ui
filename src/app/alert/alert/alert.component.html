@@ -1,12 +1,13 @@
 <div *ngIf="alert" class="d-flex align-items-center font-roboto font-size-regular"
      [ngClass]="{'alert': true, 'alert-success': alert.type == 'success', 'alert-warning': alert.type === 'warning', 'alert-action': alert.type == 'action', 'alert-info' : alert.type == 'info', 'alert-danger': alert.type == 'danger'}" role="alert">
-    <div class="flex-grow-1">
-        <h1 *ngIf="alert.title" class="alert-title">{{alert.title}}</h1>
-        <div class="alert-message-block">
-            <i *ngIf="alert.type === 'success'" class="fas fa-check-circle icon-check"></i>
-            <p class="alert-message">{{alert.message}}</p>
+    <i *ngIf="showIcon && alert.type === 'success'" class="fas fa-check-circle color-success icon-check"></i>
+    <div [class.ml-3]="showIcon">
+        <div *ngIf="alert.title" class="alert-title">{{alert.title}}</div>
+        <div *ngIf="alert.message" class="alert-message-block">
+            <span class="alert-message">{{alert.message}}</span>
         </div>
     </div>
+    <div class="flex-grow-1"></div>
     <button *ngIf="showCloseButton" (click)="dismiss()" mat-icon-button class="close-button" aria-label="close icon">
         <mat-icon>close</mat-icon>
     </button>
