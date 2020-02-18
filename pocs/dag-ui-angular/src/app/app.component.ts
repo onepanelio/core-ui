@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import 'brace';
 import 'brace/mode/yaml';
+import 'brace/ext/searchbox';
 import { NamespaceService } from "./namespace/namespace.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MatSnackBar } from "@angular/material/snack-bar";
