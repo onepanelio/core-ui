@@ -3,9 +3,10 @@ import 'brace';
 import 'brace/mode/yaml';
 import 'brace/ext/searchbox';
 import { NamespaceTracker } from "./namespace/namespace-tracker.service";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { NamespaceServiceService } from "../namespace-api";
+import { filter } from "rxjs/operators";
 
 @Component({
   selector: 'app-root',
@@ -16,6 +17,7 @@ export class AppComponent implements OnInit {
   title = 'onepanel-core-ui';
   selectedNamespace: string;
   namespaces = [];
+  activeRoute = 'templates';
 
   constructor(private namespaceTracker: NamespaceTracker,
               private namespaceService: NamespaceServiceService,
@@ -23,6 +25,19 @@ export class AppComponent implements OnInit {
               private router: Router,
               private snackbar: MatSnackBar) {
     this.selectedNamespace = namespaceTracker.activeNamespace;
+
+    // Keep track of the current url so we know what part of the app we are in and highlight it in the
+    // nav bar accordingly.
+    this.router.events
+        .pipe(filter((e) => e instanceof NavigationEnd))
+        .subscribe((e: NavigationEnd) => {
+          if(e.urlAfterRedirects.indexOf('templates') >= 0) {
+            this.activeRoute = 'templates';
+          }
+          if(e.urlAfterRedirects.indexOf('secrets') >= 0) {
+            this.activeRoute = 'secrets';
+          }
+        });
   }
 
   ngOnInit(): void {

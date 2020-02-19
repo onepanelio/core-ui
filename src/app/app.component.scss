@@ -1,13 +1,31 @@
 @import "../styles/colors";
 
-header {
-  padding: 0 10px;
-  display: flex;
-  align-items: center;
-  height: 50px;
-}
-
 .app-toolbar {
+  .link-wrapper {
+    height: 100%;
+    min-width: 200px;
+    text-align: center;
+
+    a {
+      line-height: 64px;
+      text-decoration: none;
+      color: inherit;
+      opacity: 0.8;
+    }
+
+
+    &.active {
+      border-bottom: 4px solid white;
+
+      a {
+        position: relative;
+        top: 2px;
+        opacity: 1.0;
+      }
+    }
+  }
+
+
   /deep/ .mat-form-field-wrapper {
     padding-bottom: 0;
   }

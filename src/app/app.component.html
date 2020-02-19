@@ -1,6 +1,11 @@
 <mat-toolbar color="primary" class="app-toolbar">
   <a style="height: 32px;" [routerLink]="['/']"><img src="/assets/images/onepanel-logo-white.svg"/></a>
-  <a class="ml-5 font-white" [routerLink]="['/', selectedNamespace, 'secrets']"><i class="fas fa-key"></i></a>
+  <div class="ml-5 font-size-regular font-roboto-bold font-white link-wrapper" [class.active]="activeRoute === 'templates'">
+    <a [routerLink]="['/', selectedNamespace, 'workflow-templates']">TEMPLATES</a>
+  </div>
+  <div class="ml-5 font-size-regular font-roboto-bold font-white link-wrapper" [class.active]="activeRoute === 'secrets'" >
+    <a [routerLink]="['/', selectedNamespace, 'secrets']">ENVIRONMENT VARIABLES</a>
+  </div>
   <div class="flex-grow-1"></div>
   <mat-form-field appearance="outline" class="font-size-small mat-form-white-outline">
     <mat-label>Namespace</mat-label>
