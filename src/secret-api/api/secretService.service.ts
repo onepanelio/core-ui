@@ -221,13 +221,14 @@ export class SecretServiceService {
      * 
      * @param namespace 
      * @param secretName 
+     * @param key 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteSecretKey(namespace: string, secretName: string, observe?: 'body', reportProgress?: boolean): Observable<ApiDeleteSecretKeyResponse>;
-    public deleteSecretKey(namespace: string, secretName: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ApiDeleteSecretKeyResponse>>;
-    public deleteSecretKey(namespace: string, secretName: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ApiDeleteSecretKeyResponse>>;
-    public deleteSecretKey(namespace: string, secretName: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public deleteSecretKey(namespace: string, secretName: string, key: string, observe?: 'body', reportProgress?: boolean): Observable<ApiDeleteSecretKeyResponse>;
+    public deleteSecretKey(namespace: string, secretName: string, key: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ApiDeleteSecretKeyResponse>>;
+    public deleteSecretKey(namespace: string, secretName: string, key: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ApiDeleteSecretKeyResponse>>;
+    public deleteSecretKey(namespace: string, secretName: string, key: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
 
         if (namespace === null || namespace === undefined) {
             throw new Error('Required parameter namespace was null or undefined when calling deleteSecretKey.');
@@ -235,6 +236,10 @@ export class SecretServiceService {
 
         if (secretName === null || secretName === undefined) {
             throw new Error('Required parameter secretName was null or undefined when calling deleteSecretKey.');
+        }
+
+        if (key === null || key === undefined) {
+            throw new Error('Required parameter key was null or undefined when calling deleteSecretKey.');
         }
 
         let headers = this.defaultHeaders;
@@ -252,7 +257,7 @@ export class SecretServiceService {
         const consumes: string[] = [
         ];
 
-        return this.httpClient.request<ApiDeleteSecretKeyResponse>('delete',`${this.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/secrets/${encodeURIComponent(String(secretName))}`,
+        return this.httpClient.request<ApiDeleteSecretKeyResponse>('delete',`${this.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/secrets/${encodeURIComponent(String(secretName))}/keys/${encodeURIComponent(String(key))}`,
             {
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
@@ -398,15 +403,20 @@ export class SecretServiceService {
     /**
      * 
      * 
+     * @param body 
      * @param namespace 
      * @param secretName 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateSecretKeyValue(namespace: string, secretName: string, observe?: 'body', reportProgress?: boolean): Observable<ApiUpdateSecretKeyValueResponse>;
-    public updateSecretKeyValue(namespace: string, secretName: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ApiUpdateSecretKeyValueResponse>>;
-    public updateSecretKeyValue(namespace: string, secretName: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ApiUpdateSecretKeyValueResponse>>;
-    public updateSecretKeyValue(namespace: string, secretName: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+    public updateSecretKeyValue(body: ApiSecret, namespace: string, secretName: string, observe?: 'body', reportProgress?: boolean): Observable<ApiUpdateSecretKeyValueResponse>;
+    public updateSecretKeyValue(body: ApiSecret, namespace: string, secretName: string, observe?: 'response', reportProgress?: boolean): Observable<HttpResponse<ApiUpdateSecretKeyValueResponse>>;
+    public updateSecretKeyValue(body: ApiSecret, namespace: string, secretName: string, observe?: 'events', reportProgress?: boolean): Observable<HttpEvent<ApiUpdateSecretKeyValueResponse>>;
+    public updateSecretKeyValue(body: ApiSecret, namespace: string, secretName: string, observe: any = 'body', reportProgress: boolean = false ): Observable<any> {
+
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling updateSecretKeyValue.');
+        }
 
         if (namespace === null || namespace === undefined) {
             throw new Error('Required parameter namespace was null or undefined when calling updateSecretKeyValue.');
@@ -429,10 +439,16 @@ export class SecretServiceService {
 
         // to determine the Content-Type header
         const consumes: string[] = [
+            'application/json'
         ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected != undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
 
         return this.httpClient.request<ApiUpdateSecretKeyValueResponse>('patch',`${this.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/secrets/${encodeURIComponent(String(secretName))}`,
             {
+                body: body,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
                 observe: observe,

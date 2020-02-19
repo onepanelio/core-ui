@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ApiSecret, SecretServiceService } from "../../../secret-api";
 import { ActivatedRoute } from "@angular/router";
+import { AlertService } from "../../alert/alert.service";
+import { Alert } from "../../alert/alert";
 
 @Component({
   selector: 'app-secret-list',
@@ -15,7 +17,8 @@ export class SecretListComponent implements OnInit {
   secretShown = new Map<string, boolean>();
 
   constructor(
-      private secretService: SecretServiceService
+      private secretService: SecretServiceService,
+      private alertService: AlertService,
   ) { }
 
   ngOnInit() {
@@ -57,6 +60,18 @@ export class SecretListComponent implements OnInit {
   }
 
   deleteSecret(key: string) {
-      // this.secretService.deleteSecretKey(this.namespace, this.)
+      this.secretService.deleteSecretKey(this.namespace, 'onepanel-default-env', key)
+          .subscribe(res => {
+              this.getSecrets();
+              this.alertService.storeAlert(new Alert({
+                  message: `Secret '${key}' deleted`,
+                  type: 'success',
+              }))
+          }, err => {
+              this.alertService.storeAlert(new Alert({
+                  message: `Secret ${key} failed to delete`,
+                  type: 'danger',
+              }))
+          })
   }
 }

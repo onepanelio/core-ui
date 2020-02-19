@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ApiSecret, SecretServiceService } from "../../../secret-api";
+import { Alert } from "../../alert/alert";
+import { AlertService } from "../../alert/alert.service";
 
 @Component({
   selector: 'app-edit-secret',
@@ -22,6 +24,7 @@ export class EditSecretComponent implements OnInit {
       private formBuilder: FormBuilder,
       private router: Router,
       private secretService: SecretServiceService,
+      private alertService: AlertService,
   ) { }
 
   ngOnInit() {
@@ -64,9 +67,20 @@ export class EditSecretComponent implements OnInit {
   }
 
   save() {
-    this.secretService.updateSecretKeyValue(this.namespace, this.secretKey)
+    const data = {
+      name: this.secretName,
+      data: {}
+    };
+    data.data[this.secretKey] = this.value.value;
+
+
+    this.secretService.updateSecretKeyValue(data, this.namespace, this.secretName)
         .subscribe(res => {
-          console.log(res);
+          this.router.navigate(['/', this.namespace, 'secrets']);
+          this.alertService.storeAlert(new Alert({
+            message: `Secret '${this.secretKey}' updated`,
+            type: 'success',
+          }))
         }, err => {
           console.error(err);
         })
