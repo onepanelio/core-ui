@@ -16,7 +16,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
     providers: [ WorkflowService ]
 })
 export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
-    displayedColumns = ['name', 'timestamps', 'status', 'spacer', 'actions'];
+    displayedColumns = ['name','status', 'start', 'end', 'spacer', 'actions'];
     statusWatchers = new Map<string, WebSocket>();
 
     @Input() namespace: string;

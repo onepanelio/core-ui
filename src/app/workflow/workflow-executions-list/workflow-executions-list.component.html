@@ -7,11 +7,17 @@
             </cdk-cell>
         </ng-container>
 
-        <ng-container cdkColumnDef="timestamps">
+        <ng-container cdkColumnDef="start">
             <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
             <cdk-cell *cdkCellDef="let workflow" class="font-size-small font-roboto font-medium-gray">
                 <div *ngIf="workflow.startedAt"><span class="timestamp d-inline-block">Started:</span><app-date class="" [dateTime]="workflow.startedAt"></app-date></div>
-                <div *ngIf="workflow.finishedAt" class="mt-1"><span class="timestamp d-inline-block">Finished:</span><app-date class="" [dateTime]="workflow.finishedAt"></app-date></div>
+            </cdk-cell>
+        </ng-container>
+
+        <ng-container cdkColumnDef="end">
+            <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+            <cdk-cell *cdkCellDef="let workflow" class="font-size-small font-roboto font-medium-gray ml-5">
+                <div *ngIf="workflow.finishedAt" class=""><span class="timestamp d-inline-block">Finished:</span><app-date class="" [dateTime]="workflow.finishedAt"></app-date></div>
             </cdk-cell>
         </ng-container>
 
