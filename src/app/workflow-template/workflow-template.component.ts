@@ -26,7 +26,6 @@ export class WorkflowTemplateComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(next => {
       this.namespace = next.get('namespace');
-
       this.getWorkflowTemplates();
     });
   }

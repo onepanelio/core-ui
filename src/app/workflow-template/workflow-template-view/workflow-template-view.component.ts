@@ -20,7 +20,7 @@ import { AlertService } from "../../alert/alert.service";
 import { Alert } from "../../alert/alert";
 
 export class Pagination {
-  page: number = 1;
+  page: number = 0;
   pageSize: number = 15;
 }
 
@@ -135,7 +135,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
       namespace: this.namespace,
       workflowTemplateUid: this.uid,
       pageSize: this.workflowPagination.pageSize,
-      page: this.workflowPagination.page,
+      page: this.workflowPagination.page + 1, // Tab is 0 based, so we add 1, since API is 1 based.
     };
 
     this.workflowService.listWorkflows(request)
