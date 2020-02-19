@@ -1,13 +1,16 @@
 @import "../styles/colors";
 
 .app-toolbar {
+  padding-right: 0 !important;
+  height: 50px !important;
+
   .link-wrapper {
     height: 100%;
     min-width: 200px;
     text-align: center;
 
     a {
-      line-height: 64px;
+      line-height: 50px;
       text-decoration: none;
       color: inherit;
       opacity: 0.8;
@@ -25,8 +28,26 @@
     }
   }
 
+  .dropdown {
+    padding: 0 20px;
 
-  /deep/ .mat-form-field-wrapper {
-    padding-bottom: 0;
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    .namespace {
+      line-height: 100%;
+    }
+
+    .name {
+      line-height: 100%;
+    }
+  }
+
+  mat-form-field.hidden {
+    width: 0;
+    top: 50px;
+    position: relative;
   }
 }

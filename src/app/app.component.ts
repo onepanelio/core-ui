@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import 'brace';
 import 'brace/mode/yaml';
 import 'brace/ext/searchbox';
@@ -7,6 +7,7 @@ import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { NamespaceServiceService } from "../namespace-api";
 import { filter } from "rxjs/operators";
+import { MatSelect } from "@angular/material/select";
 
 @Component({
   selector: 'app-root',
@@ -14,6 +15,8 @@ import { filter } from "rxjs/operators";
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
+  @ViewChild(MatSelect, {static:false}) matSelect: MatSelect;
+
   title = 'onepanel-core-ui';
   selectedNamespace: string;
   namespaces = [];
@@ -68,5 +71,9 @@ export class AppComponent implements OnInit {
     this.namespaceTracker.activeNamespace = this.selectedNamespace;
     this.snackbar.open(`Switched to namespace '${this.selectedNamespace}'`, 'OK');
     this.router.navigate(['/', this.namespaceTracker.activeNamespace, 'workflow-templates'])
+  }
+
+  onFormFieldClick() {
+      this.matSelect.open();
   }
 }

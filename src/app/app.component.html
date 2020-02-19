@@ -7,9 +7,16 @@
     <a [routerLink]="['/', selectedNamespace, 'secrets']">ENVIRONMENT VARIABLES</a>
   </div>
   <div class="flex-grow-1"></div>
-  <mat-form-field appearance="outline" class="font-size-small mat-form-white-outline">
+  <div class="d-flex font-roboto dropdown bg-primary-darker align-items-center h-100" (click)="onFormFieldClick()">
+    <div>
+      <div class="namespace font-size-smaller">Namespace</div>
+      <div class="name font-size-regular">{{namespaceTracker.activeNamespace}}</div>
+    </div>
+    <mat-icon class="ml-5">arrow_drop_down</mat-icon>
+  </div>
+  <mat-form-field class="font-size-small mat-form-white-outline hidden">
     <mat-label>Namespace</mat-label>
-    <mat-select [(value)]="selectedNamespace" (valueChange)="onNamespaceChange()">
+    <mat-select [panelClass]="'match-nav-select'" [(value)]="selectedNamespace" (valueChange)="onNamespaceChange()">
       <mat-option *ngFor="let namespace of namespaces" [value]="namespace.name">{{namespace.name}}</mat-option>
     </mat-select>
   </mat-form-field>
