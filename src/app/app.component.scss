@@ -31,6 +31,10 @@
   .dropdown {
     padding: 0 20px;
 
+    height: 43px;
+    position: relative;
+    bottom: -3px;
+
 
     &:hover {
       cursor: pointer;
@@ -49,5 +53,6 @@
     width: 0;
     top: 50px;
     position: relative;
+    left: 35px;
   }
 }
