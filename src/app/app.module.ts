@@ -61,6 +61,7 @@ import { Base64DecodePipe } from './pipes/base64/base64-decode.pipe';
 import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-dialog.component';
 import { AlertPanelComponent } from './alert/alert-panel/alert-panel.component';
 import { AlertService } from "./alert/alert.service";
+import { httpInterceptorProviders } from './http-interceptors';
 
 @NgModule({
   declarations: [
@@ -136,6 +137,7 @@ import { AlertService } from "./alert/alert.service";
       AlertService,
       {provide: NAMESPACE_BASE_PATH, useValue: environment.baseUrl},
       {provide: SECRET_BASE_PATH, useValue: environment.baseUrl},
+      httpInterceptorProviders,
   ],
   bootstrap: [AppComponent]
 })
