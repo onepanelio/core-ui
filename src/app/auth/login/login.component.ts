@@ -31,7 +31,6 @@ export class LoginComponent implements OnInit {
 
   login() {
     this.authService.setAuthToken(this.tokenInput.value);
-    const parsedUrl = this.router.parseUrl(this.authService.takeRedirectUrl())
-    this.router.navigateByUrl(parsedUrl);
+    this.router.navigate(['/']);
   }
 }

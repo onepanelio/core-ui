@@ -2,7 +2,7 @@
   <a style="height: 32px;" [routerLink]="['/']"><img src="/assets/images/onepanel-logo-white.svg"/></a>
   <mat-form-field class="font-size-small mat-form-white-outline hidden">
     <mat-label>Namespace</mat-label>
-    <mat-select [panelClass]="'match-nav-select'" [(value)]="selectedNamespace" (valueChange)="onNamespaceChange()">
+    <mat-select [panelClass]="'match-nav-select'" [(value)]="namespaceTracker.activeNamespace" (valueChange)="onNamespaceChange()">
       <mat-option *ngFor="let namespace of namespaces" [value]="namespace.name">{{namespace.name}}</mat-option>
     </mat-select>
   </mat-form-field>
@@ -14,10 +14,10 @@
     <mat-icon class="ml-5 color-medium-gray">arrow_drop_down</mat-icon>
   </div>
   <div class="ml-5 font-size-regular font-roboto-bold font-white link-wrapper" [class.active]="activeRoute === 'templates'">
-    <a [routerLink]="['/', selectedNamespace, 'workflow-templates']">WORKFLOWS</a>
+    <a [routerLink]="['/', namespaceTracker.activeNamespace, 'workflow-templates']">WORKFLOWS</a>
   </div>
   <div class="ml-5 font-size-regular font-roboto-bold font-white link-wrapper" [class.active]="activeRoute === 'secrets'" >
-    <a [routerLink]="['/', selectedNamespace, 'secrets']">SETTINGS</a>
+    <a [routerLink]="['/', namespaceTracker.activeNamespace, 'secrets']">SETTINGS</a>
   </div>
 </mat-toolbar>
 <router-outlet></router-outlet>

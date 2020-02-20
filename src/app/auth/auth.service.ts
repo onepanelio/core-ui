@@ -19,8 +19,6 @@ export class AuthService {
     return !!authToken && cookieTokenExists;
   }
 
-  redirectUrl?: string;
-
   constructor() { }
 
   setAuthToken(token: string) {
@@ -32,17 +30,5 @@ export class AuthService {
   clearTokens() {
     localStorage.removeItem('auth-token');
     document.cookie = 'auth-token=;path=/;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-  }
-
-  takeRedirectUrl(defaultValue = '/'): string|undefined {
-    const url = this.redirectUrl;
-
-    this.redirectUrl = undefined;
-
-    if (!url) {
-      return defaultValue;
-    }
-
-    return url;
   }
 }
