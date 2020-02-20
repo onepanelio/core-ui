@@ -93,12 +93,12 @@ body {
       justify-content: space-between;
       align-items: center;
     }
+  }
 
-    .page-title-text {
-      font-family: 'Proxima Nova Regular', sans-serif;
-      font-size: 30px;
-      color: $primary;
-    }
+  .page-title-text {
+    font-family: 'Proxima Nova Regular', sans-serif;
+    font-size: 30px;
+    color: $primary;
   }
 }
 
@@ -229,15 +229,15 @@ a {
 }
 
 .text-left {
-  text-align: left;
+  text-align: left !important;
 }
 
 .text-right {
-  text-align: right;
+  text-align: right !important;
 }
 
 .text-center {
-  text-align: center;
+  text-align: center !important;
 }
 
 .op-back-link {
@@ -329,14 +329,25 @@ mat-tab-group.no-bottom-border .mat-tab-header {
     color: $primary;
     margin-bottom: 10px;
   }
-
-  form {
-
-  }
-
 }
-
 
 .match-nav-select {
   width: 108px;
+}
+
+button.add-environment-variable {
+  height: 52px;
+  border: 2px solid $primary;
+
+  &.mat-stroked-button:not([disabled]) {
+    border-color: unset;
+  }
+}
+
+button.vertical-align-icon {
+  .mat-button-wrapper {
+    mat-icon {
+      vertical-align: text-bottom !important;
+    }
+  }
 }
