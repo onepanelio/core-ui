@@ -10,7 +10,8 @@ export class AuthService {
     let cookieTokenExists = false;
 
     for(const cookie of document.cookie.split(';')) {
-      if(cookie.indexOf('auth-token') >= 0) {
+      const items = cookie.split('=');
+      if(items[0] === 'auth-token') {
         cookieTokenExists = true;
       }
     }
