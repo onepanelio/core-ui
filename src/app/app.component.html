@@ -1,4 +1,4 @@
-<mat-toolbar color="primary" class="app-toolbar">
+<mat-toolbar *ngIf="!loggingIn" color="primary" class="app-toolbar">
   <a style="height: 32px;" [routerLink]="['/']"><img src="/assets/images/onepanel-logo-white.svg"/></a>
   <div class="ml-5 font-size-regular font-roboto-bold font-white link-wrapper" [class.active]="activeRoute === 'templates'">
     <a [routerLink]="['/', selectedNamespace, 'workflow-templates']">WORKFLOWS</a>

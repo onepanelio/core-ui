@@ -21,6 +21,7 @@ export class AppComponent implements OnInit {
   selectedNamespace: string;
   namespaces = [];
   activeRoute = 'templates';
+  loggingIn = false;
 
   constructor(private namespaceTracker: NamespaceTracker,
               private namespaceService: NamespaceServiceService,
@@ -40,6 +41,8 @@ export class AppComponent implements OnInit {
           if(e.urlAfterRedirects.indexOf('secrets') >= 0) {
             this.activeRoute = 'secrets';
           }
+
+          this.loggingIn = e.urlAfterRedirects.indexOf('login') >= 0;
         });
   }
 

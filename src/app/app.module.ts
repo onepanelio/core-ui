@@ -62,6 +62,7 @@ import { ConfirmationDialogComponent } from './confirmation-dialog/confirmation-
 import { AlertPanelComponent } from './alert/alert-panel/alert-panel.component';
 import { AlertService } from "./alert/alert.service";
 import { httpInterceptorProviders } from './http-interceptors';
+import { LoginComponent } from './auth/login/login.component';
 
 @NgModule({
   declarations: [
@@ -98,7 +99,8 @@ import { httpInterceptorProviders } from './http-interceptors';
     EditSecretComponent,
     Base64DecodePipe,
     ConfirmationDialogComponent,
-    AlertPanelComponent
+    AlertPanelComponent,
+    LoginComponent
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,
