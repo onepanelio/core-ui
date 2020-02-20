@@ -2,6 +2,8 @@ import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import * as yaml from 'js-yaml';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { NamespaceTracker } from "../../namespace/namespace-tracker.service";
+import { Router } from "@angular/router";
 
 export interface WorkflowExecuteDialogData {
   manifest: string;
@@ -34,6 +36,8 @@ export class WorkflowExecuteDialogComponent implements OnInit {
   inputControls: Array<AbstractControl> = [];
 
   constructor(
+      private namespaceTracker: NamespaceTracker,
+      private router: Router,
       private formBuilder: FormBuilder,
       public dialogRef: MatDialogRef<WorkflowExecuteDialogComponent>,
       @Inject(MAT_DIALOG_DATA) public data: WorkflowExecuteDialogData) {
@@ -97,5 +101,13 @@ export class WorkflowExecuteDialogComponent implements OnInit {
     }
 
     this.dialogRef.close(data);
+  }
+
+  goToEnvironmentVariables() {
+    this.dialogRef.afterClosed().subscribe(res => {
+      this.router.navigate(['/', this.namespaceTracker.activeNamespace, 'secrets']);
+    });
+    
+    this.dialogRef.close();
   }
 }

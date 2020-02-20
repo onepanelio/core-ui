@@ -12,7 +12,10 @@
 
 <div class="environment">
     <div class="op-h2 mb-5">Environment variables</div>
-    <mat-checkbox [checked]="true" disabled>environment variables are mounted into all containers</mat-checkbox>
+    <div class="ml-5">
+        <div class="font-size-regular color-medium-gray">All environment variables will be mounted on workflow execution.</div>
+        <div class="color-primary underline pointer-hover" (click)="goToEnvironmentVariables()">Manage environment variables</div>
+    </div>
 </div>
 
 <hr class="divider op-just-border-top border-gray mt-5" />
