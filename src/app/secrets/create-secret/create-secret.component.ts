@@ -62,7 +62,7 @@ export class CreateSecretComponent implements OnInit {
         .subscribe(res => {
           this.router.navigate(['/', this.namespace, 'secrets']);
           this.alertService.storeAlert(new Alert({
-            message: `Secret '${key}' created`,
+            message: `Environment variable '${key}' created`,
             type: 'success',
           }))
         }, err => {

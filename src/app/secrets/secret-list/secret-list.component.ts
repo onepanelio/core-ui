@@ -72,12 +72,12 @@ export class SecretListComponent implements OnInit {
           .subscribe(res => {
               this.getSecrets();
               this.alertService.storeAlert(new Alert({
-                  message: `Secret '${key}' deleted`,
+                  message: `Environment variable '${key}' deleted`,
                   type: 'success',
               }))
           }, err => {
               this.alertService.storeAlert(new Alert({
-                  message: `Secret ${key} failed to delete`,
+                  message: `Environment variable ${key} failed to delete`,
                   type: 'danger',
               }))
           })
