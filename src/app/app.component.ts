@@ -5,9 +5,9 @@ import 'brace/ext/searchbox';
 import { NamespaceTracker } from "./namespace/namespace-tracker.service";
 import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { MatSnackBar } from "@angular/material/snack-bar";
-import { NamespaceServiceService } from "../namespace-api";
 import { filter } from "rxjs/operators";
 import { MatSelect } from "@angular/material/select";
+import { NamespaceServiceService } from "../api";
 
 @Component({
   selector: 'app-root',
@@ -18,7 +18,6 @@ export class AppComponent implements OnInit {
   @ViewChild(MatSelect, {static:false}) matSelect: MatSelect;
 
   title = 'onepanel-core-ui';
-  selectedNamespace: string;
   namespaces = [];
   activeRoute = 'templates';
   loggingIn = false;
@@ -28,7 +27,6 @@ export class AppComponent implements OnInit {
               private activatedRoute: ActivatedRoute,
               private router: Router,
               private snackbar: MatSnackBar) {
-    this.selectedNamespace = namespaceTracker.activeNamespace;
 
     // Keep track of the current url so we know what part of the app we are in and highlight it in the
     // nav bar accordingly.
@@ -43,36 +41,38 @@ export class AppComponent implements OnInit {
           }
 
           this.loggingIn = e.urlAfterRedirects.indexOf('login') >= 0;
+
+          if(this.namespaces.length === 0) {
+              this.getNamespaces();
+          }
         });
   }
 
   ngOnInit(): void {
-    this.namespaceService.listNamespaces()
-        .subscribe( res => {
-          if(!res.count) {
-            return;
-          }
-          this.namespaces = res.namespaces;
-        }, err => {
-          this.namespaces = [{name: 'default'}];
-        }, () => {
-          const namespace = this.activatedRoute.snapshot.firstChild.paramMap.get('namespace');
+      this.getNamespaces();
+  }
 
-          if(namespace) {
-            this.selectedNamespace = namespace;
-            this.namespaceTracker.activeNamespace = namespace;
-          }
-        });
+  getNamespaces() {
+      this.namespaceService.listNamespaces()
+          .subscribe( res => {
+              if(!res.count) {
+                  return;
+              }
+              this.namespaces = res.namespaces;
+          }, err => {
+              this.namespaces = [{name: 'default'}];
+          }, () => {
+              const namespace = this.activatedRoute.snapshot.firstChild.paramMap.get('namespace');
+
+              if(namespace) {
+                  this.namespaceTracker.activeNamespace = namespace;
+              }
+          });
   }
 
 
   onNamespaceChange() {
-    if (this.namespaceTracker.activeNamespace === this.selectedNamespace) {
-      return;
-    }
-
-    this.namespaceTracker.activeNamespace = this.selectedNamespace;
-    this.snackbar.open(`Switched to namespace '${this.selectedNamespace}'`, 'OK');
+    this.snackbar.open(`Switched to namespace '${this.namespaceTracker.activeNamespace}'`, 'OK');
     this.router.navigate(['/', this.namespaceTracker.activeNamespace, 'workflow-templates'])
   }
 
