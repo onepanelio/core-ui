@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class AuthService {
+  public redirectUrl: string;
 
   get isLoggedIn(): boolean {
     const authToken = localStorage.getItem('auth-token');
