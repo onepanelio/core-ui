@@ -50,8 +50,6 @@ import { MatPaginatorModule } from "@angular/material/paginator";
 import { PhaseImagePipe } from "./pipes/phase-image/phase-image.pipe";
 import { PhaseTranslatePipe } from './pipes/phase-translate/phase-translate.pipe';
 import { MetricsComponent } from './node-info/metrics/metrics.component';
-import { ApiModule as NamespaceApiModule, BASE_PATH as NAMESPACE_BASE_PATH } from "../namespace-api";
-import { ApiModule as SecretApiModule, BASE_PATH as SECRET_BASE_PATH } from "../secret-api";
 import { environment } from "../environments/environment";
 import { SecretsComponent } from './secrets/secrets.component';
 import { SecretListComponent } from './secrets/secret-list/secret-list.component';
@@ -63,6 +61,7 @@ import { AlertPanelComponent } from './alert/alert-panel/alert-panel.component';
 import { AlertService } from "./alert/alert.service";
 import { httpInterceptorProviders } from './http-interceptors';
 import { LoginComponent } from './auth/login/login.component';
+import { ApiModule, BASE_PATH } from "../api";
 
 @NgModule({
   declarations: [
@@ -131,14 +130,12 @@ import { LoginComponent } from './auth/login/login.component';
         MatCheckboxModule,
         CdkTableModule,
         MatPaginatorModule,
-        NamespaceApiModule,
-        SecretApiModule
+        ApiModule
     ],
   providers: [
       NamespaceTracker,
       AlertService,
-      {provide: NAMESPACE_BASE_PATH, useValue: environment.baseUrl},
-      {provide: SECRET_BASE_PATH, useValue: environment.baseUrl},
+      {provide: BASE_PATH, useValue: environment.baseUrl},
       httpInterceptorProviders,
   ],
   bootstrap: [AppComponent]

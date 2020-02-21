@@ -3,7 +3,7 @@ import { Router } from "@angular/router";
 import { NamespaceTracker } from "../namespace/namespace-tracker.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { HttpErrorResponse } from "@angular/common/http";
-import { NamespaceServiceService } from "../../namespace-api";
+import { NamespaceServiceService } from "../../api";
 
 @Component({
     selector: 'app-namespace-select',

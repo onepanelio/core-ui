@@ -1,9 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ApiSecret, SecretServiceService } from "../../../secret-api";
-import { ActivatedRoute } from "@angular/router";
 import { AlertService } from "../../alert/alert.service";
 import { Alert } from "../../alert/alert";
 import { HttpErrorResponse } from "@angular/common/http";
+import { SecretServiceService } from "../../../api";
 
 @Component({
   selector: 'app-secret-list',
@@ -44,7 +43,7 @@ export class SecretListComponent implements OnInit {
         }, (err: HttpErrorResponse) => {
             // Alright, keep your secrets...
             if(err.status === 404) {
-                this.secretService.createSecret({name: 'onepanel-default-env'}, this.namespace)
+                this.secretService.createSecret(this.namespace, {name: 'onepanel-default-env'})
                     .subscribe(res => {
                         this.getSecrets();
                     })
