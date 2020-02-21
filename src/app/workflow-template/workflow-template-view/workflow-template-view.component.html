@@ -3,11 +3,11 @@
     <div class="page-links">
       <a [routerLink]="['/', this.namespace, 'workflow-templates']" class="op-back-link">
         <i class="fas fa-chevron-left"></i>
-        <span>Back to workflow templates</span>
+        <span>Back to workflows</span>
       </a>
     </div>
     <div class="page-title">
-      <div class="page-title-text">Workflow template details</div>
+      <div class="page-title-text">Workflow details</div>
     </div>
   </div>
 
@@ -56,7 +56,7 @@
                 [pageSizeOptions]="[5, 10, 25, 100]">
         </mat-paginator>
       </mat-tab>
-      <mat-tab label="Definition">
+      <mat-tab label="Template">
         <ng-template matTabContent>
           <div class="op-border mt-1 hide-overflow">
             <div class="definition-header op-border-bottom"></div>
