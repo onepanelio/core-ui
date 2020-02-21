@@ -5,6 +5,7 @@
 @import "table-styles";
 @import "border-styles";
 @import "flex-styles";
+@import "lengths";
 
 // Utilities
 
@@ -161,7 +162,11 @@ a {
 }
 
 .op-rounded {
-  border-radius: 2px !important;
+  border-radius: $cornerRadiusSmall !important;
+}
+
+.op-rounded-regular {
+  border-radius: $cornerRadiusRegular !important;
 }
 
 .op-button {
