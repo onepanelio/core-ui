@@ -9,10 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { ApiMetric } from './apiMetric';
 
 
-export interface GoogleProtobufAny { 
-    typeUrl?: string;
-    value?: string;
+export interface ApiGetWorkflowExecutionMetricsResponse { 
+    metrics?: Array<ApiMetric>;
 }
 

@@ -9,19 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ApiWorkflowTemplate } from './apiWorkflowTemplate';
-import { ApiWorkflowParameter } from './apiWorkflowParameter';
 
 
-export interface ApiWorkflow { 
-    createdAt?: string;
-    uid?: string;
+export interface ApiWorkflowExecutionParameter { 
     name?: string;
-    phase?: string;
-    startedAt?: string;
-    finishedAt?: string;
-    manifest?: string;
-    parameters?: Array<ApiWorkflowParameter>;
-    workflowTemplate?: ApiWorkflowTemplate;
+    value?: string;
 }
 

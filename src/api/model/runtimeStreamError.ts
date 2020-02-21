@@ -9,10 +9,14 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ApiMetric } from './apiMetric';
+import { ProtobufAny } from './protobufAny';
 
 
-export interface ApiGetWorkflowMetricsResponse { 
-    metrics?: Array<ApiMetric>;
+export interface RuntimeStreamError { 
+    grpcCode?: number;
+    httpCode?: number;
+    message?: string;
+    httpStatus?: string;
+    details?: Array<ProtobufAny>;
 }
 

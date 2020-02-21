@@ -18,11 +18,11 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { ApiArchiveWorkflowTemplateResponse } from '../model/models';
-import { ApiGetWorkflowMetricsResponse } from '../model/models';
+import { ApiGetWorkflowExecutionMetricsResponse } from '../model/models';
+import { ApiListWorkflowExecutionsResponse } from '../model/models';
 import { ApiListWorkflowTemplateVersionsResponse } from '../model/models';
 import { ApiListWorkflowTemplatesResponse } from '../model/models';
-import { ApiListWorkflowsResponse } from '../model/models';
-import { ApiWorkflow } from '../model/models';
+import { ApiWorkflowExecution } from '../model/models';
 import { ApiWorkflowTemplate } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -143,15 +143,15 @@ export class WorkflowServiceService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createWorkflow(namespace: string, body: ApiWorkflow, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ApiWorkflow>;
-    public createWorkflow(namespace: string, body: ApiWorkflow, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ApiWorkflow>>;
-    public createWorkflow(namespace: string, body: ApiWorkflow, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ApiWorkflow>>;
-    public createWorkflow(namespace: string, body: ApiWorkflow, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public createWorkflowExecution(namespace: string, body: ApiWorkflowExecution, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ApiWorkflowExecution>;
+    public createWorkflowExecution(namespace: string, body: ApiWorkflowExecution, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ApiWorkflowExecution>>;
+    public createWorkflowExecution(namespace: string, body: ApiWorkflowExecution, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ApiWorkflowExecution>>;
+    public createWorkflowExecution(namespace: string, body: ApiWorkflowExecution, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
-            throw new Error('Required parameter namespace was null or undefined when calling createWorkflow.');
+            throw new Error('Required parameter namespace was null or undefined when calling createWorkflowExecution.');
         }
         if (body === null || body === undefined) {
-            throw new Error('Required parameter body was null or undefined when calling createWorkflow.');
+            throw new Error('Required parameter body was null or undefined when calling createWorkflowExecution.');
         }
 
         let headers = this.defaultHeaders;
@@ -183,7 +183,7 @@ export class WorkflowServiceService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<ApiWorkflow>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflows`,
+        return this.httpClient.post<ApiWorkflowExecution>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflow_executions`,
             body,
             {
                 responseType: <any>responseType,
@@ -321,15 +321,15 @@ export class WorkflowServiceService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getWorkflow(namespace: string, name: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ApiWorkflow>;
-    public getWorkflow(namespace: string, name: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ApiWorkflow>>;
-    public getWorkflow(namespace: string, name: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ApiWorkflow>>;
-    public getWorkflow(namespace: string, name: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getWorkflowExecution(namespace: string, name: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ApiWorkflowExecution>;
+    public getWorkflowExecution(namespace: string, name: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ApiWorkflowExecution>>;
+    public getWorkflowExecution(namespace: string, name: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ApiWorkflowExecution>>;
+    public getWorkflowExecution(namespace: string, name: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
-            throw new Error('Required parameter namespace was null or undefined when calling getWorkflow.');
+            throw new Error('Required parameter namespace was null or undefined when calling getWorkflowExecution.');
         }
         if (name === null || name === undefined) {
-            throw new Error('Required parameter name was null or undefined when calling getWorkflow.');
+            throw new Error('Required parameter name was null or undefined when calling getWorkflowExecution.');
         }
 
         let headers = this.defaultHeaders;
@@ -352,7 +352,7 @@ export class WorkflowServiceService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<ApiWorkflow>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflows/${encodeURIComponent(String(name))}`,
+        return this.httpClient.get<ApiWorkflowExecution>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflow_executions/${encodeURIComponent(String(name))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -371,21 +371,21 @@ export class WorkflowServiceService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getWorkflowLogs(namespace: string, name: string, podName: string, containerName: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<object>;
-    public getWorkflowLogs(namespace: string, name: string, podName: string, containerName: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<object>>;
-    public getWorkflowLogs(namespace: string, name: string, podName: string, containerName: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<object>>;
-    public getWorkflowLogs(namespace: string, name: string, podName: string, containerName: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getWorkflowExecutionLogs(namespace: string, name: string, podName: string, containerName: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<object>;
+    public getWorkflowExecutionLogs(namespace: string, name: string, podName: string, containerName: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<object>>;
+    public getWorkflowExecutionLogs(namespace: string, name: string, podName: string, containerName: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<object>>;
+    public getWorkflowExecutionLogs(namespace: string, name: string, podName: string, containerName: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
-            throw new Error('Required parameter namespace was null or undefined when calling getWorkflowLogs.');
+            throw new Error('Required parameter namespace was null or undefined when calling getWorkflowExecutionLogs.');
         }
         if (name === null || name === undefined) {
-            throw new Error('Required parameter name was null or undefined when calling getWorkflowLogs.');
+            throw new Error('Required parameter name was null or undefined when calling getWorkflowExecutionLogs.');
         }
         if (podName === null || podName === undefined) {
-            throw new Error('Required parameter podName was null or undefined when calling getWorkflowLogs.');
+            throw new Error('Required parameter podName was null or undefined when calling getWorkflowExecutionLogs.');
         }
         if (containerName === null || containerName === undefined) {
-            throw new Error('Required parameter containerName was null or undefined when calling getWorkflowLogs.');
+            throw new Error('Required parameter containerName was null or undefined when calling getWorkflowExecutionLogs.');
         }
 
         let headers = this.defaultHeaders;
@@ -408,7 +408,7 @@ export class WorkflowServiceService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<object>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflows/${encodeURIComponent(String(name))}/pods/${encodeURIComponent(String(podName))}/containers/${encodeURIComponent(String(containerName))}/logs`,
+        return this.httpClient.get<object>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflow_executions/${encodeURIComponent(String(name))}/pods/${encodeURIComponent(String(podName))}/containers/${encodeURIComponent(String(containerName))}/logs`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -426,18 +426,18 @@ export class WorkflowServiceService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getWorkflowMetrics(namespace: string, name: string, podName: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ApiGetWorkflowMetricsResponse>;
-    public getWorkflowMetrics(namespace: string, name: string, podName: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ApiGetWorkflowMetricsResponse>>;
-    public getWorkflowMetrics(namespace: string, name: string, podName: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ApiGetWorkflowMetricsResponse>>;
-    public getWorkflowMetrics(namespace: string, name: string, podName: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getWorkflowExecutionMetrics(namespace: string, name: string, podName: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ApiGetWorkflowExecutionMetricsResponse>;
+    public getWorkflowExecutionMetrics(namespace: string, name: string, podName: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ApiGetWorkflowExecutionMetricsResponse>>;
+    public getWorkflowExecutionMetrics(namespace: string, name: string, podName: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ApiGetWorkflowExecutionMetricsResponse>>;
+    public getWorkflowExecutionMetrics(namespace: string, name: string, podName: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
-            throw new Error('Required parameter namespace was null or undefined when calling getWorkflowMetrics.');
+            throw new Error('Required parameter namespace was null or undefined when calling getWorkflowExecutionMetrics.');
         }
         if (name === null || name === undefined) {
-            throw new Error('Required parameter name was null or undefined when calling getWorkflowMetrics.');
+            throw new Error('Required parameter name was null or undefined when calling getWorkflowExecutionMetrics.');
         }
         if (podName === null || podName === undefined) {
-            throw new Error('Required parameter podName was null or undefined when calling getWorkflowMetrics.');
+            throw new Error('Required parameter podName was null or undefined when calling getWorkflowExecutionMetrics.');
         }
 
         let headers = this.defaultHeaders;
@@ -460,7 +460,7 @@ export class WorkflowServiceService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<ApiGetWorkflowMetricsResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflows/${encodeURIComponent(String(name))}/pods/${encodeURIComponent(String(podName))}/metrics`,
+        return this.httpClient.get<ApiGetWorkflowExecutionMetricsResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflow_executions/${encodeURIComponent(String(name))}/pods/${encodeURIComponent(String(podName))}/metrics`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -581,6 +581,73 @@ export class WorkflowServiceService {
 
     /**
      * @param namespace 
+     * @param workflowTemplateUid 
+     * @param workflowTemplateVersion 
+     * @param pageSize 
+     * @param page 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public listWorkflowExecutions(namespace: string, workflowTemplateUid?: string, workflowTemplateVersion?: string, pageSize?: number, page?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ApiListWorkflowExecutionsResponse>;
+    public listWorkflowExecutions(namespace: string, workflowTemplateUid?: string, workflowTemplateVersion?: string, pageSize?: number, page?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ApiListWorkflowExecutionsResponse>>;
+    public listWorkflowExecutions(namespace: string, workflowTemplateUid?: string, workflowTemplateVersion?: string, pageSize?: number, page?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ApiListWorkflowExecutionsResponse>>;
+    public listWorkflowExecutions(namespace: string, workflowTemplateUid?: string, workflowTemplateVersion?: string, pageSize?: number, page?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        if (namespace === null || namespace === undefined) {
+            throw new Error('Required parameter namespace was null or undefined when calling listWorkflowExecutions.');
+        }
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (workflowTemplateUid !== undefined && workflowTemplateUid !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>workflowTemplateUid, 'workflowTemplateUid');
+        }
+        if (workflowTemplateVersion !== undefined && workflowTemplateVersion !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>workflowTemplateVersion, 'workflowTemplateVersion');
+        }
+        if (pageSize !== undefined && pageSize !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>pageSize, 'pageSize');
+        }
+        if (page !== undefined && page !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>page, 'page');
+        }
+
+        let headers = this.defaultHeaders;
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<ApiListWorkflowExecutionsResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflows`,
+            {
+                params: queryParameters,
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * @param namespace 
      * @param uid 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -673,86 +740,19 @@ export class WorkflowServiceService {
 
     /**
      * @param namespace 
-     * @param workflowTemplateUid 
-     * @param workflowTemplateVersion 
-     * @param pageSize 
-     * @param page 
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public listWorkflows(namespace: string, workflowTemplateUid?: string, workflowTemplateVersion?: string, pageSize?: number, page?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ApiListWorkflowsResponse>;
-    public listWorkflows(namespace: string, workflowTemplateUid?: string, workflowTemplateVersion?: string, pageSize?: number, page?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ApiListWorkflowsResponse>>;
-    public listWorkflows(namespace: string, workflowTemplateUid?: string, workflowTemplateVersion?: string, pageSize?: number, page?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ApiListWorkflowsResponse>>;
-    public listWorkflows(namespace: string, workflowTemplateUid?: string, workflowTemplateVersion?: string, pageSize?: number, page?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        if (namespace === null || namespace === undefined) {
-            throw new Error('Required parameter namespace was null or undefined when calling listWorkflows.');
-        }
-
-        let queryParameters = new HttpParams({encoder: this.encoder});
-        if (workflowTemplateUid !== undefined && workflowTemplateUid !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>workflowTemplateUid, 'workflowTemplateUid');
-        }
-        if (workflowTemplateVersion !== undefined && workflowTemplateVersion !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>workflowTemplateVersion, 'workflowTemplateVersion');
-        }
-        if (pageSize !== undefined && pageSize !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>pageSize, 'pageSize');
-        }
-        if (page !== undefined && page !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>page, 'page');
-        }
-
-        let headers = this.defaultHeaders;
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.get<ApiListWorkflowsResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflows`,
-            {
-                params: queryParameters,
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * @param namespace 
      * @param name 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public resubmitWorkflow(namespace: string, name: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ApiWorkflow>;
-    public resubmitWorkflow(namespace: string, name: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ApiWorkflow>>;
-    public resubmitWorkflow(namespace: string, name: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ApiWorkflow>>;
-    public resubmitWorkflow(namespace: string, name: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public resubmitWorkflowExecution(namespace: string, name: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ApiWorkflowExecution>;
+    public resubmitWorkflowExecution(namespace: string, name: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ApiWorkflowExecution>>;
+    public resubmitWorkflowExecution(namespace: string, name: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ApiWorkflowExecution>>;
+    public resubmitWorkflowExecution(namespace: string, name: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
-            throw new Error('Required parameter namespace was null or undefined when calling resubmitWorkflow.');
+            throw new Error('Required parameter namespace was null or undefined when calling resubmitWorkflowExecution.');
         }
         if (name === null || name === undefined) {
-            throw new Error('Required parameter name was null or undefined when calling resubmitWorkflow.');
+            throw new Error('Required parameter name was null or undefined when calling resubmitWorkflowExecution.');
         }
 
         let headers = this.defaultHeaders;
@@ -775,7 +775,7 @@ export class WorkflowServiceService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<ApiWorkflow>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflows/${encodeURIComponent(String(name))}/resubmit`,
+        return this.httpClient.put<ApiWorkflowExecution>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflow_executions/${encodeURIComponent(String(name))}/resubmit`,
             null,
             {
                 responseType: <any>responseType,
@@ -793,15 +793,15 @@ export class WorkflowServiceService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public terminateWorkflow(namespace: string, name: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<object>;
-    public terminateWorkflow(namespace: string, name: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<object>>;
-    public terminateWorkflow(namespace: string, name: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<object>>;
-    public terminateWorkflow(namespace: string, name: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public terminateWorkflowExecution(namespace: string, name: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<object>;
+    public terminateWorkflowExecution(namespace: string, name: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<object>>;
+    public terminateWorkflowExecution(namespace: string, name: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<object>>;
+    public terminateWorkflowExecution(namespace: string, name: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
-            throw new Error('Required parameter namespace was null or undefined when calling terminateWorkflow.');
+            throw new Error('Required parameter namespace was null or undefined when calling terminateWorkflowExecution.');
         }
         if (name === null || name === undefined) {
-            throw new Error('Required parameter name was null or undefined when calling terminateWorkflow.');
+            throw new Error('Required parameter name was null or undefined when calling terminateWorkflowExecution.');
         }
 
         let headers = this.defaultHeaders;
@@ -824,7 +824,7 @@ export class WorkflowServiceService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<object>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflows/${encodeURIComponent(String(name))}/terminate`,
+        return this.httpClient.put<object>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflow_executions/${encodeURIComponent(String(name))}/terminate`,
             null,
             {
                 responseType: <any>responseType,
@@ -908,15 +908,15 @@ export class WorkflowServiceService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public watchWorkflow(namespace: string, name: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<object>;
-    public watchWorkflow(namespace: string, name: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<object>>;
-    public watchWorkflow(namespace: string, name: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<object>>;
-    public watchWorkflow(namespace: string, name: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public watchWorkflowExecution(namespace: string, name: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<object>;
+    public watchWorkflowExecution(namespace: string, name: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<object>>;
+    public watchWorkflowExecution(namespace: string, name: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<object>>;
+    public watchWorkflowExecution(namespace: string, name: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
-            throw new Error('Required parameter namespace was null or undefined when calling watchWorkflow.');
+            throw new Error('Required parameter namespace was null or undefined when calling watchWorkflowExecution.');
         }
         if (name === null || name === undefined) {
-            throw new Error('Required parameter name was null or undefined when calling watchWorkflow.');
+            throw new Error('Required parameter name was null or undefined when calling watchWorkflowExecution.');
         }
 
         let headers = this.defaultHeaders;
@@ -939,7 +939,7 @@ export class WorkflowServiceService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<object>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflows/${encodeURIComponent(String(name))}/watch`,
+        return this.httpClient.get<object>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflow_executions/${encodeURIComponent(String(name))}/watch`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

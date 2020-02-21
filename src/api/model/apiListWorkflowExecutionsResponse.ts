@@ -9,14 +9,14 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { GoogleProtobufAny } from './googleProtobufAny';
+import { ApiWorkflowExecution } from './apiWorkflowExecution';
 
 
-export interface GrpcGatewayRuntimeStreamError { 
-    grpcCode?: number;
-    httpCode?: number;
-    message?: string;
-    httpStatus?: string;
-    details?: Array<GoogleProtobufAny>;
+export interface ApiListWorkflowExecutionsResponse { 
+    count?: number;
+    workflowExecutions?: Array<ApiWorkflowExecution>;
+    page?: number;
+    pages?: number;
+    totalCount?: number;
 }
 

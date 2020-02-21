@@ -9,14 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ApiWorkflow } from './apiWorkflow';
 
 
-export interface ApiListWorkflowsResponse { 
-    count?: number;
-    workflows?: Array<ApiWorkflow>;
-    page?: number;
-    pages?: number;
-    totalCount?: number;
+export interface ProtobufAny { 
+    typeUrl?: string;
+    value?: string;
 }
 
