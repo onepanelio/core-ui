@@ -1,0 +1,51 @@
+@import "colors";
+@import "lengths";
+@import "border-mixins";
+@import "font-variables";
+@import "info-box-mixins";
+
+$tablePadding: 20px;
+
+.op-table-header {
+  color: $medium-gray;
+  font-size: $fontRegular;
+  font-family: $fontRobotoBold;
+  padding-left: $tablePadding;
+  padding-right: $tablePadding;
+  margin-bottom: 15px;
+}
+
+.op-table-row {
+  @include op-info-box-base($tablePadding);
+
+  font-size: $fontRegular;
+  font-family: $fontRoboto;
+
+  margin-top: 10px;
+
+  &:first-of-type {
+    margin-top: 0;
+  }
+
+  .op-table-row-strong {
+    font-family: $fontRobotoBold;
+    font-weight: bold;
+  }
+
+  a.name-link {
+    text-decoration: none;
+    color: black;
+
+    &:visited {
+      text-decoration: none;
+      color: black;
+    }
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .actions {
+  }
+}

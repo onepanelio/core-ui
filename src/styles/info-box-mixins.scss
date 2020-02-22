@@ -1,0 +1,10 @@
+@import "colors";
+@import "lengths";
+@import "border-mixins";
+
+@mixin op-info-box-base($padding: 22px 30px) {
+  @include op-border($cornerRadiusRegular);
+
+  background-color: $white;
+  padding: $padding;
+}

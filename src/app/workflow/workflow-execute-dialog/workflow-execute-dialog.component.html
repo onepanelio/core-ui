@@ -1,0 +1,25 @@
+<div class="op-h1">Execute Workflow</div>
+
+<form *ngIf="parameters && form" [formGroup]="form" class="parameters mt-7 mr-12">
+    <div *ngFor="let parameter of parameters">
+        <mat-form-field appearance="outline" class="w-100">
+            <mat-label>{{parameter.name}}</mat-label>
+            <input matInput [(ngModel)]="parameter.value" [formControlName]="parameter.name"/>
+            <mat-error>Must not be blank</mat-error>
+        </mat-form-field>
+    </div>
+</form>
+
+<div class="environment">
+    <div class="op-h2 mb-5">Environment variables</div>
+    <div class="ml-5">
+        <div class="font-size-regular color-medium-gray">All environment variables will be mounted on workflow execution.</div>
+        <div class="color-primary underline pointer-hover" (click)="goToEnvironmentVariables()">Manage environment variables</div>
+    </div>
+</div>
+
+<hr class="divider op-just-border-top border-gray mt-5" />
+<div class="d-flex justify-content-between mt-5">
+    <button mat-button class="font-medium-gray cancel-button" (click)="cancel()">CANCEL</button>
+    <button mat-flat-button color="accent" class="op-rounded op-button" (click)="execute()">Execute</button>
+</div>

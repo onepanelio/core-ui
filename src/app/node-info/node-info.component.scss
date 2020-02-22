@@ -1,0 +1,36 @@
+@import "../../styles/colors";
+
+:host {
+  display: block;
+}
+
+.summary-box {
+  padding: 0 16px 16px 16px;
+  text-align: center;
+}
+
+.close-button {
+  margin-right: -16px;
+  color: $medium-gray;
+}
+
+.additional-info-block {
+  padding: 30px 30px 0 30px;
+  overflow: scroll;
+}
+
+.op-expansion-panel.mat-expansion-panel:not([class*='mat-elevation-z']) {
+  margin-left: -30px;
+  margin-right: -30px;
+  border-top: $gray solid 1px;
+  border-radius: 0;
+}
+
+.invisible-node-info {
+  visibility: hidden !important;
+}
+
+.expansion-icon {
+  font-size: 30px;
+  line-height: 30px;
+}

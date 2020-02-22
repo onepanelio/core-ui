@@ -1,0 +1,6 @@
+$spacer: 0.45rem;
+@for $i from 0 through 20 {
+  .depth-#{$i} {
+    margin-left: $spacer * $i;
+  }
+}

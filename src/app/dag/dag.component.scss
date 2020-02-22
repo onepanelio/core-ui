@@ -1,0 +1,184 @@
+@import "../../styles/colors";
+
+:host {
+  display: block;
+}
+
+.buffer {
+  visibility: hidden;
+  position: fixed;
+  top: 0;
+  right: 10000px;
+  z-index: -999999;
+}
+
+/* This sets the color for "TK" nodes to a light blue green. */
+/deep/ g.type-TK > rect {
+  fill: #00ffd0;
+}
+
+/deep/ text {
+  font-weight: 300;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+}
+
+/deep/ .node rect {
+  stroke: #999;
+  fill: #fff;
+  stroke-width: 1.5px;
+}
+
+/deep/ .edgePath path {
+  stroke: #333;
+  stroke-width: 1.5px;
+}
+
+/deep/ .node {
+  cursor: pointer;
+  height: 30px;
+}
+
+/deep/ .node .name {
+  height: 100%;
+  vertical-align: middle;
+  margin-left: 10px;
+}
+
+/deep/ .node .status-icon {
+  vertical-align: middle;
+  padding-left: 20px;
+}
+
+/deep/ .node .status-pending {
+  margin-left: 20px;
+  border-radius: 50%;
+  border: 1px solid #bbb;
+  width: 20px;
+  height: 20px;
+}
+
+/deep/ .node .node-root.rect {
+  width: 200px;
+  height: 42px;
+  line-height:42px;
+}
+
+/deep/ .node .node-root.summary {
+  width: 200px;
+  height: 82px;
+
+  .not-root {
+    text-align: center;
+  }
+
+  .status-icon {
+    padding-left: 0;
+  }
+}
+
+/deep/ .node .node-root.dashed-circle {
+  width: 30px;
+  height: 30px;
+}
+
+/deep/ .node rect {
+  fill: #fff;
+}
+
+/deep/ .node circle {
+  stroke: #bbb;
+  stroke-dasharray: 3;
+  fill: none;
+  stroke-width: 2px;
+}
+
+/deep/ .edgePath path {
+  stroke: #bbb;
+  fill: #bbb;
+  stroke-width: 2px;
+  stroke-dasharray: 3;
+}
+
+/deep/ .node.skipped .phase {
+  display: none;
+}
+
+/deep/ .node {
+  .root-element {
+    margin: 1px 0 0 0;
+  }
+}
+
+/deep/ .node.succeeded {
+  rect {
+    stroke: $success;
+    fill: $success-light;
+  }
+
+  .root-element {
+    color: $white;
+    background-color: $success;
+  }
+}
+
+/deep/ .node.running {
+  rect {
+    stroke: $primary;
+    fill: $primary-light;
+  }
+
+  .root-element {
+    color: $white;
+    background-color: $primary;
+  }
+}
+
+/deep/ .node.failed {
+  rect {
+    stroke: $danger;
+    fill: $danger-light;
+  }
+
+  .root-element {
+    color: $white;
+    background-color: $danger;
+  }
+}
+
+/deep/ .node.error {
+  rect {
+    stroke: $danger;
+    fill: $danger-light;
+  }
+
+  .root-element {
+    color: $white;
+    background-color: $danger;
+  }
+}
+
+/deep/ .node.pending .phase {
+  background-color: orange;
+}
+
+/deep/ .node.failed .phase,
+.node.error .phase {
+  background-color: red;
+}
+
+/deep/ .node.selected {
+  rect {
+    stroke: #F6881F;
+    stroke-width: 2px;
+  }
+
+  .root-element {
+    margin: 1px 1px 0 1px;
+  }
+}
+
+/deep/ .node.selected circle {
+  stroke: #F6881F;
+  stroke-width: 2px;
+}

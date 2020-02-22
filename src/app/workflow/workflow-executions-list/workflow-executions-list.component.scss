@@ -1,0 +1,17 @@
+.workflow-executions-list {
+  .cdk-column-name {
+    flex-basis: 200px;
+  }
+
+  .cdk-column-timestamps {
+    flex-basis: 250px;
+  }
+
+  .cdk-column-status {
+    flex-basis: 250px;
+  }
+
+  .timestamp {
+    min-width: 60px;
+  }
+}

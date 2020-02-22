@@ -1,0 +1,22 @@
+{
+  "name": "vanilla-ts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "start": "parcel index.html --open",
+    "build": "parcel build index.html"
+  },
+  "dependencies": {
+    "d3": "^5.14.2",
+    "dagre": "0.8.5",
+    "dagre-d3": "^0.6.4",
+    "js-yaml": "^3.13.1",
+    "parcel": "^1.12.4"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.6.1",
+    "typescript": "^3.7.4"
+  },
+  "keywords": []
+}

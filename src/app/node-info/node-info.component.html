@@ -1,0 +1,120 @@
+<div class="root-element bg-white" [class.invisible-node-info]="!visible">
+  <div class="bg-primary-light summary-box">
+    <div class="d-flex flex-row-reverse">
+      <button mat-icon-button class="close-button" aria-label="close icon" (click)="onCloseClick()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <div class="d-flex flex-column">
+      <app-status *ngIf="status" class="font-roboto-bold font-size-large line-height-large" [ngClass]="statusClass" [phase]="status">
+      </app-status>
+      <app-clock *ngIf="startedAt"
+                 class="font-size-large font-roboto font-black"
+                 [startedAt]="startedAt"
+                 [finishedAt]="finishedAt">
+      </app-clock>
+      <div *ngIf="startedAt" class="font-size-small font-medium-gray font-roboto-bold mt-1">
+        Started <app-date [dateTime]="startedAt"></app-date>
+      </div>
+      <div *ngIf="finishedAt" class="font-size-small font-medium-gray font-roboto-bold mt-1">
+        Finished <app-date [dateTime]="finishedAt"></app-date>
+      </div>
+      <div>
+        <hr class="divider border-top border-primary-lighter"/>
+        <button mat-button color="primary" class="w-50 font-size-regular" (click)="openYaml()" >YAML</button>
+        <button *ngIf="logsAvailable" mat-button color="primary" class="w-50 font-size-regular" (click)="openLogs()">LOGS</button>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="visible" class="additional-info-block font-roboto">
+    <table class="w-100">
+      <thead>
+      <tr class="text-left">
+        <th>Name</th>
+        <th>Type</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr>
+        <td *ngIf="node" class="w-50">{{node.id}}</td>
+        <td *ngIf="node" class="w-50">{{node.type}}</td>
+      </tr>
+      </tbody>
+    </table>
+    <table class="w-100" *ngIf="node && node.message">
+      <thead>
+        <tr class="text-left">
+          <th>Message</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="w-100">{{node.message}}</td>
+        </tr>
+      </tbody>
+    </table>
+    <mat-expansion-panel class="op-expansion-panel mt-5" hideToggle="true" (expandedChange)="onParametersExpandChange($event)">
+      <mat-expansion-panel-header [expandedHeight]="'48px'">
+        <mat-panel-title class="font-size-larger font-primary justify-content-between align-items-center">
+          Parameters
+          <div class="expansion-icon" *ngIf="!parametersExpanded">&#43;</div>
+          <div class="expansion-icon" *ngIf="parametersExpanded">&#8722;</div>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold">INPUTS</div>
+      <div>
+        <app-parameter *ngFor="let parameter of inputParameters" [parameter]="parameter">
+        </app-parameter>
+      </div>
+
+      <div class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold mt-5" *ngIf="node.type === 'Pod'">OUTPUTS</div>
+      <div>
+        <app-parameter *ngFor="let parameter of outputParameters" [parameter]="parameter">
+        </app-parameter>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel class="op-expansion-panel" hideToggle="true" *ngIf="node.type === 'Pod'" (expandedChange)="onContainersExpandChange($event)">
+      <mat-expansion-panel-header [expandedHeight]="'48px'">
+        <mat-panel-title class="font-size-larger font-primary justify-content-between align-items-center">
+          Containers
+          <div class="expansion-icon" *ngIf="!containersExpanded">&#43;</div>
+          <div class="expansion-icon" *ngIf="containersExpanded">&#8722;</div>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div *ngIf="template">
+        <div>
+          <div class="font-weight-bold">Name</div>
+          <div>{{template.name}}</div>
+        </div>
+        <div class="mt-2">
+          <div class="font-weight-bold w-50">Image</div>
+          <div>{{template.container?.image}}</div>
+        </div>
+        <div class="mt-2">
+          <div class="font-weight-bold w-50">Command</div>
+          <div>{{template.container?.command?.join(" ")}}</div>
+        </div>
+        <div class="mt-2">
+          <div class="font-weight-bold w-50">Args</div>
+          <div>{{template.container?.args?.join(" ")}}</div>
+        </div>
+      </div>
+    </mat-expansion-panel>
+    <mat-expansion-panel class="op-expansion-panel" hideToggle="true" *ngIf="node.type === 'Pod'" (expandedChange)="onArtifactsExpandChange($event)">
+      <mat-expansion-panel-header [expandedHeight]="'48px'">
+        <mat-panel-title class="font-size-larger font-primary justify-content-between align-items-center">
+          Artifacts
+          <div class="expansion-icon" *ngIf="!artifactsExpanded">&#43;</div>
+          <div class="expansion-icon" *ngIf="artifactsExpanded">&#8722;</div>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <div>
+        <app-metrics [workflowName]="workflow.name" [podId]="node.id" [nodePhase]="node.phase">
+        </app-metrics>
+      </div>
+    </mat-expansion-panel>
+  </div>
+</div>

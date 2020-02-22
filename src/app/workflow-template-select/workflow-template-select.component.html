@@ -1,0 +1,26 @@
+<div>
+    <div class="font-size-regular font-proxima-bold d-flex align-items-center">
+        <img src="/assets/images/workflows-blank-icon.svg"/>
+        <span class="template-header">Blank template</span>
+    </div>
+    <ul>
+        <li class="font-size-regular font-proxima template-name"
+            [ngClass]="{'selected': 'new' === this.selectedTemplate}"
+            (click)="selectTemplate('new')">
+            New
+        </li>
+    </ul>
+
+    <div class="font-size-regular font-proxima-bold d-flex align-items-center">
+        <img src="/assets/images/workflows-templates-icon.svg"/>
+        <span class="template-header">Templates</span>
+    </div>
+    <ul>
+        <li *ngFor="let template of workflowTemplateSamples"
+            class="font-size-regular font-proxima template-name"
+            [ngClass]="{'selected': template.name === this.selectedTemplate}"
+            (click)="selectTemplate(template.name)">
+            {{template.name}}
+        </li>
+    </ul>
+</div>

@@ -1,0 +1,108 @@
+@import '~@angular/material/theming';
+
+@include mat-core();
+
+$mat-orange: (
+  50: #fff3e0,
+  100: #ffe0b2,
+  200: #ffcc80,
+  300: #ffb74d,
+  400: #ffa726,
+  500: #ff9800,
+  600: #fb8c00,
+  700: #f57c00,
+  800: #ef6c00,
+  900: #e65100,
+  A100: #ffd180,
+  A200: #ffab40,
+  A400: #ff9100,
+  A700: #ff6d00,
+  contrast: (
+    50: $black-87-opacity,
+    100: $black-87-opacity,
+    200: $black-87-opacity,
+    300: $black-87-opacity,
+    400: $black-87-opacity,
+    500: $black-87-opacity,
+    600: white,
+    700: $black-87-opacity,
+    800: white,
+    900: white,
+    A100: $black-87-opacity,
+    A200: $black-87-opacity,
+    A400: white,
+    A700: white,
+  )
+);
+
+$mat-red: (
+  50: #ffebee,
+  100: #ffcdd2,
+  200: #ef9a9a,
+  300: #e57373,
+  400: #ef5350,
+  500: #f44336,
+  600: #e53935,
+  700: #d32f2f,
+  800: #c62828,
+  900: #b71c1c,
+  A100: #ff8a80,
+  A200: #ff5252,
+  A400: #ff1744,
+  A700: #d32345,
+  contrast: (
+    50: $dark-primary-text,
+    100: $dark-primary-text,
+    200: $dark-primary-text,
+    300: $dark-primary-text,
+    400: $dark-primary-text,
+    500: $light-primary-text,
+    600: $light-primary-text,
+    700: $light-primary-text,
+    800: $light-primary-text,
+    900: $light-primary-text,
+    A100: $dark-primary-text,
+    A200: $light-primary-text,
+    A400: $light-primary-text,
+    A700: $light-primary-text,
+  )
+);
+
+$primary: mat-palette($mat-light-blue, 900);
+$accent: mat-palette($mat-orange, A400);
+$warn: mat-palette($mat-red, A700);
+$theme: mat-light-theme($primary, $accent, $warn);
+
+@include angular-material-theme($theme);
+
+$assets-root: '/assets/';
+$images-root: $assets-root + 'img/';
+$fonts-root: $assets-root + 'fonts/';
+$proxima-nova-font-path: '#{$fonts-root}proxima-nova/';
+$proxima-nova-regular-font-path: '#{$proxima-nova-font-path}regular/';
+
+@font-face {
+  font-family: 'Proxima Nova Regular';
+  font-style: normal;
+  font-weight: normal;
+  src: url('#{$proxima-nova-regular-font-path}ProximaNova-Regular.eot'); /* IE9 Compat Modes */
+  src: local('ProximaNova'), local('ProximaNova-Regular'),
+  url('#{$proxima-nova-regular-font-path}ProximaNova-Regular.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('#{$proxima-nova-regular-font-path}ProximaNova-Regular.woff') format('woff'), /* Modern Browsers */
+  url('#{$proxima-nova-regular-font-path}ProximaNova-Regular.ttf') format('truetype'), /* Safari, Android, iOS */
+  url('#{$proxima-nova-regular-font-path}ProximaNova-Regular.svg#ProximaNova-Regular') format('svg'); /* Legacy iOS */
+}
+
+@font-face {
+  font-family: 'Proxima Nova Bold';
+  font-style: normal;
+  font-weight: bold;
+  src: url('#{$proxima-nova-font-path}bold/ProximaNova-Bold.eot'); /* IE9 Compat Modes */
+  src: local('ProximaNova'), local('ProximaNova-Bold'),
+  url('#{$proxima-nova-font-path}bold/ProximaNova-Bold.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('#{$proxima-nova-font-path}bold/ProximaNova-Bold.woff2') format('woff2'), /* Super Modern Browsers */
+  url('#{$proxima-nova-font-path}bold/ProximaNova-Bold.woff') format('woff'), /* Modern Browsers */
+  url('#{$proxima-nova-font-path}bold/ProximaNova-Bold.ttf') format('truetype'), /* Safari, Android, iOS */
+  url('#{$proxima-nova-font-path}bold/ProximaNova-Bold.svg#ProximaNova-Bold') format('svg'); /* Legacy iOS */
+}
+

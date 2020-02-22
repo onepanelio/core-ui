@@ -1,0 +1,53 @@
+<div class="page">
+  <div class="page-alerts mb-5">
+    <app-alert-panel></app-alert-panel>
+  </div>
+  <div class="page-header">
+    <div class="page-title">
+      <div class="page-title-text">Workflow templates</div>
+      <div class="page-action-bar">
+        <a href="#" class="help-link">How to use</a>
+        <a mat-flat-button color="accent" class="op-rounded op-button ml-p40" [routerLink]="['/', this.namespace, 'workflow-templates', 'create']">
+          <mat-icon id="create-button" class="icon">add_circle</mat-icon>
+          <span class="ml-1">Create Template</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-body mt-3 workflow-list">
+    <cdk-table [dataSource]="workflowTemplates">
+      <ng-container cdkColumnDef="name">
+        <cdk-header-cell *cdkHeaderCellDef>Name</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let workflowTemplate">
+          <a class="name-link" [routerLink]="['/', this.namespace, 'workflow-templates', workflowTemplate.uid]">{{workflowTemplate.name}}</a>
+        </cdk-cell>
+      </ng-container>
+
+      <ng-container cdkColumnDef="createdAt">
+        <cdk-header-cell *cdkHeaderCellDef>Created</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let workflowTemplate">
+          <app-date [dateTime]="workflowTemplate.createdAt"></app-date>
+        </cdk-cell>
+      </ng-container>
+
+      <ng-container cdkColumnDef="actions">
+        <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+        <cdk-cell *cdkCellDef="let workflowTemplate">
+          <a class="link-button" [routerLink]="['/', this.namespace, 'workflow-templates', workflowTemplate.uid]">View</a>
+        </cdk-cell>
+      </ng-container>
+
+      <ng-container cdkColumnDef="spacer">
+        <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+        <cdk-cell *cdkCellDef="let workflow" class="flex-grow-1"></cdk-cell>
+      </ng-container>
+
+      <!-- Header and Row Declarations -->
+      <cdk-header-row *cdkHeaderRowDef="displayedColumns" class="d-flex align-items-baseline op-table-header"></cdk-header-row>
+      <cdk-row *cdkRowDef="let workflowTemplate; columns: displayedColumns"
+               class="d-flex align-items-baseline op-table-row">
+      </cdk-row>
+    </cdk-table>
+  </div>
+</div>

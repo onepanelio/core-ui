@@ -1,0 +1,46 @@
+<div class="page">
+  <div class="page-header">
+    <div class="page-title-text text-center">Edit workflow template</div>
+  </div>
+
+  <div class="page-body">
+    <div class="op-info-box mt-8">
+      <div class="header">
+        <div>
+          <mat-form-field appearance="outline" class="wp-400">
+            <mat-label>Template name</mat-label>
+            <input matInput disabled value="{{workflowTemplateDetail?.name}}"/>
+          </mat-form-field>
+        </div>
+        <div class="font-roboto">Need help? <a href="#">How to define workflows</a></div>
+      </div>
+      <div class="d-flex">
+        <div class="flex-grow-1">
+          <app-alert [autoDismiss]="false" [alert]="serverError"></app-alert>
+          <div class="two-panels op-border mt-3">
+            <ace-editor
+                 class="w-50 panel"
+                 [mode]="'yaml'"
+                 [text]="manifestText"
+                 (textChanged)="onManifestChange($event)"
+                 [options]="{
+                    showInvisibles: false,
+                    showPrintMargin: false,
+                    scrollPastEnd: 1,
+                    showLineNumbers: true,
+                    tabSize: 2
+                  }"
+            ></ace-editor>
+            <app-dag class="w-50 panel"></app-dag>
+          </div>
+          <div class="mt-5 d-flex justify-content-between">
+            <button mat-button class="font-medium-gray cancel-button" (click)="cancel()">CANCEL</button>
+            <div>
+              <button mat-flat-button color="accent" class="op-rounded op-button border-secondary" (click)="update()">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

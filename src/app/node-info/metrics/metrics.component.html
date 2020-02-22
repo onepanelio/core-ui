@@ -1,0 +1,7 @@
+<div *ngIf="metrics.length > 0">
+    <div class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold">METRICS</div>
+    <div *ngFor="let item of metrics" class="font-roboto mt-2">
+        <div class="key font-weight-bold">{{item.name}}</div>
+        <div *ngIf="item.value" class="value">{{item.value}}</div>
+    </div>
+</div>

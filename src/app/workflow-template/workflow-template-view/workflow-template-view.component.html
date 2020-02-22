@@ -1,0 +1,81 @@
+<div class="page">
+  <div class="page-header">
+    <div class="page-links">
+      <a [routerLink]="['/', this.namespace, 'workflow-templates']" class="op-back-link">
+        <i class="fas fa-chevron-left"></i>
+        <span>Back to workflow templates</span>
+      </a>
+    </div>
+    <div class="page-title">
+      <div class="page-title-text">Workflow template details</div>
+    </div>
+  </div>
+
+  <div class="page-body">
+    <div class="op-info-box mt-8">
+      <div class="header">
+        <div *ngIf="workflowTemplate" class="title">{{workflowTemplate.name}}</div>
+        <div *ngIf="workflowTemplate" class="actions font-roboto">
+          <a class="link-button" (click)="editSelectedWorkflowTemplateVersion()">
+            <i class="fas fa-pencil-alt"></i>
+            <span class="ml-2">Edit</span>
+          </a>
+          <button mat-button color="primary" class="link-button font-size-regular ml-10" (click)="deleteWorkflowTemplate()">
+            <mat-icon [fontSet]="'fas'" [fontIcon]="'fa-trash-alt'"></mat-icon>
+            Delete
+          </button>
+        </div>
+      </div>
+      <div>
+        <div *ngIf="workflowTemplate" class="info mt-2">
+          <i class="far fa-calendar-check"></i>
+          <app-date class="ml-2" [dateTime]="workflowTemplate.createdAt"></app-date>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-flex align-items-baseline mt-5">
+      <div class="header-2-text">Activity</div>
+      <div class="flex-grow-1"></div>
+      <button mat-flat-button color="accent" class="op-rounded op-button" (click)="executeWorkflow()">Execute Workflow</button>
+    </div>
+
+    <mat-tab-group class="no-bottom-border" (selectedTabChange)="onTabChange($event)" [dynamicHeight]="true">
+      <mat-tab label="Executions">
+        <app-workflow-executions-list
+            *ngIf="workflows"
+            [namespace]="namespace"
+            [workflows]="workflows">
+        </app-workflow-executions-list>
+        <mat-paginator class="no-background font-size-small"
+                *ngIf="workflowResponse"
+                (page)="onWorkflowPageChange($event)"
+                [pageIndex]="this.workflowPagination.page"
+                [length]="this.workflowResponse.totalCount"
+                [pageSize]="this.workflowPagination.pageSize"
+                [pageSizeOptions]="[5, 10, 25, 100]">
+        </mat-paginator>
+      </mat-tab>
+      <mat-tab label="Definition">
+        <ng-template matTabContent>
+          <div class="op-border mt-1 hide-overflow">
+            <div class="definition-header op-border-bottom"></div>
+            <div class="two-panels">
+              <div ace-editor
+                   [mode]="'yaml'"
+                   [text]="manifestText"
+                   [readOnly]="true"
+                   [options]="{
+                  showInvisibles: false,
+                  showPrintMargin: false,
+                  scrollPastEnd: 1,
+                  showLineNumbers: true
+                }"></div>
+              <app-dag></app-dag>
+            </div>
+          </div>
+        </ng-template>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

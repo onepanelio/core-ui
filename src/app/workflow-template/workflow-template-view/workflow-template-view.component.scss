@@ -1,0 +1,54 @@
+@import "../../../styles/colors";
+@import "../../../styles/font-variables";
+
+.definition-header {
+  background-color: #F5F5F5;
+  height: 40px;
+}
+
+.two-panels {
+  display: flex;
+  height: 500px;
+  overflow: hidden;
+
+  div {
+    flex-grow: 1;
+    resize: none;
+    width: 50%;
+  }
+  app-dag {
+    background-color: white;
+    flex-grow: 1;
+    width: 50%;
+  }
+}
+
+/deep/ mat-paginator .mat-icon-button {
+  line-height: 27px !important;
+}
+
+/deep/ app-workflow-executions-list cdk-header-row {
+  display: none;
+}
+
+/deep/ .mat-tab-labels {
+  opacity: 1;
+  align-items: baseline;
+
+  .mat-tab-label {
+    .mat-tab-label-content {
+      font-weight: bold;
+      font-size: $fontRegular;
+      text-transform: uppercase;
+    }
+  }
+
+  .mat-tab-label-active {
+    opacity: 1;
+
+    .mat-tab-label-content {
+      font-family: $fontRobotoBold;
+      color: $primary;
+    }
+  }
+}

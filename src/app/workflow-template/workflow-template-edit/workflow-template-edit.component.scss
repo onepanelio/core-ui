@@ -1,0 +1,33 @@
+@import "../../../styles/colors";
+
+.op-info-box {
+  padding-left: 50px;
+  padding-right: 50px;
+}
+
+.two-panels {
+  display: flex;
+  height: 500px;
+
+  .panel {
+    flex-grow: 1;
+    resize: none;
+  }
+
+  app-dag {
+    flex-grow: 1;
+    margin-left: 20px;
+    width: 50%;
+  }
+
+}
+
+app-workflow-template-select {
+  flex-basis: 240px;
+}
+
+/deep/ .highlight-error {
+  position:absolute;
+  background: #d32345AA;
+  z-index:20
+}

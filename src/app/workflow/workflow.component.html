@@ -1,0 +1,90 @@
+<div class="page mb-0">
+  <div class="page-header">
+    <div class="page-links">
+      <a *ngIf="this.workflow?.workflowTemplate" [routerLink]="['/', this.namespace, 'workflow-templates', this.workflow.workflowTemplate.uid]" class="op-back-link">
+        <i class="fas fa-chevron-left"></i>
+        <span>Back to workflow template</span>
+      </a>
+      </div>
+      <div class="page-title">
+      <div class="page-title-text">Workflow view</div>
+    </div>
+  </div>
+
+  <div class="page-body">
+    <app-activity-bar *ngIf="workflow?.phase" [status]="workflow.phase" class="mt-4">
+      <div class="d-inline-flex align-items-center">
+        <app-status *ngIf="workflow" class="font-roboto-bold font-weight-bold" [phase]="workflow.phase"></app-status>
+        <span *ngIf="workflow && workflow.succeeded" class="ml-1"> in </span>
+        <app-clock *ngIf="workflow"
+                   class="ml-1"
+                   [startedAt]="workflow.workflowStatus.startedAt"
+                   [finishedAt]="workflow.workflowStatus.finishedAt">
+        </app-clock>
+      </div>
+
+      <div>
+        <button *ngIf="workflow?.active" mat-button color="primary" class="font-size-regular" (click)="onTerminate()">Terminate</button>
+      </div>
+    </app-activity-bar>
+
+    <div id="info-box" class="op-info-box mt-4">
+      <div class="header">
+        <div *ngIf="workflow" class="title">{{workflow.name}}</div>
+      </div>
+      <div #pageContent>
+        <app-dag
+          class="mt-4 h-100"
+          [style.height]="height"
+          (nodeClicked)="handleNodeClicked($event)"
+          [identifier]="dagIdentifier">
+        </app-dag>
+      </div>
+    </div>
+    <app-node-info
+       class="ml-3 op-border scroll-overflow"
+       [ngClass]="{ 'visible': showNodeInfo, 'hidden': !showNodeInfo }"
+       [visible]="showNodeInfo"
+       [style.height]="nodeInfoHeight"
+       [style.minHeight]="nodeInfoHeight"
+       [style.top]="nodeInfoTop"
+       [workflow]="workflow"
+       (closeClicked)="onNodeInfoClosed()"
+       (yamlClicked)="onYamlClicked()"
+       (logsClicked)="onLogsClicked()">
+    </app-node-info>
+  </div>
+  <app-logs
+    *ngIf="showLogs && nodeInfo"
+    [namespace]="namespace"
+    [workflowName]="workflow.name"
+    [podId]="nodeInfo.id"
+    [nodeInfo]="nodeInfo"
+    (closeClicked)="onLogsClosed()">
+  </app-logs>
+  <div [ngClass]="{ 'visible': showYaml, 'hidden': !showYaml }" class="yaml-root">
+    <div class="d-flex align-items-center toolbar font-roboto">
+      <div class="title font-white">
+        <strong>YAML: </strong>
+        <span class="node-name">{{workflow?.name}}</span>
+      </div>
+      <div class="flex-grow-1"></div>
+      <button mat-icon-button class="close-button font-white" aria-label="close icon" (click)="onYamlClose()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <ace-editor
+        #yamlEditor
+        class="w-100 h-100"
+        [mode]="'yaml'"
+        [readOnly]="true"
+        [text]="workflow?.yamlManifest"
+        [options]="{
+                    showInvisibles: false,
+                    showPrintMargin: false,
+                    scrollPastEnd: 1,
+                    showLineNumbers: true
+                  }"
+    ></ace-editor>
+  </div>
+</div>
