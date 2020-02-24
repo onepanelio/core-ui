@@ -139,11 +139,6 @@ export class LogsComponent implements OnInit, OnDestroy {
         self.information = 'No logs generated';
       }
     }});
-
-
-    this.socket.onclose = (event) => {
-
-    };
   }
 
   ngOnDestroy(): void {
