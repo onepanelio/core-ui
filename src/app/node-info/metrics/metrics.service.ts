@@ -20,7 +20,7 @@ export class MetricsService {
     }
 
     getWorkflowMetrics(namespace: string, workflowName: string, podId: string) {
-        const url = `${this.baseUrl}/apis/v1beta1/${namespace}/workflows/${workflowName}/pods/${podId}/metrics`;
+        const url = `${this.baseUrl}/apis/v1beta1/${namespace}/workflow_executions/${workflowName}/pods/${podId}/metrics`;
 
         return this.client.get<GetMetricsResponse>(url);
     }
