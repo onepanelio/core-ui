@@ -198,13 +198,67 @@ export interface ListWorkflowRequest {
   page?: number;
 }
 
+export function createJsonLineReader(reader, callback = (resp) => {}, completionCallback = () => {}) {
+  const decoder = new TextDecoder("utf-8");
+  let line = '';
+
+  return new ReadableStream({
+    start(controller) {
+      return pump();
+      function pump() {
+        return reader.read().then(({ done, value }) => {
+          // When no more data needs to be consumed, close the stream
+          if (done) {
+            controller.close();
+            completionCallback();
+            return;
+          }
+          // Enqueue the next data chunk into our target stream
+          controller.enqueue(value);
+
+          let res = '';
+          const textValue = decoder.decode(value);
+
+          for(const textItem of textValue.split('\n')) {
+            if(textItem) {
+              line += textItem;
+              try {
+                res = JSON.parse(line);
+
+                callback(res);
+                line = '';
+              } catch (e) {
+                // Keep going, line is not ready yet.
+              }
+            }
+          }
+
+          return pump();
+        });
+      }
+    }
+  })
+}
+
 @Injectable()
 export class WorkflowService {
   constructor(private client: HttpClient) {
   }
 
-  watchWorkflow(namespace: string, name: string) {
-    return new WebSocket(`${environment.baseWsUrl}/apis/v1beta1/${namespace}/workflow_executions/${name}/watch`);
+  watchWorkflow(namespace: string, name: string, callback?: any) {
+    const url =`${environment.baseUrl}/apis/v1beta1/${namespace}/workflow_executions/${name}/watch`;
+    const authToken: string = localStorage.getItem('auth-token');
+    const headers = new Headers({
+      Authorization: 'Bearer ' + authToken
+    });
+
+    fetch(url, {
+      credentials: "same-origin",
+      headers: headers,
+    }).then(response => {
+      let reader = response.body.getReader();
+      return createJsonLineReader(reader, callback);
+    });
   }
 
   getWorkflow(namespace: string, uid: string) {

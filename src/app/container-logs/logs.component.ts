@@ -113,28 +113,36 @@ export class LogsComponent implements OnInit, OnDestroy {
     // Clean up the log text as the new node/logs provider will have new logs.
     this.logText = '';
 
-    this.socket = this.logsService.getPodLogsSocket(this.namespace, this.workflowName, this.podId);
+    const self = this;
 
-    this.socket.onmessage = (event: any) => {
-      try {
-        const jsonData = JSON.parse(event.data);
+    // this.socket = this.logsService.getPodLogsSocket(this.namespace, this.workflowName, this.podId);
+    this.logsService.getPodLogsSocket({
+      namespace: this.namespace,
+      workflowName: this.workflowName,
+      podId: this.podId,
+      containerName: 'main',
+      callback: (jsonData) => {
+        try {
+          if(jsonData.result && jsonData.result.content) {
+            this.logText += jsonData.result.content + '\n';
 
-        if(jsonData.result && jsonData.result.content) {
-          this.logText += jsonData.result.content + '\n';
+            self.onLogsUpdated();
+          }
 
-          this.onLogsUpdated();
+        } catch (e) {
+          console.error(e);
         }
-
-      } catch (e) {
-        console.error(e);
+    },
+    completionCallback: () => {
+      self.loading = false;
+      if (self.logText === '') {
+        self.information = 'No logs generated';
       }
-    };
+    }});
+
 
     this.socket.onclose = (event) => {
-      this.loading = false;
-      if (this.logText === '') {
-        this.information = 'No logs generated';
-      }
+
     };
   }
 

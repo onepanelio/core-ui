@@ -54,15 +54,12 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
     }
 
     addStatusWatcher(workflowDetail: WorkflowExecution) {
-        const watcher = this.workflowService.watchWorkflow(this.namespace, workflowDetail.name);
-        this.statusWatchers[workflowDetail.uid] = watcher;
-
-        watcher.onmessage = (event) => {
-            const parsedData = JSON.parse(event.data);
+        const self = this;
+        this.workflowService.watchWorkflow(this.namespace, workflowDetail.name, (parsedData) => {
             if(parsedData.result.manifest) {
                 workflowDetail.updateWorkflowManifest(parsedData.result.manifest);
             }
-        }
+        });
     }
 
     onTerminate(workflow: WorkflowExecution) {
