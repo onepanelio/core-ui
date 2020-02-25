@@ -35,11 +35,20 @@ export class ClockComponent implements OnInit, OnDestroy {
       return
     }
 
+    let proposedFinishedAt: Date|null;
+
     if(typeof(value) === 'string') {
-      this._finishedAt = new Date(value);
+      proposedFinishedAt = new Date(value);
     } else {
-      this._finishedAt = value;
+      proposedFinishedAt = value;
     }
+
+    if(proposedFinishedAt.getFullYear() < 2) {
+      this._finishedAt = null;
+      return;
+    }
+
+    this._finishedAt = proposedFinishedAt;
 
     this.updateDuration();
   }
