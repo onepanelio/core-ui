@@ -8,6 +8,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { filter } from "rxjs/operators";
 import { MatSelect } from "@angular/material/select";
 import { NamespaceServiceService } from "../api";
+import { AuthService } from "./auth/auth.service";
 
 @Component({
   selector: 'app-root',
@@ -22,7 +23,8 @@ export class AppComponent implements OnInit {
   activeRoute = 'templates';
   loggingIn = false;
 
-  constructor(private namespaceTracker: NamespaceTracker,
+  constructor(private authService: AuthService,
+              private namespaceTracker: NamespaceTracker,
               private namespaceService: NamespaceServiceService,
               private activatedRoute: ActivatedRoute,
               private router: Router,
@@ -78,5 +80,10 @@ export class AppComponent implements OnInit {
 
   onFormFieldClick() {
       this.matSelect.open();
+  }
+
+  logout() {
+      this.authService.clearTokens();
+      this.router.navigate(['/', 'login']);
   }
 }

@@ -19,5 +19,7 @@
   <div class="ml-5 font-size-regular font-roboto-bold font-white link-wrapper" [class.active]="activeRoute === 'secrets'" >
     <a [routerLink]="['/', namespaceTracker.activeNamespace, 'secrets']">SETTINGS</a>
   </div>
+  <div class="flex-grow-1"></div>
+  <button mat-stroked-button class="logout mr-3" (click)="logout()">LOG OUT</button>
 </mat-toolbar>
 <router-outlet></router-outlet>
