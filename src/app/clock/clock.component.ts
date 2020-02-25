@@ -86,6 +86,10 @@ export class ClockComponent implements OnInit, OnDestroy {
     }
 
     this.durationString = this.durationFormatter(this._startedAt, finishedAt);
+
+    if(this._finishedAt) {
+      this.clearTimer();
+    }
   }
 
   ngOnDestroy(): void {
