@@ -114,7 +114,7 @@ export class LogsComponent implements OnInit, OnDestroy {
     this.logText = '';
 
 
-    this.workflowService.watchLogs(this.namespace, this.workflowName, this.podId)
+    this.logSubscription = this.workflowService.watchLogs(this.namespace, this.workflowName, this.podId)
         .subscribe((jsonData: any) => {
           try {
             if(jsonData.result && jsonData.result.content) {
@@ -137,6 +137,7 @@ export class LogsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    console.log('ngOnDestroy');
     if (this.logSubscription) {
       this.logSubscription.unsubscribe();
     }
