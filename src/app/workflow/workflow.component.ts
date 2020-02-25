@@ -9,7 +9,6 @@ import { AceEditorComponent } from "ng2-ace-editor";
 import * as yaml from 'js-yaml';
 import * as ace from 'brace';
 import { WorkflowServiceService } from "../../api";
-import { environment } from "../../environments/environment";
 const aceRange = ace.acequire('ace/range').Range;
 
 @Component({
@@ -75,6 +74,8 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   ) {
   }
 
+  private sub;
+
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(next => {
       this.setNamespaceName(next.get('namespace'), next.get('name'));
@@ -83,15 +84,20 @@ export class WorkflowComponent implements OnInit, OnDestroy {
         .subscribe(res => {
           this.workflow = res;
 
-          const self = this;
-          this.workflowService.watchWorkflow(this.namespace, this.name, (data) => {
-            self.onSocketMessage(data);
-          });
+          this.sub = this.workflowService.watchWorkflow(this.namespace, this.name)
+              .subscribe(res => {
+                this.onWorkflowExecutionUpdate(res);
+              }, err => {
+                console.error(err);
+              })
         });
     });
   }
 
   ngOnDestroy() {
+    if(this.sub) {
+      this.sub.unsubscribe();
+    }
     if (this.socket) {
       this.socket.close();
     }
@@ -102,7 +108,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     this.name = name;
   }
 
-  onSocketMessage(data: any) {
+  onWorkflowExecutionUpdate(data: any) {
     if (!this.dag) {
       return;
     }

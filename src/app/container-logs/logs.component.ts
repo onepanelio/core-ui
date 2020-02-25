@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { LogsService } from "./logs.service";
 import { NodeStatus } from "../node/node.service";
 import { AceEditorComponent } from "ng2-ace-editor";
+import { WorkflowService } from "../workflow/workflow.service";
 
 @Component({
   selector: 'app-logs',
   templateUrl: './logs.component.html',
   styleUrls: ['./logs.component.scss'],
-  providers: [LogsService]
+  providers: [WorkflowService]
 })
 export class LogsComponent implements OnInit, OnDestroy {
   private biggestScrollDown = 0;
@@ -92,7 +92,7 @@ export class LogsComponent implements OnInit, OnDestroy {
   // Utility to determine if we can change the scrollToBottom value.
   canChangeScrollToBottom = true;
 
-  constructor(private logsService: LogsService) { }
+  constructor(private workflowService: WorkflowService) { }
 
   ngOnInit(): void {
   }
@@ -104,6 +104,7 @@ export class LogsComponent implements OnInit, OnDestroy {
 
     this.gettingLogsForNodeId = this.nodeInfo.id;
 
+    // @todo is this still needed with subscribers?
     // We're switching to a new node/logs provider.
     // Clean up the old socket if there was one.
     if (this.socket) {
@@ -116,29 +117,27 @@ export class LogsComponent implements OnInit, OnDestroy {
     const self = this;
 
     // this.socket = this.logsService.getPodLogsSocket(this.namespace, this.workflowName, this.podId);
-    this.logsService.getPodLogsSocket({
-      namespace: this.namespace,
-      workflowName: this.workflowName,
-      podId: this.podId,
-      containerName: 'main',
-      callback: (jsonData) => {
-        try {
-          if(jsonData.result && jsonData.result.content) {
-            this.logText += jsonData.result.content + '\n';
 
-            self.onLogsUpdated();
+    this.workflowService.watchLogs(this.namespace, this.workflowName, this.podId)
+        .subscribe((jsonData: any) => {
+          try {
+            if(jsonData.result && jsonData.result.content) {
+              this.logText += jsonData.result.content + '\n';
+
+              self.onLogsUpdated();
+            }
+
+          } catch (e) {
+            console.error(e);
           }
-
-        } catch (e) {
-          console.error(e);
-        }
-    },
-    completionCallback: () => {
-      self.loading = false;
-      if (self.logText === '') {
-        self.information = 'No logs generated';
-      }
-    }});
+        }, err => {
+          console.error(err);
+        }, () => {
+          self.loading = false;
+          if (self.logText === '') {
+            self.information = 'No logs generated';
+          }
+        });
   }
 
   ngOnDestroy(): void {

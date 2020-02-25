@@ -8,6 +8,7 @@ import {
 } from '../workflow.service';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { Subscription } from "rxjs";
 
 @Component({
     selector: 'app-workflow-executions-list',
@@ -17,7 +18,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 })
 export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
     displayedColumns = ['name','status', 'start', 'end', 'spacer', 'actions'];
-    statusWatchers = new Map<string, WebSocket>();
+    watchingWorkflowsMap = new Map<string, Subscription>();
 
     @Input() namespace: string;
     @Input() set workflows(value: Workflow[]) {
@@ -48,18 +49,27 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        for(let key in this.statusWatchers) {
-            this.statusWatchers[key].close();
+        for(let item of this.watchingWorkflowsMap.entries()) {
+            item[1].unsubscribe();
         }
     }
 
     addStatusWatcher(workflowDetail: WorkflowExecution) {
-        const self = this;
-        this.workflowService.watchWorkflow(this.namespace, workflowDetail.name, (parsedData) => {
-            if(parsedData.result.manifest) {
-                workflowDetail.updateWorkflowManifest(parsedData.result.manifest);
-            }
-        });
+        const key = this.key(this.namespace, workflowDetail.name);
+
+        // Already watching, so don't create another watcher.
+        if(this.watchingWorkflowsMap.get(key)) {
+            return;
+        }
+
+        const subscription = this.workflowService.watchWorkflow(this.namespace, workflowDetail.name)
+            .subscribe((parsedData: any) => {
+                if(parsedData.result.manifest) {
+                    workflowDetail.updateWorkflowManifest(parsedData.result.manifest);
+                }
+            });
+
+        this.watchingWorkflowsMap.set(key, subscription);
     }
 
     onTerminate(workflow: WorkflowExecution) {
@@ -69,5 +79,9 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
             }, err => {
                 this.snackbar.open('Unable to stop workflow', 'OK');
             })
+    }
+
+    key(namespace: string, name:string): string {
+        return `${namespace}_${name}`;
     }
 }
