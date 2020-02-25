@@ -1,8 +1,6 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
-    SimpleWorkflowDetail,
     Workflow,
-    WorkflowDetail,
     WorkflowExecution,
     WorkflowService
 } from '../workflow.service';
@@ -22,6 +20,8 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
 
     @Input() namespace: string;
     @Input() set workflows(value: Workflow[]) {
+        this.clearWatchers();
+
         let formattedList = [];
 
         for(let workflow of value) {
@@ -45,13 +45,20 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
         private workflowService: WorkflowService,
         private snackbar: MatSnackBar) { }
 
-    ngOnInit(): void {
-    }
-
-    ngOnDestroy(): void {
+    clearWatchers() {
         for(let item of this.watchingWorkflowsMap.entries()) {
             item[1].unsubscribe();
         }
+
+        this.watchingWorkflowsMap.clear();
+    }
+
+    ngOnInit(): void {
+
+    }
+
+    ngOnDestroy(): void {
+        this.clearWatchers();
     }
 
     addStatusWatcher(workflowDetail: WorkflowExecution) {
@@ -67,6 +74,8 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
                 if(parsedData.result.manifest) {
                     workflowDetail.updateWorkflowManifest(parsedData.result.manifest);
                 }
+            }, err => {
+                console.error(err);
             });
 
         this.watchingWorkflowsMap.set(key, subscription);
