@@ -26,13 +26,13 @@ export class NamespaceSelectComponent implements OnInit {
                 if (namespaceResponse.count) {
                     newNamespace = namespaceResponse.namespaces[0].name;
                 } else {
-                    this.snackbar.open(`Unable to get activate namespace from API. Resorting to 'default'.`, 'OK');
+                    this.snackbar.open(`Unable to get active namespace from API. Resorting to 'default'.`, 'OK');
                 }
 
                 this.namespaceService.activeNamespace = newNamespace;
                 this.onNamespaceSelected(this.namespaceService.activeNamespace);
             }, (err: HttpErrorResponse) => {
-                let errorMessage = 'Unable to get activate namespace from API.';
+                let errorMessage = 'Unable to get active namespace from API.';
                 if (err.status === 0) {
                     errorMessage = 'Unable to connect to API. Is it running?'
                 }
