@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } 
 import { NodeStatus } from "../node/node.service";
 import { AceEditorComponent } from "ng2-ace-editor";
 import { WorkflowService } from "../workflow/workflow.service";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: 'app-logs',
@@ -65,8 +66,7 @@ export class LogsComponent implements OnInit, OnDestroy {
     return this._nodeInfo;
   }
 
-  // Socket to the streaming logs
-  private socket: WebSocket;
+  private logSubscription: Subscription;
 
   // The Node ID this component is currently getting logs for.
   // The Node Info may be updated several times, and it may refer to the same node.
@@ -104,19 +104,15 @@ export class LogsComponent implements OnInit, OnDestroy {
 
     this.gettingLogsForNodeId = this.nodeInfo.id;
 
-    // @todo is this still needed with subscribers?
     // We're switching to a new node/logs provider.
-    // Clean up the old socket if there was one.
-    if (this.socket) {
-      this.socket.close();
+    // Clean up the old subscription if there was one.
+    if (this.logSubscription) {
+      this.logSubscription.unsubscribe();
     }
 
     // Clean up the log text as the new node/logs provider will have new logs.
     this.logText = '';
 
-    const self = this;
-
-    // this.socket = this.logsService.getPodLogsSocket(this.namespace, this.workflowName, this.podId);
 
     this.workflowService.watchLogs(this.namespace, this.workflowName, this.podId)
         .subscribe((jsonData: any) => {
@@ -124,7 +120,7 @@ export class LogsComponent implements OnInit, OnDestroy {
             if(jsonData.result && jsonData.result.content) {
               this.logText += jsonData.result.content + '\n';
 
-              self.onLogsUpdated();
+              this.onLogsUpdated();
             }
 
           } catch (e) {
@@ -133,16 +129,16 @@ export class LogsComponent implements OnInit, OnDestroy {
         }, err => {
           console.error(err);
         }, () => {
-          self.loading = false;
-          if (self.logText === '') {
-            self.information = 'No logs generated';
+          this.loading = false;
+          if (this.logText === '') {
+            this.information = 'No logs generated';
           }
         });
   }
 
   ngOnDestroy(): void {
-    if (this.socket) {
-      this.socket.close();
+    if (this.logSubscription) {
+      this.logSubscription.unsubscribe();
     }
   }
 
