@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 })
 export class AuthService {
   public redirectUrl: string;
+  private authToken?: string;
 
   get isLoggedIn(): boolean {
     const authToken = localStorage.getItem('auth-token');
@@ -26,10 +27,25 @@ export class AuthService {
     localStorage.setItem('auth-token', token);
     const expires = new Date(new Date().setFullYear(new Date().getFullYear() + 10)).toUTCString();
     document.cookie = 'auth-token=' + token + ';path=/;expires=' + expires;
+
+    this.authToken = token;
   }
 
   clearTokens() {
     localStorage.removeItem('auth-token');
     document.cookie = 'auth-token=;path=/;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    this.authToken = undefined;
+  }
+
+  getAuthToken(): string {
+    if(this.authToken) {
+      return this.authToken;
+    }
+
+    return localStorage.getItem('auth-token');
+  }
+
+  getAuthHeader(): string {
+    return 'Bearer ' + this.getAuthToken();
   }
 }

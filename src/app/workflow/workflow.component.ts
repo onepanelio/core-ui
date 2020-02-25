@@ -8,6 +8,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 import { AceEditorComponent } from "ng2-ace-editor";
 import * as yaml from 'js-yaml';
 import * as ace from 'brace';
+import { WorkflowServiceService } from "../../api";
 const aceRange = ace.acequire('ace/range').Range;
 
 @Component({
@@ -68,9 +69,12 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   constructor(
     private activatedRoute: ActivatedRoute,
     private workflowService: WorkflowService,
+    private apiWorkflowService: WorkflowServiceService,
     private snackbar: MatSnackBar
   ) {
   }
+
+  private sub;
 
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(next => {
@@ -80,15 +84,20 @@ export class WorkflowComponent implements OnInit, OnDestroy {
         .subscribe(res => {
           this.workflow = res;
 
-          this.socket = this.workflowService.watchWorkflow(this.namespace, this.name);
-          this.socket.onmessage = (event) => {this.onSocketMessage(event)};
-        }, err => {
-
+          this.sub = this.workflowService.watchWorkflow(this.namespace, this.name)
+              .subscribe(res => {
+                this.onWorkflowExecutionUpdate(res);
+              }, err => {
+                console.error(err);
+              })
         });
     });
   }
 
   ngOnDestroy() {
+    if(this.sub) {
+      this.sub.unsubscribe();
+    }
     if (this.socket) {
       this.socket.close();
     }
@@ -99,13 +108,8 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     this.name = name;
   }
 
-  onSocketMessage(event: any) {
+  onWorkflowExecutionUpdate(data: any) {
     if (!this.dag) {
-      return;
-    }
-
-    const data = JSON.parse(event.data);
-    if (!data.result) {
       return;
     }
 

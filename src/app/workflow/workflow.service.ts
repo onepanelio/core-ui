@@ -6,6 +6,8 @@ import { WorkflowTemplateDetail } from '../workflow-template/workflow-template.s
 import { NodeStatus } from '../node/node.service';
 import { map } from "rxjs/operators";
 import { environment } from "../../environments/environment";
+import { connectableObservableDescriptor } from "rxjs/internal/observable/ConnectableObservable";
+import { AuthService } from "../auth/auth.service";
 
 export interface Workflow {
   uid: string;
@@ -176,8 +178,6 @@ export class WorkflowExecution {
     this.startedAt = status.startedAt;
     this.finishedAt = status.finishedAt;
     this.phase = status.phase;
-
-    // this.startedAt = this.jsonManifest.
   }
 
 
@@ -198,13 +198,129 @@ export interface ListWorkflowRequest {
   page?: number;
 }
 
+export class ReadableStreamWrapper {
+  private decoder = new TextDecoder('utf-8');
+  private line = '';
+  private cancelled;
+  private readableStream;
+
+  subscriber;
+  reader;
+
+  constructor() {
+  }
+
+  getReader() {
+    if(this.readableStream) {
+      return this.readableStream;
+    }
+
+    const self = this;
+
+    this.readableStream = new ReadableStream({
+      start(controller) {
+        return pump();
+        function pump() {
+          if(self.cancelled) {
+            controller.close();
+            return () => {};
+          }
+
+          return self.reader.read().then(({ done, value }) => {
+            if(self.cancelled) {
+              controller.close();
+              return () => {};
+            }
+            try {
+
+              // When no more data needs to be consumed, close the stream
+              if (done) {
+                controller.close();
+                self.subscriber.complete();
+                return;
+              }
+              // Enqueue the next data chunk into our target stream
+              controller.enqueue(value);
+
+              let res = '';
+              const textValue = self.decoder.decode(value);
+
+              for (const textItem of textValue.split('\n')) {
+                if (textItem) {
+                  self.line += textItem;
+                  try {
+                    res = JSON.parse(self.line);
+
+                    self.subscriber.next(res);
+                    self.line = '';
+
+                  } catch (e) {
+                    // Keep going, line is not ready yet.
+                  }
+                }
+              }
+
+            } catch (e) {
+              self.subscriber.error(e);
+            }
+            return pump();
+          });
+        }
+      }
+    });
+
+    return this.readableStream;
+  }
+
+  cancel(reason?: any) {
+    this.cancelled = true;
+    if(this.readableStream) {
+      this.readableStream.cancel(reason);
+    }
+  }
+}
+
 @Injectable()
 export class WorkflowService {
-  constructor(private client: HttpClient) {
+  constructor(
+      private client: HttpClient,
+      private authService: AuthService) {
+  }
+
+  private jsonLineStreamRequest(url: string) {
+    let controller = new AbortController();
+    let signal = controller.signal;
+
+    const headers = new Headers({
+      Authorization: this.authService.getAuthHeader()
+    });
+
+    const myReader = new ReadableStreamWrapper();
+    const observable = new Observable(subs => {
+      myReader.subscriber = subs;
+
+      return () => {
+        myReader.cancel();
+        controller.abort();
+      }
+    });
+
+    fetch(url, {
+      signal: signal,
+      credentials: "same-origin",
+      headers: headers,
+    }).then(response => {
+      myReader.reader = response.body.getReader();
+      return myReader.getReader();
+    });
+
+    return observable;
   }
 
   watchWorkflow(namespace: string, name: string) {
-    return new WebSocket(`${environment.baseWsUrl}/apis/v1beta1/${namespace}/workflow_executions/${name}/watch`);
+    const url =`${environment.baseUrl}/apis/v1beta1/${namespace}/workflow_executions/${name}/watch`;
+
+    return this.jsonLineStreamRequest(url);
   }
 
   getWorkflow(namespace: string, uid: string) {
@@ -257,4 +373,11 @@ export class WorkflowService {
 
     return this.client.get(url, {});
   }
+
+  watchLogs(namespace: string, workflowName: string, podId: string, containerName = 'main') {
+    const url =`${environment.baseUrl}/apis/v1beta1/${namespace}/workflow_executions/${workflowName}/pods/${podId}/containers/${containerName}/logs`;
+
+    return this.jsonLineStreamRequest(url);
+  }
 }
+
