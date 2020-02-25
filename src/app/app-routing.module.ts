@@ -10,47 +10,63 @@ import { NamespaceSelectComponent } from "./namespace-select/namespace-select.co
 import { SecretsComponent } from "./secrets/secrets.component";
 import { CreateSecretComponent } from "./secrets/create-secret/create-secret.component";
 import { EditSecretComponent } from "./secrets/edit-secret/edit-secret.component";
+import { LoginComponent } from "./auth/login/login.component";
+import { AuthGuard } from "./auth/auth.guard";
 
 const routes: Routes = [
   {
+    path: 'login',
+    component: LoginComponent,
+  },
+  {
     path: ':namespace/workflow-templates',
-    component: WorkflowTemplateComponent
+    component: WorkflowTemplateComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: ':namespace/workflow-templates/create',
-    component: WorkflowTemplateCreateComponent
+    component: WorkflowTemplateCreateComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: ':namespace/workflow-templates/:uid/edit',
-    component: WorkflowTemplateEditComponent
+    component: WorkflowTemplateEditComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: ':namespace/workflow-templates/:uid',
-    component: WorkflowTemplateViewComponent
+    component: WorkflowTemplateViewComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: ':namespace/workflows',
-    component: WorkflowListComponent
+    component: WorkflowListComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: ':namespace/workflows/:name',
-    component: WorkflowComponent
+    component: WorkflowComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: ':namespace/secrets',
-    component: SecretsComponent
+    component: SecretsComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: ':namespace/secrets/:secret-name/create',
-    component: CreateSecretComponent
+    component: CreateSecretComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: ':namespace/secrets/:secret-name/:secret-key/edit',
-    component: EditSecretComponent
+    component: EditSecretComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: '**',
-    component: NamespaceSelectComponent
+    component: NamespaceSelectComponent,
+    canActivate: [AuthGuard],
   }
 ];
 

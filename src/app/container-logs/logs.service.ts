@@ -12,7 +12,7 @@ export class LogsService {
     }
 
     getPodLogsSocket(namespace: string, workflowName: string, podId: string, containerName: string = 'main') {
-        const url = `ws://${this.baseRPCUrl}/apis/v1beta1/${namespace}/workflows/${workflowName}/pods/${podId}/containers/${containerName}/logs`;
+        const url = `ws://${this.baseRPCUrl}/apis/v1beta1/${namespace}/workflow_executions/${workflowName}/pods/${podId}/containers/${containerName}/logs`;
 
         return new WebSocket(url);
     }

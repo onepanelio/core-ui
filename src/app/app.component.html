@@ -1,24 +1,23 @@
-<mat-toolbar color="primary" class="app-toolbar">
+<mat-toolbar *ngIf="!loggingIn" color="primary" class="app-toolbar">
   <a style="height: 32px;" [routerLink]="['/']"><img src="/assets/images/onepanel-logo-white.svg"/></a>
-  <div class="ml-5 font-size-regular font-roboto-bold font-white link-wrapper" [class.active]="activeRoute === 'templates'">
-    <a [routerLink]="['/', selectedNamespace, 'workflow-templates']">TEMPLATES</a>
-  </div>
-  <div class="ml-5 font-size-regular font-roboto-bold font-white link-wrapper" [class.active]="activeRoute === 'secrets'" >
-    <a [routerLink]="['/', selectedNamespace, 'secrets']">ENVIRONMENT VARIABLES</a>
-  </div>
-  <div class="flex-grow-1"></div>
-  <div class="d-flex font-roboto dropdown bg-primary-darker align-items-center h-100" (click)="onFormFieldClick()">
-    <div>
-      <div class="namespace font-size-smaller">Namespace</div>
-      <div class="name font-size-regular">{{namespaceTracker.activeNamespace}}</div>
-    </div>
-    <mat-icon class="ml-5">arrow_drop_down</mat-icon>
-  </div>
   <mat-form-field class="font-size-small mat-form-white-outline hidden">
     <mat-label>Namespace</mat-label>
-    <mat-select [panelClass]="'match-nav-select'" [(value)]="selectedNamespace" (valueChange)="onNamespaceChange()">
+    <mat-select [panelClass]="'match-nav-select'" [(value)]="namespaceTracker.activeNamespace" (valueChange)="onNamespaceChange()">
       <mat-option *ngFor="let namespace of namespaces" [value]="namespace.name">{{namespace.name}}</mat-option>
     </mat-select>
   </mat-form-field>
+  <div class="d-flex font-roboto dropdown bg-light-gray align-items-center ml-5" (click)="onFormFieldClick()">
+    <i class="far fa-sticky-note color-primary"></i>
+    <div class="name font-size-small font-proxima color-black ml-2">
+      {{namespaceTracker.activeNamespace}}
+    </div>
+    <mat-icon class="ml-5 color-medium-gray">arrow_drop_down</mat-icon>
+  </div>
+  <div class="ml-5 font-size-regular font-roboto-bold font-white link-wrapper" [class.active]="activeRoute === 'templates'">
+    <a [routerLink]="['/', namespaceTracker.activeNamespace, 'workflow-templates']">WORKFLOWS</a>
+  </div>
+  <div class="ml-5 font-size-regular font-roboto-bold font-white link-wrapper" [class.active]="activeRoute === 'secrets'" >
+    <a [routerLink]="['/', namespaceTracker.activeNamespace, 'secrets']">SETTINGS</a>
+  </div>
 </mat-toolbar>
 <router-outlet></router-outlet>

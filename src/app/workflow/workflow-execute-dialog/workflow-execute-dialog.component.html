@@ -10,11 +10,15 @@
     </div>
 </form>
 
-<div class="environment">
-    <div class="op-h2 mb-5">Environment variables</div>
-    <div class="ml-5">
-        <div class="font-size-regular color-medium-gray">All environment variables will be mounted on workflow execution.</div>
-        <div class="color-primary underline pointer-hover" (click)="goToEnvironmentVariables()">Manage environment variables</div>
+<div class="environment bg-primary-light op-rounded-regular">
+    <div class="font-roboto-bold font-weight-bold font-size-regular">Environment variables</div>
+    <div class="mt-1 font-roboto font-size-regular color-black">
+        <div>
+            Any environment variables you have created will be mounted on workflow execution.
+        </div>
+        <div class="color-primary underline pointer-hover mt-1" (click)="goToEnvironmentVariables()">
+            Add or manage environment variables
+        </div>
     </div>
 </div>
 

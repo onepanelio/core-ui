@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { ApiSecret, SecretServiceService } from "../../../secret-api";
 import { AlertService } from "../../alert/alert.service";
 import { Alert } from "../../alert/alert";
+import { ApiSecret, SecretServiceService } from "../../../api";
 
 @Component({
   selector: 'app-create-secret',
@@ -58,11 +58,11 @@ export class CreateSecretComponent implements OnInit {
 
     data.data[key] = this.value.value;
 
-    this.secretService.addSecretKeyValue(data, this.namespace, this.secretName)
+    this.secretService.addSecretKeyValue(this.namespace, this.secretName, data)
         .subscribe(res => {
           this.router.navigate(['/', this.namespace, 'secrets']);
           this.alertService.storeAlert(new Alert({
-            message: `Secret '${key}' created`,
+            message: `Environment variable '${key}' created`,
             type: 'success',
           }))
         }, err => {

@@ -141,7 +141,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
     this.workflowService.listWorkflows(request)
       .subscribe(res => {
         this.workflowResponse = res;
-        this.workflows = res.workflows;
+        this.workflows = res.workflowExecutions;
       });
   }
 

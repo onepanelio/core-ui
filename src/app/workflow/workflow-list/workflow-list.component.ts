@@ -31,7 +31,7 @@ export class WorkflowListComponent implements OnInit {
 
     this.workflowService.listWorkflows(request)
       .subscribe(res => {
-        this.workflows = res.workflows;
+        this.workflows = res.workflowExecutions;
       }, err => {
       });
   }

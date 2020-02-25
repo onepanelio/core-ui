@@ -187,8 +187,6 @@ export class NodeRenderer {
     alreadyVisited: Map<string, string>,
     parentFullPath: string
   ): void {
-
-    console.log('build dag');
     const root = templates.get(rootTemplateId);
 
     if (root && root.nodeType === 'DAG') {
@@ -304,8 +302,6 @@ export class NodeRenderer {
       return;
     }
 
-    console.log(status);
-
     let childrenNodes = {};
 
     Object.keys(status.nodes).forEach(key => {
@@ -374,8 +370,6 @@ export class NodeRenderer {
   }
 
   static createGraphFromManifest(manifestRaw: string): dagre.graphlib.Graph {
-    console.log('createGraphFromManifest');
-
     const graph = new dagre.graphlib.Graph();
     graph.setGraph({});
     graph.setDefaultEdgeLabel(() => ({}));
