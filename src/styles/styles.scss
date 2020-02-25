@@ -366,3 +366,13 @@ button.vertical-align-icon {
     cursor: pointer;
   }
 }
+
+button.logout {
+  font-size: $fontRegularLarge;
+  font-family: $fontRobotoBold;
+
+  &.mat-stroked-button:not([disabled]) {
+    border-color: $white;
+    border-width: 2px;
+  }
+}

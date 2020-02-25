@@ -12,6 +12,22 @@
   z-index: -999999;
 }
 
+/deep/ g.root {
+  rect {
+    stroke: #BED2FE !important;
+    fill: #EDF2FD !important;
+  }
+
+  .root-element {
+    background-color: #BED2FE;
+  }
+
+  .not-root {
+    text-align: center;
+    background-color: #EDF2FD;
+  }
+}
+
 /* This sets the color for "TK" nodes to a light blue green. */
 /deep/ g.type-TK > rect {
   fill: #00ffd0;
@@ -68,10 +84,6 @@
   width: 200px;
   height: 82px;
 
-  .not-root {
-    text-align: center;
-  }
-
   .status-icon {
     padding-left: 0;
   }
@@ -115,22 +127,12 @@
     stroke: $success;
     fill: $success-light;
   }
-
-  .root-element {
-    color: $white;
-    background-color: $success;
-  }
 }
 
 /deep/ .node.running {
   rect {
     stroke: $primary;
     fill: $primary-light;
-  }
-
-  .root-element {
-    color: $white;
-    background-color: $primary;
   }
 }
 
@@ -139,22 +141,12 @@
     stroke: $danger;
     fill: $danger-light;
   }
-
-  .root-element {
-    color: $white;
-    background-color: $danger;
-  }
 }
 
 /deep/ .node.error {
   rect {
     stroke: $danger;
     fill: $danger-light;
-  }
-
-  .root-element {
-    color: $white;
-    background-color: $danger;
   }
 }
 

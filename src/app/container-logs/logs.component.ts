@@ -1,13 +1,14 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { LogsService } from "./logs.service";
 import { NodeStatus } from "../node/node.service";
 import { AceEditorComponent } from "ng2-ace-editor";
+import { WorkflowService } from "../workflow/workflow.service";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: 'app-logs',
   templateUrl: './logs.component.html',
   styleUrls: ['./logs.component.scss'],
-  providers: [LogsService]
+  providers: [WorkflowService]
 })
 export class LogsComponent implements OnInit, OnDestroy {
   private biggestScrollDown = 0;
@@ -65,7 +66,6 @@ export class LogsComponent implements OnInit, OnDestroy {
     return this._nodeInfo;
   }
 
-  // Socket to the streaming logs
   private socket: WebSocket;
 
   // The Node ID this component is currently getting logs for.
@@ -92,7 +92,7 @@ export class LogsComponent implements OnInit, OnDestroy {
   // Utility to determine if we can change the scrollToBottom value.
   canChangeScrollToBottom = true;
 
-  constructor(private logsService: LogsService) { }
+  constructor(private workflowService: WorkflowService) { }
 
   ngOnInit(): void {
   }
@@ -105,7 +105,7 @@ export class LogsComponent implements OnInit, OnDestroy {
     this.gettingLogsForNodeId = this.nodeInfo.id;
 
     // We're switching to a new node/logs provider.
-    // Clean up the old socket if there was one.
+    // Clean up the old subscription if there was one.
     if (this.socket) {
       this.socket.close();
     }
@@ -113,29 +113,27 @@ export class LogsComponent implements OnInit, OnDestroy {
     // Clean up the log text as the new node/logs provider will have new logs.
     this.logText = '';
 
-    this.socket = this.logsService.getPodLogsSocket(this.namespace, this.workflowName, this.podId);
+    this.socket = this.workflowService.watchLogs(this.namespace, this.workflowName, this.podId);
+    this.socket.onmessage = (event) => {
+        try {
+          const jsonData = JSON.parse(event.data);
 
-    this.socket.onmessage = (event: any) => {
-      try {
-        const jsonData = JSON.parse(event.data);
+          if (jsonData.result && jsonData.result.content) {
+            this.logText += jsonData.result.content + '\n';
 
-        if(jsonData.result && jsonData.result.content) {
-          this.logText += jsonData.result.content + '\n';
-
-          this.onLogsUpdated();
+            this.onLogsUpdated();
+          }
+        } catch (e) {
+           console.error(e);
         }
+      };
 
-      } catch (e) {
-        console.error(e);
-      }
-    };
-
-    this.socket.onclose = (event) => {
+    this.socket.onclose = () => {
       this.loading = false;
       if (this.logText === '') {
         this.information = 'No logs generated';
       }
-    };
+    }
   }
 
   ngOnDestroy(): void {

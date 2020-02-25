@@ -1,13 +1,12 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
-    SimpleWorkflowDetail,
     Workflow,
-    WorkflowDetail,
     WorkflowExecution,
     WorkflowService
 } from '../workflow.service';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from "@angular/material/snack-bar";
+import { Subscription } from "rxjs";
 
 @Component({
     selector: 'app-workflow-executions-list',
@@ -17,10 +16,12 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 })
 export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
     displayedColumns = ['name','status', 'start', 'end', 'spacer', 'actions'];
-    statusWatchers = new Map<string, WebSocket>();
+    watchingWorkflowsMap = new Map<string, WebSocket>();
 
     @Input() namespace: string;
     @Input() set workflows(value: Workflow[]) {
+        this.clearWatchers();
+
         let formattedList = [];
 
         for(let workflow of value) {
@@ -44,25 +45,45 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
         private workflowService: WorkflowService,
         private snackbar: MatSnackBar) { }
 
+    clearWatchers() {
+        for(let item of this.watchingWorkflowsMap.entries()) {
+            item[1].close();
+        }
+
+        this.watchingWorkflowsMap.clear();
+    }
+
     ngOnInit(): void {
+
     }
 
     ngOnDestroy(): void {
-        for(let key in this.statusWatchers) {
-            this.statusWatchers[key].close();
-        }
+        this.clearWatchers();
     }
 
     addStatusWatcher(workflowDetail: WorkflowExecution) {
-        const watcher = this.workflowService.watchWorkflow(this.namespace, workflowDetail.name);
-        this.statusWatchers[workflowDetail.uid] = watcher;
+        const key = this.key(this.namespace, workflowDetail.name);
 
-        watcher.onmessage = (event) => {
-            const parsedData = JSON.parse(event.data);
+        // Already watching, so don't create another watcher.
+        if(this.watchingWorkflowsMap.get(key)) {
+            return;
+        }
+
+        const socket = this.workflowService.watchWorkflow(this.namespace, workflowDetail.name);
+        socket.onmessage = (event) => {
+            let parsedData;
+            try {
+                parsedData = JSON.parse(event.data);
+            } catch (e) {
+                return;
+            }
+
             if(parsedData.result.manifest) {
                 workflowDetail.updateWorkflowManifest(parsedData.result.manifest);
             }
-        }
+        };
+
+        this.watchingWorkflowsMap.set(key, socket);
     }
 
     onTerminate(workflow: WorkflowExecution) {
@@ -72,5 +93,9 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
             }, err => {
                 this.snackbar.open('Unable to stop workflow', 'OK');
             })
+    }
+
+    key(namespace: string, name:string): string {
+        return `${namespace}_${name}`;
     }
 }

@@ -136,16 +136,14 @@ export class NodeRenderer {
     const showInfo = root || !(node.type === 'StepGroup' || node.type === 'DAG');
 
     if(showInfo) {
-      if (!root) {
-        if (node.phase === 'Succeeded') {
-          html += '<img class="status-icon" src="/assets/images/status-icons/completed.svg"/>';
-        } else if (node.phase === 'Running') {
-          html += '<img class="status-icon" src="/assets/images/status-icons/running-blue.svg"/>';
-        } else if (node.phase === 'Failed' || node.phase === 'Error') {
-          html += '<img class="status-icon" src="/assets/images/status-icons/failed.svg"/>';
-        } else {
-          html += '<img class="status-icon" src="/assets/images/status-icons/notrun.svg"/>';
-        }
+      if (node.phase === 'Succeeded') {
+        html += '<img class="status-icon" src="/assets/images/status-icons/completed.svg"/>';
+      } else if (node.phase === 'Running') {
+        html += '<img class="status-icon" src="/assets/images/status-icons/running-blue.svg"/>';
+      } else if (node.phase === 'Failed' || node.phase === 'Error') {
+        html += '<img class="status-icon" src="/assets/images/status-icons/failed.svg"/>';
+      } else {
+        html += '<img class="status-icon" src="/assets/images/status-icons/notrun.svg"/>';
       }
 
       let nameToShow = node.displayName;
@@ -345,12 +343,17 @@ export class NodeRenderer {
       // Key might not exist, so we double negate to typecast to boolean.
       const root = !!(rootsMap[key]);
 
+      let nodeClasses = nodeStatus.phase.toLowerCase();
+      if (root) {
+        nodeClasses += ' root';
+      }
+
       graph.setNode(nodeStatus.id, {
         id: nodeStatus.id,
         labelType: 'html',
         label: NodeRenderer.nodeTemplate(nodeStatus, root),
         padding: 0,
-        class: nodeStatus.phase.toLowerCase(),
+        class: nodeClasses,
         ...NodeRenderer.getNodeDisplayProperties(nodeStatus, root),
         info
       });
