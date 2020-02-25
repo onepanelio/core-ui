@@ -178,8 +178,6 @@ export class WorkflowExecution {
     this.startedAt = status.startedAt;
     this.finishedAt = status.finishedAt;
     this.phase = status.phase;
-
-    // this.startedAt = this.jsonManifest.
   }
 
 
@@ -224,14 +222,23 @@ export class ReadableStreamWrapper {
         return pump();
         function pump() {
           if(self.cancelled) {
+            console.log('closing 1');
             controller.close();
+            return () => {};
           }
 
           return self.reader.read().then(({ done, value }) => {
+            if(self.cancelled) {
+              console.log('closing 2');
+              controller.close();
+              return () => {};
+            }
             try {
+
               // When no more data needs to be consumed, close the stream
               if (done) {
                 controller.close();
+                console.log('closing');
                 self.subscriber.complete();
                 return;
               }
@@ -284,6 +291,9 @@ export class WorkflowService {
   }
 
   private jsonLineStreamRequest(url: string) {
+    let controller = new AbortController();
+    let signal = controller.signal;
+
     const headers = new Headers({
       Authorization: this.authService.getAuthHeader()
     });
@@ -293,11 +303,14 @@ export class WorkflowService {
       myReader.subscriber = subs;
 
       return () => {
+        console.log('requesting cancel on reader');
         myReader.cancel();
+        controller.abort();
       }
     });
 
     fetch(url, {
+      signal: signal,
       credentials: "same-origin",
       headers: headers,
     }).then(response => {
