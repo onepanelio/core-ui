@@ -222,14 +222,12 @@ export class ReadableStreamWrapper {
         return pump();
         function pump() {
           if(self.cancelled) {
-            console.log('closing 1');
             controller.close();
             return () => {};
           }
 
           return self.reader.read().then(({ done, value }) => {
             if(self.cancelled) {
-              console.log('closing 2');
               controller.close();
               return () => {};
             }
@@ -238,7 +236,6 @@ export class ReadableStreamWrapper {
               // When no more data needs to be consumed, close the stream
               if (done) {
                 controller.close();
-                console.log('closing');
                 self.subscriber.complete();
                 return;
               }
@@ -303,7 +300,6 @@ export class WorkflowService {
       myReader.subscriber = subs;
 
       return () => {
-        console.log('requesting cancel on reader');
         myReader.cancel();
         controller.abort();
       }
