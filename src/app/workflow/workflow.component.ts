@@ -74,8 +74,6 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   ) {
   }
 
-  private sub;
-
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(next => {
       this.setNamespaceName(next.get('namespace'), next.get('name'));
@@ -84,20 +82,15 @@ export class WorkflowComponent implements OnInit, OnDestroy {
         .subscribe(res => {
           this.workflow = res;
 
-          this.sub = this.workflowService.watchWorkflow(this.namespace, this.name)
-              .subscribe(res => {
-                this.onWorkflowExecutionUpdate(res);
-              }, err => {
-                console.error(err);
-              })
+          this.socket = this.workflowService.watchWorkflow(this.namespace, this.name);
+          this.socket.onmessage = (event) => {
+            this.onWorkflowExecutionUpdate(event.data);
+          }
         });
     });
   }
 
   ngOnDestroy() {
-    if(this.sub) {
-      this.sub.unsubscribe();
-    }
     if (this.socket) {
       this.socket.close();
     }
@@ -108,8 +101,15 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     this.name = name;
   }
 
-  onWorkflowExecutionUpdate(data: any) {
+  onWorkflowExecutionUpdate(rawData: any) {
     if (!this.dag) {
+      return;
+    }
+
+    let data;
+    try {
+      data = JSON.parse(rawData);
+    } catch (e) {
       return;
     }
 

@@ -16,7 +16,7 @@ import { Subscription } from "rxjs";
 })
 export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
     displayedColumns = ['name','status', 'start', 'end', 'spacer', 'actions'];
-    watchingWorkflowsMap = new Map<string, Subscription>();
+    watchingWorkflowsMap = new Map<string, WebSocket>();
 
     @Input() namespace: string;
     @Input() set workflows(value: Workflow[]) {
@@ -47,7 +47,7 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
 
     clearWatchers() {
         for(let item of this.watchingWorkflowsMap.entries()) {
-            item[1].unsubscribe();
+            item[1].close();
         }
 
         this.watchingWorkflowsMap.clear();
@@ -69,16 +69,21 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
             return;
         }
 
-        const subscription = this.workflowService.watchWorkflow(this.namespace, workflowDetail.name)
-            .subscribe((parsedData: any) => {
-                if(parsedData.result.manifest) {
-                    workflowDetail.updateWorkflowManifest(parsedData.result.manifest);
-                }
-            }, err => {
-                console.error(err);
-            });
+        const socket = this.workflowService.watchWorkflow(this.namespace, workflowDetail.name);
+        socket.onmessage = (event) => {
+            let parsedData;
+            try {
+                parsedData = JSON.parse(event.data);
+            } catch (e) {
+                return;
+            }
 
-        this.watchingWorkflowsMap.set(key, subscription);
+            if(parsedData.result.manifest) {
+                workflowDetail.updateWorkflowManifest(parsedData.result.manifest);
+            }
+        };
+
+        this.watchingWorkflowsMap.set(key, socket);
     }
 
     onTerminate(workflow: WorkflowExecution) {

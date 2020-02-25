@@ -66,7 +66,7 @@ export class LogsComponent implements OnInit, OnDestroy {
     return this._nodeInfo;
   }
 
-  private logSubscription: Subscription;
+  private socket: WebSocket;
 
   // The Node ID this component is currently getting logs for.
   // The Node Info may be updated several times, and it may refer to the same node.
@@ -106,39 +106,39 @@ export class LogsComponent implements OnInit, OnDestroy {
 
     // We're switching to a new node/logs provider.
     // Clean up the old subscription if there was one.
-    if (this.logSubscription) {
-      this.logSubscription.unsubscribe();
+    if (this.socket) {
+      this.socket.close();
     }
 
     // Clean up the log text as the new node/logs provider will have new logs.
     this.logText = '';
 
+    this.socket = this.workflowService.watchLogs(this.namespace, this.workflowName, this.podId);
+    this.socket.onmessage = (event) => {
+        try {
+          const jsonData = JSON.parse(event.data);
 
-    this.logSubscription = this.workflowService.watchLogs(this.namespace, this.workflowName, this.podId)
-        .subscribe((jsonData: any) => {
-          try {
-            if(jsonData.result && jsonData.result.content) {
-              this.logText += jsonData.result.content + '\n';
+          if (jsonData.result && jsonData.result.content) {
+            this.logText += jsonData.result.content + '\n';
 
-              this.onLogsUpdated();
-            }
-
-          } catch (e) {
-            console.error(e);
+            this.onLogsUpdated();
           }
-        }, err => {
-          console.error(err);
-        }, () => {
-          this.loading = false;
-          if (this.logText === '') {
-            this.information = 'No logs generated';
-          }
-        });
+        } catch (e) {
+           console.error(e);
+        }
+      };
+
+    this.socket.onclose = () => {
+      this.loading = false;
+      if (this.logText === '') {
+        this.information = 'No logs generated';
+      }
+    }
   }
 
   ngOnDestroy(): void {
-    if (this.logSubscription) {
-      this.logSubscription.unsubscribe();
+    if (this.socket) {
+      this.socket.close();
     }
   }
 

@@ -287,40 +287,10 @@ export class WorkflowService {
       private authService: AuthService) {
   }
 
-  private jsonLineStreamRequest(url: string) {
-    let controller = new AbortController();
-    let signal = controller.signal;
-
-    const headers = new Headers({
-      Authorization: this.authService.getAuthHeader()
-    });
-
-    const myReader = new ReadableStreamWrapper();
-    const observable = new Observable(subs => {
-      myReader.subscriber = subs;
-
-      return () => {
-        myReader.cancel();
-        controller.abort();
-      }
-    });
-
-    fetch(url, {
-      signal: signal,
-      credentials: "same-origin",
-      headers: headers,
-    }).then(response => {
-      myReader.reader = response.body.getReader();
-      return myReader.getReader();
-    });
-
-    return observable;
-  }
-
   watchWorkflow(namespace: string, name: string) {
-    const url =`${environment.baseUrl}/apis/v1beta1/${namespace}/workflow_executions/${name}/watch`;
+    const url =`${environment.baseWsUrl}/apis/v1beta1/${namespace}/workflow_executions/${name}/watch`;
 
-    return this.jsonLineStreamRequest(url);
+    return new WebSocket(url);
   }
 
   getWorkflow(namespace: string, uid: string) {
@@ -375,9 +345,9 @@ export class WorkflowService {
   }
 
   watchLogs(namespace: string, workflowName: string, podId: string, containerName = 'main') {
-    const url =`${environment.baseUrl}/apis/v1beta1/${namespace}/workflow_executions/${workflowName}/pods/${podId}/containers/${containerName}/logs`;
+    const url =`${environment.baseWsUrl}/apis/v1beta1/${namespace}/workflow_executions/${workflowName}/pods/${podId}/containers/${containerName}/logs`;
 
-    return this.jsonLineStreamRequest(url);
+    return new WebSocket(url);
   }
 }
 
