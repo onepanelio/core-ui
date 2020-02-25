@@ -137,7 +137,6 @@ export class LogsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    console.log('ngOnDestroy');
     if (this.logSubscription) {
       this.logSubscription.unsubscribe();
     }
