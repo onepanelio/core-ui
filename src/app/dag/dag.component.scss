@@ -26,15 +26,19 @@
   .root-element {
     background-color: #BED2FE;
     height: 40px;
+    width: 198px;
+    position: relative;
+    left: 1px;
+    top: 1px;
   }
 
   .not-root {
     text-align: center;
     background-color: #EDF2FD;
-    width: 196px;
+    width: 198px;
     position: relative;
-    left: 2px;
-    height: 40px;
+    left: 1px;
+    height: 41px;
   }
 }
 
@@ -165,12 +169,12 @@
 
 /deep/ .node.selected {
   rect {
-    stroke: #F6881F;
+    stroke: #F6881F !important;
     stroke-width: 2px;
   }
 
   .root-element {
-    margin: 1px 1px 0 1px;
+    //margin: 1px 1px 0 1px;
   }
 }
 
