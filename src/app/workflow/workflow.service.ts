@@ -6,7 +6,6 @@ import { WorkflowTemplateDetail } from '../workflow-template/workflow-template.s
 import { NodeStatus } from '../node/node.service';
 import { map } from "rxjs/operators";
 import { environment } from "../../environments/environment";
-import { connectableObservableDescriptor } from "rxjs/internal/observable/ConnectableObservable";
 import { AuthService } from "../auth/auth.service";
 
 export interface Workflow {
@@ -348,6 +347,12 @@ export class WorkflowService {
     const url =`${environment.baseWsUrl}/apis/v1beta1/${namespace}/workflow_executions/${workflowName}/pods/${podId}/containers/${containerName}/logs`;
 
     return new WebSocket(url);
+  }
+
+  getArtifact(namespace: string, workflowName: string, key: string) {
+    const url = `${environment.baseUrl}/apis/v1beta1/${namespace}/workflow_executions/${name}/artifact?key=${key}`;
+
+    return this.client.get(url);
   }
 }
 

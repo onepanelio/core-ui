@@ -1,15 +1,19 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { NodeInfo, NodeStatus } from '../node/node.service';
-import { SimpleWorkflowDetail, WorkflowPhase, } from "../workflow/workflow.service";
+import { SimpleWorkflowDetail, WorkflowPhase, WorkflowService, } from "../workflow/workflow.service";
 import * as yaml from 'js-yaml';
 import { TemplateDefinition } from "../workflow-template/workflow-template.service";
 
 @Component({
   selector: 'app-node-info',
   templateUrl: './node-info.component.html',
-  styleUrls: ['./node-info.component.scss']
+  styleUrls: ['./node-info.component.scss'],
+  providers: [WorkflowService]
 })
 export class NodeInfoComponent implements OnInit, OnDestroy {
+  @Input() namespace: string;
+  @Input() name: string;
+
   @Input() visible = true;
   @Input() workflow: SimpleWorkflowDetail;
   @Output() yamlClicked = new EventEmitter();
@@ -34,7 +38,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   artifactsExpanded = false;
   template: TemplateDefinition;
 
-  constructor() { }
+  constructor(private workflowService: WorkflowService) { }
 
   ngOnInit() {
   }
@@ -89,7 +93,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
       this.template = null;
     }
 
-    if ((node.type === 'DAG' || node.type === 'Steps') 
+    if ((node.type === 'DAG' || node.type === 'Steps')
       && node.templateName === loaded.spec.entrypoint
       && loaded && loaded.spec.arguments.parameters) {
       this.inputParameters = loaded.spec.arguments.parameters;
@@ -97,6 +101,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
       this.inputParameters = node.inputs.parameters;
       this.outputArtifacts = node.inputs.artifacts;
     }
+
 
     if (node.type !== 'DAG' && node.type !== 'Steps' && node.outputs) {
       this.outputParameters = node.outputs.parameters;
@@ -126,5 +131,33 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
   onArtifactsExpandChange(expanded: boolean) {
     this.artifactsExpanded = expanded;
+  }
+
+  downloadArtifact(artifact: any) {
+    if(!artifact.s3) {
+      return;
+    }
+
+    const key = artifact.s3.key;
+    const extension = this.getArtifactExtension(key);
+
+    this.workflowService.getArtifact(this.namespace, this.name, key)
+        .subscribe((res: any) => {
+          const link = <HTMLAnchorElement>document.createElement('a');
+
+          link.download = `${this.namespace}-${this.name}-${artifact.name}.${extension}`;
+          link.href = 'data:application/octet-stream;charset=utf-16le;base64,' + res.data;
+
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        })
+  }
+
+  getArtifactExtension(key: string): string {
+    const lastSlashIndex = key.lastIndexOf('/');
+    const lastDotIndex = key.indexOf('.', lastSlashIndex);
+
+    return key.substring(lastDotIndex + 1);
   }
 }
