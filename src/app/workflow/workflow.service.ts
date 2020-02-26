@@ -350,7 +350,7 @@ export class WorkflowService {
   }
 
   getArtifact(namespace: string, workflowName: string, key: string) {
-    const url = `${environment.baseUrl}/apis/v1beta1/${namespace}/workflow_executions/${name}/artifact?key=${key}`;
+    const url = `${environment.baseUrl}/apis/v1beta1/${namespace}/workflow_executions/${workflowName}/artifacts/${encodeURIComponent(String(key))}`;
 
     return this.client.get(url);
   }
