@@ -29,8 +29,8 @@ export class WorkflowTemplateEditComponent implements OnInit {
   namespace: string;
   uid: string;
 
-  private workflowTemplateDetail: WorkflowTemplateDetail;
-  private errorMarkerId;
+  workflowTemplateDetail: WorkflowTemplateDetail;
+  errorMarkerId;
 
   get workflowTemplate(): WorkflowTemplateDetail {
     return this.workflowTemplateDetail;

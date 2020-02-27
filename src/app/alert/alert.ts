@@ -1,4 +1,4 @@
-export type AlertType = 'success' | 'warning' | 'danger' | 'info';
+export type AlertType = 'success' | 'warning' | 'danger' | 'info' | 'action';
 
 export interface AlertInterface {
     title?: string;

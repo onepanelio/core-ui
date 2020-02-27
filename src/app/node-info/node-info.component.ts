@@ -16,7 +16,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   @Output() closeClicked = new EventEmitter();
   @Output() logsClicked = new EventEmitter();
 
-  protected node: NodeStatus;
+  node: NodeStatus;
 
   startedAt = null;
   finishedAt = null;

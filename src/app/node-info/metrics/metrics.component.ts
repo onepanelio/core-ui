@@ -14,8 +14,8 @@ export class MetricsComponent implements OnChanges {
     @Input() podId: string;
     @Input() nodePhase: WorkflowPhase;
 
-    protected namespace: string;
-    protected metrics: Metric[] = [];
+    namespace: string;
+    metrics: Metric[] = [];
 
     constructor(
         private activatedRoute: ActivatedRoute,

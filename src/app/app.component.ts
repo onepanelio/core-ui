@@ -23,8 +23,8 @@ export class AppComponent implements OnInit {
   activeRoute = 'templates';
   loggingIn = false;
 
-  constructor(private authService: AuthService,
-              private namespaceTracker: NamespaceTracker,
+  constructor(public namespaceTracker: NamespaceTracker,
+              private authService: AuthService,
               private namespaceService: NamespaceServiceService,
               private activatedRoute: ActivatedRoute,
               private router: Router,
