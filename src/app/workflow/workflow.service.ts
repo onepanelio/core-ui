@@ -354,5 +354,11 @@ export class WorkflowService {
 
     return this.client.get(url);
   }
+
+  listFiles(namespace: string, workflowName: string, key: string) {
+    const url = `${environment.baseUrl}/apis/v1beta1/${namespace}/workflow_executions/${workflowName}/files/${encodeURIComponent(String(key))}`;
+
+    return this.client.get(url);
+  }
 }
 

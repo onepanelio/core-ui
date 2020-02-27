@@ -1,0 +1,10 @@
+<table *ngIf="fileNavigator">
+    <tbody>
+        <tr *ngFor="let file of fileNavigator.files">
+            <td (click)="onFileClick(file)">{{file.name}}</td>
+            <td>{{file.size}}</td>
+            <td>{{file.contentType}}</td>
+            <td>{{file.lastModified | amTimeAgo}}</td>
+        </tr>
+    </tbody>
+</table>

@@ -3,7 +3,8 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { AlertService } from "../../alert/alert.service";
 import { Alert } from "../../alert/alert";
-import { ApiSecret, SecretServiceService } from "../../../api";
+import { SecretServiceService } from "../../../api";
+import { ApiSecret } from "../../../api/model/apiSecret";
 
 @Component({
   selector: 'app-create-secret',

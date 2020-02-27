@@ -112,6 +112,11 @@
       </mat-expansion-panel-header>
 
       <div>
+
+        <div *ngIf="this.fileNavigator">
+          <app-file-navigator [fileNavigator]="fileNavigator"></app-file-navigator>
+        </div>
+
         <div class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold">FILES</div>
         <div class="font-roboto font-size-small mt-2" *ngFor="let artifact of outputArtifacts; let i = index">
           <ng-container *ngIf="artifact.s3">

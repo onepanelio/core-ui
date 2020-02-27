@@ -62,6 +62,7 @@ import { AlertService } from "./alert/alert.service";
 import { httpInterceptorProviders } from './http-interceptors';
 import { LoginComponent } from './auth/login/login.component';
 import { ApiModule, BASE_PATH } from "../api";
+import { FileNavigatorComponent } from './files/file-navigator/file-navigator.component';
 
 @NgModule({
   declarations: [
@@ -99,7 +100,8 @@ import { ApiModule, BASE_PATH } from "../api";
     Base64DecodePipe,
     ConfirmationDialogComponent,
     AlertPanelComponent,
-    LoginComponent
+    LoginComponent,
+    FileNavigatorComponent
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,

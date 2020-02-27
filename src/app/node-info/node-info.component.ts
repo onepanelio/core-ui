@@ -3,6 +3,8 @@ import { NodeInfo, NodeStatus } from '../node/node.service';
 import { SimpleWorkflowDetail, WorkflowPhase, WorkflowService, } from "../workflow/workflow.service";
 import * as yaml from 'js-yaml';
 import { TemplateDefinition } from "../workflow-template/workflow-template.service";
+import { FileNavigator } from "../files/fileNavigator";
+import { WorkflowServiceService } from "../../api";
 
 @Component({
   selector: 'app-node-info',
@@ -38,7 +40,10 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   artifactsExpanded = false;
   template: TemplateDefinition;
 
-  constructor(private workflowService: WorkflowService) { }
+  fileNavigator: FileNavigator;
+
+  constructor(private workflowService: WorkflowService,
+              private workflowServiceService: WorkflowServiceService) { }
 
   ngOnInit() {
   }
@@ -107,6 +112,17 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
       this.outputParameters = node.outputs.parameters;
       this.outputArtifacts = node.outputs.artifacts;
     }
+
+    if(this.fileNavigator) {
+      this.fileNavigator.cleanUp();
+    }
+
+    this.fileNavigator = new FileNavigator({
+      rootPath: `artifacts/${this.namespace}/${this.name}/${this.node.id}`,
+      namespace: this.namespace,
+      name: this.name,
+      workflowService: this.workflowServiceService,
+    });
   }
 
   onCloseClick() {
@@ -138,8 +154,19 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
       return;
     }
 
+    console.log(artifact);
     const key = artifact.s3.key;
     const extension = this.getArtifactExtension(key);
+
+    this.workflowService.listFiles(this.namespace, this.name, key)
+        .subscribe(res => {
+          console.log({
+            action: 'list files',
+            data: res
+          });
+        });
+
+    return;
 
     this.workflowService.getArtifact(this.namespace, this.name, key)
         .subscribe((res: any) => {
