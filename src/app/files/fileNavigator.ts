@@ -74,6 +74,7 @@ export class SlowValue<T> {
 export interface FileNavigatorArgs {
     workflowService: WorkflowServiceService;
     rootPath: string;
+    directory?: boolean;
     namespace: string;
     name: string;
 }
@@ -86,33 +87,46 @@ export class FileNavigator {
 
     private _rootPath: string;
     path: SlowValue<string>;
-    files: Array<ModelFile> = [];
+    private file: SlowValue<ModelFile>;
+    files?: Array<ModelFile>;
 
     constructor(args: FileNavigatorArgs) {
         this.workflowService = args.workflowService;
         this._rootPath = args.rootPath;
         this.path = new SlowValue<string>(args.rootPath);
+        this.file = new SlowValue<ModelFile>({
+           path: args.rootPath,
+           directory: args.directory ? args.directory : false,
+        });
+
         this.namespace = args.namespace;
         this.name = args.name;
-
-        this.pathValueChangedSubscription = this.path.valueChanged.subscribe( (change) => {
-            this.onPathValueChanged(change);
-        })
-    }
-
-    protected onPathValueChanged(change: SlowValueUpdate<string>) {
-        console.log(change);
-
-        this.loadFiles();
     }
 
     goUpDirectory() {
-        // @todo if at root, don't
         if(this.isRoot()) {
             return;
         }
 
-        // otherwise...
+        const pathString = this.path.value;
+        const lastSlashIndex = pathString.lastIndexOf('/');
+        const containingDirectoryPath = pathString.substring(0, lastSlashIndex);
+
+        const fakeFile = {
+            path: containingDirectoryPath,
+            directory: true,
+        };
+
+        this.selectFile(fakeFile);
+    }
+
+    selectFile(file: ModelFile) {
+        this.path.value = file.path;
+        this.file.value = file;
+
+        if(file.directory) {
+            this.loadFiles()
+        }
     }
 
     isRoot(): boolean {
@@ -132,6 +146,5 @@ export class FileNavigator {
 
 
     cleanUp() {
-        this.pathValueChangedSubscription.unsubscribe();
     }
 }

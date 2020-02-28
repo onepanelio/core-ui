@@ -8,7 +8,10 @@ import { ModelFile } from "../../../api";
   styleUrls: ['./file-navigator.component.scss']
 })
 export class FileNavigatorComponent implements OnInit {
+  @Input() displayedColumns = ['name', 'last-modified', 'size', 'actions'];
+
   private _fileNavigator: FileNavigator;
+
 
   @Input() set fileNavigator(fileNavigator: FileNavigator) {
     if(!fileNavigator) {
@@ -32,6 +35,6 @@ export class FileNavigatorComponent implements OnInit {
   }
 
   onFileClick(file: ModelFile) {
-    this.fileNavigator.path.value = file.path;
+    this.fileNavigator.selectFile(file);
   }
 }

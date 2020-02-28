@@ -63,6 +63,7 @@ import { httpInterceptorProviders } from './http-interceptors';
 import { LoginComponent } from './auth/login/login.component';
 import { ApiModule, BASE_PATH } from "../api";
 import { FileNavigatorComponent } from './files/file-navigator/file-navigator.component';
+import { FileSizePipe } from './file-size.pipe';
 
 @NgModule({
   declarations: [
@@ -101,7 +102,8 @@ import { FileNavigatorComponent } from './files/file-navigator/file-navigator.co
     ConfirmationDialogComponent,
     AlertPanelComponent,
     LoginComponent,
-    FileNavigatorComponent
+    FileNavigatorComponent,
+    FileSizePipe
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,
