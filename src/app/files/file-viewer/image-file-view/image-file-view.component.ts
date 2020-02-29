@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ModelFile, WorkflowServiceService } from "../../../../api";
 
 @Component({
-  selector: 'image-file-view',
+  selector: 'app-image-file-view',
   templateUrl: './image-file-view.component.html',
   styleUrls: ['./image-file-view.scss'],
 })
@@ -41,7 +41,6 @@ export class ImageFileViewComponent implements OnInit {
   public static IsImageExtension(extension: string){
     return (/(gif|jpg|jpeg|tiff|png)$/i).test(extension);
   }
-
 
   private setBase64Content(content: any) {
     let extension = this.file.extension;

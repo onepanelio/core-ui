@@ -1,18 +1,20 @@
 <div *ngIf="_file" class="generic-file-view">
   <div [ngSwitch]="fileType">
 <!--    <big-file-view (fileAction)="onToolbarAction($event)" *ngSwitchCase="'big-file'" [file]="_file"></big-file-view>-->
-    <image-file-view *ngSwitchCase="'image'"
+    <app-image-file-view *ngSwitchCase="'image'"
                      [namespace]="namespace"
                      [name]="name"
                      [file]="_file"
                      (loading)="onLoadingChange($event)"
-    ></image-file-view>
+    ></app-image-file-view>
 <!--    <mat-file-view *ngSwitchCase="'mat'" [file]="_file"></mat-file-view>-->
 <!--    <jupyter-file-view *ngSwitchCase="'jupyter'" [file]="_file"></jupyter-file-view>-->
-<!--    <text-file-view-->
-<!--      *ngSwitchCase="'text'"-->
-<!--      [file]="_file"-->
-<!--      [editing]="editing"-->
-<!--    ></text-file-view>-->
+    <app-text-file-view
+      *ngSwitchCase="'text'"
+      [namespace]="namespace"
+      [name]="name"
+      [file]="_file"
+      (loading)="onLoadingChange($event)"
+    ></app-text-file-view>
   </div>
 </div>

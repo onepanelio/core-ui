@@ -17,11 +17,11 @@
             [fileNavigator]="fileNavigator"
             (fileAction)="onFileEvent($event)">
     </app-file-navigator>
-    <generic-file-view
+    <app-generic-file-view
             *ngIf="showingFile"
             [namespace]="namespace"
             [name]="name"
             [file]="fileNavigator.file.value"
             (loading)="onFileLoadingChange($event)">
-    </generic-file-view>
+    </app-generic-file-view>
 </div>

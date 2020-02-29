@@ -5,7 +5,7 @@ import { ModelFile } from "../../../../api";
 import { FileActionEvent } from "../../file-navigator/file-navigator.component";
 
 @Component({
-  selector: 'generic-file-view',
+  selector: 'app-generic-file-view',
   templateUrl: './generic-file-view.component.html',
   styleUrls: ['./generic-file-view.component.scss'],
 })

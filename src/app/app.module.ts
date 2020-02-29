@@ -70,6 +70,7 @@ import { FileSizePipe } from "./pipes/file-size/file-size.pipe";
 import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { ImageFileViewComponent } from "./files/file-viewer/image-file-view/image-file-view.component";
 import { GenericFileViewComponent } from "./files/file-viewer/generic-file-view/generic-file-view.component";
+import { TextFileViewComponent } from "./files/file-viewer/text-file-view/text-file-view.component";
 
 @NgModule({
   declarations: [
@@ -114,7 +115,8 @@ import { GenericFileViewComponent } from "./files/file-viewer/generic-file-view/
     FileBrowserComponent,
     BreadcrumbsComponent,
     ImageFileViewComponent,
-    GenericFileViewComponent
+    GenericFileViewComponent,
+    TextFileViewComponent
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,
