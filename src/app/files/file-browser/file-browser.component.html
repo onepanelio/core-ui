@@ -12,7 +12,15 @@
                 [mode]="'indeterminate'">
         </mat-spinner>
     </div>
-    <app-file-navigator [fileNavigator]="fileNavigator"
-                        (fileAction)="onFileEvent($event)">
+    <app-file-navigator
+            *ngIf="!showingFile"
+            [fileNavigator]="fileNavigator"
+            (fileAction)="onFileEvent($event)">
     </app-file-navigator>
+    <generic-file-view
+            *ngIf="showingFile"
+            [namespace]="namespace"
+            [name]="name"
+            [file]="fileNavigator.file.value">
+    </generic-file-view>
 </div>

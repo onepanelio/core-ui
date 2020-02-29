@@ -126,6 +126,8 @@ export class FileNavigator {
 
         if(file.directory) {
             this.loadFiles(file)
+        } else {
+            this.file.value = file;
         }
     }
 

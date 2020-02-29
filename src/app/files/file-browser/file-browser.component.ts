@@ -11,7 +11,10 @@ import { ModelFile, WorkflowServiceService } from "../../../api";
 })
 export class FileBrowserComponent implements OnInit, OnDestroy {
   private filePathChangedSubscriber;
+  private fileChangedSubscriber;
   private _fileNavigator: FileNavigator;
+
+  showingFile = false;
 
   @Input() rootName: string = '';
   @Input() set fileNavigator(value: FileNavigator) {
@@ -23,8 +26,17 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
 
     this.filePathChangedSubscriber = value.path.valueChanged.subscribe((change: SlowValueUpdate<string>)  => {
       if(change.state === LongRunningTaskState.Succeeded) {
-        console.log('path changed, success:', change);
         this.updatePathParts(change.value);
+      }
+    });
+
+    if(this.fileChangedSubscriber) {
+      this.fileChangedSubscriber.unsubscribe();
+    }
+
+    this.fileChangedSubscriber = value.file.valueChanged.subscribe((change: SlowValueUpdate<ModelFile>) => {
+      if(change.state === LongRunningTaskState.Succeeded) {
+        this.updateFile(change.value);
       }
     });
 
@@ -47,13 +59,16 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
   updatePathParts(path: string) {
     const subPath = path.substring(this.fileNavigator.rootPath.length);
     const newParts = subPath.split('/');
-
-    console.log('updating path parts', {
-      newPath: path,
-      newParts: newParts,
-      filtered: newParts.filter( value => value !== ''),
-    });
     this.pathParts = newParts.filter( value => value !== '');
+  }
+
+  updateFile(newFile: ModelFile) {
+    if(newFile.directory) {
+      this.showingFile = false;
+      return;
+    }
+
+    this.showingFile = true;
   }
 
   ngOnDestroy(): void {
@@ -64,10 +79,7 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
   }
 
   onBreadcrumbClicked(e: BreadcrumbEvent) {
-    console.log(e);
     const path = this.getPathFromBreadcrumbIndex(e.index);
-
-    console.log(path);
     this.fileNavigator.goToDirectory(path);
   }
 
@@ -82,14 +94,6 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
     let parts = subPath.split('/').filter(value => value.length != 0);
 
     const partUntil = parts.slice(0, index + 1).join('/');
-
-
-    console.log({
-      parts: parts,
-      subPath: subPath,
-      partUntil: partUntil,
-      total: this.fileNavigator.rootPath + '/' + partUntil
-    });
 
     return this.fileNavigator.rootPath + '/' + partUntil;
   }
@@ -112,7 +116,7 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
           if(file.extension) {
             downloadName += `.${file.extension}`;
           }
-          
+
           link.download = downloadName;
 
           link.href = 'data:application/octet-stream;charset=utf-16le;base64,' + res.data;
@@ -121,12 +125,5 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
           link.click();
           document.body.removeChild(link);
         })
-  }
-
-  getFileExtension(key: string): string {
-    const lastSlashIndex = key.lastIndexOf('/');
-    const lastDotIndex = key.indexOf('.', lastSlashIndex);
-
-    return key.substring(lastDotIndex + 1);
   }
 }
