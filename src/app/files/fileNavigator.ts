@@ -155,8 +155,11 @@ export class FileNavigator {
         return this._rootPath;
     }
 
-    loadFiles(file: ModelFile) {
-        this.file.requestValueChange();
+    loadFiles(file?: ModelFile) {
+        if(file) {
+            this.file.requestValueChange();
+        }
+
         this.workflowService.listFiles(this.namespace, this.name, this.path.value)
             .pipe(
                 map(value => {
@@ -173,7 +176,10 @@ export class FileNavigator {
             )
             .subscribe((response: ListFilesResponse) => {
                 this.files = response.files;
-                this.file.value = file;
+
+                if(file) {
+                    this.file.value = file;
+                }
             });
     }
 
