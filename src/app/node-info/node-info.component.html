@@ -112,18 +112,12 @@
       </mat-expansion-panel-header>
 
       <div>
-
-        <div *ngIf="this.fileNavigator">
-          <app-file-navigator [fileNavigator]="fileNavigator"></app-file-navigator>
-        </div>
-
-        <div class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold">FILES</div>
-        <div class="font-roboto font-size-small mt-2" *ngFor="let artifact of outputArtifacts; let i = index">
-          <ng-container *ngIf="artifact.s3">
-            <div [ngClass]="{'mt-2': i > 0}" >{{artifact.name}} <span class="ml-1"><i (click)="downloadArtifact(artifact)" class="fas fa-download pointer-hover"></i></span></div>
-          </ng-container>
-        </div>
-
+        <app-file-browser *ngIf="this.fileNavigator"
+                          [rootName]="name"
+                          [fileNavigator]="fileNavigator"
+                          [namespace]="this.namespace"
+                          [name]="this.name">
+        </app-file-browser>
         <app-metrics class="mt-4 d-block" [workflowName]="workflow.name" [podId]="node.id" [nodePhase]="node.phase">
         </app-metrics>
       </div>

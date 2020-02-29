@@ -1,0 +1,18 @@
+<div class="op-border hide-overflow">
+    <div class="bg-light-gray toolbar font-roboto font-size-regular">
+        <span class="font-weight-bold">Location: </span>
+        <span (click)="goToRoot()" class="pointer-hover">
+            <span [class.active-link]="pathParts.length != 0">{{rootName}}</span>
+            <span *ngIf="pathParts.length > 0" class="path-separator">/</span>
+        </span>
+        <app-breadcrumbs [parts]="pathParts" (breadcrumbClick)="onBreadcrumbClicked($event)"></app-breadcrumbs>
+        <mat-spinner *ngIf="fileNavigator && fileNavigator.file.valueChanging"
+                color="primary"
+                [diameter]="20"
+                [mode]="'indeterminate'">
+        </mat-spinner>
+    </div>
+    <app-file-navigator [fileNavigator]="fileNavigator"
+                        (fileAction)="onFileEvent($event)">
+    </app-file-navigator>
+</div>

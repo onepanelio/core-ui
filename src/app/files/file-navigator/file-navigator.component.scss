@@ -1,0 +1,37 @@
+.cdk-table {
+  .cdk-header-row {
+    display: none;
+  }
+
+  .cdk-row {
+    height: 40px;
+    padding: 0 20px;
+    border-top: 1px solid #c1c1c1;
+
+    &:first-of-type {
+    }
+
+    &:hover {
+      background-color: #f6f8fa;
+    }
+
+    .cdk-column-name {
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    i {
+      font-size: 21px;
+      width: 21px;
+    }
+
+    .cdk-column-last-modified {
+      flex-basis: 150px;
+    }
+
+    .cdk-column-size {
+      flex-basis: 100px;
+    }
+  }
+}

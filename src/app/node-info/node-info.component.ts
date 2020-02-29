@@ -148,43 +148,4 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   onArtifactsExpandChange(expanded: boolean) {
     this.artifactsExpanded = expanded;
   }
-
-  downloadArtifact(artifact: any) {
-    if(!artifact.s3) {
-      return;
-    }
-
-    console.log(artifact);
-    const key = artifact.s3.key;
-    const extension = this.getArtifactExtension(key);
-
-    this.workflowService.listFiles(this.namespace, this.name, key)
-        .subscribe(res => {
-          console.log({
-            action: 'list files',
-            data: res
-          });
-        });
-
-    return;
-
-    this.workflowService.getArtifact(this.namespace, this.name, key)
-        .subscribe((res: any) => {
-          const link = <HTMLAnchorElement>document.createElement('a');
-
-          link.download = `${this.namespace}-${this.name}-${artifact.name}.${extension}`;
-          link.href = 'data:application/octet-stream;charset=utf-16le;base64,' + res.data;
-
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        })
-  }
-
-  getArtifactExtension(key: string): string {
-    const lastSlashIndex = key.lastIndexOf('/');
-    const lastDotIndex = key.indexOf('.', lastSlashIndex);
-
-    return key.substring(lastDotIndex + 1);
-  }
 }

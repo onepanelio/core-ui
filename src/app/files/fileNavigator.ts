@@ -1,5 +1,6 @@
 import { EventEmitter } from "@angular/core";
 import { ListFilesResponse, ModelFile, WorkflowServiceService } from "../../api";
+import { map } from "rxjs/operators";
 
 export enum LongRunningTaskState {
     Started = 0,
@@ -87,7 +88,7 @@ export class FileNavigator {
 
     private _rootPath: string;
     path: SlowValue<string>;
-    private file: SlowValue<ModelFile>;
+    file: SlowValue<ModelFile>;
     files?: Array<ModelFile>;
 
     constructor(args: FileNavigatorArgs) {
@@ -122,11 +123,28 @@ export class FileNavigator {
 
     selectFile(file: ModelFile) {
         this.path.value = file.path;
-        this.file.value = file;
 
         if(file.directory) {
-            this.loadFiles()
+            this.loadFiles(file)
         }
+    }
+
+    goToDirectory(path: string) {
+        const fakeFile = {
+            path: path,
+            directory: true
+        };
+
+        this.selectFile(fakeFile);
+    }
+
+    goToRoot() {
+        const fakeFile = {
+            path: this.rootPath,
+            directory: true,
+        };
+
+        this.selectFile(fakeFile);
     }
 
     isRoot(): boolean {
@@ -137,10 +155,25 @@ export class FileNavigator {
         return this._rootPath;
     }
 
-    loadFiles() {
+    loadFiles(file: ModelFile) {
+        this.file.requestValueChange();
         this.workflowService.listFiles(this.namespace, this.name, this.path.value)
+            .pipe(
+                map(value => {
+                    for(let item of value.files) {
+                        let dateItem = new Date(item.lastModified);
+
+                        if(dateItem.getFullYear() < 2) {
+                            item.lastModified = undefined;
+                        }
+                    }
+
+                    return value;
+                })
+            )
             .subscribe((response: ListFilesResponse) => {
                 this.files = response.files;
+                this.file.value = file;
             });
     }
 

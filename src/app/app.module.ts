@@ -63,7 +63,11 @@ import { httpInterceptorProviders } from './http-interceptors';
 import { LoginComponent } from './auth/login/login.component';
 import { ApiModule, BASE_PATH } from "../api";
 import { FileNavigatorComponent } from './files/file-navigator/file-navigator.component';
-import { FileSizePipe } from './file-size.pipe';
+import { ToolbarComponent } from './toolbar/toolbar.component';
+import { FileBrowserComponent } from './files/file-browser/file-browser.component';
+import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
+import { FileSizePipe } from "./pipes/file-size/file-size.pipe";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 
 @NgModule({
   declarations: [
@@ -103,7 +107,10 @@ import { FileSizePipe } from './file-size.pipe';
     AlertPanelComponent,
     LoginComponent,
     FileNavigatorComponent,
-    FileSizePipe
+    FileSizePipe,
+    ToolbarComponent,
+    FileBrowserComponent,
+    BreadcrumbsComponent
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,
@@ -134,7 +141,8 @@ import { FileSizePipe } from './file-size.pipe';
         MatCheckboxModule,
         CdkTableModule,
         MatPaginatorModule,
-        ApiModule
+        ApiModule,
+        MatProgressSpinnerModule
     ],
   providers: [
       NamespaceTracker,

@@ -20,6 +20,10 @@ export class FileSizePipe implements PipeTransform {
   static BytesToSize(bytes = 0, precision = 0, round = true): string {
     if (isNaN(parseFloat(String(bytes))) || ! isFinite(bytes)) return '?';
 
+    if (typeof bytes === 'string') {
+      bytes = parseInt(bytes);
+    }
+
     let unit = 0;
 
     while (bytes >= 1024) {
