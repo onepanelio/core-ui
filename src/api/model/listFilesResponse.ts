@@ -13,5 +13,6 @@
 
 export interface ListFilesResponse { 
     files?: Array<any>;
+    parentPath?: string;
 }
 

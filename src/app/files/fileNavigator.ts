@@ -163,6 +163,10 @@ export class FileNavigator {
         this.workflowService.listFiles(this.namespace, this.name, this.path.value)
             .pipe(
                 map(value => {
+                    if(!value.files) {
+                        return value;
+                    }
+
                     for(let item of value.files) {
                         let dateItem = new Date(item.lastModified);
 
@@ -171,10 +175,24 @@ export class FileNavigator {
                         }
                     }
 
+                    if(this.path.value !== this.rootPath) {
+                        const fileUp = {
+                            path: value.parentPath,
+                            directory: true,
+                            name: '..'
+                        };
+
+                        value.files.unshift(fileUp);
+                    }
+
                     return value;
                 })
             )
             .subscribe((response: ListFilesResponse) => {
+                if(!response.files) {
+                    response.files = [];
+                }
+
                 this.files = response.files;
 
                 if(file) {

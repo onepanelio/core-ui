@@ -107,11 +107,14 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
 
     this.workflowService.getArtifact(this.namespace, this.name, file.path)
         .subscribe((res: any) => {
-
-          const extension = this.getFileExtension(file.path);
           const link = <HTMLAnchorElement>document.createElement('a');
+          let downloadName = `${this.namespace}-${this.name}-${file.name}`;
+          if(file.extension) {
+            downloadName += `.${file.extension}`;
+          }
+          
+          link.download = downloadName;
 
-          link.download = `${this.namespace}-${this.name}-${file.name}.${extension}`;
           link.href = 'data:application/octet-stream;charset=utf-16le;base64,' + res.data;
 
           document.body.appendChild(link);
