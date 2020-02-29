@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ModelFile, WorkflowServiceService } from "../../../../api";
 
 @Component({
@@ -10,6 +10,7 @@ export class ImageFileViewComponent implements OnInit {
   @Input() namespace: string;
   @Input() name: string;
   @Input() file: ModelFile;
+  @Output() loading = new EventEmitter<boolean>();
 
   displayContent: string;
 
@@ -17,9 +18,15 @@ export class ImageFileViewComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.loading.emit(true);
+
     this.workflowService.getArtifact(this.namespace, this.name, this.file.path)
         .subscribe(res => {
           this.setBase64Content(res.data);
+        }, err => {
+          console.error(err);
+        }, () => {
+          this.loading.emit(false);
         })
   }
 

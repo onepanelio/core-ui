@@ -43,6 +43,7 @@ export class GenericFileViewComponent {
 
   @Input() namespace: string;
   @Input() name: string;
+  @Output() loading = new EventEmitter<boolean>();
 
   onToolbarAction(event: any) {
     this.actionClick.emit(event);
@@ -71,5 +72,9 @@ export class GenericFileViewComponent {
   }
 
   private updateShouldShow() {
+  }
+
+  onLoadingChange(value: boolean) {
+    this.loading.emit(value);
   }
 }

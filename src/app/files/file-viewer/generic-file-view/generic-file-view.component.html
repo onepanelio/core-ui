@@ -5,6 +5,7 @@
                      [namespace]="namespace"
                      [name]="name"
                      [file]="_file"
+                     (loading)="onLoadingChange($event)"
     ></image-file-view>
 <!--    <mat-file-view *ngSwitchCase="'mat'" [file]="_file"></mat-file-view>-->
 <!--    <jupyter-file-view *ngSwitchCase="'jupyter'" [file]="_file"></jupyter-file-view>-->

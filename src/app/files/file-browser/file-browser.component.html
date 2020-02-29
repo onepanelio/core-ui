@@ -6,7 +6,7 @@
             <span *ngIf="pathParts.length > 0" class="path-separator">/</span>
         </span>
         <app-breadcrumbs [parts]="pathParts" (breadcrumbClick)="onBreadcrumbClicked($event)"></app-breadcrumbs>
-        <mat-spinner *ngIf="fileNavigator && fileNavigator.file.valueChanging"
+        <mat-spinner *ngIf="loading"
                 color="primary"
                 [diameter]="20"
                 [mode]="'indeterminate'">
@@ -21,6 +21,7 @@
             *ngIf="showingFile"
             [namespace]="namespace"
             [name]="name"
-            [file]="fileNavigator.file.value">
+            [file]="fileNavigator.file.value"
+            (loading)="onFileLoadingChange($event)">
     </generic-file-view>
 </div>

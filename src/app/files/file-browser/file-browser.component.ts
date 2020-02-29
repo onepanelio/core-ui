@@ -16,6 +16,8 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
 
   showingFile = false;
 
+  loading: boolean = false;
+
   @Input() rootName: string = '';
   @Input() set fileNavigator(value: FileNavigator) {
     this._fileNavigator = value;
@@ -35,8 +37,22 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
     }
 
     this.fileChangedSubscriber = value.file.valueChanged.subscribe((change: SlowValueUpdate<ModelFile>) => {
+      if(!this.showingFile && change.state === LongRunningTaskState.Started) {
+        this.loading = true;
+      }
+
       if(change.state === LongRunningTaskState.Succeeded) {
         this.updateFile(change.value);
+
+        if(!this.showingFile) {
+          this.loading = false;
+        }
+      }
+
+      if(change.state === LongRunningTaskState.Failed) {
+        if(!this.showingFile) {
+          this.loading = false;
+        }
       }
     });
 
@@ -125,5 +141,11 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
           link.click();
           document.body.removeChild(link);
         })
+  }
+
+  onFileLoadingChange(value: boolean) {
+    if(this.showingFile) {
+      this.loading = value;
+    }
   }
 }
