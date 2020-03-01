@@ -71,6 +71,7 @@ import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
 import { ImageFileViewComponent } from "./files/file-viewer/image-file-view/image-file-view.component";
 import { GenericFileViewComponent } from "./files/file-viewer/generic-file-view/generic-file-view.component";
 import { TextFileViewComponent } from "./files/file-viewer/text-file-view/text-file-view.component";
+import { BigFileViewComponent } from './files/file-viewer/big-file-view/big-file-view.component';
 
 @NgModule({
   declarations: [
@@ -116,7 +117,8 @@ import { TextFileViewComponent } from "./files/file-viewer/text-file-view/text-f
     BreadcrumbsComponent,
     ImageFileViewComponent,
     GenericFileViewComponent,
-    TextFileViewComponent
+    TextFileViewComponent,
+    BigFileViewComponent
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,

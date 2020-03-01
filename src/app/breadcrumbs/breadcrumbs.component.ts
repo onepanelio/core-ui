@@ -17,7 +17,6 @@ export class BreadcrumbsComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    console.log('breadcrumb parts are', this.parts);
   }
 
   onClick(index: number, part: string) {

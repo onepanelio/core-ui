@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation, Input, EventEmitter, Output } from '@angular/core';
+import { Component, Input, EventEmitter, Output } from '@angular/core';
 
 import { ImageFileViewComponent } from '../image-file-view/image-file-view.component';
 import { ModelFile } from "../../../../api";
@@ -50,6 +50,8 @@ export class GenericFileViewComponent {
   }
 
   getFileType(): string {
+    this.loading.emit(false);
+    return 'big-file';
     const extension = this._file.extension;
 
     if (GenericFileViewComponent.IsFileTooBigToDisplay(this._file)) {
@@ -64,10 +66,6 @@ export class GenericFileViewComponent {
       return 'image';
     }
 
-    // if (JupyterFileViewComponent.Supports(this._file)) {
-    //   return 'jupyter';
-    // }
-
     return 'text';
   }
 
@@ -76,5 +74,9 @@ export class GenericFileViewComponent {
 
   onLoadingChange(value: boolean) {
     this.loading.emit(value);
+  }
+
+  onFileAction(e: FileActionEvent) {
+    this.actionClick.emit(e);
   }
 }

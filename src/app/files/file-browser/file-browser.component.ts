@@ -145,7 +145,9 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
 
   onFileLoadingChange(value: boolean) {
     if(this.showingFile) {
-      this.loading = value;
+      setTimeout(() => {
+        this.loading = value;
+      });
     }
   }
 }

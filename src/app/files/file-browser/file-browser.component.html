@@ -22,6 +22,7 @@
             [namespace]="namespace"
             [name]="name"
             [file]="fileNavigator.file.value"
-            (loading)="onFileLoadingChange($event)">
+            (loading)="onFileLoadingChange($event)"
+            (actionClick)="onFileEvent($event)">
     </app-generic-file-view>
 </div>

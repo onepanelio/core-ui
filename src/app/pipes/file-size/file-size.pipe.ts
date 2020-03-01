@@ -13,7 +13,7 @@ export class FileSizePipe implements PipeTransform {
     'PB',
   ];
 
-  transform(bytes = 0, precision = 1, round = false): string {
+  transform(bytes: any = 0, precision = 1, round = false): string {
     return FileSizePipe.BytesToSize(bytes, precision, round);
   }
 
