@@ -166,7 +166,7 @@ export class FileNavigator {
             .pipe(
                 map(value => {
                     if(!value.files) {
-                        return value;
+                        value.files = [];
                     }
 
                     for(let item of value.files) {

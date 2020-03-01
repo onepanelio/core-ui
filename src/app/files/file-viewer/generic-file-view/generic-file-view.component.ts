@@ -38,20 +38,14 @@ export class GenericFileViewComponent {
   @Input() set file(file: ModelFile) {
     this._file = file;
     this.fileType =  this.getFileType();
-    this.updateShouldShow();
   }
 
   @Input() namespace: string;
   @Input() name: string;
   @Output() loading = new EventEmitter<boolean>();
 
-  onToolbarAction(event: any) {
-    this.actionClick.emit(event);
-  }
-
   getFileType(): string {
     this.loading.emit(false);
-    return 'big-file';
     const extension = this._file.extension;
 
     if (GenericFileViewComponent.IsFileTooBigToDisplay(this._file)) {
@@ -67,9 +61,6 @@ export class GenericFileViewComponent {
     }
 
     return 'text';
-  }
-
-  private updateShouldShow() {
   }
 
   onLoadingChange(value: boolean) {

@@ -39,3 +39,13 @@ mat-spinner {
   position: relative;
   top: 4px;
 }
+
+.file-toolbar {
+  height: 38px;
+  line-height: 38px;
+  background-color: $medium-white;
+  border-bottom: 1px solid;
+  border-top: 1px solid;
+  border-color: $light-white;
+  padding: 0 20px;
+}
