@@ -2,7 +2,7 @@
 
 .toolbar {
   padding: 5px 20px;
-  height: 36px;
+  min-height: 36px;
   line-height: 36px;
 }
 
@@ -41,7 +41,7 @@ mat-spinner {
 }
 
 .file-toolbar {
-  height: 38px;
+  min-height: 38px;
   line-height: 38px;
   background-color: $medium-white;
   border-bottom: 1px solid;

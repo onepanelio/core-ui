@@ -113,6 +113,7 @@
 
       <div>
         <app-file-browser *ngIf="this.fileNavigator"
+                          [displayedColumns]="['icon', 'name', 'size', 'actions']"
                           [rootName]="name"
                           [fileNavigator]="fileNavigator"
                           [namespace]="this.namespace"

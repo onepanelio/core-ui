@@ -14,6 +14,8 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
   private fileChangedSubscriber;
   private _fileNavigator: FileNavigator;
 
+  @Input() displayedColumns = [];
+
   showingFile = false;
 
   loading: boolean = false;
