@@ -42,19 +42,25 @@
 
     <mat-tab-group class="no-bottom-border" (selectedTabChange)="onTabChange($event)" [dynamicHeight]="true">
       <mat-tab label="Executions">
-        <app-workflow-executions-list
-            *ngIf="workflows"
-            [namespace]="namespace"
-            [workflows]="workflows">
-        </app-workflow-executions-list>
-        <mat-paginator class="no-background font-size-small"
-                *ngIf="workflowResponse"
-                (page)="onWorkflowPageChange($event)"
-                [pageIndex]="this.workflowPagination.page"
-                [length]="this.workflowResponse.totalCount"
-                [pageSize]="this.workflowPagination.pageSize"
-                [pageSizeOptions]="[5, 10, 25, 100]">
-        </mat-paginator>
+        <div *ngIf="hasWorkflowExecutions">
+          <app-workflow-executions-list
+              *ngIf="workflows"
+              [namespace]="namespace"
+              [workflows]="workflows">
+          </app-workflow-executions-list>
+          <mat-paginator class="no-background font-size-small"
+                  *ngIf="workflowResponse"
+                  (page)="onWorkflowPageChange($event)"
+                  [pageIndex]="this.workflowPagination.page"
+                  [length]="this.workflowResponse.totalCount"
+                  [pageSize]="this.workflowPagination.pageSize"
+                  [pageSizeOptions]="[5, 10, 25, 100]">
+          </mat-paginator>
+        </div>
+        <div *ngIf="!hasWorkflowExecutions"
+             class="font-size-larger font-medium-gray font-weight-bold font-roboto-bold text-center w-100 mt-4">
+          No executions
+        </div>
       </mat-tab>
       <mat-tab label="Template">
         <ng-template matTabContent>
