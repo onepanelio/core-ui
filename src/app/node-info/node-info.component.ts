@@ -5,12 +5,13 @@ import * as yaml from 'js-yaml';
 import { TemplateDefinition } from "../workflow-template/workflow-template.service";
 import { FileNavigator, LongRunningTaskState, SlowValueUpdate } from "../files/fileNavigator";
 import { ModelFile, WorkflowServiceService } from "../../api";
+import { Metric, MetricsService } from "./metrics/metrics.service";
 
 @Component({
   selector: 'app-node-info',
   templateUrl: './node-info.component.html',
   styleUrls: ['./node-info.component.scss'],
-  providers: [WorkflowService]
+  providers: [WorkflowService, MetricsService]
 })
 export class NodeInfoComponent implements OnInit, OnDestroy {
   @Input() namespace: string;
@@ -43,9 +44,11 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
   fileNavigator: FileNavigator;
   hasFiles = false;
+  metrics: Metric[] = [];
 
   constructor(private workflowService: WorkflowService,
-              private workflowServiceService: WorkflowServiceService) { }
+              private workflowServiceService: WorkflowServiceService,
+              private metricsService: MetricsService) { }
 
   ngOnInit() {
   }
@@ -115,25 +118,8 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
       this.outputArtifacts = node.outputs.artifacts;
     }
 
-    if(this.fileNavigator) {
-      this.fileNavigator.cleanUp();
-    }
-
-    this.fileNavigator = new FileNavigator({
-      rootPath: `artifacts/${this.namespace}/${this.name}/${this.node.id}`,
-      namespace: this.namespace,
-      name: this.name,
-      workflowService: this.workflowServiceService,
-    });
-
-    // Check if there are any files at all. If there isn't, don't display the file browser.
-    this.fileLoaderSubscriber = this.fileNavigator.filesChanged.subscribe(() => {
-      console.log(this.fileNavigator);
-      this.hasFiles = this.fileNavigator.files.length !== 0;
-      this.fileLoaderSubscriber.unsubscribe();
-    });
-
-    this.fileNavigator.loadFiles();
+    this.updateFiles();
+    this.updateMetrics();
   }
 
   onCloseClick() {
@@ -158,5 +144,33 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
   onArtifactsExpandChange(expanded: boolean) {
     this.artifactsExpanded = expanded;
+  }
+
+  updateFiles() {
+    if(this.fileNavigator) {
+      this.fileNavigator.cleanUp();
+    }
+
+    this.fileNavigator = new FileNavigator({
+      rootPath: `artifacts/${this.namespace}/${this.name}/${this.node.id}`,
+      namespace: this.namespace,
+      name: this.name,
+      workflowService: this.workflowServiceService,
+    });
+
+    // Check if there are any files at all. If there isn't, don't display the file browser.
+    this.fileLoaderSubscriber = this.fileNavigator.filesChanged.subscribe(() => {
+      this.hasFiles = this.fileNavigator.files.length !== 0;
+      this.fileLoaderSubscriber.unsubscribe();
+    });
+
+    this.fileNavigator.loadFiles();
+  }
+
+  updateMetrics() {
+    this.metricsService.getWorkflowMetrics(this.namespace, this.workflow.name, this.node.id)
+        .subscribe(res => {
+          this.metrics = res.metrics;
+        });
   }
 }
