@@ -72,6 +72,7 @@ import { ImageFileViewComponent } from "./files/file-viewer/image-file-view/imag
 import { GenericFileViewComponent } from "./files/file-viewer/generic-file-view/generic-file-view.component";
 import { TextFileViewComponent } from "./files/file-viewer/text-file-view/text-file-view.component";
 import { BigFileViewComponent } from './files/file-viewer/big-file-view/big-file-view.component';
+import { CallToActionComponent } from './call-to-action/call-to-action.component';
 
 @NgModule({
   declarations: [
@@ -118,7 +119,8 @@ import { BigFileViewComponent } from './files/file-viewer/big-file-view/big-file
     ImageFileViewComponent,
     GenericFileViewComponent,
     TextFileViewComponent,
-    BigFileViewComponent
+    BigFileViewComponent,
+    CallToActionComponent
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,

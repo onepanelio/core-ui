@@ -367,6 +367,16 @@ button.vertical-align-icon {
   }
 }
 
+.underline-hover {
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.underline {
+  text-decoration: underline;
+}
+
 button.logout {
   font-size: $fontSmall;
   font-family: $fontRobotoBold;

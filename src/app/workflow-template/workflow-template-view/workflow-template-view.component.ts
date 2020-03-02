@@ -47,6 +47,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
   workflows: Workflow[] = [];
   workflowResponse: WorkflowResponse;
   workflowPagination = new Pagination();
+  hasWorkflowExecutions = false;
 
   private workflowTemplateDetail: WorkflowTemplateDetail;
 
@@ -142,10 +143,16 @@ export class WorkflowTemplateViewComponent implements OnInit {
       .subscribe(res => {
         this.workflowResponse = res;
         this.workflows = res.workflowExecutions;
+
+        this.hasWorkflowExecutions = !(request.page === 1 && !res.workflowExecutions);
       });
   }
 
-  executeWorkflow() {
+  executeWorkflow(e: any) {
+    if(e) {
+      e.preventDefault();
+    }
+
     const dialogRef = this.dialog.open(WorkflowExecuteDialogComponent, {
       width: '60vw',
       data: {manifest: this.manifestText}
