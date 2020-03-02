@@ -3,6 +3,7 @@ import { Component, Input, EventEmitter, Output } from '@angular/core';
 import { ImageFileViewComponent } from '../image-file-view/image-file-view.component';
 import { ModelFile } from "../../../../api";
 import { FileActionEvent } from "../../file-navigator/file-navigator.component";
+import { TextFileViewComponent } from "../text-file-view/text-file-view.component";
 
 @Component({
   selector: 'app-generic-file-view',
@@ -60,7 +61,11 @@ export class GenericFileViewComponent {
       return 'image';
     }
 
-    return 'text';
+    if (TextFileViewComponent.Supports(this._file)) {
+      return 'text';
+    }
+
+    return 'big-file';
   }
 
   onLoadingChange(value: boolean) {
