@@ -18,7 +18,7 @@
             [fileNavigator]="fileNavigator"
             (fileAction)="onFileEvent($event)">
     </app-file-navigator>
-    <div *ngIf="showingFile" class="file-toolbar font-roboto font-size-small color-dark-gray d-flex justify-content-between">
+    <div *ngIf="showingFile" class="file-toolbar font-roboto font-size-small color-darker-gray d-flex justify-content-between">
         <div>
             <i class="far fa-file-alt"></i>
             <span class="font-weight-bold ml-1">{{fileNavigator.file.value.name}}</span>
