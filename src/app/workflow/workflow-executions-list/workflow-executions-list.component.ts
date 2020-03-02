@@ -5,7 +5,7 @@ import {
     WorkflowService
 } from '../workflow.service';
 import { ActivatedRoute } from '@angular/router';
-import { MatSnackBar } from "@angular/material/snack-bar";
+import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from "@angular/material/snack-bar";
 import { Subscription } from "rxjs";
 
 @Component({
@@ -15,6 +15,8 @@ import { Subscription } from "rxjs";
     providers: [ WorkflowService ]
 })
 export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
+    private snackbarRef: MatSnackBarRef<SimpleSnackBar>;
+
     displayedColumns = ['name','status', 'start', 'end', 'spacer', 'actions'];
     watchingWorkflowsMap = new Map<string, WebSocket>();
 
@@ -59,6 +61,9 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.clearWatchers();
+        if (this.snackbarRef) {
+            this.snackbarRef.dismiss();
+        }
     }
 
     addStatusWatcher(workflowDetail: WorkflowExecution) {
@@ -89,9 +94,9 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
     onTerminate(workflow: WorkflowExecution) {
         this.workflowService.terminateWorkflow(this.namespace, workflow.name)
             .subscribe(res => {
-                this.snackbar.open('Workflow stopped', 'OK');
+                this.snackbarRef = this.snackbar.open('Workflow stopped', 'OK');
             }, err => {
-                this.snackbar.open('Unable to stop workflow', 'OK');
+                this.snackbarRef = this.snackbar.open('Unable to stop workflow', 'OK');
             })
     }
 

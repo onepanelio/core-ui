@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   WorkflowTemplateDetail,
   WorkflowTemplateService
@@ -8,7 +8,7 @@ import { ActivatedRoute, Route, Router } from '@angular/router';
 import { NodeRenderer } from '../../node/node.service';
 import { WorkflowService } from "../../workflow/workflow.service";
 import { WorkflowTemplateSelected } from "../../workflow-template-select/workflow-template-select.component";
-import { MatSnackBar } from "@angular/material/snack-bar";
+import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from "@angular/material/snack-bar";
 import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { HttpErrorResponse } from "@angular/common/http";
 import { AceEditorComponent } from "ng2-ace-editor";
@@ -24,7 +24,9 @@ const aceRange = ace.acequire('ace/range').Range;
   styleUrls: ['./workflow-template-create.component.scss'],
   providers: [WorkflowService, WorkflowTemplateService]
 })
-export class WorkflowTemplateCreateComponent implements OnInit {
+export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy {
+  private snackbarRefs: Array<MatSnackBarRef<any>> = [];
+
   @ViewChild(AceEditorComponent, {static:false}) codeEditor: AceEditorComponent;
   @ViewChild(DagComponent, {static: false}) dag: DagComponent;
 
@@ -84,6 +86,12 @@ export class WorkflowTemplateCreateComponent implements OnInit {
     });
   }
 
+  ngOnDestroy(): void {
+    for(const snackbarRef of this.snackbarRefs) {
+      snackbarRef.dismiss();
+    }
+  }
+
   onManifestChange(newManifest: string) {
     this.manifestTextCurrent = newManifest;
 
@@ -120,7 +128,8 @@ export class WorkflowTemplateCreateComponent implements OnInit {
     const templateName = this.templateNameInput.value;
 
     if(!templateName) {
-      this.snackBar.open('Unable to update - template name is invalid', 'OK');
+      const snackbarRef = this.snackBar.open('Unable to update - template name is invalid', 'OK');
+      this.snackbarRefs.push(snackbarRef);
 
       return;
     }
@@ -169,7 +178,9 @@ export class WorkflowTemplateCreateComponent implements OnInit {
     snackUndo.onAction().subscribe(res => {
       this.manifestText = this.previousManifestText;
       this.manifestTextCurrent = this.previousManifestText;
-    })
+    });
+
+    this.snackbarRefs.push(snackUndo);
   }
 
   setServerError(message: Alert) {

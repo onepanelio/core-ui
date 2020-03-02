@@ -4,7 +4,7 @@ import { SimpleWorkflowDetail, WorkflowService } from './workflow.service';
 import { NodeRenderer, NodeStatus } from '../node/node.service';
 import { DagClickEvent, DagComponent } from '../dag/dag.component';
 import { NodeInfoComponent } from "../node-info/node-info.component";
-import { MatSnackBar } from "@angular/material/snack-bar";
+import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from "@angular/material/snack-bar";
 import { AceEditorComponent } from "ng2-ace-editor";
 import * as yaml from 'js-yaml';
 import * as ace from 'brace';
@@ -21,6 +21,8 @@ const aceRange = ace.acequire('ace/range').Range;
   },
 })
 export class WorkflowComponent implements OnInit, OnDestroy {
+  private snackbarRef: MatSnackBarRef<SimpleSnackBar>;
+
   @ViewChild('yamlEditor', {static: true}) yamlEditor: AceEditorComponent;
   @ViewChild(DagComponent, {static: false}) dag: DagComponent;
   @ViewChild('pageContent', {static: false}) set pageContent(value: ElementRef) {
@@ -93,6 +95,10 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if (this.socket) {
       this.socket.close();
+    }
+
+    if (this.snackbarRef) {
+      this.snackbarRef.dismiss();
     }
   }
 
@@ -282,9 +288,9 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   onTerminate() {
     this.workflowService.terminateWorkflow(this.namespace, this.workflow.name)
         .subscribe(res => {
-          this.snackbar.open('Workflow stopped', 'OK');
+          this.snackbarRef = this.snackbar.open('Workflow stopped', 'OK');
         }, err => {
-          this.snackbar.open('Unable to stop workflow', 'OK');
+          this.snackbarRef = this.snackbar.open('Unable to stop workflow', 'OK');
         })
   }
 
