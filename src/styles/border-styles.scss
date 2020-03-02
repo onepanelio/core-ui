@@ -8,6 +8,10 @@
   @include op-border();
 }
 
+.op-border-small {
+  @include op-border(2px);
+}
+
 .op-border-top {
   border-top: solid 1px $gray;
 }

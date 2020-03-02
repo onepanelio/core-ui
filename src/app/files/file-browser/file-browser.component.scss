@@ -1,0 +1,51 @@
+@import "../../../styles/colors";
+
+.toolbar {
+  padding: 5px 20px;
+  min-height: 36px;
+  line-height: 36px;
+}
+
+.active-link {
+  color: $primary;
+  text-decoration: underline;
+}
+
+.path-separator {
+  padding-left: 3px;
+  padding-right: 3px;
+}
+
+/deep/ app-breadcrumbs {
+  .clickable {
+    color: $primary;
+    text-decoration: underline;
+  }
+
+  .separator {
+    padding-left: 3px;
+    padding-right: 3px;
+  }
+
+  .last {
+    color: $medium-gray;
+  }
+}
+
+
+mat-spinner {
+  display: inline-block;
+  margin-left: 6px;
+  position: relative;
+  top: 4px;
+}
+
+.file-toolbar {
+  min-height: 38px;
+  line-height: 38px;
+  background-color: $medium-white;
+  border-bottom: 1px solid;
+  border-top: 1px solid;
+  border-color: $light-white;
+  padding: 0 20px;
+}

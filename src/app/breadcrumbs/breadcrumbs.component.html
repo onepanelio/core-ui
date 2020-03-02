@@ -1,0 +1,5 @@
+<ng-container *ngFor="let part of parts; let i = index; let last = last;">
+    <span *ngIf="i != 0" class="separator">/</span>
+    <span *ngIf="!last" (click)="onClick(i, part)" class="part clickable">{{part}}</span>
+    <span *ngIf="last" class="part last">{{part}}</span>
+</ng-container>

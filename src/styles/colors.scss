@@ -1,5 +1,9 @@
 $black: black;
 $white: white;
+$lighter-white: #E8E8E8;
+$light-white: #e0e0e0;
+$medium-white: #f7f7f7;
+$dark-white: #c1c1c1;
 $primary-light: #EDF2FD;
 $primary-lighter: #BED2FE;
 $primary: #01579b;
@@ -13,6 +17,8 @@ $light-gray: #f5f6fa;
 $light-medium-gray: #d1d1d5;
 $gray: #C1C1C1;
 $medium-gray: #888888;
+$dark-gray: #666666;
+$darker-gray: #5B5B5B;
 $success-light: #EBF6EE;
 $success: #37AD58;
 
@@ -20,6 +26,10 @@ $background-color: $light-gray;
 
 $colors: (
   "white": $white,
+  "lighter-white": $lighter-white,
+  "light-white": $light-white,
+  "medium-white": $medium-white,
+  "dark-white": $dark-white,
   "black": $black,
   "primary-light": $primary-light,
   "primary-lighter": $primary-lighter,
@@ -34,6 +44,8 @@ $colors: (
   "light-medium-gray": $light-medium-gray,
   "gray": $gray,
   "medium-gray": $medium-gray,
+  "dark-gray": $dark-gray,
+  "darker-gray": $darker-gray,
   "success-light": $success-light,
   "success": $success,
 )
