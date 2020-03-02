@@ -148,7 +148,11 @@ export class WorkflowTemplateViewComponent implements OnInit {
       });
   }
 
-  executeWorkflow() {
+  executeWorkflow(e: any) {
+    if(e) {
+      e.preventDefault();
+    }
+
     const dialogRef = this.dialog.open(WorkflowExecuteDialogComponent, {
       width: '60vw',
       data: {manifest: this.manifestText}

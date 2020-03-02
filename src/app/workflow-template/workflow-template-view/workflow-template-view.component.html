@@ -57,10 +57,11 @@
                   [pageSizeOptions]="[5, 10, 25, 100]">
           </mat-paginator>
         </div>
-        <div *ngIf="!hasWorkflowExecutions"
-             class="font-size-larger font-medium-gray font-weight-bold font-roboto-bold text-center w-100 mt-4">
-          No executions
-        </div>
+          <app-call-to-action *ngIf="!hasWorkflowExecutions">
+            <div class="header">Get started with workflow executions</div>
+            <div class="body">This is where all your workflow executions live.</div>
+            <a class="action underline pointer-hover" (click)="executeWorkflow($event)" >Execute a workflow</a>
+          </app-call-to-action>
       </mat-tab>
       <mat-tab label="Template">
         <ng-template matTabContent>

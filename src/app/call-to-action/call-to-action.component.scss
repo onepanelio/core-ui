@@ -1,0 +1,29 @@
+@import "../../styles/font-variables";
+@import "../../styles/colors";
+
+:host ::ng-deep .call-to-action {
+  padding: 42px;
+  text-align: center;
+  font-family: $fontRoboto;
+  color: $medium-gray;
+
+  .icon {
+    margin-bottom: 8px;
+  }
+
+  .header {
+    font-size: $fontLarge;
+    font-family: $fontRobotoBold;
+    font-weight: bold;
+    margin-bottom: 6px;
+  }
+
+  .body {
+    font-size: $fontRegular;
+    margin-bottom: 20px;
+  }
+
+  a.action {
+    color: $medium-gray !important;
+  }
+}
