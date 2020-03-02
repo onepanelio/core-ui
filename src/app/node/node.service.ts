@@ -31,7 +31,7 @@ export interface NodeStatus {
   children: string[];
   outboundNodes: string[];
   inputs: { parameters: Array<NodeParameter>, artifacts: [] };
-  outputs: { parameters: Array<NodeParameter>, artifacts: [] };
+  outputs: { parameters: Array<NodeParameter>, artifacts: Array<any> };
 }
 
 export class NodeInfo {

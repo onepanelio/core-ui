@@ -1,0 +1,43 @@
+<cdk-table *ngIf="fileNavigator" [dataSource]="fileNavigator.files">
+    <ng-container cdkColumnDef="icon">
+        <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+        <cdk-cell *cdkCellDef="let file" class="mr-3 color-primary">
+            <i *ngIf="file.directory" class="fa fa-folder"></i>
+            <i *ngIf="!file.directory" class="far fa-file-alt"></i>
+        </cdk-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="name">
+        <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+        <cdk-cell *cdkCellDef="let file" class="flex-grow-1">
+            <div (click)="onFileClick(file)" class="pointer-hover">{{file.name}}</div>
+        </cdk-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="last-modified">
+        <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+        <cdk-cell *cdkCellDef="let file">
+            <div *ngIf="file.lastModified">{{file.lastModified | amTimeAgo}}</div>
+        </cdk-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="size">
+        <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+        <cdk-cell *cdkCellDef="let file">
+            <div *ngIf="file.size">{{file.size | fileSize}}</div>
+        </cdk-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="actions">
+        <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+        <cdk-cell *cdkCellDef="let file" class="color-primary">
+            <div *ngIf="!file.directory" (click)="onFileDownload(file)" class="pointer-hover"><i class="fas fa-download"></i></div>
+        </cdk-cell>
+    </ng-container>
+
+    <!-- Header and Row Declarations -->
+    <cdk-header-row *cdkHeaderRowDef="displayedColumns" class="op-table-header"></cdk-header-row>
+    <cdk-row *cdkRowDef="let row; columns: displayedColumns"
+             class="d-flex align-items-center font-size-regular font-roboto">
+    </cdk-row>
+</cdk-table>

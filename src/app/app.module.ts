@@ -62,6 +62,16 @@ import { AlertService } from "./alert/alert.service";
 import { httpInterceptorProviders } from './http-interceptors';
 import { LoginComponent } from './auth/login/login.component';
 import { ApiModule, BASE_PATH } from "../api";
+import { FileNavigatorComponent } from './files/file-navigator/file-navigator.component';
+import { ToolbarComponent } from './toolbar/toolbar.component';
+import { FileBrowserComponent } from './files/file-browser/file-browser.component';
+import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
+import { FileSizePipe } from "./pipes/file-size/file-size.pipe";
+import { MatProgressSpinnerModule } from "@angular/material/progress-spinner";
+import { ImageFileViewComponent } from "./files/file-viewer/image-file-view/image-file-view.component";
+import { GenericFileViewComponent } from "./files/file-viewer/generic-file-view/generic-file-view.component";
+import { TextFileViewComponent } from "./files/file-viewer/text-file-view/text-file-view.component";
+import { BigFileViewComponent } from './files/file-viewer/big-file-view/big-file-view.component';
 
 @NgModule({
   declarations: [
@@ -99,7 +109,16 @@ import { ApiModule, BASE_PATH } from "../api";
     Base64DecodePipe,
     ConfirmationDialogComponent,
     AlertPanelComponent,
-    LoginComponent
+    LoginComponent,
+    FileNavigatorComponent,
+    FileSizePipe,
+    ToolbarComponent,
+    FileBrowserComponent,
+    BreadcrumbsComponent,
+    ImageFileViewComponent,
+    GenericFileViewComponent,
+    TextFileViewComponent,
+    BigFileViewComponent
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,
@@ -130,7 +149,8 @@ import { ApiModule, BASE_PATH } from "../api";
         MatCheckboxModule,
         CdkTableModule,
         MatPaginatorModule,
-        ApiModule
+        ApiModule,
+        MatProgressSpinnerModule
     ],
   providers: [
       NamespaceTracker,

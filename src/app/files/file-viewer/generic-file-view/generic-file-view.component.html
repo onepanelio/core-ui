@@ -1,0 +1,21 @@
+<div *ngIf="_file" class="generic-file-view">
+  <div [ngSwitch]="fileType">
+    <app-big-file-view
+            *ngSwitchCase="'big-file'"
+            (fileAction)="onFileAction($event)"
+            [file]="_file"></app-big-file-view>
+    <app-image-file-view *ngSwitchCase="'image'"
+                     [namespace]="namespace"
+                     [name]="name"
+                     [file]="_file"
+                     (loading)="onLoadingChange($event)"
+    ></app-image-file-view>
+    <app-text-file-view
+      *ngSwitchCase="'text'"
+      [namespace]="namespace"
+      [name]="name"
+      [file]="_file"
+      (loading)="onLoadingChange($event)"
+    ></app-text-file-view>
+  </div>
+</div>

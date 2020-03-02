@@ -1,0 +1,13 @@
+.separator {
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+.part {
+
+  &.clickable {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}

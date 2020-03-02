@@ -1,5 +1,4 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {NodeInfo} from './node.service';
 
 @Component({
   selector: 'app-node',

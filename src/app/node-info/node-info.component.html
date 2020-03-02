@@ -112,8 +112,23 @@
       </mat-expansion-panel-header>
 
       <div>
-        <app-metrics [workflowName]="workflow.name" [podId]="node.id" [nodePhase]="node.phase">
+        <app-metrics *ngIf="metrics.length" [metrics]="metrics">
         </app-metrics>
+
+        <div *ngIf="hasFiles" class="mt-4">
+          <div class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold">FILES</div>
+          <app-file-browser *ngIf="this.fileNavigator"
+                            class="d-block mt-3"
+                            [displayedColumns]="['icon', 'name', 'size', 'actions']"
+                            [rootName]="name"
+                            [fileNavigator]="fileNavigator"
+                            [namespace]="this.namespace"
+                            [name]="this.name">
+          </app-file-browser>
+        </div>
+      </div>
+      <div *ngIf="!metrics.length && !hasFiles" class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold">
+        No Artifacts
       </div>
     </mat-expansion-panel>
   </div>

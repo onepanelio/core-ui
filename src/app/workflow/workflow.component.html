@@ -44,6 +44,8 @@
     <app-node-info
        class="ml-3 op-border scroll-overflow"
        [ngClass]="{ 'visible': showNodeInfo, 'hidden': !showNodeInfo }"
+       [namespace]="namespace"
+       [name]="name"
        [visible]="showNodeInfo"
        [style.height]="nodeInfoHeight"
        [style.minHeight]="nodeInfoHeight"

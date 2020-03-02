@@ -1,0 +1,39 @@
+<div class="op-border hide-overflow">
+    <div class="bg-light-gray toolbar font-roboto font-size-regular">
+        <span class="font-weight-bold">Location: </span>
+        <span (click)="goToRoot()" class="pointer-hover">
+            <span [class.active-link]="pathParts.length != 0">{{rootName}}</span>
+            <span *ngIf="pathParts.length > 0" class="path-separator">/</span>
+        </span>
+        <app-breadcrumbs [parts]="pathParts" (breadcrumbClick)="onBreadcrumbClicked($event)"></app-breadcrumbs>
+        <mat-spinner *ngIf="loading"
+                color="primary"
+                [diameter]="20"
+                [mode]="'indeterminate'">
+        </mat-spinner>
+    </div>
+    <app-file-navigator
+            *ngIf="!showingFile"
+            [displayedColumns]="displayedColumns"
+            [fileNavigator]="fileNavigator"
+            (fileAction)="onFileEvent($event)">
+    </app-file-navigator>
+    <div *ngIf="showingFile" class="file-toolbar font-roboto font-size-small color-darker-gray d-flex justify-content-between">
+        <div>
+            <i class="far fa-file-alt"></i>
+            <span class="font-weight-bold ml-1">{{fileNavigator.file.value.name}}</span>
+            <span class="ml-2">{{fileNavigator.file.value.size | fileSize}}</span>
+        </div>
+        <div class="pointer-hover" (click)="onFileDownload(fileNavigator.file.value)">
+            <i class="fas fa-download"></i> Download
+        </div>
+    </div>
+    <app-generic-file-view
+            *ngIf="showingFile"
+            [namespace]="namespace"
+            [name]="name"
+            [file]="fileNavigator.file.value"
+            (loading)="onFileLoadingChange($event)"
+            (actionClick)="onFileEvent($event)">
+    </app-generic-file-view>
+</div>

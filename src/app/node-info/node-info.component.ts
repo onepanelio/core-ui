@@ -1,15 +1,22 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { NodeInfo, NodeStatus } from '../node/node.service';
-import { SimpleWorkflowDetail, WorkflowPhase, } from "../workflow/workflow.service";
+import { NodeStatus } from '../node/node.service';
+import { SimpleWorkflowDetail, WorkflowPhase, WorkflowService, } from "../workflow/workflow.service";
 import * as yaml from 'js-yaml';
 import { TemplateDefinition } from "../workflow-template/workflow-template.service";
+import { FileNavigator, LongRunningTaskState, SlowValueUpdate } from "../files/fileNavigator";
+import { ModelFile, WorkflowServiceService } from "../../api";
+import { Metric, MetricsService } from "./metrics/metrics.service";
 
 @Component({
   selector: 'app-node-info',
   templateUrl: './node-info.component.html',
-  styleUrls: ['./node-info.component.scss']
+  styleUrls: ['./node-info.component.scss'],
+  providers: [WorkflowService, MetricsService]
 })
 export class NodeInfoComponent implements OnInit, OnDestroy {
+  @Input() namespace: string;
+  @Input() name: string;
+
   @Input() visible = true;
   @Input() workflow: SimpleWorkflowDetail;
   @Output() yamlClicked = new EventEmitter();
@@ -17,6 +24,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   @Output() logsClicked = new EventEmitter();
 
   node: NodeStatus;
+  protected fileLoaderSubscriber;
 
   startedAt = null;
   finishedAt = null;
@@ -34,7 +42,13 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   artifactsExpanded = false;
   template: TemplateDefinition;
 
-  constructor() { }
+  fileNavigator: FileNavigator;
+  hasFiles = false;
+  metrics: Metric[] = [];
+
+  constructor(private workflowService: WorkflowService,
+              private workflowServiceService: WorkflowServiceService,
+              private metricsService: MetricsService) { }
 
   ngOnInit() {
   }
@@ -89,7 +103,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
       this.template = null;
     }
 
-    if ((node.type === 'DAG' || node.type === 'Steps') 
+    if ((node.type === 'DAG' || node.type === 'Steps')
       && node.templateName === loaded.spec.entrypoint
       && loaded && loaded.spec.arguments.parameters) {
       this.inputParameters = loaded.spec.arguments.parameters;
@@ -98,10 +112,14 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
       this.outputArtifacts = node.inputs.artifacts;
     }
 
+
     if (node.type !== 'DAG' && node.type !== 'Steps' && node.outputs) {
       this.outputParameters = node.outputs.parameters;
       this.outputArtifacts = node.outputs.artifacts;
     }
+
+    this.updateFiles();
+    this.updateMetrics();
   }
 
   onCloseClick() {
@@ -126,5 +144,33 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
   onArtifactsExpandChange(expanded: boolean) {
     this.artifactsExpanded = expanded;
+  }
+
+  updateFiles() {
+    if(this.fileNavigator) {
+      this.fileNavigator.cleanUp();
+    }
+
+    this.fileNavigator = new FileNavigator({
+      rootPath: `artifacts/${this.namespace}/${this.name}/${this.node.id}`,
+      namespace: this.namespace,
+      name: this.name,
+      workflowService: this.workflowServiceService,
+    });
+
+    // Check if there are any files at all. If there isn't, don't display the file browser.
+    this.fileLoaderSubscriber = this.fileNavigator.filesChanged.subscribe(() => {
+      this.hasFiles = this.fileNavigator.files.length !== 0;
+      this.fileLoaderSubscriber.unsubscribe();
+    });
+
+    this.fileNavigator.loadFiles();
+  }
+
+  updateMetrics() {
+    this.metricsService.getWorkflowMetrics(this.namespace, this.workflow.name, this.node.id)
+        .subscribe(res => {
+          this.metrics = res.metrics;
+        });
   }
 }

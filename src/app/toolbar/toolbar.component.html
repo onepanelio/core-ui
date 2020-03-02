@@ -1,0 +1,16 @@
+<div class="d-flex">
+    <ng-content select=".toolbar-start"></ng-content>
+    <ng-content select=".toolbar-pre-crumbs"></ng-content>
+
+    <div>
+        <ng-content select=".toolbar-pre-crumbs-inside"></ng-content>
+        <ng-container *ngFor="let part of parts; let i = index">
+            <span *ngIf="i != 0">/</span>
+            <span>{{part}}</span>
+        </ng-container>
+        <ng-content select=".toolbar-post-crumbs-inside"></ng-content>
+    </div>
+
+    <ng-content select=".toolbar-post-crumbs"></ng-content>
+    <ng-content select=".toolbar-end"></ng-content>
+</div>
