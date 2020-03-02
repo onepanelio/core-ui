@@ -1,4 +1,4 @@
-import { EventEmitter } from "@angular/core";
+import { EventEmitter, Output } from "@angular/core";
 import { ListFilesResponse, ModelFile, WorkflowServiceService } from "../../api";
 import { map } from "rxjs/operators";
 
@@ -90,6 +90,8 @@ export class FileNavigator {
     path: SlowValue<string>;
     file: SlowValue<ModelFile>;
     files?: Array<ModelFile>;
+
+    @Output() filesChanged = new EventEmitter();
 
     constructor(args: FileNavigatorArgs) {
         this.workflowService = args.workflowService;
@@ -196,6 +198,7 @@ export class FileNavigator {
                 }
 
                 this.files = response.files;
+                this.filesChanged.emit();
 
                 if(file) {
                     this.file.value = file;

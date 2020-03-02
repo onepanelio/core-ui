@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { NodeInfo, NodeStatus } from '../node/node.service';
+import { NodeStatus } from '../node/node.service';
 import { SimpleWorkflowDetail, WorkflowPhase, WorkflowService, } from "../workflow/workflow.service";
 import * as yaml from 'js-yaml';
 import { TemplateDefinition } from "../workflow-template/workflow-template.service";
-import { FileNavigator } from "../files/fileNavigator";
-import { WorkflowServiceService } from "../../api";
+import { FileNavigator, LongRunningTaskState, SlowValueUpdate } from "../files/fileNavigator";
+import { ModelFile, WorkflowServiceService } from "../../api";
 
 @Component({
   selector: 'app-node-info',
@@ -23,6 +23,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   @Output() logsClicked = new EventEmitter();
 
   protected node: NodeStatus;
+  protected fileLoaderSubscriber;
 
   startedAt = null;
   finishedAt = null;
@@ -41,6 +42,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   template: TemplateDefinition;
 
   fileNavigator: FileNavigator;
+  hasFiles = false;
 
   constructor(private workflowService: WorkflowService,
               private workflowServiceService: WorkflowServiceService) { }
@@ -123,6 +125,15 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
       name: this.name,
       workflowService: this.workflowServiceService,
     });
+
+    // Check if there are any files at all. If there isn't, don't display the file browser.
+    this.fileLoaderSubscriber = this.fileNavigator.filesChanged.subscribe(() => {
+      console.log(this.fileNavigator);
+      this.hasFiles = this.fileNavigator.files.length !== 0;
+      this.fileLoaderSubscriber.unsubscribe();
+    });
+
+    this.fileNavigator.loadFiles();
   }
 
   onCloseClick() {
