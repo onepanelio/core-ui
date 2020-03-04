@@ -50,6 +50,7 @@
       </cdk-row>
     </cdk-table>
     <app-call-to-action *ngIf="workflowTemplates.length === 0">
+      <img class="icon" width="37" src="../../assets/images/workflows-icon.svg"/>
       <div class="header">Get started with workflows</div>
       <div class="body">This is where all your workflow templates live.</div>
       <a class="action underline pointer-hover" [routerLink]="['/', this.namespace, 'workflow-templates', 'create']">Creating a new workflow template</a>
