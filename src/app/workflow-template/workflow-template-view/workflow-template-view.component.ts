@@ -148,7 +148,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
       });
   }
 
-  executeWorkflow(e: any) {
+  executeWorkflow(e?: any) {
     if(e) {
       e.preventDefault();
     }

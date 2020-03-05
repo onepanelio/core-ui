@@ -27,7 +27,7 @@ export class GenericFileViewComponent {
   public static BIG_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
   public static MAX_IMAGE_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 
-  private fileType: string = 'unknown';
+  fileType: string = 'unknown';
 
   _file: ModelFile = null;
 

@@ -1,6 +1,6 @@
 <div class="big-file-view bg-lighter-white font-roboto">
     <div class="text-center color-darker-gray" (click)="onFileDownload()">
         <i class="fa fa-download font-size-XL pointer-hover"></i>
-        <div class="font-size-regular mt-1 pointer-hover">Download <span *ngIf="file.size != 0">({{file.size | fileSize }})</span></div>
+        <div class="font-size-regular mt-1 pointer-hover">Download <span *ngIf="file.size">({{file.size | fileSize }})</span></div>
     </div>
 </div>
