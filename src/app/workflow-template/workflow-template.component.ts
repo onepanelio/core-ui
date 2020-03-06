@@ -33,7 +33,11 @@ export class WorkflowTemplateComponent implements OnInit {
   getWorkflowTemplates() {
     this.workflowTemplateService.listWorkflowTemplates(this.namespace)
         .subscribe(res => {
-          this.workflowTemplates = res.workflowTemplates;
+          if(res.workflowTemplates) {
+            this.workflowTemplates = res.workflowTemplates;
+          } else {
+            this.workflowTemplates = [];
+          }
         })
   }
 }
