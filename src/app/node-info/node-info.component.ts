@@ -160,7 +160,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
     // Check if there are any files at all. If there isn't, don't display the file browser.
     this.fileLoaderSubscriber = this.fileNavigator.filesChanged.subscribe(() => {
-      this.hasFiles = this.fileNavigator.files.length !== 0;
+      this.hasFiles = this.fileNavigator.hasFiles;
       this.fileLoaderSubscriber.unsubscribe();
     });
 
