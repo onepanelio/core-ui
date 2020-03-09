@@ -24,6 +24,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   @Output() logsClicked = new EventEmitter();
 
   node: NodeStatus;
+  previousNodeStatus: NodeStatus;
   protected fileLoaderSubscriber;
 
   startedAt = null;
@@ -62,6 +63,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
     this.inputParameters = [];
     this.inputArtifacts = [];
 
+    this.previousNodeStatus = this.node;
     this.node = node;
 
     if(node.startedAt) {
@@ -147,6 +149,10 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   }
 
   updateFiles() {
+    if(this.updatedToSameNode() && !this.transitionedToFinishedNode()) {
+      return;
+    }
+
     if(this.fileNavigator) {
       this.fileNavigator.cleanUp();
     }
@@ -168,9 +174,29 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   }
 
   updateMetrics() {
+    if(this.updatedToSameNode() && !this.transitionedToFinishedNode()) {
+      return;
+    }
+
     this.metricsService.getWorkflowMetrics(this.namespace, this.workflow.name, this.node.id)
         .subscribe(res => {
           this.metrics = res.metrics;
         });
+  }
+
+  /**
+   * Compares the previous node status to the current one (if available)
+   * and returns true if we are on the same node status.
+   */
+  private updatedToSameNode(): boolean {
+    return this.previousNodeStatus && this.previousNodeStatus.id === this.node.id;
+  }
+
+  /**
+   * Compares the previous node status and the current one (if available)
+   * to see if the status went from unfinished to finished and returns this.
+   */
+  private transitionedToFinishedNode(): boolean {
+    return this.previousNodeStatus && this.previousNodeStatus.finishedAt === null && this.node.finishedAt !== null;
   }
 }
