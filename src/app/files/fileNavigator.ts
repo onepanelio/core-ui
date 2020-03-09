@@ -106,6 +106,10 @@ export class FileNavigator {
         this.name = args.name;
     }
 
+    get hasFiles(): boolean {
+        return this.files && this.files.length && this.files.length > 0;
+    }
+
     goUpDirectory() {
         if(this.isRoot()) {
             return;

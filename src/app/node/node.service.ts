@@ -27,7 +27,7 @@ export interface NodeStatus {
   message: string;
   boundaryID: string;
   startedAt: string;
-  finishedAt: string;
+  finishedAt: string|null;
   children: string[];
   outboundNodes: string[];
   inputs: { parameters: Array<NodeParameter>, artifacts: [] };
