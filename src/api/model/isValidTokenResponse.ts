@@ -11,13 +11,7 @@
  */
 
 
-export interface ModelFile { 
-    path?: string;
-    name?: string;
-    extension?: string;
-    size?: string;
-    contentType?: string;
-    lastModified?: string;
-    directory?: boolean;
+export interface IsValidTokenResponse { 
+    valid?: boolean;
 }
 

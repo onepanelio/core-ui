@@ -44,7 +44,7 @@ export class AppComponent implements OnInit {
 
           this.loggingIn = e.urlAfterRedirects.indexOf('login') >= 0;
 
-          if(this.namespaces.length === 0) {
+          if(!this.loggingIn && this.namespaces.length === 0) {
               this.getNamespaces();
           }
         });

@@ -3,6 +3,7 @@ import { Configuration } from './configuration';
 import { HttpClient } from '@angular/common/http';
 
 
+import { AuthServiceService } from './api/authService.service';
 import { NamespaceServiceService } from './api/namespaceService.service';
 import { SecretServiceService } from './api/secretService.service';
 import { WorkflowServiceService } from './api/workflowService.service';

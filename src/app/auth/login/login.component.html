@@ -5,12 +5,12 @@
             <mat-form-field class="w-100" appearance="outline">
                 <mat-label>Token</mat-label>
                 <input matInput formControlName="token" />
-                <mat-error>Must not be blank</mat-error>
+                <mat-error>{{tokenInput.getError('error')}}</mat-error>
             </mat-form-field>
-        </form>
 
-        <div>
-            <button mat-flat-button color="accent" class="op-rounded op-button border-secondary" (click)="login()">LOGIN</button>
-        </div>
+            <div>
+                <button mat-flat-button color="accent" class="op-rounded op-button border-secondary" (click)="login()">LOGIN</button>
+            </div>
+        </form>
     </div>
 </div>

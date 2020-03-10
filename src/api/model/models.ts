@@ -6,6 +6,7 @@ export * from './deleteSecretResponse';
 export * from './getWorkflowExecutionMetricsResponse';
 export * from './googleProtobufAny';
 export * from './grpcGatewayRuntimeStreamError';
+export * from './isValidTokenResponse';
 export * from './listFilesResponse';
 export * from './listNamespacesResponse';
 export * from './listSecretsResponse';
