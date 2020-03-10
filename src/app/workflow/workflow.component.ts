@@ -60,6 +60,9 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   showLogs = false;
   showYaml = false;
 
+  private socketClosedCount = 0;
+  private socketErrorCount = 0;
+
   get dagIdentifier() {
     return {
       type: 'workflow',
@@ -80,16 +83,41 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     this.activatedRoute.paramMap.subscribe(next => {
       this.setNamespaceName(next.get('namespace'), next.get('name'));
 
-      this.workflowService.getWorkflow(this.namespace, this.name)
+      this.startCheckingWorkflow();
+    });
+  }
+
+  startCheckingWorkflow() {
+    this.workflowService.getWorkflow(this.namespace, this.name)
         .subscribe(res => {
           this.workflow = res;
+
+          if(this.socket) {
+            this.socket.close();
+            this.socket = null;
+          }
 
           this.socket = this.workflowService.watchWorkflow(this.namespace, this.name);
           this.socket.onmessage = (event) => {
             this.onWorkflowExecutionUpdate(event.data);
-          }
+          };
+
+          this.socket.onerror = (err) => {
+            this.socketErrorCount += 1;
+
+            if (this.socketErrorCount < 2) {
+              this.startCheckingWorkflow();
+            }
+          };
+
+          this.socket.onclose = (msg) => {
+            this.socketClosedCount += 1;
+
+            if (this.socketClosedCount < 2) {
+              this.startCheckingWorkflow();
+            }
+          };
         });
-    });
   }
 
   ngOnDestroy() {
@@ -116,6 +144,10 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     try {
       data = JSON.parse(rawData);
     } catch (e) {
+      return;
+    }
+
+    if(!data.result) {
       return;
     }
 
