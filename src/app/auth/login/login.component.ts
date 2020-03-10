@@ -55,6 +55,7 @@ export class LoginComponent implements OnInit {
 
             this.router.navigate(['/']);
           } else {
+            this.authService.clearTokens();
             this.tokenInput.setErrors({error: 'Invalid token'})
           }
         })
