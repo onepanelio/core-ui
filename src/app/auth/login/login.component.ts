@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { AuthService } from "../auth.service";
-import { ActivatedRoute, Router } from "@angular/router";
-import { Location } from "@angular/common";
+import { Router } from "@angular/router";
+import { AuthServiceService } from "../../../api";
 
 @Component({
   selector: 'app-login',
@@ -19,6 +19,7 @@ export class LoginComponent implements OnInit {
       private formBuilder: FormBuilder,
       private authService: AuthService,
       private router: Router,
+      private apiAuthService: AuthServiceService
   ) {
     this.form = this.formBuilder.group({
       token: ['', Validators.compose([
@@ -37,13 +38,25 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    this.authService.setAuthToken(this.tokenInput.value);
-
-    if(this.redirectUrl) {
-      this.router.navigateByUrl(this.redirectUrl);
+    if(this.tokenInput.value.length === 0) {
+      this.tokenInput.setErrors({error: 'Must not be blank'});
       return;
     }
 
-    this.router.navigate(['/']);
+    this.authService.setAuthToken(this.tokenInput.value);
+
+    this.apiAuthService.isValidToken()
+        .subscribe(res => {
+          if (res.valid) {
+            if(this.redirectUrl) {
+              this.router.navigateByUrl(this.redirectUrl);
+              return;
+            }
+
+            this.router.navigate(['/']);
+          } else {
+            this.tokenInput.setErrors({error: 'Invalid token'})
+          }
+        })
   }
 }

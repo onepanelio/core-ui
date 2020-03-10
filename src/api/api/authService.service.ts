@@ -17,7 +17,7 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { ListNamespacesResponse } from '../model/models';
+import { IsValidTokenResponse } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -27,7 +27,7 @@ import { Configuration }                                     from '../configurat
 @Injectable({
   providedIn: 'root'
 })
-export class NamespaceServiceService {
+export class AuthServiceService {
 
     protected basePath = 'http://localhost:8888';
     public defaultHeaders = new HttpHeaders();
@@ -85,10 +85,10 @@ export class NamespaceServiceService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listNamespaces(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ListNamespacesResponse>;
-    public listNamespaces(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ListNamespacesResponse>>;
-    public listNamespaces(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ListNamespacesResponse>>;
-    public listNamespaces(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public isValidToken(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<IsValidTokenResponse>;
+    public isValidToken(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<IsValidTokenResponse>>;
+    public isValidToken(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<IsValidTokenResponse>>;
+    public isValidToken(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
 
         let headers = this.defaultHeaders;
 
@@ -115,7 +115,7 @@ export class NamespaceServiceService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<ListNamespacesResponse>(`${this.configuration.basePath}/apis/v1beta1/namespaces`,
+        return this.httpClient.get<IsValidTokenResponse>(`${this.configuration.basePath}/apis/v1beta1/auth/token`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
