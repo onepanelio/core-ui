@@ -3,7 +3,7 @@
   <mat-form-field class="font-size-small mat-form-white-outline hidden">
     <mat-label>Namespace</mat-label>
     <mat-select [panelClass]="'match-nav-select'" [(value)]="namespaceTracker.activeNamespace" (valueChange)="onNamespaceChange()">
-      <mat-option *ngFor="let namespace of namespaces" [value]="namespace.name">{{namespace.name}}</mat-option>
+      <mat-option *ngFor="let namespace of namespaceTracker.namespaces" [value]="namespace.name">{{namespace.name}}</mat-option>
     </mat-select>
   </mat-form-field>
   <div class="d-flex font-roboto dropdown bg-light-gray align-items-center ml-5" (click)="onFormFieldClick()">
