@@ -19,7 +19,6 @@ export class AppComponent implements OnInit {
   @ViewChild(MatSelect, {static:false}) matSelect: MatSelect;
 
   title = 'onepanel-core-ui';
-  namespaces = [];
   activeRoute = 'templates';
   loggingIn = false;
 
@@ -29,6 +28,14 @@ export class AppComponent implements OnInit {
               private activatedRoute: ActivatedRoute,
               private router: Router,
               private snackbar: MatSnackBar) {
+
+      this.namespaceTracker.namespacesChanged.subscribe(() => {
+          const namespace = this.activatedRoute.snapshot.firstChild.paramMap.get('namespace');
+
+          if(namespace) {
+              this.namespaceTracker.activeNamespace = namespace;
+          }
+      });
 
     // Keep track of the current url so we know what part of the app we are in and highlight it in the
     // nav bar accordingly.
@@ -44,34 +51,15 @@ export class AppComponent implements OnInit {
 
           this.loggingIn = e.urlAfterRedirects.indexOf('login') >= 0;
 
-          if(!this.loggingIn && this.namespaces.length === 0) {
-              this.getNamespaces();
+          if(!this.loggingIn && !this.namespaceTracker.hasNamespaces()) {
+              this.namespaceTracker.getNamespaces();
           }
         });
   }
 
   ngOnInit(): void {
-      this.getNamespaces();
+      this.namespaceTracker.getNamespaces();
   }
-
-  getNamespaces() {
-      this.namespaceService.listNamespaces()
-          .subscribe( res => {
-              if(!res.count) {
-                  return;
-              }
-              this.namespaces = res.namespaces;
-          }, err => {
-              this.namespaces = [{name: 'default'}];
-          }, () => {
-              const namespace = this.activatedRoute.snapshot.firstChild.paramMap.get('namespace');
-
-              if(namespace) {
-                  this.namespaceTracker.activeNamespace = namespace;
-              }
-          });
-  }
-
 
   onNamespaceChange() {
     this.snackbar.open(`Switched to namespace '${this.namespaceTracker.activeNamespace}'`, 'OK');
