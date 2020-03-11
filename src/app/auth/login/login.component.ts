@@ -3,6 +3,7 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/fo
 import { AuthService } from "../auth.service";
 import { Router } from "@angular/router";
 import { AuthServiceService } from "../../../api";
+import { NamespaceTracker } from "../../namespace/namespace-tracker.service";
 
 @Component({
   selector: 'app-login',
@@ -19,7 +20,8 @@ export class LoginComponent implements OnInit {
       private formBuilder: FormBuilder,
       private authService: AuthService,
       private router: Router,
-      private apiAuthService: AuthServiceService
+      private apiAuthService: AuthServiceService,
+      private namespaceTracker: NamespaceTracker
   ) {
     this.form = this.formBuilder.group({
       token: ['', Validators.compose([
@@ -48,6 +50,8 @@ export class LoginComponent implements OnInit {
     this.apiAuthService.isValidToken()
         .subscribe(res => {
           if (res.valid) {
+            this.namespaceTracker.getNamespaces();
+
             if(this.redirectUrl) {
               this.router.navigateByUrl(this.redirectUrl);
               return;
