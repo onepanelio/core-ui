@@ -1,0 +1,10 @@
+<form [formGroup]="form">
+    <ng-container *ngFor="let fieldDataum of fieldData">
+        <ng-container [ngSwitch]="fieldDataum.type">
+            <app-input *ngSwitchCase="'input.text'" [data]="fieldDataum" [form]="form"></app-input>
+            <app-textarea *ngSwitchCase="'textarea.textarea'" [data]="fieldDataum" [form]="form"></app-textarea>
+            <app-select *ngSwitchCase="'select.select'" [data]="fieldDataum" [form]="form"></app-select>
+            <app-radio *ngSwitchCase="'input.radio'" [data]="fieldDataum" [form]="form"></app-radio>
+        </ng-container>
+    </ng-container>
+</form>

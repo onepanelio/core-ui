@@ -4,6 +4,7 @@ import * as yaml from 'js-yaml';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { NamespaceTracker } from "../../namespace/namespace-tracker.service";
 import { Router } from "@angular/router";
+import { FormComponent } from "../../fields/form/form.component";
 
 export interface WorkflowExecuteDialogData {
   manifest: string;
@@ -24,6 +25,8 @@ export class WorkflowExecuteDialogComponent implements OnInit {
         parameters.push({
           name: param.name,
           value: param.value,
+          type: param.type,
+          options: param.options
         });
       }
     }
@@ -31,9 +34,9 @@ export class WorkflowExecuteDialogComponent implements OnInit {
     return parameters;
   }
 
-  form: FormGroup;
-  parameters: Array<{name: string, value: string}> = [];
-  inputControls: Array<AbstractControl> = [];
+  @ViewChild(FormComponent, {static: false}) form: FormComponent;
+
+  parameters: Array<FieldData> = [];
 
   constructor(
       private namespaceTracker: NamespaceTracker,
@@ -49,39 +52,9 @@ export class WorkflowExecuteDialogComponent implements OnInit {
 
   private setManifest(value: string) {
     this.parameters = WorkflowExecuteDialogComponent.pluckParameters(value);
-    this.inputControls = [];
-
-    let controlsConfig = {};
-    for(let parameter of this.parameters) {
-      controlsConfig[parameter.name] = [
-        '',
-        Validators.compose([
-          Validators.required,
-        ])
-      ]
-    }
-
-    this.form = this.formBuilder.group(controlsConfig);
-
-    for(let parameter of this.parameters) {
-      this.inputControls.push(this.form.get(parameter.name));
-    }
   }
 
   getData() {
-    let hasErrors = false;
-
-    for(let control of this.inputControls) {
-      if (!control.value || control.value.length === 0) {
-        hasErrors = true;
-        control.markAllAsTouched();
-      }
-    }
-
-    if (hasErrors) {
-      return null;
-    }
-
     const data = {
       parameters: this.parameters,
     };
@@ -94,6 +67,10 @@ export class WorkflowExecuteDialogComponent implements OnInit {
   }
 
   execute() {
+    if(!this.form.form.valid) {
+      return;
+    }
+
     const data = this.getData();
 
     if(!data) {

@@ -1,0 +1,6 @@
+<label [id]="labelId" class="font-roboto">{{data.name}}</label>
+<mat-radio-group class="onepanel-dynamic-radio" [(ngModel)]="data.value" [formControl]="radioControl">
+    <mat-radio-button class="radio-button" *ngFor="let option of options" [value]="option.value">
+        {{option.name}}
+    </mat-radio-button>
+</mat-radio-group>
