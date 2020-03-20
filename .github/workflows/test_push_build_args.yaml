@@ -8,7 +8,7 @@ jobs:
       - name: Publish to Registry
         uses: elgohr/Publish-Docker-Github-Action@master
         env:
-          VERSION: $GITHUB_SHA
+          VERSION: ${{ GITHUB_SHA }}
         with:
           name: onepanel/core-ui
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
