@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from "@angular/forms";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 
 @Component({
   selector: 'app-textarea',
@@ -17,6 +17,12 @@ export class TextareaComponent implements OnInit {
   }
 
   ngOnInit() {
+    if(this.data.required) {
+      this.textAreaControl.setValidators([
+        Validators.required
+      ]);
+    }
+
     this.form.addControl(this.data.name, this.textAreaControl);
   }
 }

@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from "@angular/forms";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 
 @Component({
   selector: 'app-select',
@@ -39,6 +39,12 @@ export class SelectComponent implements OnInit {
   }
 
   ngOnInit() {
+    if(this.data.required) {
+      this.selectControl.setValidators([
+        Validators.required
+      ]);
+    }
+
     this.form.addControl(this.data.name, this.selectControl);
   }
 }

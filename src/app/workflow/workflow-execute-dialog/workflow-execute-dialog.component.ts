@@ -1,10 +1,10 @@
-import { Component, Inject, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import * as yaml from 'js-yaml';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { NamespaceTracker } from "../../namespace/namespace-tracker.service";
 import { Router } from "@angular/router";
 import { FormComponent } from "../../fields/form/form.component";
+import { MatSnackBar, MatSnackBarRef } from "@angular/material/snack-bar";
 
 export interface WorkflowExecuteDialogData {
   manifest: string;
@@ -15,19 +15,14 @@ export interface WorkflowExecuteDialogData {
   templateUrl: './workflow-execute-dialog.component.html',
   styleUrls: ['./workflow-execute-dialog.component.scss']
 })
-export class WorkflowExecuteDialogComponent implements OnInit {
+export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
   public static pluckParameters(manifest) {
     const res = yaml.safeLoad(manifest);
     const parameters = [];
 
     if(res && res.spec && res.spec.arguments && res.spec.arguments.parameters) {
       for(const param of res.spec.arguments.parameters) {
-        parameters.push({
-          name: param.name,
-          value: param.value,
-          type: param.type,
-          options: param.options
-        });
+        parameters.push(param);
       }
     }
 
@@ -37,11 +32,12 @@ export class WorkflowExecuteDialogComponent implements OnInit {
   @ViewChild(FormComponent, {static: false}) form: FormComponent;
 
   parameters: Array<FieldData> = [];
+  private snackRef: MatSnackBarRef<any>;
 
   constructor(
       private namespaceTracker: NamespaceTracker,
+      private snackBar: MatSnackBar,
       private router: Router,
-      private formBuilder: FormBuilder,
       public dialogRef: MatDialogRef<WorkflowExecuteDialogComponent>,
       @Inject(MAT_DIALOG_DATA) public data: WorkflowExecuteDialogData) {
     this.setManifest(data.manifest);
@@ -68,6 +64,8 @@ export class WorkflowExecuteDialogComponent implements OnInit {
 
   execute() {
     if(!this.form.form.valid) {
+      this.form.form.markAllAsTouched();
+      this.snackRef = this.snackBar.open('Invalid data', 'OK');
       return;
     }
 
@@ -86,5 +84,11 @@ export class WorkflowExecuteDialogComponent implements OnInit {
     });
     
     this.dialogRef.close();
+  }
+
+  ngOnDestroy(): void {
+    if(this.snackRef) {
+      this.snackRef.dismiss();
+    }
   }
 }

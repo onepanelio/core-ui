@@ -1,5 +1,10 @@
 <mat-form-field appearance="outline" class="onepanel-dynamic-input">
     <mat-label>{{data.name}}</mat-label>
-    <input matInput [(ngModel)]="data.value" [formControl]="inputControl"/>
-    <mat-error>Must not be blank</mat-error>
+    <input #inputElement matInput [type]="inputType" [ngModel]="data.value" (ngModelChange)="setDataValue(inputElement.value)" [formControl]="inputControl"/>
+    <mat-error>
+        Must not be blank
+        <span *ngIf="inputType === 'number'">
+            and must be a number
+        </span>
+    </mat-error>
 </mat-form-field>
