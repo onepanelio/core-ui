@@ -1,11 +1,13 @@
 FROM node:13.10.1 AS builder
 
+ARG version=1.0.0
+
 RUN npm install -g @angular/cli@8.3.22
 
 WORKDIR /usr/src/app
 COPY . .
 RUN npm install
-RUN version=$version node set-env.js && ng build --prod
+RUN version=${version} node set-env.js && ng build --prod
 
 FROM nginx
 COPY --from=builder /usr/src/app/dist/onepanel-core-ui /usr/share/nginx/html
