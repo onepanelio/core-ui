@@ -7,7 +7,7 @@ RUN npm install -g @angular/cli@8.3.22
 WORKDIR /usr/src/app
 COPY . .
 RUN npm install
-RUN echo ${GITHUB_SHA} ; version=${GITHUB_SHA} node set-env.js && ng build --prod
+RUN echo ${GITHUB_SHA} ; VERSION=${GITHUB_SHA} PRODUCTION=true node set-env.js && ng build --prod
 
 FROM nginx
 COPY --from=builder /usr/src/app/dist/onepanel-core-ui /usr/share/nginx/html

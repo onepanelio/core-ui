@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 const envVariables = {
-    version: process.env.version,
+    version: process.env.VERSION,
 };
 
 const targetPath = './src/environments/';
