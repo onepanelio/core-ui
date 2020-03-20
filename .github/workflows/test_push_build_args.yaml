@@ -12,4 +12,4 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
           snapshot: true
-          buildargs: version=${{ GITHUB_SHA }}
+          buildargs: version=$GITHUB_SHA
