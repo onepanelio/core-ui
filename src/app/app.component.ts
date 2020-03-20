@@ -9,6 +9,7 @@ import { filter } from "rxjs/operators";
 import { MatSelect } from "@angular/material/select";
 import { NamespaceServiceService } from "../api";
 import { AuthService } from "./auth/auth.service";
+import { environment } from "../environments/environment";
 
 @Component({
   selector: 'app-root',
@@ -21,6 +22,7 @@ export class AppComponent implements OnInit {
   title = 'onepanel-core-ui';
   activeRoute = 'templates';
   loggingIn = false;
+  version: string = '1.0.0';
 
   constructor(public namespaceTracker: NamespaceTracker,
               private authService: AuthService,
@@ -28,6 +30,8 @@ export class AppComponent implements OnInit {
               private activatedRoute: ActivatedRoute,
               private router: Router,
               private snackbar: MatSnackBar) {
+
+      this.version = environment.version;
 
       this.namespaceTracker.namespacesChanged.subscribe(() => {
           const namespace = this.activatedRoute.snapshot.firstChild.paramMap.get('namespace');

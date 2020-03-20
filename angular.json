@@ -39,7 +39,7 @@
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+                  "with": "src/environments/environment.local.ts"
                 }
               ],
               "optimization": false,
@@ -105,7 +105,8 @@
               "browserTarget": "onepanel-core-ui:build:production"
             },
             "local": {
-              "browserTarget": "onepanel-core-ui:build:local"
+              "browserTarget": "onepanel-core-ui:build:local",
+
             }
           }
         },
