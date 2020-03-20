@@ -7,9 +7,11 @@ jobs:
       - uses: actions/checkout@master
       - name: Publish to Registry
         uses: elgohr/Publish-Docker-Github-Action@master
+        env:
+          VERSION: 1.0.1
         with:
           name: onepanel/core-ui
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
           snapshot: true
-          buildargs: GITHUB_SHA
+          buildargs: VERSION,GITHUB_SHA
