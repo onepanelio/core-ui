@@ -16,3 +16,4 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
           snapshot: true
           buildargs: GITHUB_REF
+          tag_semver: true
