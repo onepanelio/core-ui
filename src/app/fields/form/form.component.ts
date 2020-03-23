@@ -30,7 +30,7 @@ export class FormComponent implements OnInit {
     if(!fieldData.type) {
       return true;
     }
-    return fieldData.type.indexOf('input') > 0;
+    return fieldData.type.indexOf('input') >= 0;
   }
 
   getInputType(input?: string): string {

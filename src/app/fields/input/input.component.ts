@@ -41,6 +41,8 @@ export class InputComponent implements OnInit {
   }
 
   setDataValue(value: string) {
-    this._data.value = value;
+    setTimeout( () => {
+      this._data.value = value;
+    });
   }
 }
