@@ -1,0 +1,12 @@
+<form [formGroup]="form">
+    <ng-container *ngFor="let fieldDataum of fieldData">
+        <ng-container [ngSwitch]="fieldDataum.type">
+            <app-textarea *ngSwitchCase="'textarea.textarea'" [data]="fieldDataum" [form]="form"></app-textarea>
+            <app-select *ngSwitchCase="'select.select'" [data]="fieldDataum" [form]="form"></app-select>
+            <app-radio *ngSwitchCase="'input.radio'" [data]="fieldDataum" [form]="form"></app-radio>
+            <ng-container *ngSwitchDefault>
+                <app-input *ngIf="isFieldInput(fieldDataum)" [data]="fieldDataum" [inputType]="getInputType(fieldDataum.type)" [form]="form"></app-input>
+            </ng-container>
+        </ng-container>
+    </ng-container>
+</form>

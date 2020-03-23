@@ -1,0 +1,5 @@
+<mat-form-field appearance="outline" class="onepanel-dynamic-textarea">
+    <mat-label>{{data.name}}</mat-label>
+    <textarea matInput [(ngModel)]="data.value" [formControl]="textAreaControl"></textarea>
+    <mat-error>Must not be blank</mat-error>
+</mat-form-field>

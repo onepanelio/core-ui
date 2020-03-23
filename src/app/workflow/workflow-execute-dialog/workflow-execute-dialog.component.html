@@ -1,29 +1,27 @@
-<div class="op-h1">Execute Workflow</div>
+<div class="workflow-execution-title op-h1">Execute Workflow</div>
 
-<form *ngIf="parameters && form" [formGroup]="form" class="parameters mt-7 mr-12">
-    <div *ngFor="let parameter of parameters">
-        <mat-form-field appearance="outline" class="w-100">
-            <mat-label>{{parameter.name}}</mat-label>
-            <input matInput [(ngModel)]="parameter.value" [formControlName]="parameter.name"/>
-            <mat-error>Must not be blank</mat-error>
-        </mat-form-field>
-    </div>
-</form>
+<div>
+    <app-form
+        *ngIf="parameters"
+        [fieldData]="parameters"
+        class="parameters mt-7 mr-12">
+    </app-form>
 
-<div class="environment bg-primary-light op-rounded-regular">
-    <div class="font-roboto-bold font-weight-bold font-size-regular">Environment variables</div>
-    <div class="mt-1 font-roboto font-size-regular color-black">
-        <div>
-            Any environment variables you have created will be mounted on workflow execution.
-        </div>
-        <div class="color-primary underline pointer-hover mt-1" (click)="goToEnvironmentVariables()">
-            Add or manage environment variables
+    <div class="environment bg-primary-light op-rounded-regular mb-3">
+        <div class="font-roboto-bold font-weight-bold font-size-regular">Environment variables</div>
+        <div class="mt-1 font-roboto font-size-regular color-black">
+            <div>
+                Any environment variables you have created will be mounted on workflow execution.
+            </div>
+            <div class="color-primary underline pointer-hover mt-1" (click)="goToEnvironmentVariables()">
+                Add or manage environment variables
+            </div>
         </div>
     </div>
 </div>
 
 <hr class="divider op-just-border-top border-gray mt-5" />
-<div class="d-flex justify-content-between mt-5">
+<div class="d-flex justify-content-between w-100 mt-5">
     <button mat-button class="font-medium-gray cancel-button" (click)="cancel()">CANCEL</button>
     <button mat-flat-button color="accent" class="op-rounded op-button" (click)="execute()">Execute</button>
 </div>

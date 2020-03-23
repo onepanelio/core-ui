@@ -73,6 +73,11 @@ import { GenericFileViewComponent } from "./files/file-viewer/generic-file-view/
 import { TextFileViewComponent } from "./files/file-viewer/text-file-view/text-file-view.component";
 import { BigFileViewComponent } from './files/file-viewer/big-file-view/big-file-view.component';
 import { CallToActionComponent } from './call-to-action/call-to-action.component';
+import { InputComponent } from './fields/input/input.component';
+import { FormComponent } from './fields/form/form.component';
+import { TextareaComponent } from "./fields/textarea/textarea.component";
+import { SelectComponent } from './fields/select/select.component';
+import { RadioComponent } from './fields/radio/radio.component';
 
 @NgModule({
   declarations: [
@@ -120,7 +125,12 @@ import { CallToActionComponent } from './call-to-action/call-to-action.component
     GenericFileViewComponent,
     TextFileViewComponent,
     BigFileViewComponent,
-    CallToActionComponent
+    CallToActionComponent,
+    InputComponent,
+    FormComponent,
+    TextareaComponent,
+    SelectComponent,
+    RadioComponent
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,

@@ -1,0 +1,9 @@
+<mat-form-field appearance="outline" class="onepanel-dynamic-select">
+    <mat-label>{{data.name}}</mat-label>
+    <mat-select [formControl]="selectControl">
+        <mat-option *ngFor="let option of options" [value]="option.value">
+            {{option.name}}
+        </mat-option>
+    </mat-select>
+    <mat-error>Must select a value</mat-error>
+</mat-form-field>
