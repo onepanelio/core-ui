@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from "@angular/forms";
+import { FormControl, FormGroup, Validators } from "@angular/forms";
 
 @Component({
   selector: 'app-radio',
@@ -44,5 +44,11 @@ export class RadioComponent implements OnInit {
 
   ngOnInit() {
     this.form.addControl(this.data.name, this.radioControl);
+
+    if(this.data.required) {
+      this.radioControl.setValidators([
+        Validators.required
+      ]);
+    }
   }
 }

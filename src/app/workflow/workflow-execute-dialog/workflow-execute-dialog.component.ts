@@ -4,7 +4,6 @@ import * as yaml from 'js-yaml';
 import { NamespaceTracker } from "../../namespace/namespace-tracker.service";
 import { Router } from "@angular/router";
 import { FormComponent } from "../../fields/form/form.component";
-import { MatSnackBar, MatSnackBarRef } from "@angular/material/snack-bar";
 
 export interface WorkflowExecuteDialogData {
   manifest: string;
@@ -32,11 +31,9 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
   @ViewChild(FormComponent, {static: false}) form: FormComponent;
 
   parameters: Array<FieldData> = [];
-  private snackRef: MatSnackBarRef<any>;
 
   constructor(
       private namespaceTracker: NamespaceTracker,
-      private snackBar: MatSnackBar,
       private router: Router,
       public dialogRef: MatDialogRef<WorkflowExecuteDialogComponent>,
       @Inject(MAT_DIALOG_DATA) public data: WorkflowExecuteDialogData) {
@@ -65,7 +62,6 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
   execute() {
     if(!this.form.form.valid) {
       this.form.form.markAllAsTouched();
-      this.snackRef = this.snackBar.open('Invalid data', 'OK');
       return;
     }
 
@@ -87,8 +83,5 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if(this.snackRef) {
-      this.snackRef.dismiss();
-    }
   }
 }

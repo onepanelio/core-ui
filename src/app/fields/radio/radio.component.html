@@ -4,3 +4,4 @@
         {{option.name}}
     </mat-radio-button>
 </mat-radio-group>
+<mat-error *ngIf="radioControl.invalid && radioControl.touched">Must select a value</mat-error>

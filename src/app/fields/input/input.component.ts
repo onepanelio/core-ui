@@ -9,12 +9,10 @@ import { AbstractControl, FormControl, FormGroup, Validators } from "@angular/fo
 export class InputComponent implements OnInit {
   private _data: FieldData;
 
+  @Input() inputType: string = 'text';
+
   @Input() set data(value: FieldData) {
     this._data = value;
-
-    if(value.inputType) {
-      this.inputType = value.inputType;
-    }
   }
   get data(): FieldData {
     return this._data;
@@ -23,12 +21,10 @@ export class InputComponent implements OnInit {
 
   @Input() form: FormGroup;
   inputControl: FormControl;
-  inputType = 'text';
 
   constructor() {
     this.inputControl = new FormControl('');
   }
-
 
   ngOnInit() {
     this.setupForm();

@@ -25,4 +25,29 @@ export class FormComponent implements OnInit {
 
   ngOnInit() {
   }
+
+  isFieldInput(fieldData: FieldData): boolean {
+    if(!fieldData.type) {
+      return true;
+    }
+    return fieldData.type.indexOf('input') > 0;
+  }
+
+  getInputType(input?: string): string {
+    if(!input) {
+      return 'text';
+    }
+
+    const parts = input.split('.');
+
+    if(parts.length == 0) {
+      return '';
+    }
+
+    if(parts.length < 2) {
+      return parts[0];
+    }
+
+    return parts[1];
+  }
 }
