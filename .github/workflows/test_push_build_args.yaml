@@ -27,7 +27,7 @@ jobs:
           SLACK_CHANNEL: dev
           SLACK_COLOR: '#3278BD'
           SLACK_ICON: https://avatars1.githubusercontent.com/u/30390575?s=48&v=4
-          SLACK_MESSAGE: "Version ${{VERSION}}. Docker Tag onepanel/core-ui\:${{VERSION}}"
+          SLACK_MESSAGE: "Testing slack message"
           SLACK_TITLE: New Core-UI Version
           SLACK_USERNAME: opBot
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
