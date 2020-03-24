@@ -8,12 +8,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
+      - uses: olegtarasov/get-tag@v2
+          id: tagName
+          with:
+            tagRegex: "refs/tags/(.*)"
       - name: Publish to Registry
         uses: elgohr/Publish-Docker-Github-Action@master
+        env:
+          VERSION: $GIT_TAG_NAME
         with:
           name: onepanel/core-ui
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
           snapshot: true
-          buildargs: GITHUB_REF
+          buildargs: VERSION
           tag_semver: true
