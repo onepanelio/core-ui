@@ -11,7 +11,7 @@ jobs:
       - uses: olegtarasov/get-tag@v2
         id: tagName
         with:
-          tagRegex: "refs/tags/(.*)"
+          tagRegex: "(.*)"
       - name: Publish to Registry
         uses: elgohr/Publish-Docker-Github-Action@master
         env:
