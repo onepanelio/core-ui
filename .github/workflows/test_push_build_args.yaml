@@ -10,8 +10,6 @@ jobs:
       - uses: actions/checkout@master
       - uses: olegtarasov/get-tag@v2
         id: tagName
-        with:
-          tagRegex: "(.*)"
       - name: Publish to Registry
         uses: elgohr/Publish-Docker-Github-Action@master
         env:
