@@ -11,6 +11,10 @@ jobs:
       - uses: olegtarasov/get-tag@v2
         id: tagName
       - name: test env
-        run: echo "tag is $GIT_TAG_NAME - dervied from $GITHUB_REF ::set-env name=VERSION::$GIT_TAG_NAME"
+        run: echo "tag is $GIT_TAG_NAME - dervied from $GITHUB_REF"
+      - name: test set alias
+        run: echo "::set-env name=VERSION::$GIT_TAG_NAME"
+      - name: test set var
+        run: echo "::set-env name=VERSION2::test-version"
       - name: test alias env
-        run: echo "alias is $VERSION"
+        run: echo "alias is $VERSION we also have $VERSION2"
