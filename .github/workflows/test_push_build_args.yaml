@@ -10,14 +10,7 @@ jobs:
       - uses: actions/checkout@master
       - uses: olegtarasov/get-tag@v2
         id: tagName
-      - name: Publish to Registry
-        uses: elgohr/Publish-Docker-Github-Action@master
-        env:
-          VERSION: $GIT_TAG_NAME
-        with:
-          name: onepanel/core-ui
-          username: ${{ secrets.DOCKER_HUB_USERNAME }}
-          password: ${{ secrets.DOCKER_HUB_TOKEN }}
-          snapshot: true
-          buildargs: VERSION
-          tag_semver: true
+      - name: test env
+        run: echo "tag is $GIT_TAG_NAME - dervied from $GITHUB_REF ::set-env name=VERSION::$GIT_TAG_NAME"
+      - name: test alias env
+        run: echo "alias is $VERSION"

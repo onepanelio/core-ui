@@ -2,8 +2,6 @@ FROM node:13.10.1 AS builder
 
 ARG VERSION=v1.0.0
 
-RUN echo ${VERSION} ;
-
 RUN npm install -g @angular/cli@8.3.22
 
 WORKDIR /usr/src/app
