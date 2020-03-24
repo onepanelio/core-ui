@@ -21,3 +21,13 @@ jobs:
           snapshot: true
           buildargs: VERSION
           tag_semver: true
+      - name: Notify Slack Channels
+        uses: rtCamp/action-slack-notify@v2.0.0
+        env:
+          SLACK_CHANNEL: dev
+          SLACK_COLOR: '#3278BD'
+          SLACK_ICON: https://avatars1.githubusercontent.com/u/30390575?s=48&v=4
+          SLACK_MESSAGE: "Version: ${{VERSION}}. Docker Tag: onepanel/core-ui:${{VERSION}}"
+          SLACK_TITLE: New Core-UI Version
+          SLACK_USERNAME: opBot
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
