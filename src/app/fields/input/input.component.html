@@ -1,4 +1,4 @@
-<mat-form-field appearance="outline" class="onepanel-dynamic-input">
+<mat-form-field *ngIf="inputType !== 'hidden'" appearance="outline" class="onepanel-dynamic-input">
     <mat-label>{{data.name}}</mat-label>
     <input #inputElement matInput [type]="inputType" [ngModel]="data.value" (ngModelChange)="setDataValue(inputElement.value)" [formControl]="inputControl"/>
     <mat-error>
@@ -8,3 +8,6 @@
         </span>
     </mat-error>
 </mat-form-field>
+<ng-container *ngIf="inputType === 'hidden'">
+    <input #inputElement [type]="inputType" [ngModel]="data.value" (ngModelChange)="setDataValue(inputElement.value)" [formControl]="inputControl"/>
+</ng-container>
