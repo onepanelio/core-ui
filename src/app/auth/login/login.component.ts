@@ -45,11 +45,12 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    this.authService.setAuthToken(this.tokenInput.value);
+    const token = `Bearer ${this.tokenInput.value}`;
 
-    this.apiAuthService.isValidToken()
+    this.apiAuthService.isValidToken({token: token})
         .subscribe(res => {
-          if (res.valid) {
+            this.authService.setAuthToken(token);
+
             this.namespaceTracker.getNamespaces();
 
             if(this.redirectUrl) {
@@ -58,10 +59,8 @@ export class LoginComponent implements OnInit {
             }
 
             this.router.navigate(['/']);
-          } else {
-            this.authService.clearTokens();
-            this.tokenInput.setErrors({error: 'Invalid token'})
-          }
+        }, err => {
+          this.tokenInput.setErrors({error: 'Invalid token'})
         })
   }
 }

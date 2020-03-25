@@ -11,7 +11,7 @@
  */
 
 
-export interface IsValidTokenResponse { 
-    valid?: boolean;
+export interface TokenWrapper { 
+    token?: string;
 }
 

@@ -1,5 +1,7 @@
+// Version is set via set-env.js
 export const environment = {
-    production: false,
-    baseUrl: 'http://localhost:8888',
-    baseRPCUrl: 'localhost:8888'
+  "version": "1.0.0",
+  "baseWsUrl": "localhost:8888",
+  "baseUrl": "http://localhost:8888",
+  "production": false
 };

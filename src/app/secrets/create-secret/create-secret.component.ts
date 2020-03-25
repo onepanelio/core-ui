@@ -4,7 +4,7 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/fo
 import { AlertService } from "../../alert/alert.service";
 import { Alert } from "../../alert/alert";
 import { SecretServiceService } from "../../../api";
-import { ApiSecret } from "../../../api/model/apiSecret";
+import { Secret as ApiSecret } from "../../../api/model/secret";
 
 @Component({
   selector: 'app-create-secret',

@@ -78,6 +78,7 @@ import { FormComponent } from './fields/form/form.component';
 import { TextareaComponent } from "./fields/textarea/textarea.component";
 import { SelectComponent } from './fields/select/select.component';
 import { RadioComponent } from './fields/radio/radio.component';
+import { MatTooltipModule } from "@angular/material/tooltip";
 
 @NgModule({
   declarations: [
@@ -162,7 +163,8 @@ import { RadioComponent } from './fields/radio/radio.component';
         CdkTableModule,
         MatPaginatorModule,
         ApiModule,
-        MatProgressSpinnerModule
+        MatProgressSpinnerModule,
+        MatTooltipModule
     ],
   providers: [
       NamespaceTracker,

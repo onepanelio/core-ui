@@ -1,5 +1,5 @@
 <mat-toolbar *ngIf="!loggingIn" color="primary" class="app-toolbar">
-  <a style="height: 32px;" [routerLink]="['/']"><img src="/assets/images/onepanel-logo-white.svg"/></a>
+  <a style="height: 32px;" [routerLink]="['/']" matTooltip="Version: {{version}}"><img src="/assets/images/onepanel-logo-white.svg"/></a>
   <mat-form-field class="font-size-small mat-form-white-outline hidden">
     <mat-label>Namespace</mat-label>
     <mat-select [panelClass]="'match-nav-select'" [(value)]="namespaceTracker.activeNamespace" (valueChange)="onNamespaceChange()">
