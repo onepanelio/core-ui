@@ -31,11 +31,9 @@ export class InputComponent implements OnInit {
   }
 
   setupForm() {
-    if(this.data.required) {
-      this.inputControl.setValidators([
-        Validators.required
-      ]);
-    }
+    this.inputControl.setValidators([
+      Validators.required
+    ]);
 
     this.form.addControl(this.data.name, this.inputControl);
   }
