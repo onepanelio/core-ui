@@ -5,7 +5,8 @@
 export const environment = {
   production: false,
   baseUrl: 'http://localhost:8888',
-  baseWsUrl: 'ws://localhost:8888'
+  baseWsUrl: 'ws://localhost:8888',
+  version: "1.0.0"
 };
 
 /*
