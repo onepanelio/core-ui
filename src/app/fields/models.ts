@@ -3,7 +3,6 @@ interface FieldData {
     value: string;
     type: string;
     options: any;
-    required?: boolean;
     inputType?: string;
 }
 

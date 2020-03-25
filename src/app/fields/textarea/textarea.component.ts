@@ -17,11 +17,9 @@ export class TextareaComponent implements OnInit {
   }
 
   ngOnInit() {
-    if(this.data.required) {
-      this.textAreaControl.setValidators([
-        Validators.required
-      ]);
-    }
+    this.textAreaControl.setValidators([
+      Validators.required
+    ]);
 
     this.form.addControl(this.data.name, this.textAreaControl);
   }
