@@ -5,17 +5,11 @@
         <i class="fas fa-chevron-left"></i>
         <span>Back to workflow template</span>
       </a>
-      </div>
-      <div class="page-title">
-        <div class="page-title-text">Workflow execution:
-          <ng-container *ngIf="workflow">{{workflow.name}}</ng-container>
-        </div>
     </div>
+    <div class="page-title-text">Workflow execution</div>
   </div>
 
   <div class="page-body">
-
-    <app-labels-list-view [labels]="labels" class="d-inline-block mt-3"></app-labels-list-view>
 
     <app-activity-bar *ngIf="workflow?.phase" [status]="workflow.phase" class="mt-4">
       <div class="d-inline-flex align-items-center">
@@ -32,6 +26,16 @@
         <button *ngIf="workflow?.active" mat-button color="primary" class="font-size-regular" (click)="onTerminate()">Terminate</button>
       </div>
     </app-activity-bar>
+
+    <div class="op-info-box mt-4">
+      <div class="header">
+        <div class="page-title-text">
+          <ng-container *ngIf="workflow">{{workflow.name}}</ng-container>
+        </div>
+      </div>
+
+      <app-labels-list-view [labels]="labels" class="d-inline-block mt-3"></app-labels-list-view>
+    </div>
 
     <div id="info-box" class="op-info-box mt-4">
       <div #pageContent>

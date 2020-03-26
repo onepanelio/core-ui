@@ -183,7 +183,10 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     }
 
     this.nodeInfo = newNodeInfo;
+    this.updateNodeInfoProperties();
+
     this.showNodeInfo = true;
+
 
     if(this._nodeInfoElement) {
       this._nodeInfoElement.updateNodeStatus(this.nodeInfo);
