@@ -7,11 +7,16 @@
       </a>
       </div>
       <div class="page-title">
-      <div class="page-title-text">Workflow execution</div>
+        <div class="page-title-text">Workflow execution:
+          <ng-container *ngIf="workflow">{{workflow.name}}</ng-container>
+        </div>
     </div>
   </div>
 
   <div class="page-body">
+
+    <app-labels-list-view [labels]="labels" class="d-inline-block mt-3"></app-labels-list-view>
+
     <app-activity-bar *ngIf="workflow?.phase" [status]="workflow.phase" class="mt-4">
       <div class="d-inline-flex align-items-center">
         <app-status *ngIf="workflow" class="font-roboto-bold font-weight-bold" [phase]="workflow.phase"></app-status>
@@ -29,9 +34,6 @@
     </app-activity-bar>
 
     <div id="info-box" class="op-info-box mt-4">
-      <div class="header">
-        <div *ngIf="workflow" class="title">{{workflow.name}}</div>
-      </div>
       <div #pageContent>
         <app-dag
           class="mt-4 h-100"

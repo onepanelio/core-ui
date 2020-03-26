@@ -8,7 +8,7 @@ import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from "@angular/material/s
 import { AceEditorComponent } from "ng2-ace-editor";
 import * as yaml from 'js-yaml';
 import * as ace from 'brace';
-import { WorkflowServiceService } from "../../api";
+import { KeyValue, WorkflowServiceService } from "../../api";
 const aceRange = ace.acequire('ace/range').Range;
 
 @Component({
@@ -60,6 +60,8 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   showLogs = false;
   showYaml = false;
 
+  labels = new Array<KeyValue>();
+
   private socketClosedCount = 0;
   private socketErrorCount = 0;
 
@@ -74,6 +76,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   constructor(
     private activatedRoute: ActivatedRoute,
     private workflowService: WorkflowService,
+    private workflowServiceService: WorkflowServiceService,
     private apiWorkflowService: WorkflowServiceService,
     private snackbar: MatSnackBar
   ) {
@@ -91,6 +94,8 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     this.workflowService.getWorkflow(this.namespace, this.name)
         .subscribe(res => {
           this.workflow = res;
+
+          this.getLabels();
 
           if(this.socket) {
             this.socket.close();
@@ -328,5 +333,16 @@ export class WorkflowComponent implements OnInit, OnDestroy {
 
   onYamlClose() {
     this.showYaml = false;
+  }
+
+  getLabels() {
+    this.workflowServiceService.getWorkflowExecutionLabels(this.namespace, this.workflow.name)
+        .subscribe(res => {
+          if(!res.labels) {
+            return;
+          }
+
+          this.labels = res.labels;
+        })
   }
 }
