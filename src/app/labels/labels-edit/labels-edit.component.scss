@@ -1,0 +1,24 @@
+.cdk-row {
+  max-width: 300px;
+  margin-top: 5px;
+}
+
+.cdk-column-key {
+  width: 130px;
+}
+
+.cdk-column-value {
+  width: 130px;
+  margin-left: 5px;
+}
+
+.add-button {
+  margin-right: 30px;
+}
+
+/deep/ .mat-icon-button {
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+}
+

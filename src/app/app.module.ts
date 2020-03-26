@@ -79,6 +79,9 @@ import { TextareaComponent } from "./fields/textarea/textarea.component";
 import { SelectComponent } from './fields/select/select.component';
 import { RadioComponent } from './fields/radio/radio.component';
 import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatChipsModule } from "@angular/material/chips";
+import { LabelsListViewComponent } from './labels/labels-list-view/labels-list-view.component';
+import { LabelsEditComponent } from './labels/labels-edit/labels-edit.component';
 
 @NgModule({
   declarations: [
@@ -131,7 +134,9 @@ import { MatTooltipModule } from "@angular/material/tooltip";
     FormComponent,
     TextareaComponent,
     SelectComponent,
-    RadioComponent
+    RadioComponent,
+    LabelsListViewComponent,
+    LabelsEditComponent
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,
@@ -164,7 +169,8 @@ import { MatTooltipModule } from "@angular/material/tooltip";
         MatPaginatorModule,
         ApiModule,
         MatProgressSpinnerModule,
-        MatTooltipModule
+        MatTooltipModule,
+        MatChipsModule
     ],
   providers: [
       NamespaceTracker,

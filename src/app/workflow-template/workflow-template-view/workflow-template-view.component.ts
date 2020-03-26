@@ -18,6 +18,7 @@ import { PageEvent } from "@angular/material/paginator";
 import { ConfirmationDialogComponent } from "../../confirmation-dialog/confirmation-dialog.component";
 import { AlertService } from "../../alert/alert.service";
 import { Alert } from "../../alert/alert";
+import { KeyValue, WorkflowServiceService } from "../../../api";
 
 export class Pagination {
   page: number = 0;
@@ -48,6 +49,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
   workflowResponse: WorkflowResponse;
   workflowPagination = new Pagination();
   hasWorkflowExecutions = false;
+  labels = new Array<KeyValue>();
 
   private workflowTemplateDetail: WorkflowTemplateDetail;
 
@@ -86,6 +88,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private workflowService: WorkflowService,
+    private workflowServiceService: WorkflowServiceService,
     private workflowTemplateService: WorkflowTemplateService,
     private dialog: MatDialog,
     private alertService: AlertService
@@ -99,6 +102,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
       this.getWorkflowTemplate();
       this.getWorkflowTemplateVersions();
       this.getWorkflows();
+      this.getLabels();
     });
   }
 
@@ -235,5 +239,16 @@ export class WorkflowTemplateViewComponent implements OnInit {
             }));
           })
     });
+  }
+
+  getLabels() {
+    this.workflowServiceService.getWorkflowTemplateLabels(this.namespace, this.uid)
+        .subscribe(res => {
+          if(!res.labels) {
+            return;
+          }
+
+          this.labels = res.labels;
+        })
   }
 }
