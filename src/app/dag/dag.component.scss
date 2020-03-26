@@ -92,6 +92,10 @@
   width: 200px;
   height: 42px;
   line-height:42px;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 185px;
 }
 
 /deep/ .node .node-root.summary {
