@@ -1,5 +1,5 @@
-<mat-chip-list>
-    <mat-chip *ngFor="let label of labels" class="font-roboto chip-modifications font-roboto font-size-smaller">
+<div class="d-flex labels-list">
+    <div *ngFor="let label of labels" class="font-roboto chip-modifications font-roboto font-size-smaller labels-list-item">
         {{label.key}}: {{label.value}}
-    </mat-chip>
-</mat-chip-list>
+    </div>
+</div>
