@@ -34,9 +34,9 @@
         </div>
       </div>
 
-      <div class="d-flex align-items-baseline">
-        <app-labels-list-view [labels]="labels" class="d-inline-block mt-3"></app-labels-list-view>
-        <div class="actions font-roboto ml-5">
+      <div class="d-flex align-items-baseline mt-3">
+        <app-labels-list-view *ngIf="labels?.length > 0" [labels]="labels" class="d-inline-block mr-5"></app-labels-list-view>
+        <div class="actions font-roboto">
           <a class="link-button" (click)="onEdit()">
             <i class="fas fa-pencil-alt"></i>
             <span class="ml-2">Edit</span>
