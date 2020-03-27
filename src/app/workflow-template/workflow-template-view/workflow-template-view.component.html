@@ -29,6 +29,7 @@
       <div>
         <div *ngIf="workflowTemplate" class="info mt-2">
           <i class="far fa-calendar-check"></i>
+          <span class="ml-2 font-roboto">Created</span>
           <app-date class="ml-2" [dateTime]="workflowTemplate.createdAt"></app-date>
         </div>
         <app-labels-list-view [labels]="labels" class="d-inline-block mt-3"></app-labels-list-view>
