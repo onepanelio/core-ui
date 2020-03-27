@@ -359,6 +359,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     }
 
     const dialogRef = this.dialog.open(LabelEditDialogComponent, {
+      maxHeight: '100vh',
       data: {
         labels: labelsCopy
       }
