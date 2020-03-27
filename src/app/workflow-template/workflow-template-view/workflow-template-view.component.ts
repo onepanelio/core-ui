@@ -176,7 +176,17 @@ export class WorkflowTemplateViewComponent implements OnInit {
 
       this.workflowService.executeWorkflow(this.namespace, request)
         .subscribe(res => {
-          this.router.navigate(['/', this.namespace, 'workflows', res.name]);
+          this.workflowServiceService.addWorkflowExecutionLabels(this.namespace, res.name, {
+            items: result.labels
+          })
+              .subscribe(res => {
+                // Do nothing
+              }, err => {
+                // Do nothing
+              }, () => {
+                this.router.navigate(['/', this.namespace, 'workflows', res.name]);
+              });
+
         }, err => {
 
         });

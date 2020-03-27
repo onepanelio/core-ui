@@ -4,6 +4,7 @@ import * as yaml from 'js-yaml';
 import { NamespaceTracker } from "../../namespace/namespace-tracker.service";
 import { Router } from "@angular/router";
 import { FormComponent } from "../../fields/form/form.component";
+import { KeyValue } from "../../../api";
 
 export interface WorkflowExecuteDialogData {
   manifest: string;
@@ -31,6 +32,7 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
   @ViewChild(FormComponent, {static: false}) form: FormComponent;
 
   parameters: Array<FieldData> = [];
+  labels = new Array<KeyValue>();
 
   constructor(
       private namespaceTracker: NamespaceTracker,
@@ -50,6 +52,7 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
   getData() {
     const data = {
       parameters: this.parameters,
+      labels: this.labels,
     };
 
     return data;
