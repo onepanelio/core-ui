@@ -82,6 +82,7 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 import { MatChipsModule } from "@angular/material/chips";
 import { LabelsListViewComponent } from './labels/labels-list-view/labels-list-view.component';
 import { LabelsEditComponent } from './labels/labels-edit/labels-edit.component';
+import { LabelEditDialogComponent } from './labels/label-edit-dialog/label-edit-dialog.component';
 
 @NgModule({
   declarations: [
@@ -136,12 +137,14 @@ import { LabelsEditComponent } from './labels/labels-edit/labels-edit.component'
     SelectComponent,
     RadioComponent,
     LabelsListViewComponent,
-    LabelsEditComponent
+    LabelsEditComponent,
+    LabelEditDialogComponent
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,
         ConfirmationDialogComponent,
-        ClosableSnackComponent
+        ClosableSnackComponent,
+        LabelEditDialogComponent
     ],
     imports: [
         BrowserModule,

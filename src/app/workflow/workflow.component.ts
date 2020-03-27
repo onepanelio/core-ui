@@ -9,6 +9,8 @@ import { AceEditorComponent } from "ng2-ace-editor";
 import * as yaml from 'js-yaml';
 import * as ace from 'brace';
 import { KeyValue, WorkflowServiceService } from "../../api";
+import { MatDialog } from "@angular/material/dialog";
+import { LabelEditDialogComponent } from "../labels/label-edit-dialog/label-edit-dialog.component";
 const aceRange = ace.acequire('ace/range').Range;
 
 @Component({
@@ -78,6 +80,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     private workflowService: WorkflowService,
     private workflowServiceService: WorkflowServiceService,
     private apiWorkflowService: WorkflowServiceService,
+    private dialog: MatDialog,
     private snackbar: MatSnackBar
   ) {
   }
@@ -347,5 +350,30 @@ export class WorkflowComponent implements OnInit, OnDestroy {
 
           this.labels = res.labels;
         })
+  }
+
+  onEdit() {
+    let labelsCopy = [];
+    if(this.labels) {
+      labelsCopy = this.labels.slice();
+    }
+
+    const dialogRef = this.dialog.open(LabelEditDialogComponent, {
+      data: {
+        labels: labelsCopy
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(data => {
+      if(!data) {
+        return;
+      }
+
+      this.workflowServiceService.replaceWorkflowExecutionLabels(this.namespace, this.workflow.name, {
+        items: data
+      }).subscribe(res => {
+        this.labels = res.labels;
+      })
+    });
   }
 }

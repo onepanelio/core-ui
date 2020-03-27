@@ -32,6 +32,12 @@
         <div class="page-title-text">
           <ng-container *ngIf="workflow">{{workflow.name}}</ng-container>
         </div>
+        <div class="actions font-roboto">
+          <a class="link-button" (click)="onEdit()">
+            <i class="fas fa-pencil-alt"></i>
+            <span class="ml-2">Edit</span>
+          </a>
+        </div>
       </div>
 
       <app-labels-list-view [labels]="labels" class="d-inline-block mt-3"></app-labels-list-view>
