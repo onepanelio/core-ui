@@ -93,9 +93,12 @@
   height: 42px;
   line-height:42px;
 
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 185px;
+  .name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 140px;
+    display: inline-block;
+  }
 }
 
 /deep/ .node .node-root.summary {
