@@ -1325,7 +1325,7 @@ export class WorkflowServiceService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<GetLabelsResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflow_executions/${encodeURIComponent(String(name))}/labels/replace`,
+        return this.httpClient.put<GetLabelsResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflow_executions/${encodeURIComponent(String(name))}/labels`,
             body,
             {
                 responseType: <any>responseType,
@@ -1392,7 +1392,7 @@ export class WorkflowServiceService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<GetLabelsResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflow_templates/${encodeURIComponent(String(name))}/labels/replace`,
+        return this.httpClient.put<GetLabelsResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflow_templates/${encodeURIComponent(String(name))}/labels`,
             body,
             {
                 responseType: <any>responseType,
