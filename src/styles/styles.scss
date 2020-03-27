@@ -339,7 +339,7 @@ mat-tab-group.no-bottom-border .mat-tab-header {
 }
 
 button.add-environment-variable {
-  height: 52px;
+  height: 44px;
   border: 2px solid $primary;
 
   &.mat-stroked-button:not([disabled]) {
@@ -350,7 +350,7 @@ button.add-environment-variable {
 button.vertical-align-icon {
   .mat-button-wrapper {
     mat-icon {
-      vertical-align: text-bottom !important;
+      vertical-align: text-top !important;
     }
   }
 }

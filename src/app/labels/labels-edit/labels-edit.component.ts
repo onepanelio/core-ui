@@ -107,6 +107,10 @@ export class LabelsEditComponent implements OnInit {
   }
 
   private createNewKeyControl(value: string): FormControl {
+    if(value === '') {
+      value = ' ';
+    }
+
     let control = new FormControl(value);
     control.setValidators([
         Validators.required
@@ -116,11 +120,27 @@ export class LabelsEditComponent implements OnInit {
   }
 
   private createNewValueControl(value: string): FormControl {
+    if(value === '') {
+      value = ' ';
+    }
+
     let control = new FormControl(value);
     control.setValidators([
       Validators.required
     ]);
 
     return control;
+  }
+
+  onKeyFocusOut(label: LabelItem) {
+    if(label.controlKey.value === ' ') {
+      label.controlKey.setValue('');
+    }
+  }
+
+  onValueFocusOut(label: LabelItem) {
+    if(label.controlValue.value === ' ') {
+      label.controlValue.setValue('');
+    }
   }
 }

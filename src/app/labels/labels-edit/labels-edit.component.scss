@@ -1,5 +1,9 @@
+.cdk-header-row {
+  padding-bottom: 8px;
+}
+
 .cdk-row {
-  max-width: 300px;
+  max-width: 350px;
   margin-top: 5px;
 }
 
@@ -12,8 +16,11 @@
   margin-left: 5px;
 }
 
-.add-button {
-  margin-right: 30px;
+.label-edit-add {
+  width: 350px !important;
+}
+
+.delete-button {
 }
 
 /deep/ .mat-icon-button {
@@ -22,3 +29,14 @@
   line-height: 30px;
 }
 
+/deep/ mat-form-field.small {
+
+  .mat-form-field-wrapper {
+    padding-bottom: 0;
+  }
+
+  .mat-form-field-infix  {
+    border: none;
+    padding: 0.55em 0 0.25em 0;
+  }
+}

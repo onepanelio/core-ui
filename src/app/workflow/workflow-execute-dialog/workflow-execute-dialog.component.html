@@ -2,12 +2,16 @@
 
 <div>
     <app-form
-        *ngIf="parameters"
         [fieldData]="parameters"
-        class="parameters mt-7 mr-12">
+        class="parameters mt-7 mr-12 mb-3 d-block">
     </app-form>
 
-    <div class="environment bg-primary-light op-rounded-regular mb-3">
+    <div>
+        <div class="op-h2">Labels</div>
+        <app-labels-edit class="d-inline-block mt-3" [labels]="labels" ></app-labels-edit>
+    </div>
+
+    <div class="environment bg-primary-light op-rounded-regular mt-5">
         <div class="font-roboto-bold font-weight-bold font-size-regular">Environment variables</div>
         <div class="mt-1 font-roboto font-size-regular color-black">
             <div>
@@ -17,11 +21,6 @@
                 Add or manage environment variables
             </div>
         </div>
-    </div>
-
-    <div class="mt-5">
-        <div class="op-h2">Labels</div>
-        <app-labels-edit class="d-inline-block mt-3" [labels]="labels" ></app-labels-edit>
     </div>
 </div>
 

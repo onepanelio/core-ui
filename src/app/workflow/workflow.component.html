@@ -32,15 +32,17 @@
         <div class="page-title-text">
           <ng-container *ngIf="workflow">{{workflow.name}}</ng-container>
         </div>
-        <div class="actions font-roboto">
+      </div>
+
+      <div class="d-flex align-items-baseline">
+        <app-labels-list-view [labels]="labels" class="d-inline-block mt-3"></app-labels-list-view>
+        <div class="actions font-roboto ml-5">
           <a class="link-button" (click)="onEdit()">
             <i class="fas fa-pencil-alt"></i>
             <span class="ml-2">Edit</span>
           </a>
         </div>
       </div>
-
-      <app-labels-list-view [labels]="labels" class="d-inline-block mt-3"></app-labels-list-view>
     </div>
 
     <div id="info-box" class="op-info-box mt-4">

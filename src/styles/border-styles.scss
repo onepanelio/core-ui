@@ -29,3 +29,9 @@
 .op-border-bottom {
   border-bottom: solid 1px $gray;
 }
+
+@for $i from 2 through 5 {
+  .op-border-bottom-#{$i} {
+    border-bottom: solid #{$i}px $gray;
+  }
+}
