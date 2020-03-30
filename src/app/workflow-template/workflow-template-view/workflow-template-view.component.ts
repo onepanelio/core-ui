@@ -18,7 +18,13 @@ import { PageEvent } from "@angular/material/paginator";
 import { ConfirmationDialogComponent } from "../../confirmation-dialog/confirmation-dialog.component";
 import { AlertService } from "../../alert/alert.service";
 import { Alert } from "../../alert/alert";
-import { KeyValue, WorkflowServiceService } from "../../../api";
+import {
+  CronWorkflow,
+  CronWorkflowServiceService,
+  KeyValue,
+  WorkflowExecution,
+  WorkflowServiceService
+} from "../../../api";
 
 export class Pagination {
   page: number = 0;
@@ -88,6 +94,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private workflowService: WorkflowService,
+    private cronWorkflowService: CronWorkflowServiceService,
     private workflowServiceService: WorkflowServiceService,
     private workflowTemplateService: WorkflowTemplateService,
     private dialog: MatDialog,
@@ -168,16 +175,41 @@ export class WorkflowTemplateViewComponent implements OnInit {
         return;
       }
 
-      const request: CreateWorkflow = {
+      if(result.cron) {
+        result.workflowExecution.workflowTemplate = this.workflowTemplate;
+
+        const request: CronWorkflow = {
+          name: 'test-name',
+          schedule: result.cron.schedule,
+          timezone: result.cron.timezone,
+          suspend: result.cron.suspend,
+          concurrencyPolicy: result.cron.concurrencyPolicy,
+          startingDeadlineSeconds: result.cron.startingDeadlineSeconds,
+          successfulJobsHistoryLimit: result.cron.successfulJobsHistoryLimit,
+          failedJobsHistoryLimit: result.cron.failedJobsHistoryLimit,
+          workflowTemplate: this.workflowTemplate,
+          parameters: result.parameters,
+        };
+
+        this.executeCronWorkflowRequest(request, result.labels);
+
+      } else {
+        const request: CreateWorkflow = {
           namespace: this.namespace,
           workflowTemplate: this.workflowTemplate,
           parameters: result.parameters,
-      };
+        };
 
-      this.workflowService.executeWorkflow(this.namespace, request)
+        this.executeWorkflowRequest(request, result.labels);
+      }
+    });
+  }
+
+  protected executeWorkflowRequest(request: CreateWorkflow, labels: any) {
+    this.workflowService.executeWorkflow(this.namespace, request)
         .subscribe(res => {
           this.workflowServiceService.addWorkflowExecutionLabels(this.namespace, res.name, {
-            items: result.labels
+            items: labels
           })
               .subscribe(res => {
                 // Do nothing
@@ -190,7 +222,15 @@ export class WorkflowTemplateViewComponent implements OnInit {
         }, err => {
 
         });
-    });
+  }
+
+  protected executeCronWorkflowRequest(data: CronWorkflow, labels: any) {
+      this.cronWorkflowService.createCronWorkflow(this.namespace, data)
+          .subscribe(res => {
+            console.log(res);
+          }, err => {
+
+          });
   }
 
   showDag() {

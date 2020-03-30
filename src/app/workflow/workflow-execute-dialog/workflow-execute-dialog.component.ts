@@ -5,6 +5,7 @@ import { NamespaceTracker } from "../../namespace/namespace-tracker.service";
 import { Router } from "@angular/router";
 import { FormComponent } from "../../fields/form/form.component";
 import { KeyValue } from "../../../api";
+import { MatCheckboxChange } from "@angular/material/checkbox";
 
 export interface WorkflowExecuteDialogData {
   manifest: string;
@@ -31,8 +32,23 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
 
   @ViewChild(FormComponent, {static: false}) form: FormComponent;
 
+  showCron = false;
   parameters: Array<FieldData> = [];
   labels = new Array<KeyValue>();
+  schedulingText: string = `# Schedule at which the Workflowwill be run. E.g.5 4 * * *
+schedule: "* * * * *"
+# Timezone during which the Workflow will be run. E.g. America/Los_Angeles
+timezone: 'America/Los_Angeles'
+# If true Workflow scheduling will not occur.
+suspend: false
+# Policy that determines what to do if multiple Workflows are scheduled at the same time. Available      options: Allow: allow all, Replace: remove all old before scheduling a new, Forbid: do not allow any new while there are old 
+concurrencyPolicy: Allow
+# Number of seconds after the last successful run during which a missed Workflow will be run
+startingDeadlineSeconds: 0
+# Number of successful Workflows that will be persisted at a time
+successfulJobsHistoryLimit:\t3
+# Number of failed Workflows that will be persisted at a time
+failedJobsHistoryLimit: 1`;
 
   constructor(
       private namespaceTracker: NamespaceTracker,
@@ -50,10 +66,16 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
   }
 
   getData() {
-    const data = {
-      parameters: this.parameters,
-      labels: this.labels,
+    let data = {
+      workflowExecution: {
+        parameters: this.parameters,
+        labels: this.labels,
+      }
     };
+
+    if(this.showCron) {
+      data['cron'] = yaml.safeLoad(this.schedulingText);
+    }
 
     return data;
   }
@@ -86,5 +108,9 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+  }
+
+  onCronCheck(value: MatCheckboxChange) {
+    this.showCron = value.checked;
   }
 }

@@ -22,6 +22,27 @@
             </div>
         </div>
     </div>
+
+    <div class="mt-5">
+        <div class="op-h2 mb-5 font-roboto">Scheduling</div>
+        <mat-checkbox (change)="onCronCheck($event)" >Schedule workflow execution</mat-checkbox>
+        <div class="align-with-checkbox color-medium-gray">
+            Use Cron expression to schedule this workflow to execute at a certain time or reoccurring interval.
+            <a href="#" class="font-roboto color-medium-gray">More info</a>
+        </div>
+        <ace-editor *ngIf="showCron"
+                style="width: 400px; height: 400px;"
+                class="h-100 w-100 mt-3"
+                [mode]="'yaml'"
+                [(text)]="schedulingText"
+                [options]="{
+                        showInvisibles: false,
+                        showPrintMargin: false,
+                        showLineNumbers: true,
+                        scrollPastEnd: 0.1
+                      }"
+        ></ace-editor>
+    </div>
 </div>
 
 <hr class="divider op-just-border-top border-gray mt-5" />

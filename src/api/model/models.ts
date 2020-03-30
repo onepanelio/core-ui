@@ -1,6 +1,7 @@
 export * from './addSecretKeyValueResponse';
 export * from './archiveWorkflowTemplateResponse';
 export * from './artifactResponse';
+export * from './cronWorkflow';
 export * from './deleteSecretKeyResponse';
 export * from './deleteSecretResponse';
 export * from './getLabelsResponse';
@@ -9,6 +10,7 @@ export * from './googleProtobufAny';
 export * from './grpcGatewayRuntimeStreamError';
 export * from './keyValue';
 export * from './labels';
+export * from './listCronWorkflowsResponse';
 export * from './listFilesResponse';
 export * from './listNamespacesResponse';
 export * from './listSecretsResponse';
