@@ -60,7 +60,7 @@ export class NodeInfo {
 
 export class NodeRenderer {
   static nodeHeight = 50;
-  static summaryNodeHeight = 82;
+  static summaryNodeHeight = 50;
   static nodeWidth = 200;
 
 
@@ -123,17 +123,16 @@ export class NodeRenderer {
       nodeRootClasses += ' rect';
     }
 
+    let html = '';
     if(root) {
-      nodeRootClasses += ' summary';
+      nodeRootClasses += ' summary name font-roboto font-weight-bold text-center';
+      html += `<div id="${node.id}" class="${nodeRootClasses}">START</div>`;
+
+    } else {
+      html += `<div id="${node.id}" class="${nodeRootClasses}">`;
     }
 
-    let html = `<div id="${node.id}" class="${nodeRootClasses}">`;
-
-    if(root) {
-      html += '<div class="text-center font-roboto font-weight-bold root-element">WORKFLOW SUMMARY</div><div class="not-root">';
-    }
-
-    const showInfo = root || !(node.type === 'StepGroup' || node.type === 'DAG');
+    const showInfo = !(node.type === 'StepGroup' || node.type === 'DAG');
 
     if(showInfo) {
       if (node.phase === 'Succeeded') {

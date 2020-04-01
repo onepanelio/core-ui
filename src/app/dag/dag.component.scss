@@ -14,12 +14,12 @@
 
 /deep/ g.root {
   rect {
-    stroke: #BED2FE !important;
-    fill: #BED2FE !important;
+    stroke: $primary-lighter !important;
+    fill: $primary-light !important;
   }
 
   .node-root {
-    height: 82px;
+    height: 42px;
     overflow: hidden;
   }
 
@@ -98,15 +98,6 @@
     text-overflow: ellipsis;
     max-width: 140px;
     display: inline-block;
-  }
-}
-
-/deep/ .node .node-root.summary {
-  width: 200px;
-  height: 82px;
-
-  .status-icon {
-    padding-left: 0;
   }
 }
 

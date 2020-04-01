@@ -331,7 +331,6 @@ export class WorkflowTemplateViewComponent implements OnInit {
 
     this.cronWorkflowService.listCronWorkflows(this.namespace, this.cronWorkflowPagination.pageSize, page)
         .subscribe(res => {
-          console.log(res);
           this.cronWorkflowResponse = res;
           this.cronWorkflows = res.cronWorkflows;
 

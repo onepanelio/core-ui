@@ -85,6 +85,7 @@ import { LabelsEditComponent } from './labels/labels-edit/labels-edit.component'
 import { LabelEditDialogComponent } from './labels/label-edit-dialog/label-edit-dialog.component';
 import { CronWorkflowListComponent } from './cron-workflow/cron-workflow-list/cron-workflow-list.component';
 import { CronWorkflowEditDialogComponent } from './cron-workflow/cron-workflow-edit-dialog/cron-workflow-edit-dialog.component';
+import { WorkflowParameterComponent } from './workflow/workflow-parameter/workflow-parameter.component';
 
 @NgModule({
   declarations: [
@@ -142,7 +143,8 @@ import { CronWorkflowEditDialogComponent } from './cron-workflow/cron-workflow-e
     LabelsEditComponent,
     LabelEditDialogComponent,
     CronWorkflowListComponent,
-    CronWorkflowEditDialogComponent
+    CronWorkflowEditDialogComponent,
+    WorkflowParameterComponent
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,

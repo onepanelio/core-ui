@@ -10,9 +10,8 @@
   </div>
 
   <div class="page-body">
-
-    <app-activity-bar *ngIf="workflow?.phase" [status]="workflow.phase" class="mt-4">
-      <div class="d-inline-flex align-items-center">
+    <app-activity-bar #activityBar *ngIf="workflow?.phase" [status]="workflow.phase" class="mt-4">
+      <div class="d-flex align-items-center w-100">
         <app-status *ngIf="workflow" class="font-roboto-bold font-weight-bold" [phase]="workflow.phase"></app-status>
         <span *ngIf="workflow && workflow.succeeded" class="ml-1"> in </span>
         <app-clock *ngIf="workflow"
@@ -20,6 +19,13 @@
                    [startedAt]="workflow.workflowStatus.startedAt"
                    [finishedAt]="workflow.workflowStatus.finishedAt">
         </app-clock>
+
+        <div class="flex-grow-1">
+        </div>
+
+        <div *ngIf="activityBar.normalizedStatus === 'failed'" class="failed">
+          <button mat-flat-button color="warn" (click)="runAgain()">RUN AGAIN</button>
+        </div>
       </div>
 
       <div>
@@ -32,16 +38,37 @@
         <div class="page-title-text">
           <ng-container *ngIf="workflow">{{workflow.name}}</ng-container>
         </div>
+        <div class="actions">
+          <button mat-button color="primary" class="font-proxima-bold font-size-regular ml-2" (click)="onEdit()"><i class="fas fa-pencil-alt mr-2"></i> EDIT LABELS</button>
+          <button mat-button color="primary" class="font-proxima-bold font-size-regular ml-2" (click)="onEdit()"><i class="far fa-copy mr-2"></i> CLONE</button>
+          <button mat-button color="primary" class="font-proxima-bold font-size-regular ml-2" (click)="onShowTotalYaml()"><i class="fas fa-terminal mr-2"></i>VIEW YAML</button>
+        </div>
+      </div>
+      <div class="d-flex align-items-center font-roboto font-size-small color-medium-gray mt-3">
+        <div>
+          Started: <app-date *ngIf="workflow" [dateTime]="workflow.workflowStatus.startedAt"></app-date>
+        </div>
+        <div *ngIf="workflow?.workflowStatus?.finishedAt" class="ml-5">
+          Ended: <app-date *ngIf="workflow" [dateTime]="workflow.workflowStatus.finishedAt"></app-date>
+        </div>
+
+        <div *ngIf="labels?.length > 0"  class="ml-5">Labels</div>
+        <app-labels-list-view *ngIf="labels?.length > 0" [labels]="labels" class="d-inline-block ml-2"></app-labels-list-view>
       </div>
 
-      <div class="d-flex align-items-baseline mt-3">
-        <app-labels-list-view *ngIf="labels?.length > 0" [labels]="labels" class="d-inline-block mr-5"></app-labels-list-view>
-        <div class="actions font-roboto">
-          <a class="link-button" (click)="onEdit()">
-            <i class="fas fa-pencil-alt"></i>
-            <span class="ml-2">Edit labels</span>
-          </a>
-        </div>
+      <div class="op-h2 mt-4 mb-4">Parameters</div>
+      <ng-container *ngFor="let parameter of this.parameters; let index = index">
+        <app-workflow-parameter
+                *ngIf="index == 0 || showAllParameters"
+                [key]="parameter.name"
+                [value]="parameter.value"
+                class="d-block">
+        </app-workflow-parameter>
+      </ng-container>
+
+      <div class="font-roboto font-size-regular underline pointer-hover mt-3" (click)="this.toggleShowParameters()">
+        <span *ngIf="showAllParameters">Hide parameters</span>
+        <span *ngIf="!showAllParameters">Show all parameters</span>
       </div>
     </div>
 

@@ -37,6 +37,9 @@ export class ActivityBarComponent implements OnInit {
       }
     }
   }
+  get normalizedStatus(): NormalizedStatus {
+    return this._status;
+  }
 
   constructor() { }
 
