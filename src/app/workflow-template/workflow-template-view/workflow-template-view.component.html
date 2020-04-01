@@ -26,13 +26,14 @@
           </button>
         </div>
       </div>
-      <div>
+      <div class="d-flex align-items-baseline">
         <div *ngIf="workflowTemplate" class="info mt-2">
           <i class="far fa-calendar-check"></i>
           <span class="ml-2 font-roboto">Created</span>
           <app-date class="ml-2" [dateTime]="workflowTemplate.createdAt"></app-date>
         </div>
-        <app-labels-list-view [labels]="labels" class="d-inline-block mt-3"></app-labels-list-view>
+        <div *ngIf="labels?.length > 0"  class="font-roboto font-size-small color-medium-gray ml-5">Labels</div>
+        <app-labels-list-view [labels]="labels" class="d-inline-block ml-2"></app-labels-list-view>
       </div>
     </div>
 

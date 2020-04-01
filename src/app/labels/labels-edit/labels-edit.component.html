@@ -1,29 +1,31 @@
 <cdk-table *ngIf="items?.length > 0" [dataSource]="items" class="mb-8">
     <ng-container cdkColumnDef="key">
-        <cdk-header-cell *cdkHeaderCellDef>Key</cdk-header-cell>
+        <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
         <cdk-cell *cdkCellDef="let label" class="d-inline-flex flex-column">
-            <mat-form-field appearance="outline" class="small" floatLabel="never">
+            <mat-form-field appearance="outline" class="small">
+                <mat-label>Key</mat-label>
                 <input #inputKey matInput
                        [value]="label.item.key"
                        (keyup)="onKeyChange(label.item, inputKey.value)"
                        (focusout)="onKeyFocusOut(label)"
                        [formControl]="label.controlKey"/>
+                <mat-error class="color-danger font-size-small font-roboto ml-2">Must not be blank.</mat-error>
             </mat-form-field>
-            <span *ngIf="label.controlKey.invalid" class="color-danger font-size-small font-roboto ml-2">Must not be blank.</span>
         </cdk-cell>
     </ng-container>
 
     <ng-container cdkColumnDef="value">
-        <cdk-header-cell *cdkHeaderCellDef>Value</cdk-header-cell>
+        <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
         <cdk-cell *cdkCellDef="let label" class="d-inline-flex flex-column">
             <mat-form-field appearance="outline" class="small">
+                <mat-label>Value</mat-label>
                 <input #inputValue matInput
                        [value]="label.item.value"
                        (keyup)="onValueChange(label.item, inputValue.value)"
                        (focusout)="onValueFocusOut(label)"
                        [formControl]="label.controlValue"/>
+                <mat-error class="color-danger font-size-small font-roboto ml-2">Must not be blank.</mat-error>
             </mat-form-field>
-            <span *ngIf="label.controlValue.invalid" class="color-danger font-size-small font-roboto ml-2">Must not be blank.</span>
         </cdk-cell>
     </ng-container>
 
@@ -37,13 +39,13 @@
     </ng-container>
 
     <!-- Header and Row Declarations -->
-    <cdk-header-row *cdkHeaderRowDef="displayedColumns" class="d-flex op-border-bottom-2 font-roboto font-weight-bold"></cdk-header-row>
+    <cdk-header-row *cdkHeaderRowDef="displayedColumns" class="d-flex font-roboto font-weight-bold"></cdk-header-row>
     <cdk-row *cdkRowDef="let row; columns: displayedColumns"
              class="d-flex align-items-baseline flex-wrap">
     </cdk-row>
 </cdk-table>
 
-<button mat-stroked-button color="primary" class="font-roboto-bold font-weight-bold font-size-regular add-environment-variable op-rounded w-100 vertical-align-icon label-edit-add mt-3" (click)="onAdd()">
+<button mat-stroked-button color="primary" class="font-roboto-bold font-weight-bold font-size-regular add-environment-variable op-rounded vertical-align-icon label-edit-add mt-3" (click)="onAdd()">
     <mat-icon class="font-size-regular">add_circle</mat-icon>
-    ADD LABEL
+    ADD ANOTHER LABEL
 </button>

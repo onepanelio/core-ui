@@ -51,7 +51,7 @@
           Ended: <app-date *ngIf="workflow" [dateTime]="workflow.workflowStatus.finishedAt"></app-date>
         </div>
 
-        <div *ngIf="labels?.length > 0"  class="ml-5">Labels</div>
+        <div *ngIf="labels?.length > 0" class="ml-5">Labels</div>
         <app-labels-list-view *ngIf="labels?.length > 0" [labels]="labels" class="d-inline-block ml-2"></app-labels-list-view>
       </div>
 
