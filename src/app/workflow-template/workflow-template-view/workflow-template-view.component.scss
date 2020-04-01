@@ -31,6 +31,10 @@
   display: none;
 }
 
+/deep/ app-cron-workflow-list cdk-header-row {
+  display: none;
+}
+
 /deep/ .mat-tab-labels {
   opacity: 1;
   align-items: baseline;

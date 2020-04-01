@@ -65,25 +65,30 @@
             <a class="action underline pointer-hover" (click)="executeWorkflow($event)" >Execute a workflow</a>
           </app-call-to-action>
       </mat-tab>
-      <mat-tab label="Template">
-        <ng-template matTabContent>
-          <div class="op-border mt-1 hide-overflow">
-            <div class="definition-header op-border-bottom"></div>
-            <div class="two-panels">
-              <div ace-editor
-                   [mode]="'yaml'"
-                   [text]="manifestText"
-                   [readOnly]="true"
-                   [options]="{
-                  showInvisibles: false,
-                  showPrintMargin: false,
-                  scrollPastEnd: 1,
-                  showLineNumbers: true
-                }"></div>
-              <app-dag></app-dag>
-            </div>
-          </div>
-        </ng-template>
+
+      <mat-tab label="Scheduled">
+        <div *ngIf="hasCronWorkflows">
+          <app-cron-workflow-list
+                  *ngIf="cronWorkflows"
+                  [namespace]="namespace"
+                  [template]="workflowTemplate"
+                  [cronWorkflows]="cronWorkflows"
+                  (listRowsModified)="getCronWorkflows()">
+          </app-cron-workflow-list>
+          <mat-paginator class="no-background font-size-small"
+                         *ngIf="cronWorkflowResponse"
+                         (page)="onCronWorkflowPageChange($event)"
+                         [pageIndex]="this.cronWorkflowPagination.page"
+                         [length]="this.cronWorkflowResponse.totalCount"
+                         [pageSize]="this.cronWorkflowPagination.pageSize"
+                         [pageSizeOptions]="[5, 10, 25, 100]">
+          </mat-paginator>
+        </div>
+        <app-call-to-action *ngIf="showWorkflowExecutionsCallToAction">
+          <div class="header">Get started with workflow executions</div>
+          <div class="body">This is where all your workflow executions live.</div>
+          <a class="action underline pointer-hover" (click)="executeWorkflow($event)" >Execute a workflow</a>
+        </app-call-to-action>
       </mat-tab>
     </mat-tab-group>
   </div>

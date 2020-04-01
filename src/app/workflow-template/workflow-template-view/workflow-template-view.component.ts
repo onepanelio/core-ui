@@ -21,10 +21,11 @@ import { Alert } from "../../alert/alert";
 import {
   CronWorkflow,
   CronWorkflowServiceService,
-  KeyValue,
+  KeyValue, ListCronWorkflowsResponse,
   WorkflowExecution,
   WorkflowServiceService
 } from "../../../api";
+import { MatTabGroup } from "@angular/material/tabs";
 
 export class Pagination {
   page: number = 0;
@@ -47,15 +48,32 @@ export class WorkflowTemplateViewComponent implements OnInit {
     return this.dagComponent;
   }
 
+  @ViewChild(MatTabGroup, {static: false}) matTabGroup: MatTabGroup;
+
   manifestText: string;
   namespace: string;
   uid: string;
 
   workflows: Workflow[] = [];
+  cronWorkflowResponse: ListCronWorkflowsResponse;
+  cronWorkflows: CronWorkflow[] = [];
   workflowResponse: WorkflowResponse;
   workflowPagination = new Pagination();
-  hasWorkflowExecutions = false;
+  cronWorkflowPagination = new Pagination();
+
+  private _hasWorkflowExecutions = false;
+  set hasWorkflowExecutions(value: boolean) {
+    this._hasWorkflowExecutions = value;
+
+    this.updateShowWorkflowExecutionCallToAction();
+  }
+  get hasWorkflowExecutions(): boolean {
+    return this._hasWorkflowExecutions
+  }
+
+  hasCronWorkflows = false;
   labels = new Array<KeyValue>();
+  showWorkflowExecutionsCallToAction: boolean = false;
 
   private workflowTemplateDetail: WorkflowTemplateDetail;
 
@@ -109,6 +127,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
       this.getWorkflowTemplate();
       this.getWorkflowTemplateVersions();
       this.getWorkflows();
+      this.getCronWorkflows();
       this.getLabels();
     });
   }
@@ -187,8 +206,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
           startingDeadlineSeconds: result.cron.startingDeadlineSeconds,
           successfulJobsHistoryLimit: result.cron.successfulJobsHistoryLimit,
           failedJobsHistoryLimit: result.cron.failedJobsHistoryLimit,
-          workflowTemplate: this.workflowTemplate,
-          parameters: result.parameters,
+          workflowExecution: result.workflowExecution
         };
 
         this.executeCronWorkflowRequest(request, result.labels);
@@ -227,7 +245,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
   protected executeCronWorkflowRequest(data: CronWorkflow, labels: any) {
       this.cronWorkflowService.createCronWorkflow(this.namespace, data)
           .subscribe(res => {
-            console.log(res);
+            this.getCronWorkflows();
           }, err => {
 
           });
@@ -247,9 +265,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
   }
 
   onTabChange(event: MatTabChangeEvent) {
-    if (event.index === 1) {
-      this.showDag();
-    }
+    this.updateShowWorkflowExecutionCallToAction();
   }
 
   editSelectedWorkflowTemplateVersion() {
@@ -261,6 +277,13 @@ export class WorkflowTemplateViewComponent implements OnInit {
     this.workflowPagination.pageSize = event.pageSize;
 
     this.getWorkflows();
+  }
+
+  onCronWorkflowPageChange(event: PageEvent) {
+    this.cronWorkflowPagination.page = event.pageIndex;
+    this.cronWorkflowPagination.pageSize = event.pageSize;
+
+    this.getCronWorkflows();
   }
 
   deleteWorkflowTemplate() {
@@ -300,5 +323,27 @@ export class WorkflowTemplateViewComponent implements OnInit {
 
           this.labels = res.labels;
         })
+  }
+
+  getCronWorkflows() {
+    // Tab is 0 based, so we add 1, since API is 1 based.
+    const page = this.cronWorkflowPagination.page + 1;
+
+    this.cronWorkflowService.listCronWorkflows(this.namespace, this.cronWorkflowPagination.pageSize, page)
+        .subscribe(res => {
+          console.log(res);
+          this.cronWorkflowResponse = res;
+          this.cronWorkflows = res.cronWorkflows;
+
+          this.hasCronWorkflows = !(page === 1 && !res.cronWorkflows);
+        })
+  }
+
+  updateShowWorkflowExecutionCallToAction() {
+    if(!this.matTabGroup) {
+      return;
+    }
+
+    this.showWorkflowExecutionsCallToAction = !this.hasWorkflowExecutions && this.matTabGroup.selectedIndex === 0
   }
 }

@@ -1,0 +1,39 @@
+<div class="cron-workflow-executions-list">
+    <cdk-table [dataSource]="cronWorkflows">
+        <ng-container cdkColumnDef="name">
+            <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+            <cdk-cell *cdkCellDef="let workflow">
+                <span class="name-link">{{workflow.name}}</span>
+            </cdk-cell>
+        </ng-container>
+
+        <ng-container cdkColumnDef="schedule">
+            <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+            <cdk-cell *cdkCellDef="let workflow" class="font-size-regular font-roboto ml-5 d-flex align-items-baseline">
+                <i class="fas fa-clock color-medium-gray"></i> <div class="font-weight-bold color-black ml-2">Scheduled: <span class="font-medium-gray ml-3">{{workflow.schedule}}</span></div>
+            </cdk-cell>
+        </ng-container>
+
+        <ng-container cdkColumnDef="actions">
+            <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+            <cdk-cell *cdkCellDef="let workflow">
+                <div>
+                    <button mat-button color="primary" class="font-proxima-bold font-size-regular ml-2" (click)="onEdit(workflow)">EDIT</button>
+                    <button mat-button color="primary" class="font-proxima-bold font-size-regular ml-2" (click)="onExecute(workflow)">EXECUTE</button>
+                    <button mat-button color="primary" class="font-proxima-bold font-size-regular ml-2" (click)="onDelete(workflow)">DELETE</button>
+                </div>
+            </cdk-cell>
+        </ng-container>
+
+        <ng-container cdkColumnDef="spacer">
+            <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+            <cdk-cell *cdkCellDef="let workflow" class="flex-grow-1"></cdk-cell>
+        </ng-container>
+
+        <!-- Header and Row Declarations -->
+        <cdk-header-row *cdkHeaderRowDef="displayedColumns" class="op-table-header"></cdk-header-row>
+        <cdk-row *cdkRowDef="let row; columns: displayedColumns"
+                 class="d-flex op-table-row align-items-center">
+        </cdk-row>
+    </cdk-table>
+</div>

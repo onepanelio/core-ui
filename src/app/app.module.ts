@@ -83,6 +83,8 @@ import { MatChipsModule } from "@angular/material/chips";
 import { LabelsListViewComponent } from './labels/labels-list-view/labels-list-view.component';
 import { LabelsEditComponent } from './labels/labels-edit/labels-edit.component';
 import { LabelEditDialogComponent } from './labels/label-edit-dialog/label-edit-dialog.component';
+import { CronWorkflowListComponent } from './cron-workflow/cron-workflow-list/cron-workflow-list.component';
+import { CronWorkflowEditDialogComponent } from './cron-workflow/cron-workflow-edit-dialog/cron-workflow-edit-dialog.component';
 
 @NgModule({
   declarations: [
@@ -138,10 +140,13 @@ import { LabelEditDialogComponent } from './labels/label-edit-dialog/label-edit-
     RadioComponent,
     LabelsListViewComponent,
     LabelsEditComponent,
-    LabelEditDialogComponent
+    LabelEditDialogComponent,
+    CronWorkflowListComponent,
+    CronWorkflowEditDialogComponent
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,
+        CronWorkflowEditDialogComponent,
         ConfirmationDialogComponent,
         ClosableSnackComponent,
         LabelEditDialogComponent
