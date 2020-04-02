@@ -60,7 +60,7 @@
                   [pageSizeOptions]="[5, 10, 25, 100]">
           </mat-paginator>
         </div>
-          <app-call-to-action *ngIf="!hasWorkflowExecutions">
+          <app-call-to-action *ngIf="showWorkflowExecutionsCallToAction">
             <div class="header">Get started with workflow executions</div>
             <div class="body">This is where all your workflow executions live.</div>
             <a class="action underline pointer-hover" (click)="executeWorkflow($event)" >Execute a workflow</a>
@@ -85,10 +85,10 @@
                          [pageSizeOptions]="[5, 10, 25, 100]">
           </mat-paginator>
         </div>
-        <app-call-to-action *ngIf="showWorkflowExecutionsCallToAction">
-          <div class="header">Get started with workflow executions</div>
-          <div class="body">This is where all your workflow executions live.</div>
-          <a class="action underline pointer-hover" (click)="executeWorkflow($event)" >Execute a workflow</a>
+        <app-call-to-action *ngIf="showCronWorkflowsCallToAction">
+          <div class="header">Get started with cron workflows</div>
+          <div class="body">This is where all your cron workflows live.</div>
+          <a class="action underline pointer-hover" (click)="executeWorkflow($event, true)">Schedule a cron workflow</a>
         </app-call-to-action>
       </mat-tab>
     </mat-tab-group>

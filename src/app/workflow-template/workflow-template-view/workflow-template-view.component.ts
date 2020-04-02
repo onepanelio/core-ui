@@ -71,9 +71,19 @@ export class WorkflowTemplateViewComponent implements OnInit {
     return this._hasWorkflowExecutions
   }
 
-  hasCronWorkflows = false;
+  private _hasCronWorkflows = false;
+  set hasCronWorkflows(value: boolean) {
+    this._hasCronWorkflows = value;
+
+    this.updateShowCronWorkflowsCallToAction();
+  }
+  get hasCronWorkflows(): boolean {
+    return this._hasCronWorkflows;
+  }
+
   labels = new Array<KeyValue>();
-  showWorkflowExecutionsCallToAction: boolean = false;
+  showWorkflowExecutionsCallToAction = false;
+  showCronWorkflowsCallToAction = false;
 
   private workflowTemplateDetail: WorkflowTemplateDetail;
 
@@ -178,7 +188,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
       });
   }
 
-  executeWorkflow(e?: any) {
+  executeWorkflow(e?: any, cron: boolean = false) {
     if(e) {
       e.preventDefault();
     }
@@ -186,7 +196,10 @@ export class WorkflowTemplateViewComponent implements OnInit {
     const dialogRef = this.dialog.open(WorkflowExecuteDialogComponent, {
       width: '60vw',
       maxHeight: '100vh',
-      data: {manifest: this.manifestText}
+      data: {
+        manifest: this.manifestText,
+        cron: cron,
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -266,6 +279,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
 
   onTabChange(event: MatTabChangeEvent) {
     this.updateShowWorkflowExecutionCallToAction();
+    this.updateShowCronWorkflowsCallToAction();
   }
 
   editSelectedWorkflowTemplateVersion() {
@@ -328,8 +342,9 @@ export class WorkflowTemplateViewComponent implements OnInit {
   getCronWorkflows() {
     // Tab is 0 based, so we add 1, since API is 1 based.
     const page = this.cronWorkflowPagination.page + 1;
+    const pageSize = this.cronWorkflowPagination.pageSize;
 
-    this.cronWorkflowService.listCronWorkflows(this.namespace, this.cronWorkflowPagination.pageSize, page)
+    this.cronWorkflowService.listCronWorkflows(this.namespace, this.uid, pageSize, page)
         .subscribe(res => {
           this.cronWorkflowResponse = res;
           this.cronWorkflows = res.cronWorkflows;
@@ -343,6 +358,14 @@ export class WorkflowTemplateViewComponent implements OnInit {
       return;
     }
 
-    this.showWorkflowExecutionsCallToAction = !this.hasWorkflowExecutions && this.matTabGroup.selectedIndex === 0
+    this.showWorkflowExecutionsCallToAction = !this.hasWorkflowExecutions && this.matTabGroup.selectedIndex === 0;
+  }
+
+  updateShowCronWorkflowsCallToAction() {
+    if(!this.matTabGroup) {
+      return;
+    }
+
+    this.showCronWorkflowsCallToAction = !this.hasCronWorkflows && this.matTabGroup.selectedIndex === 1;
   }
 }

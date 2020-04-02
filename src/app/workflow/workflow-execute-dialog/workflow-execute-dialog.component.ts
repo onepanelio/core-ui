@@ -10,6 +10,7 @@ import { CronWorkflowFormatter } from "../../cron-workflow/models";
 
 export interface WorkflowExecuteDialogData {
   manifest: string;
+  cron: boolean;
 }
 
 @Component({
@@ -44,6 +45,9 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
       public dialogRef: MatDialogRef<WorkflowExecuteDialogComponent>,
       @Inject(MAT_DIALOG_DATA) public data: WorkflowExecuteDialogData) {
     this.setManifest(data.manifest);
+    if(data.cron) {
+      this.showCron = true;
+    }
   }
 
   ngOnInit() {

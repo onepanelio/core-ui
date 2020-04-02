@@ -25,7 +25,7 @@
 
     <div class="mt-5">
         <div class="op-h2 mb-5 font-roboto">Scheduling</div>
-        <mat-checkbox (change)="onCronCheck($event)" >Schedule workflow execution</mat-checkbox>
+        <mat-checkbox [checked]="showCron" (change)="onCronCheck($event)" >Schedule workflow execution</mat-checkbox>
         <div class="align-with-checkbox color-medium-gray">
             Use Cron expression to schedule this workflow to execute at a certain time or reoccurring interval.
             <a href="#" class="font-roboto color-medium-gray">More info</a>
