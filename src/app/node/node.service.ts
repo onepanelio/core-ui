@@ -146,10 +146,6 @@ export class NodeRenderer {
       html += `<span class="name font-roboto">${nameToShow}</span>`;
     }
 
-    if(root) {
-      html += '</div>';
-    }
-
     html += '</div>';
 
     return html;
