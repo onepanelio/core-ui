@@ -79,6 +79,8 @@ import { TextareaComponent } from "./fields/textarea/textarea.component";
 import { SelectComponent } from './fields/select/select.component';
 import { RadioComponent } from './fields/radio/radio.component';
 import { MatTooltipModule } from "@angular/material/tooltip";
+import { NamespaceManagerComponent } from './namespace/namespace-manager/namespace-manager.component';
+import { CreateNamespaceDialogComponent } from './namespace/create-namespace-dialog/create-namespace-dialog.component';
 
 @NgModule({
   declarations: [
@@ -131,12 +133,15 @@ import { MatTooltipModule } from "@angular/material/tooltip";
     FormComponent,
     TextareaComponent,
     SelectComponent,
-    RadioComponent
+    RadioComponent,
+    NamespaceManagerComponent,
+    CreateNamespaceDialogComponent
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,
         ConfirmationDialogComponent,
-        ClosableSnackComponent
+        ClosableSnackComponent,
+        CreateNamespaceDialogComponent
     ],
     imports: [
         BrowserModule,

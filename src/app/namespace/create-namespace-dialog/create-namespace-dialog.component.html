@@ -1,0 +1,17 @@
+<div class="op-h1">Create Namespace</div>
+
+<div>
+    <form>
+        <mat-form-field appearance="outline">
+            <mat-label>Name</mat-label>
+            <input [formControl]="namespaceInput" matInput />
+            <mat-error>Must not be blank</mat-error>
+        </mat-form-field>
+    </form>
+</div>
+
+<hr class="divider op-just-border-top border-gray mt-5" />
+<div class="d-flex justify-content-between w-100 mt-5">
+    <button mat-button class="font-medium-gray cancel-button" (click)="cancel()">CANCEL</button>
+    <button mat-flat-button color="accent" class="op-rounded op-button" (click)="create()">Create</button>
+</div>
