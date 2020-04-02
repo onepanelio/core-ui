@@ -6,11 +6,6 @@
             class="parameters mt-7 mr-12 mb-3 d-block">
     </app-form>
 
-    <div>
-        <div class="op-h2">Labels</div>
-        <app-labels-edit class="d-inline-block mt-3" [labels]="labels" ></app-labels-edit>
-    </div>
-
     <div class="environment bg-primary-light op-rounded-regular mt-5">
         <div class="font-roboto-bold font-weight-bold font-size-regular">Environment variables</div>
         <div class="mt-1 font-roboto font-size-regular color-black">
@@ -22,6 +17,15 @@
             </div>
         </div>
     </div>
+
+    <div class="op-border-bottom mt-8 mb-5"></div>
+    
+    <div>
+        <div class="op-h2">Labels</div>
+        <app-labels-edit class="d-inline-block mt-3" [labels]="labels" ></app-labels-edit>
+    </div>
+
+    <div class="op-border-bottom mt-8 mb-5"></div>
 
     <div class="mt-5">
         <div class="op-h2 mb-5 font-roboto">Scheduling</div>

@@ -41,7 +41,7 @@ export class CronWorkflowEditDialogComponent implements OnInit {
   private setManifest(data: CronWorkflowEditData) {
     let parameters = WorkflowExecuteDialogComponent.pluckParameters(data.manifest);
 
-    if(data.cronWorkflow.workflowExecution) {
+    if(data.cronWorkflow.workflowExecution && data.cronWorkflow.workflowExecution.parameters) {
       for (let dataParam of data.cronWorkflow.workflowExecution.parameters) {
         for(let param of parameters) {
           if(param.name === dataParam.name) {
