@@ -37,16 +37,32 @@ $spacer: 0.25rem;
     margin-top: ($i * $spacer) !important;
   }
 
+  .pt-#{$i} {
+    padding-top: ($i * $spacer) !important;
+  }
+
   .mr-#{$i} {
     margin-right: ($i * $spacer) !important;
+  }
+
+  .pr-#{$i} {
+    padding-right: ($i * $spacer) !important;
   }
 
   .mb-#{$i} {
     margin-bottom: ($i * $spacer) !important;
   }
 
+  .pb-#{$i} {
+    padding-bottom: ($i * $spacer) !important;
+  }
+
   .ml-#{$i} {
     margin-left: ($i * $spacer) !important;
+  }
+
+  .pl-#{$i} {
+    padding-left: ($i * $spacer) !important;
   }
 }
 
@@ -165,6 +181,11 @@ a {
 
 .op-rounded-regular {
   border-radius: $cornerRadiusRegular !important;
+}
+
+.op-round-bottom {
+  border-bottom-left-radius: $cornerRadiusSmall !important;
+  border-bottom-right-radius: $cornerRadiusSmall !important;
 }
 
 .op-button {
@@ -322,7 +343,6 @@ mat-tab-group.no-bottom-border .mat-tab-header {
 }
 
 
-
 .op-form {
   @include op-info-box-base();
 
@@ -388,4 +408,10 @@ button.logout {
 
 .mat-form-field-appearance-outline .mat-form-field-label {
   top: 1.7em !important;
+}
+
+.fix-mat-overflow {
+  .mat-form-field-label-wrapper {
+    overflow: visible;
+  }
 }

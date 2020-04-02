@@ -12,6 +12,10 @@
   @include op-border(2px);
 }
 
+.op-just-border {
+  @include op-just-border();
+}
+
 .op-border-top {
   border-top: solid 1px $gray;
 }
@@ -28,4 +32,8 @@
 
 .op-border-bottom {
   border-bottom: solid 1px $gray;
+}
+
+.no-border-top {
+  border-top: none !important;
 }

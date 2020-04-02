@@ -7,9 +7,12 @@ import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { filter } from "rxjs/operators";
 import { MatSelect } from "@angular/material/select";
-import { NamespaceServiceService } from "../api";
+import { Namespace, NamespaceServiceService } from "../api";
 import { AuthService } from "./auth/auth.service";
 import { environment } from "../environments/environment";
+import { MatDialog } from "@angular/material/dialog";
+import { WorkflowExecuteDialogComponent } from "./workflow/workflow-execute-dialog/workflow-execute-dialog.component";
+import { CreateNamespaceDialogComponent } from "./namespace/create-namespace-dialog/create-namespace-dialog.component";
 
 @Component({
   selector: 'app-root',
@@ -23,12 +26,14 @@ export class AppComponent implements OnInit {
   activeRoute = 'templates';
   loggingIn = false;
   version: string = '1.0.0';
+  showNamespaceManager = false;
 
   constructor(public namespaceTracker: NamespaceTracker,
               private authService: AuthService,
               private namespaceService: NamespaceServiceService,
               private activatedRoute: ActivatedRoute,
               private router: Router,
+              private dialog: MatDialog,
               private snackbar: MatSnackBar) {
 
       this.version = environment.version;
@@ -65,13 +70,38 @@ export class AppComponent implements OnInit {
       this.namespaceTracker.getNamespaces();
   }
 
-  onNamespaceChange() {
+  onNewNamespace() {
+      const dialogRef = this.dialog.open(CreateNamespaceDialogComponent, {
+          maxHeight: '100vh',
+      });
+
+      dialogRef.afterClosed().subscribe(namespaceName => {
+          if(!namespaceName) {
+              return;
+          }
+
+          let namespaceData: Namespace = {
+            name: namespaceName
+          };
+
+          this.namespaceService.createNamespace(namespaceData)
+              .subscribe(res => {
+                this.onNamespaceChange(namespaceName);
+                return;
+              });
+      })
+  }
+
+  onNamespaceChange(newNamespace: string) {
+    this.showNamespaceManager = false;
+    this.namespaceTracker.activeNamespace = newNamespace;
+
     this.snackbar.open(`Switched to namespace '${this.namespaceTracker.activeNamespace}'`, 'OK');
     this.router.navigate(['/', this.namespaceTracker.activeNamespace, 'workflow-templates'])
   }
 
   onFormFieldClick() {
-      this.matSelect.open();
+      this.showNamespaceManager = !this.showNamespaceManager;
   }
 
   logout() {
