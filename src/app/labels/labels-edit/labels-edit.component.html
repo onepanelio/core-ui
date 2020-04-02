@@ -1,7 +1,7 @@
 <cdk-table *ngIf="items?.length > 0" [dataSource]="items" class="mb-8">
     <ng-container cdkColumnDef="key">
         <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
-        <cdk-cell *cdkCellDef="let label" class="d-inline-flex flex-column">
+        <cdk-cell *cdkCellDef="let label" class="d-flex flex-column flex-grow-3">
             <mat-form-field appearance="outline" class="small">
                 <mat-label>Key</mat-label>
                 <input #inputKey matInput
@@ -15,7 +15,7 @@
 
     <ng-container cdkColumnDef="value">
         <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
-        <cdk-cell *cdkCellDef="let label" class="d-inline-flex flex-column">
+        <cdk-cell *cdkCellDef="let label" class="d-inline-flex flex-column flex-grow-5">
             <mat-form-field appearance="outline" class="small">
                 <mat-label>Value</mat-label>
                 <input #inputValue matInput
