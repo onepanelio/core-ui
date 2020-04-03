@@ -15,5 +15,8 @@ import { Namespace } from './namespace';
 export interface ListNamespacesResponse { 
     count?: number;
     namespaces?: Array<Namespace>;
+    page?: number;
+    pages?: number;
+    totalCount?: number;
 }
 

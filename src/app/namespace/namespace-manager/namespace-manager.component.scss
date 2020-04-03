@@ -1,0 +1,17 @@
+@import '../../../styles/colors';
+
+.namespace {
+  padding-top: 15px;
+  padding-bottom: 15px;
+
+  border-bottom: solid 1px $gray;
+
+  &:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+}

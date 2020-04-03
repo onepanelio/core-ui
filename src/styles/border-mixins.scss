@@ -4,3 +4,7 @@
   border: solid 1px $gray;
   border-radius: $radius;
 }
+
+@mixin op-just-border($borderWidth:1px) {
+  border: solid $borderWidth $gray;
+}

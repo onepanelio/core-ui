@@ -86,6 +86,8 @@ import { LabelEditDialogComponent } from './labels/label-edit-dialog/label-edit-
 import { CronWorkflowListComponent } from './cron-workflow/cron-workflow-list/cron-workflow-list.component';
 import { CronWorkflowEditDialogComponent } from './cron-workflow/cron-workflow-edit-dialog/cron-workflow-edit-dialog.component';
 import { WorkflowParameterComponent } from './workflow/workflow-parameter/workflow-parameter.component';
+import { NamespaceManagerComponent } from './namespace/namespace-manager/namespace-manager.component';
+import { CreateNamespaceDialogComponent } from './namespace/create-namespace-dialog/create-namespace-dialog.component';
 
 @NgModule({
   declarations: [
@@ -144,14 +146,17 @@ import { WorkflowParameterComponent } from './workflow/workflow-parameter/workfl
     LabelEditDialogComponent,
     CronWorkflowListComponent,
     CronWorkflowEditDialogComponent,
-    WorkflowParameterComponent
+    WorkflowParameterComponent,
+    NamespaceManagerComponent,
+    CreateNamespaceDialogComponent
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,
         CronWorkflowEditDialogComponent,
         ConfirmationDialogComponent,
         ClosableSnackComponent,
-        LabelEditDialogComponent
+        LabelEditDialogComponent,
+        CreateNamespaceDialogComponent
     ],
     imports: [
         BrowserModule,
