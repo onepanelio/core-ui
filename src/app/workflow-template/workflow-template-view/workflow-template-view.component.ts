@@ -228,7 +228,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
         const request: CreateWorkflow = {
           namespace: this.namespace,
           workflowTemplate: this.workflowTemplate,
-          parameters: result.parameters,
+          parameters: result.workflowExecution.parameters,
         };
 
         this.executeWorkflowRequest(request, result.labels);
