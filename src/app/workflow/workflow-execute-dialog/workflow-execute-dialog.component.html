@@ -29,9 +29,9 @@
     <div class="mt-5">
         <div class="op-h2 mb-5 font-roboto">Scheduling</div>
         <mat-checkbox [checked]="showCron" (change)="onCronCheck($event)" >Schedule workflow execution</mat-checkbox>
-        <div class="align-with-checkbox color-medium-gray">
+        <div class="align-with-checkbox color-medium-gray font-roboto">
             Use Cron expression to schedule this workflow to execute at a certain time or reoccurring interval.
-            <a href="#" class="font-roboto color-medium-gray">More info</a>
+            <a href="https://en.wikipedia.org/wiki/Cron#Overview" target="_blank" class="font-roboto color-medium-gray">More info</a>
         </div>
         <ace-editor *ngIf="showCron"
                 style="width: 400px; height: 400px;"
