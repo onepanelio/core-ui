@@ -117,20 +117,13 @@ export class NodeRenderer {
 
   static nodeTemplate(node: any, root = false) {
     let nodeRootClasses = 'node-root ';
-    if ( (node.type === 'StepGroup' || node.type === 'DAG') && !root) {
+    if (node.type === 'StepGroup' || node.type === 'DAG') {
       nodeRootClasses += ' dashed-circle';
     } else {
       nodeRootClasses += ' rect';
     }
 
-    let html = '';
-    if(root) {
-      nodeRootClasses += ' summary name font-roboto font-weight-bold text-center';
-      html += `<div id="${node.id}" class="${nodeRootClasses}">START</div>`;
-
-    } else {
-      html += `<div id="${node.id}" class="${nodeRootClasses}">`;
-    }
+    let html = `<div id="${node.id}" class="${nodeRootClasses}">`;
 
     const showInfo = !(node.type === 'StepGroup' || node.type === 'DAG');
 
@@ -151,10 +144,6 @@ export class NodeRenderer {
       }
 
       html += `<span class="name font-roboto">${nameToShow}</span>`;
-    }
-
-    if(root) {
-      html += '</div>';
     }
 
     html += '</div>';
@@ -441,7 +430,7 @@ export class NodeRenderer {
   static getNodeDisplayProperties(node: any, root = false): object {
     const shape = NodeRenderer.getNodeShape(node);
 
-    if (shape === 'Rectangle' || root) {
+    if (shape === 'Rectangle') {
       let height = NodeRenderer.nodeHeight;
       if(root) {
         height = NodeRenderer.summaryNodeHeight;
@@ -454,7 +443,7 @@ export class NodeRenderer {
       }
     }
 
-    if (shape === 'Dashed-Circle') {
+    if (shape === 'Dashed-Circle' || root) {
       return {
         height: 30,
         width: 30,
