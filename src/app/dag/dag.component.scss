@@ -117,6 +117,11 @@
   stroke-width: 2px;
 }
 
+/deep/ .node.root circle {
+  fill: $primary-light;
+  stroke: $primary-lighter;
+}
+
 /deep/ .edgePath path {
   stroke: #bbb;
   fill: #bbb;
