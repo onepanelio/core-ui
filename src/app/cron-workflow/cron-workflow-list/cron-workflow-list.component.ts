@@ -60,8 +60,9 @@ export class CronWorkflowListComponent implements OnInit {
     };
 
     this.dialogRef = this.dialog.open(CronWorkflowEditDialogComponent, {
+      width: '60vw',
+      maxHeight: '100vh',
       data: data,
-      maxHeight: "100vh"
     });
 
     this.dialogRef.afterClosed().subscribe(res => {
