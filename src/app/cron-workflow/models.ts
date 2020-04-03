@@ -66,7 +66,7 @@ export class CronWorkflowFormatter {
         if(withComments) {
             result += "# Timezone during which the Workflow will be run. E.g. America/Los_Angeles\n";
         }
-        result += "timezone: " + (input.timezone || "America/Los_Angeles") + "\n";
+        result += "timezone: " + (input.timezone || "Etc/UTC") + "\n";
 
         if(withComments) {
             result += "# If true Workflow scheduling will not occur.\n";
@@ -74,7 +74,12 @@ export class CronWorkflowFormatter {
         result += "suspend: " + (input.suspend || "false") + "\n";
 
         if(withComments) {
-            result += "# Policy that determines what to do if multiple Workflows are scheduled at the same time. Available      options: Allow: allow all, Replace: remove all old before scheduling a new, Forbid: do not allow any new while there are old\n";
+            result += `# Policy that determines what to do if multiple Workflows are scheduled at the same time.
+# Available options:
+#   Allow: allow all
+#   Replace: remove all old before scheduling a new
+#   Forbid: do not allow any new while there are old
+`;
         }
         result += "concurrencyPolicy: " + (input.concurrencyPolicy || "Allow") + "\n";
 
