@@ -218,7 +218,6 @@ export class WorkflowTemplateViewComponent implements OnInit {
         result.workflowExecution.workflowTemplate = this.workflowTemplate;
 
         const request: CronWorkflow = {
-          name: 'test-name',
           schedule: result.cron.schedule,
           timezone: result.cron.timezone,
           suspend: result.cron.suspend,
@@ -268,7 +267,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
             this.getCronWorkflows();
             this.matTabGroup.selectedIndex = 1;
             this.alertService.storeAlert(new Alert({
-              message: `You have scheduled "${data.name}"`,
+              message: `You have scheduled "${res.name}"`,
               type: "success"
             }))
           }, err => {
