@@ -266,6 +266,11 @@ export class WorkflowTemplateViewComponent implements OnInit {
       this.cronWorkflowService.createCronWorkflow(this.namespace, data)
           .subscribe(res => {
             this.getCronWorkflows();
+            this.matTabGroup.selectedIndex = 1;
+            this.alertService.storeAlert(new Alert({
+              message: `You have scheduled "${data.name}"`,
+              type: "success"
+            }))
           }, err => {
 
           });
