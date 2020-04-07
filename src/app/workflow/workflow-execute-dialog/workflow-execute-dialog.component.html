@@ -51,5 +51,8 @@
 <hr class="divider op-just-border-top border-gray mt-5" />
 <div class="d-flex justify-content-between w-100 mt-5">
     <button mat-button class="font-medium-gray cancel-button" (click)="cancel()">CANCEL</button>
-    <button mat-flat-button color="accent" class="op-rounded op-button" (click)="execute()">Execute</button>
+    <button mat-flat-button color="accent" class="op-rounded op-button" (click)="execute()">
+        <ng-container *ngIf="!showCron">Execute</ng-container>
+        <ng-container *ngIf="showCron">Schedule</ng-container>
+    </button>
 </div>
