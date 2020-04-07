@@ -280,6 +280,132 @@ export class WorkflowServiceService {
     }
 
     /**
+     * @param namespace 
+     * @param uid 
+     * @param name 
+     * @param version 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public cloneWorkflowTemplate(namespace: string, uid: string, name: string, version?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WorkflowTemplate>;
+    public cloneWorkflowTemplate(namespace: string, uid: string, name: string, version?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WorkflowTemplate>>;
+    public cloneWorkflowTemplate(namespace: string, uid: string, name: string, version?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WorkflowTemplate>>;
+    public cloneWorkflowTemplate(namespace: string, uid: string, name: string, version?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        if (namespace === null || namespace === undefined) {
+            throw new Error('Required parameter namespace was null or undefined when calling cloneWorkflowTemplate.');
+        }
+        if (uid === null || uid === undefined) {
+            throw new Error('Required parameter uid was null or undefined when calling cloneWorkflowTemplate.');
+        }
+        if (name === null || name === undefined) {
+            throw new Error('Required parameter name was null or undefined when calling cloneWorkflowTemplate.');
+        }
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (version !== undefined && version !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>version, 'version');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // authentication (Bearer) required
+        if (this.configuration.apiKeys && this.configuration.apiKeys["authorization"]) {
+            headers = headers.set('authorization', this.configuration.apiKeys["authorization"]);
+        }
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<WorkflowTemplate>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflow_templates/${encodeURIComponent(String(uid))}/clone/${encodeURIComponent(String(name))}`,
+            {
+                params: queryParameters,
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * @param namespace 
+     * @param uid 
+     * @param name 
+     * @param version 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public cloneWorkflowTemplate2(namespace: string, uid: string, name: string, version: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WorkflowTemplate>;
+    public cloneWorkflowTemplate2(namespace: string, uid: string, name: string, version: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WorkflowTemplate>>;
+    public cloneWorkflowTemplate2(namespace: string, uid: string, name: string, version: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WorkflowTemplate>>;
+    public cloneWorkflowTemplate2(namespace: string, uid: string, name: string, version: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        if (namespace === null || namespace === undefined) {
+            throw new Error('Required parameter namespace was null or undefined when calling cloneWorkflowTemplate2.');
+        }
+        if (uid === null || uid === undefined) {
+            throw new Error('Required parameter uid was null or undefined when calling cloneWorkflowTemplate2.');
+        }
+        if (name === null || name === undefined) {
+            throw new Error('Required parameter name was null or undefined when calling cloneWorkflowTemplate2.');
+        }
+        if (version === null || version === undefined) {
+            throw new Error('Required parameter version was null or undefined when calling cloneWorkflowTemplate2.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // authentication (Bearer) required
+        if (this.configuration.apiKeys && this.configuration.apiKeys["authorization"]) {
+            headers = headers.set('authorization', this.configuration.apiKeys["authorization"]);
+        }
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<WorkflowTemplate>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflow_templates/${encodeURIComponent(String(uid))}/clone/${encodeURIComponent(String(name))}/${encodeURIComponent(String(version))}`,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * Creates a Workflow
      * @param namespace 
      * @param body 

@@ -17,7 +17,6 @@ export interface ConfirmationDialogData {
   styleUrls: ['./confirmation-dialog.component.scss']
 })
 export class ConfirmationDialogComponent implements OnInit {
-
   constructor(
       public dialogRef: MatDialogRef<ConfirmationDialogComponent>,
       @Inject(MAT_DIALOG_DATA) public data: ConfirmationDialogData

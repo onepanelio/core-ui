@@ -26,6 +26,8 @@ import {
   WorkflowServiceService
 } from "../../../api";
 import { MatTabGroup } from "@angular/material/tabs";
+import { AppRouter } from "../../router/app-router.service";
+import { WorkflowTemplateCloneDialog, WorkflowTemplateCloneData } from "../../dialog/input-dialog/workflow-template-clone-dialog.component";
 
 export class Pagination {
   page: number = 0;
@@ -120,6 +122,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
   constructor(
     private snackBar: MatSnackBar,
     private router: Router,
+    private appRouter: AppRouter,
     private activatedRoute: ActivatedRoute,
     private workflowService: WorkflowService,
     private cronWorkflowService: CronWorkflowServiceService,
@@ -152,6 +155,10 @@ export class WorkflowTemplateViewComponent implements OnInit {
   getWorkflowTemplateVersions() {
     this.workflowTemplateService.listWorkflowTemplateVersions(this.namespace, this.uid)
       .subscribe(res => {
+        if(!res.workflowTemplates) {
+          return;
+        }
+
         this.workflowTemplateVersions = res.workflowTemplates;
 
         if (this.workflowTemplateVersions.length === 0) {
@@ -284,6 +291,37 @@ export class WorkflowTemplateViewComponent implements OnInit {
 
   editSelectedWorkflowTemplateVersion() {
     this.router.navigate(['/', this.namespace, 'workflow-templates', this.workflowTemplateDetail.uid, 'edit']);
+  }
+
+  cloneSelectedWorkflowTemplateVersion() {
+    let data : WorkflowTemplateCloneData = {
+      title: 'Cloned template name',
+      inputLabel: 'Name',
+      defaultValue: this.workflowTemplate.name + '-clone',
+      namespace: this.namespace,
+      uid: this.uid,
+      version: this._selectedWorkflowTemplateVersionValue
+    };
+
+    const dialog = this.dialog.open(WorkflowTemplateCloneDialog, {
+      width: '400px',
+      data: data
+    });
+
+    dialog.afterClosed().subscribe(res => {
+      if(!res) {
+        return;
+      }
+
+      this.alertService.storeAlert(new Alert({
+        message: `You are now viewing "${res.name}".`,
+        type: "success"
+      }));
+
+      this.appRouter.navigateToWorkflowTemplateView(this.namespace, res.uid);
+    });
+
+    return;
   }
 
   onWorkflowPageChange(event: PageEvent) {
