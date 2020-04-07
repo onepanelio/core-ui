@@ -39,9 +39,11 @@ export class SelectComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.selectControl.setValidators([
-      Validators.required
-    ]);
+    if(this.data.required) {
+      this.selectControl.setValidators([
+        Validators.required
+      ]);
+    }
 
     this.form.addControl(this.data.name, this.selectControl);
   }

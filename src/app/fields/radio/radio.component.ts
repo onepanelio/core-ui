@@ -45,8 +45,10 @@ export class RadioComponent implements OnInit {
   ngOnInit() {
     this.form.addControl(this.data.name, this.radioControl);
 
-    this.radioControl.setValidators([
-      Validators.required
-    ]);
+    if(this.data.required) {
+      this.radioControl.setValidators([
+        Validators.required
+      ]);
+    }
   }
 }
