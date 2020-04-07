@@ -115,7 +115,7 @@ export class CronWorkflowListComponent implements OnInit {
     this.cronWorkflowServiceService.terminateCronWorkflow(this.namespace, workflow.name)
         .subscribe(res => {
           this.listRowsModified.emit();
-          this.snackbarRef = this.snackbar.open('Cron-Workflow terminated', 'OK');
+          this.snackbarRef = this.snackbar.open('Scheduled workflow deleted', 'OK');
         }, err => {
           this.snackbarRef = this.snackbar.open('Unable to stop workflow', 'OK');
         })
