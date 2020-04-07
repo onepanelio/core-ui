@@ -5,7 +5,6 @@ import { isUndefined } from "util";
 export class CronWorkflowFormatter {
     static fromYaml(input: string): CronWorkflow {
         const data = yaml.safeLoad(input);
-        console.log(data);
 
         if(!data.schedule) {
             throw new Error("Missing schedule");

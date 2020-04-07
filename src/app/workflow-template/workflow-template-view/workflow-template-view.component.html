@@ -6,6 +6,7 @@
         <span>Back to workflows</span>
       </a>
     </div>
+    <app-alert-panel class="mb-3 d-block"></app-alert-panel>
     <div class="page-title">
       <div class="page-title-text">Workflow details</div>
     </div>
@@ -16,10 +17,14 @@
       <div class="header">
         <div *ngIf="workflowTemplate" class="title">{{workflowTemplate.name}}</div>
         <div *ngIf="workflowTemplate" class="actions font-roboto">
-          <a class="link-button" (click)="editSelectedWorkflowTemplateVersion()">
-            <i class="fas fa-pencil-alt"></i>
+          <button mat-button color="primary" class="link-button font-size-regular" (click)="editSelectedWorkflowTemplateVersion()">
+            <mat-icon [fontSet]="'fas'" [fontIcon]="'fa-pencil-alt'"></mat-icon>
             <span class="ml-2">Edit Template</span>
-          </a>
+          </button>
+          <button mat-button color="primary" class="link-button font-size-regular ml-10" (click)="cloneSelectedWorkflowTemplateVersion()">
+            <mat-icon [fontSet]="'far'" [fontIcon]="'fa-clone'"></mat-icon>
+            <span class="ml-2">Clone</span>
+          </button>
           <button mat-button color="primary" class="link-button font-size-regular ml-10" (click)="deleteWorkflowTemplate()">
             <mat-icon [fontSet]="'fas'" [fontIcon]="'fa-trash-alt'"></mat-icon>
             Delete
