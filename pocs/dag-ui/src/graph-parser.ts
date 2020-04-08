@@ -227,10 +227,7 @@ export function createGraphFromWorkflowTemplate(workflowTemplate: any): dagre.gr
   const graph = new dagre.graphlib.Graph();
   graph.setGraph({});
   graph.setDefaultEdgeLabel(() => ({}));
-  const spec = yaml.safeLoad(workflowTemplate.manifest);
-  const manifest = {
-    spec: spec
-  };
+  const manifest = yaml.safeLoad(workflowTemplate.manifest);
 
   if (!manifest.spec || !manifest.spec.templates) {
     throw new Error(
