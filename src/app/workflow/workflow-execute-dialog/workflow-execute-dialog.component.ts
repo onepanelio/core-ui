@@ -4,9 +4,13 @@ import * as yaml from 'js-yaml';
 import { NamespaceTracker } from "../../namespace/namespace-tracker.service";
 import { Router } from "@angular/router";
 import { FormComponent } from "../../fields/form/form.component";
+import { KeyValue } from "../../../api";
+import { MatCheckboxChange } from "@angular/material/checkbox";
+import { CronWorkflowFormatter } from "../../cron-workflow/models";
 
 export interface WorkflowExecuteDialogData {
   manifest: string;
+  cron: boolean;
 }
 
 @Component({
@@ -30,7 +34,10 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
 
   @ViewChild(FormComponent, {static: false}) form: FormComponent;
 
+  showCron = false;
   parameters: Array<FieldData> = [];
+  labels = new Array<KeyValue>();
+  schedulingText: string = CronWorkflowFormatter.toYamlString({}, true);
 
   constructor(
       private namespaceTracker: NamespaceTracker,
@@ -38,6 +45,9 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
       public dialogRef: MatDialogRef<WorkflowExecuteDialogComponent>,
       @Inject(MAT_DIALOG_DATA) public data: WorkflowExecuteDialogData) {
     this.setManifest(data.manifest);
+    if(data.cron) {
+      this.showCron = true;
+    }
   }
 
   ngOnInit() {
@@ -48,9 +58,16 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
   }
 
   getData() {
-    const data = {
-      parameters: this.parameters,
+    let data = {
+      workflowExecution: {
+        parameters: this.parameters,
+        labels: this.labels,
+      }
     };
+
+    if(this.showCron) {
+      data['cron'] = CronWorkflowFormatter.fromYaml(this.schedulingText);
+    }
 
     return data;
   }
@@ -83,5 +100,9 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+  }
+
+  onCronCheck(value: MatCheckboxChange) {
+    this.showCron = value.checked;
   }
 }

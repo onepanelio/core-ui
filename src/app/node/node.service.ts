@@ -60,7 +60,7 @@ export class NodeInfo {
 
 export class NodeRenderer {
   static nodeHeight = 50;
-  static summaryNodeHeight = 82;
+  static summaryNodeHeight = 50;
   static nodeWidth = 200;
 
 
@@ -117,23 +117,15 @@ export class NodeRenderer {
 
   static nodeTemplate(node: any, root = false) {
     let nodeRootClasses = 'node-root ';
-    if ( (node.type === 'StepGroup' || node.type === 'DAG') && !root) {
+    if (node.type === 'StepGroup' || node.type === 'DAG') {
       nodeRootClasses += ' dashed-circle';
     } else {
       nodeRootClasses += ' rect';
     }
 
-    if(root) {
-      nodeRootClasses += ' summary';
-    }
-
     let html = `<div id="${node.id}" class="${nodeRootClasses}">`;
 
-    if(root) {
-      html += '<div class="text-center font-roboto font-weight-bold root-element">WORKFLOW SUMMARY</div><div class="not-root">';
-    }
-
-    const showInfo = root || !(node.type === 'StepGroup' || node.type === 'DAG');
+    const showInfo = !(node.type === 'StepGroup' || node.type === 'DAG');
 
     if(showInfo) {
       if (node.phase === 'Succeeded') {
@@ -152,10 +144,6 @@ export class NodeRenderer {
       }
 
       html += `<span class="name font-roboto">${nameToShow}</span>`;
-    }
-
-    if(root) {
-      html += '</div>';
     }
 
     html += '</div>';
@@ -442,7 +430,7 @@ export class NodeRenderer {
   static getNodeDisplayProperties(node: any, root = false): object {
     const shape = NodeRenderer.getNodeShape(node);
 
-    if (shape === 'Rectangle' || root) {
+    if (shape === 'Rectangle') {
       let height = NodeRenderer.nodeHeight;
       if(root) {
         height = NodeRenderer.summaryNodeHeight;
@@ -455,7 +443,7 @@ export class NodeRenderer {
       }
     }
 
-    if (shape === 'Dashed-Circle') {
+    if (shape === 'Dashed-Circle' || root) {
       return {
         height: 30,
         width: 30,

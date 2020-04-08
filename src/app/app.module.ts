@@ -79,8 +79,16 @@ import { TextareaComponent } from "./fields/textarea/textarea.component";
 import { SelectComponent } from './fields/select/select.component';
 import { RadioComponent } from './fields/radio/radio.component';
 import { MatTooltipModule } from "@angular/material/tooltip";
+import { MatChipsModule } from "@angular/material/chips";
+import { LabelsListViewComponent } from './labels/labels-list-view/labels-list-view.component';
+import { LabelsEditComponent } from './labels/labels-edit/labels-edit.component';
+import { LabelEditDialogComponent } from './labels/label-edit-dialog/label-edit-dialog.component';
+import { CronWorkflowListComponent } from './cron-workflow/cron-workflow-list/cron-workflow-list.component';
+import { CronWorkflowEditDialogComponent } from './cron-workflow/cron-workflow-edit-dialog/cron-workflow-edit-dialog.component';
+import { WorkflowParameterComponent } from './workflow/workflow-parameter/workflow-parameter.component';
 import { NamespaceManagerComponent } from './namespace/namespace-manager/namespace-manager.component';
 import { CreateNamespaceDialogComponent } from './namespace/create-namespace-dialog/create-namespace-dialog.component';
+import { WorkflowTemplateCloneComponent } from './workflow-template/workflow-template-clone/workflow-template-clone.component';
 
 @NgModule({
   declarations: [
@@ -134,14 +142,23 @@ import { CreateNamespaceDialogComponent } from './namespace/create-namespace-dia
     TextareaComponent,
     SelectComponent,
     RadioComponent,
+    LabelsListViewComponent,
+    LabelsEditComponent,
+    LabelEditDialogComponent,
+    CronWorkflowListComponent,
+    CronWorkflowEditDialogComponent,
+    WorkflowParameterComponent,
     NamespaceManagerComponent,
-    CreateNamespaceDialogComponent
+    CreateNamespaceDialogComponent,
+    WorkflowTemplateCloneComponent
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,
+        CronWorkflowEditDialogComponent,
         ConfirmationDialogComponent,
         ClosableSnackComponent,
-        CreateNamespaceDialogComponent
+        LabelEditDialogComponent,
+        CreateNamespaceDialogComponent,
     ],
     imports: [
         BrowserModule,
@@ -169,7 +186,8 @@ import { CreateNamespaceDialogComponent } from './namespace/create-namespace-dia
         MatPaginatorModule,
         ApiModule,
         MatProgressSpinnerModule,
-        MatTooltipModule
+        MatTooltipModule,
+        MatChipsModule
     ],
   providers: [
       NamespaceTracker,

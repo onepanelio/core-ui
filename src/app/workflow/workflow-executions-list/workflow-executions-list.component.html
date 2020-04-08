@@ -23,8 +23,8 @@
 
         <ng-container cdkColumnDef="status">
             <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
-            <cdk-cell *cdkCellDef="let workflow" class="d-inline-flex align-items-end">
-                <img *ngIf="workflow.phase" [src]="workflow.phase | phaseImage"/>
+            <cdk-cell *cdkCellDef="let workflow" class="d-inline-flex align-items-center">
+                <img *ngIf="workflow.phase" class="phase-image" [src]="workflow.phase | phaseImage"/>
                 <div class="ml-2 font-roboto-bold font-weight-bold">{{workflow.phase | phaseTranslate}}</div>
                 <span *ngIf="workflow && workflow.succeeded" class="ml-1"> in </span>
                 <app-clock

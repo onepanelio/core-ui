@@ -1,0 +1,17 @@
+.chip-modifications {
+  color: #888;
+  border: 1px solid #888 !important;
+  border-radius: 2px !important;
+  background-color: transparent !important;
+  padding: 2px 4px;
+}
+
+.labels-list {
+  .labels-list-item {
+    margin-left: 10px;
+
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+}

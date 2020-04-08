@@ -3,13 +3,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { WorkflowTemplateBase, WorkflowTemplateDetail, WorkflowTemplateService } from '../workflow-template.service';
 import { DagComponent } from '../../dag/dag.component';
 import { NodeRenderer } from '../../node/node.service';
-import { CreateWorkflow, WorkflowService } from '../../workflow/workflow.service';
-import { MatSnackBar } from '@angular/material';
+import { WorkflowService } from '../../workflow/workflow.service';
 import { HttpErrorResponse } from "@angular/common/http";
 import { AceEditorComponent } from "ng2-ace-editor";
 import * as yaml from 'js-yaml';
 import * as ace from 'brace';
 import { Alert } from "../../alert/alert";
+import { KeyValue, WorkflowServiceService } from "../../../api";
+import { LabelsEditComponent } from "../../labels/labels-edit/labels-edit.component";
 const aceRange = ace.acequire('ace/range').Range;
 
 @Component({
@@ -21,6 +22,7 @@ const aceRange = ace.acequire('ace/range').Range;
 export class WorkflowTemplateEditComponent implements OnInit {
   @ViewChild(DagComponent, {static: false}) dag: DagComponent;
   @ViewChild(AceEditorComponent, {static: false}) aceEditor: AceEditorComponent;
+  @ViewChild(LabelsEditComponent, {static: false}) labelEditor: LabelsEditComponent;
 
   manifestText: string;
   manifestTextCurrent: string;
@@ -31,6 +33,8 @@ export class WorkflowTemplateEditComponent implements OnInit {
 
   workflowTemplateDetail: WorkflowTemplateDetail;
   errorMarkerId;
+
+  labels = new Array<KeyValue>();
 
   get workflowTemplate(): WorkflowTemplateDetail {
     return this.workflowTemplateDetail;
@@ -73,7 +77,7 @@ export class WorkflowTemplateEditComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private workflowService: WorkflowService,
     private workflowTemplateService: WorkflowTemplateService,
-    private snackBar: MatSnackBar) { }
+    private workflowServiceService: WorkflowServiceService) { }
 
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(next => {
@@ -82,6 +86,7 @@ export class WorkflowTemplateEditComponent implements OnInit {
 
       this.getWorkflowTemplate();
       this.getWorkflowTemplateVersions();
+      this.getLabels();
     });
   }
 
@@ -151,6 +156,12 @@ export class WorkflowTemplateEditComponent implements OnInit {
   }
 
   update() {
+    // @todo display error message if duplicates.
+    if(!this.labelEditor.isValid) {
+        this.labelEditor.markAllAsDirty();
+        return;
+    }
+
     this.workflowTemplateService
       .createWorkflowTemplateVersion(
         this.namespace,
@@ -160,7 +171,15 @@ export class WorkflowTemplateEditComponent implements OnInit {
           manifest: this.manifestTextCurrent,
         })
       .subscribe(res => {
-        this.router.navigate(['/', this.namespace, 'workflow-templates', this.workflowTemplateDetail.uid]);
+        this.workflowServiceService.replaceWorkflowTemplateLabels(this.namespace, this.workflowTemplateDetail.uid, {
+            items: this.labels
+        }).subscribe( labelRes => {
+            // Do nothing
+        }, err => {
+            // Do nothing
+        }, () => {
+            this.router.navigate(['/', this.namespace, 'workflow-templates', this.workflowTemplateDetail.uid]);
+        })
       }, (err: HttpErrorResponse) => {
         this.serverError = {
           message: err.error.message,
@@ -171,5 +190,16 @@ export class WorkflowTemplateEditComponent implements OnInit {
 
   cancel() {
     this.router.navigate(['/', this.namespace, 'workflow-templates', this.workflowTemplateDetail.uid]);
+  }
+
+  getLabels() {
+    this.workflowServiceService.getWorkflowTemplateLabels(this.namespace, this.uid)
+        .subscribe(res => {
+            if(!res.labels) {
+                return;
+            }
+
+            this.labels = res.labels;
+        })
   }
 }

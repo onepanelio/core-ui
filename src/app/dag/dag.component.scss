@@ -14,12 +14,12 @@
 
 /deep/ g.root {
   rect {
-    stroke: #BED2FE !important;
-    fill: #BED2FE !important;
+    stroke: $primary-lighter !important;
+    fill: $primary-light !important;
   }
 
   .node-root {
-    height: 82px;
+    height: 42px;
     overflow: hidden;
   }
 
@@ -92,14 +92,12 @@
   width: 200px;
   height: 42px;
   line-height:42px;
-}
 
-/deep/ .node .node-root.summary {
-  width: 200px;
-  height: 82px;
-
-  .status-icon {
-    padding-left: 0;
+  .name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 140px;
+    display: inline-block;
   }
 }
 
@@ -117,6 +115,11 @@
   stroke-dasharray: 3;
   fill: none;
   stroke-width: 2px;
+}
+
+/deep/ .node.root circle {
+  fill: $primary-light;
+  stroke: $primary-lighter;
 }
 
 /deep/ .edgePath path {

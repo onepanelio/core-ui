@@ -30,8 +30,10 @@
   justify-content: center;
 }
 
-.flex-grow-1 {
-  flex-grow: 1;
+@for $i from 1 through 10 {
+  .flex-grow-#{$i} {
+    flex-grow: $i;
+  }
 }
 
 .flex-shrink-0 {
@@ -46,6 +48,9 @@
   flex-direction: column;
 }
 
+.flex-wrap {
+  flex-wrap: wrap;
+}
 
 .d-inline-block {
   display: inline-block !important;

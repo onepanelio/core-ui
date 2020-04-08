@@ -1,5 +1,6 @@
 app-activity-bar {
   display: block;
+  line-height: 40px;
 }
 
 app-status {
@@ -31,6 +32,14 @@ app-logs {
   right: 0;
   top: 0;
   height: 100vh;
+}
+
+app-workflow-parameter {
+  margin-top: 15px;
+
+  &:first-child {
+    margin-top: 0;
+  }
 }
 
 .yaml-root {

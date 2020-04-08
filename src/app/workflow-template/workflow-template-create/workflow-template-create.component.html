@@ -9,13 +9,15 @@
         <mat-form-field appearance="outline" class="wp-400">
           <mat-label>Template name</mat-label>
           <input formControlName="templateNameInput" matInput/>
-          <mat-error>Name must not be empty</mat-error>
+          <mat-error *ngIf="!templateNameInput.hasError('conflict')">Name must not be empty</mat-error>
+          <mat-error *ngIf="templateNameInput.hasError('conflict')">That name is already taken</mat-error>
         </mat-form-field>
         <div class="font-roboto">Need help? <a href="#">How to define workflows</a></div>
       </div>
       <div class="d-flex">
         <app-workflow-template-select
-                (templateSelected)="onTemplateSelected($event)"></app-workflow-template-select>
+                (templateSelected)="onTemplateSelected($event)">
+        </app-workflow-template-select>
         <div class="ml-8 flex-grow-1">
           <app-alert [autoDismiss]="false" [alert]="serverError"></app-alert>
           <div class="two-panels op-border mt-3">
@@ -30,16 +32,19 @@
                     scrollPastEnd: 1,
                     showLineNumbers: true,
                     tabSize: 2
-                  }"
-            ></ace-editor>
+                  }"></ace-editor>
             <app-dag class="w-50 panel"></app-dag>
           </div>
-          <div class="mt-5 d-flex justify-content-between">
-            <button mat-button class="font-medium-gray cancel-button" (click)="cancel()">CANCEL</button>
-            <div>
-              <button mat-flat-button color="accent" class="op-rounded op-button border-secondary" (click)="save()">Save</button>
-            </div>
-          </div>
+        </div>
+      </div>
+      <div class="mt-5">
+        <div class="op-h2">Labels</div>
+        <app-labels-edit class="d-inline-block mt-3" [labels]="labels" ></app-labels-edit>
+      </div>
+      <div class="mt-5 d-flex justify-content-between">
+        <button mat-button class="font-medium-gray cancel-button" (click)="cancel()">CANCEL</button>
+        <div>
+          <button mat-flat-button color="accent" class="op-rounded op-button border-secondary" (click)="save()">Save</button>
         </div>
       </div>
     </div>

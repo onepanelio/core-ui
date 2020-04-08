@@ -1,0 +1,54 @@
+<div class="workflow-execution-title op-h1">Execute Workflow</div>
+
+<div>
+    <app-form
+            [fieldData]="parameters"
+            class="parameters mt-7 mr-12 mb-3 d-block">
+    </app-form>
+
+    <div class="environment bg-primary-light op-rounded-regular mt-5">
+        <div class="font-roboto-bold font-weight-bold font-size-regular">Environment variables</div>
+        <div class="mt-1 font-roboto font-size-regular color-black">
+            <div>
+                Any environment variables you have created will be mounted on workflow execution.
+            </div>
+            <div class="color-primary underline pointer-hover mt-1" (click)="goToEnvironmentVariables()">
+                Add or manage environment variables
+            </div>
+        </div>
+    </div>
+
+    <div class="op-border-bottom mt-8 mb-5"></div>
+
+    <div>
+        <div class="op-h2">Labels</div>
+        <app-labels-edit class="d-block mt-3 w-100" [labels]="labels" ></app-labels-edit>
+    </div>
+
+    <div class="op-border-bottom mt-8 mb-5"></div>
+
+    <div class="mt-5">
+        <div class="op-h2 mb-5 font-roboto">Scheduling</div>
+        <div class="align-with-checkbox color-medium-gray font-roboto">
+            Use Cron expression to schedule this workflow to execute at a certain time or reoccurring interval.
+            <a href="https://en.wikipedia.org/wiki/Cron#Overview" target="_blank" class="font-roboto color-medium-gray">More info</a>
+        </div>
+        <ace-editor style="width: 400px; height: 400px;"
+                    class="h-100 w-100 mt-3"
+                    [mode]="'yaml'"
+                    [(text)]="schedulingText"
+                    [options]="{
+                        showInvisibles: false,
+                        showPrintMargin: false,
+                        showLineNumbers: true,
+                        scrollPastEnd: 0.1
+                      }"
+        ></ace-editor>
+    </div>
+</div>
+
+<hr class="divider op-just-border-top border-gray mt-5" />
+<div class="d-flex justify-content-between w-100 mt-5">
+    <button mat-button class="font-medium-gray cancel-button" (click)="cancel()">CANCEL</button>
+    <button mat-flat-button color="accent" class="op-rounded op-button" (click)="save()">SAVE</button>
+</div>
