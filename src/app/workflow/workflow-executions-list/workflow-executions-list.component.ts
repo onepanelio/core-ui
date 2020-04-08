@@ -19,9 +19,26 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
 
     displayedColumns = ['name','status', 'start', 'end', 'spacer', 'actions'];
     watchingWorkflowsMap = new Map<string, WebSocket>();
+    executionWorkflowsMap = new Map<string, WorkflowExecution>();
 
     @Input() namespace: string;
     @Input() set workflows(value: Workflow[]) {
+        // Check if we have any new data. If we don't, don't update.
+        // This is done because this method may be called repeated on a timer.
+        let newData = false;
+        for(let workflow of value) {
+            if(!this.executionWorkflowsMap.has(workflow.uid)) {
+                newData = true;
+                break;
+            }
+        }
+
+        if(!newData) {
+            return;
+        }
+
+        this.executionWorkflowsMap.clear();
+
         this.clearWatchers();
 
         let formattedList = [];
@@ -33,6 +50,8 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
             if (formatted.active) {
                 this.addStatusWatcher(formatted);
             }
+
+            this.executionWorkflowsMap.set(workflow.uid, formatted);
         }
 
         this.executionWorkflows = formattedList;

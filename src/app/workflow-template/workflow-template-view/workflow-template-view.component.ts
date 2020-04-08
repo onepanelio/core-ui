@@ -139,7 +139,11 @@ export class WorkflowTemplateViewComponent implements OnInit {
 
       this.getWorkflowTemplate();
       this.getWorkflowTemplateVersions();
-      this.getWorkflows();
+
+      setInterval(() => {
+        this.getWorkflows();
+      }, 5000);
+
       this.getCronWorkflows();
       this.getLabels();
     });
