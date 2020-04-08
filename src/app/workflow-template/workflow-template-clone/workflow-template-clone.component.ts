@@ -1,39 +1,37 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import {
   WorkflowTemplateDetail,
   WorkflowTemplateService
 } from '../workflow-template.service';
 import { DagComponent } from '../../dag/dag.component';
-import { ActivatedRoute, Route, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NodeRenderer } from '../../node/node.service';
 import { WorkflowService } from "../../workflow/workflow.service";
-import { WorkflowTemplateSelected } from "../../workflow-template-select/workflow-template-select.component";
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from "@angular/material/snack-bar";
 import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { HttpErrorResponse } from "@angular/common/http";
 import { AceEditorComponent } from "ng2-ace-editor";
 import * as yaml from 'js-yaml';
 import * as ace from 'brace';
-import { ClosableSnackComponent } from "../../closable-snack/closable-snack.component";
 import { Alert } from "../../alert/alert";
 import { KeyValue, WorkflowServiceService } from "../../../api";
 import { LabelsEditComponent } from "../../labels/labels-edit/labels-edit.component";
+import { AppRouter } from "../../router/app-router.service";
 const aceRange = ace.acequire('ace/range').Range;
 
 @Component({
-  selector: 'app-workflow-template-create',
-  templateUrl: './workflow-template-create.component.html',
-  styleUrls: ['./workflow-template-create.component.scss'],
+  selector: 'app-workflow-template-clone',
+  templateUrl: './workflow-template-clone.component.html',
+  styleUrls: ['./workflow-template-clone.component.scss'],
   providers: [WorkflowService, WorkflowTemplateService]
 })
-export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy {
+export class WorkflowTemplateCloneComponent implements OnInit {
   private snackbarRefs: Array<MatSnackBarRef<any>> = [];
 
   @ViewChild(AceEditorComponent, {static:false}) codeEditor: AceEditorComponent;
   @ViewChild(DagComponent, {static: false}) dag: DagComponent;
   @ViewChild(LabelsEditComponent, {static: false}) labelEditor: LabelsEditComponent;
 
-  previousManifestText: string;
   manifestText: string;
   manifestTextCurrent: string;
   serverError: Alert;
@@ -43,10 +41,11 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy {
   templateNameInput: AbstractControl;
   form: FormGroup;
   labels = new Array<KeyValue>();
+  sourceWorkflowTemplateUid: string;
 
   private errorMarkerId;
-
   private workflowTemplateDetail: WorkflowTemplateDetail;
+
 
   get workflowTemplate(): WorkflowTemplateDetail {
     return this.workflowTemplateDetail;
@@ -69,6 +68,7 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy {
   constructor(
       private formBuilder: FormBuilder,
       private router: Router,
+      private appRouter: AppRouter,
       private activatedRoute: ActivatedRoute,
       private workflowService: WorkflowService,
       private workflowTemplateService: WorkflowTemplateService,
@@ -88,6 +88,10 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy {
 
     this.activatedRoute.paramMap.subscribe(next => {
       this.namespace = next.get('namespace');
+      this.sourceWorkflowTemplateUid = next.get('uid');
+
+      this.getSourceWorkflowTemplate(this.sourceWorkflowTemplateUid);
+      this.getSourceWorkflowLabels(this.sourceWorkflowTemplateUid);
     });
   }
 
@@ -172,46 +176,36 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy {
             message: err.error.message,
             type: 'danger',
           };
-    });
+        });
   }
 
   cancel() {
-    this.router.navigate(['/', this.namespace, 'workflow-templates']);
-  }
-
-  onTemplateSelected(template: WorkflowTemplateSelected) {
-    if(!this.manifestTextCurrent || (this.manifestText === this.manifestTextCurrent)) {
-      this.manifestText = template.manifest;
-      this.manifestTextCurrent = template.manifest;
-      return;
-    }
-
-    this.previousManifestText = this.manifestTextCurrent;
-    this.manifestText = template.manifest;
-    this.manifestTextCurrent = template.manifest;
-
-    // We have to update this because just changing the variable above
-    // does not always update the value in the editor.
-    this.codeEditor.getEditor().session.setValue(template.manifest);
-
-    const snackUndo = this.snackBar.openFromComponent(ClosableSnackComponent, {
-      data: {
-        message: 'Template changed',
-        action: 'Undo',
-      },
-    });
-
-    snackUndo.onAction().subscribe(res => {
-      this.manifestText = this.previousManifestText;
-      this.manifestTextCurrent = this.previousManifestText;
-    });
-
-    this.snackbarRefs.push(snackUndo);
+    this.appRouter.navigateToWorkflowTemplateView(this.namespace, this.sourceWorkflowTemplateUid);
   }
 
   setServerError(message: Alert) {
     setTimeout( () => {
       this.serverError = null;
     });
+  }
+
+  getSourceWorkflowTemplate(uid: string) {
+    this.workflowTemplateService.getWorkflowTemplate(this.namespace, uid)
+        .subscribe(res => {
+          this.templateNameInput.setValue(res.name + '-clone');
+          this.manifestText = res.manifest;
+          this.manifestTextCurrent = res.manifest;
+        })
+  }
+
+  getSourceWorkflowLabels(uid: string) {
+    this.workflowServiceService.getWorkflowTemplateLabels(this.namespace, uid)
+        .subscribe(res => {
+          if(!res.labels) {
+            return;
+          }
+
+          this.labels = res.labels;
+        })
   }
 }

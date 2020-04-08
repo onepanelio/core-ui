@@ -9,7 +9,8 @@
         <mat-form-field appearance="outline" class="wp-400">
           <mat-label>Template name</mat-label>
           <input formControlName="templateNameInput" matInput/>
-          <mat-error>Name must not be empty</mat-error>
+          <mat-error *ngIf="!templateNameInput.hasError('conflict')">Name must not be empty</mat-error>
+          <mat-error *ngIf="templateNameInput.hasError('conflict')">That name is already taken</mat-error>
         </mat-form-field>
         <div class="font-roboto">Need help? <a href="#">How to define workflows</a></div>
       </div>
@@ -31,8 +32,7 @@
                     scrollPastEnd: 1,
                     showLineNumbers: true,
                     tabSize: 2
-                  }"
-            ></ace-editor>
+                  }"></ace-editor>
             <app-dag class="w-50 panel"></app-dag>
           </div>
         </div>

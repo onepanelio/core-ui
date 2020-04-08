@@ -12,6 +12,7 @@ import { CreateSecretComponent } from "./secrets/create-secret/create-secret.com
 import { EditSecretComponent } from "./secrets/edit-secret/edit-secret.component";
 import { LoginComponent } from "./auth/login/login.component";
 import { AuthGuard } from "./auth/auth.guard";
+import { WorkflowTemplateCloneComponent } from "./workflow-template/workflow-template-clone/workflow-template-clone.component";
 
 const routes: Routes = [
   {
@@ -26,6 +27,11 @@ const routes: Routes = [
   {
     path: ':namespace/workflow-templates/create',
     component: WorkflowTemplateCreateComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: ':namespace/workflow-templates/:uid/clone',
+    component: WorkflowTemplateCloneComponent,
     canActivate: [AuthGuard],
   },
   {
