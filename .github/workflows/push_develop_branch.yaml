@@ -2,7 +2,7 @@ name: Publish Docker
 on: 
   push:
     branches:
-      - 'feature/test.gh.tags'
+      - 'develop'
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -14,9 +14,3 @@ jobs:
         name: onepanel/core-ui
         username: ${{ secrets.DOCKER_HUB_USERNAME }}
         password: ${{ secrets.DOCKER_HUB_TOKEN }}
-    - name: Bump version and push tag
-      uses: anothrNick/github-tag-action@1.17.2
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        WITH_V: true
-        DEFAULT_BUMP: 'patch'
