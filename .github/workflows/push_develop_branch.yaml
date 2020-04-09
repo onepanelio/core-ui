@@ -1,4 +1,4 @@
-name: Publish Docker
+name: Publish develop docker image
 on: 
   push:
     branches:
