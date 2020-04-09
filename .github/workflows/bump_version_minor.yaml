@@ -9,8 +9,31 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: Bump version and push tag
+        id: version_bump
         uses: anothrNick/github-tag-action@1.17.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
-          DEFAULT_BUMP: 'minor'
+          DEFAULT_BUMP: 'patch'
+      - name: Alias New tag to VERSION
+        run: echo "::set-env name=VERSION::${{ steps.version_bump.outputs.new_tag }}"
+      - name: Publish to Registry
+        uses: elgohr/Publish-Docker-Github-Action@master
+        with:
+          name: onepanel/core-ui
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
+          buildargs: VERSION
+          tags: VERSION
+      - name: Set Slack Message
+        run: echo "::set-env name=SLACK_MESSAGE::Version $VERSION. Docker Tag onepanel/core-ui:$VERSION"
+      - name: Notify Slack Channels
+        uses: rtCamp/action-slack-notify@v2.0.0
+        env:
+          SLACK_CHANNEL: dev
+          SLACK_ICON: https://avatars1.githubusercontent.com/u/30390575?s=48&v=4
+          SLACK_TITLE: New Core-UI Version
+          SLACK_USERNAME: opBot
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+
+
