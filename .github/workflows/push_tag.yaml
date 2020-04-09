@@ -18,7 +18,6 @@ jobs:
           name: onepanel/core-ui
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
-          snapshot: true
           buildargs: VERSION
           tag_semver: true
       - name: Set Slack Message

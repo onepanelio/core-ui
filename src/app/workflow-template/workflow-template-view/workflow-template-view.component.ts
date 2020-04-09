@@ -117,6 +117,8 @@ export class WorkflowTemplateViewComponent implements OnInit {
     return this._selectedWorkflowTemplateVersionValue;
   }
 
+  workflowsInterval;
+
   constructor(
     private snackBar: MatSnackBar,
     private router: Router,
@@ -138,13 +140,19 @@ export class WorkflowTemplateViewComponent implements OnInit {
       this.getWorkflowTemplate();
       this.getWorkflowTemplateVersions();
 
-      setInterval(() => {
+      this.workflowsInterval = setInterval(() => {
         this.getWorkflows();
       }, 5000);
 
       this.getCronWorkflows();
       this.getLabels();
     });
+  }
+
+  ngOnDestroy() {
+    if(this.workflowsInterval) {
+      clearInterval(this.workflowsInterval);
+    }
   }
 
   getWorkflowTemplate() {
