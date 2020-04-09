@@ -1,6 +1,6 @@
-name: Publish Docker with build args
+name: Publish docker image from tag
 on:
-  create:
+  push:
     tags:
       - '*'
 jobs:
