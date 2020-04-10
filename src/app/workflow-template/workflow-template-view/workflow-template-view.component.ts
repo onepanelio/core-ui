@@ -97,26 +97,6 @@ export class WorkflowTemplateViewComponent implements OnInit {
     this.showDag();
   }
 
-  workflowTemplateVersions: WorkflowTemplateBase[] = [];
-  workflowTemplateVersionsMap = new Map<number, WorkflowTemplateBase>();
-
-  private _selectedWorkflowTemplateVersionValue: number;
-  set selectedWorkflowTemplateVersionValue(value: number) {
-    this._selectedWorkflowTemplateVersionValue = value;
-    const selectedVersion = this.workflowTemplateVersionsMap.get(value);
-
-    this.workflowTemplateService.getWorkflowTemplateForVersion(this.namespace, selectedVersion.uid, selectedVersion.version)
-      .subscribe(res => {
-        this.workflowTemplate = res;
-      });
-
-    this.getWorkflows();
-  }
-
-  get selectedWorkflowTemplateVersionValue(): number {
-    return this._selectedWorkflowTemplateVersionValue;
-  }
-
   workflowsInterval;
 
   constructor(
@@ -138,8 +118,8 @@ export class WorkflowTemplateViewComponent implements OnInit {
       this.uid = next.get('uid');
 
       this.getWorkflowTemplate();
-      this.getWorkflowTemplateVersions();
 
+      this.getWorkflows();
       this.workflowsInterval = setInterval(() => {
         this.getWorkflows();
       }, 5000);
@@ -159,32 +139,6 @@ export class WorkflowTemplateViewComponent implements OnInit {
     this.workflowTemplateService.getWorkflowTemplate(this.namespace, this.uid)
       .subscribe(res => {
         this.workflowTemplate = res;
-      });
-  }
-
-  getWorkflowTemplateVersions() {
-    this.workflowTemplateService.listWorkflowTemplateVersions(this.namespace, this.uid)
-      .subscribe(res => {
-        if(!res.workflowTemplates) {
-          return;
-        }
-
-        this.workflowTemplateVersions = res.workflowTemplates;
-
-        if (this.workflowTemplateVersions.length === 0) {
-          return;
-        }
-
-        // Set the latest version
-        let newestVersion = this.workflowTemplateVersions[0];
-        for (const version of this.workflowTemplateVersions) {
-          this.workflowTemplateVersionsMap.set(version.version, version);
-          if (version.version > newestVersion.version) {
-            newestVersion = version;
-          }
-        }
-
-        this.selectedWorkflowTemplateVersionValue = newestVersion.version;
       });
   }
 
