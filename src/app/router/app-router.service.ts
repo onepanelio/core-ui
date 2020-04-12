@@ -15,4 +15,8 @@ export class AppRouter {
   public navigateToWorkflowTemplateClone(namespace: string, workflowTemplateUid: string) {
     return this.router.navigate(['/', namespace, 'workflow-templates', workflowTemplateUid, 'clone']);
   }
+
+  public navigateToWorkflowExecution(namespace: string, name: string) {
+    this.router.navigate(['/', namespace, 'workflows', name]);
+  }
 }

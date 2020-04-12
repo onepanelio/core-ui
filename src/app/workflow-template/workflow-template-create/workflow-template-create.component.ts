@@ -16,7 +16,7 @@ import * as yaml from 'js-yaml';
 import * as ace from 'brace';
 import { ClosableSnackComponent } from "../../closable-snack/closable-snack.component";
 import { Alert } from "../../alert/alert";
-import { KeyValue, WorkflowServiceService } from "../../../api";
+import { KeyValue, WorkflowServiceService, WorkflowTemplateServiceService } from "../../../api";
 import { LabelsEditComponent } from "../../labels/labels-edit/labels-edit.component";
 const aceRange = ace.acequire('ace/range').Range;
 
@@ -72,6 +72,7 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy {
       private activatedRoute: ActivatedRoute,
       private workflowService: WorkflowService,
       private workflowTemplateService: WorkflowTemplateService,
+      private workflowTemplateServiceService: WorkflowTemplateServiceService,
       private workflowServiceService: WorkflowServiceService,
       private snackBar: MatSnackBar) { }
 
@@ -144,21 +145,14 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.workflowTemplateService
-        .create(this.namespace, {
+    this.workflowTemplateServiceService
+        .createWorkflowTemplate(this.namespace, {
           name: templateName,
           manifest: this.manifestTextCurrent,
+          labels: this.labels
         })
         .subscribe(res => {
-          this.workflowServiceService.replaceWorkflowTemplateLabels(this.namespace, res.uid, {
-            items: this.labels
-          }).subscribe( labelRes => {
-            // Do nothing
-          }, err => {
-            // Do nothing
-          }, () => {
-            this.router.navigate(['/', this.namespace, 'workflow-templates', res.uid]);
-          })
+          this.router.navigate(['/', this.namespace, 'workflow-templates', res.uid]);
         }, (err: HttpErrorResponse) => {
           if(err.status === 409) {
             this.templateNameInput.setErrors({

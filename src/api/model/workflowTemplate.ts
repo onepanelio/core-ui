@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { KeyValue } from './keyValue';
 
 
 export interface WorkflowTemplate { 
@@ -19,5 +20,6 @@ export interface WorkflowTemplate {
     manifest?: string;
     isLatest?: boolean;
     isArchived?: boolean;
+    labels?: Array<KeyValue>;
 }
 

@@ -21,8 +21,8 @@ import { Alert } from "../../alert/alert";
 import {
   CronWorkflow,
   CronWorkflowServiceService,
-  KeyValue, ListCronWorkflowsResponse,
-  WorkflowServiceService
+  KeyValue, ListCronWorkflowsResponse, WorkflowExecution,
+  WorkflowServiceService, WorkflowTemplateServiceService
 } from "../../../api";
 import { MatTabGroup } from "@angular/material/tabs";
 import { AppRouter } from "../../router/app-router.service";
@@ -108,6 +108,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
     private cronWorkflowService: CronWorkflowServiceService,
     private workflowServiceService: WorkflowServiceService,
     private workflowTemplateService: WorkflowTemplateService,
+    private workflowTemplateServiceService: WorkflowTemplateServiceService,
     private dialog: MatDialog,
     private alertService: AlertService
   ) { }
@@ -192,40 +193,29 @@ export class WorkflowTemplateViewComponent implements OnInit {
           workflowExecution: result.workflowExecution
         };
 
-        this.executeCronWorkflowRequest(request, result.labels);
+        this.executeCronWorkflowRequest(request);
 
       } else {
-        const request: CreateWorkflow = {
-          namespace: this.namespace,
+        const request: WorkflowExecution = {
           workflowTemplate: this.workflowTemplate,
           parameters: result.workflowExecution.parameters,
+          labels: result.workflowExecution.labels,
         };
 
-        this.executeWorkflowRequest(request, result.labels);
+        this.executeWorkflowRequest(request);
       }
     });
   }
 
-  protected executeWorkflowRequest(request: CreateWorkflow, labels: any) {
-    this.workflowService.executeWorkflow(this.namespace, request)
+  protected executeWorkflowRequest(request: WorkflowExecution) {
+    this.workflowServiceService.createWorkflowExecution(this.namespace, request)
         .subscribe(res => {
-          this.workflowServiceService.addWorkflowExecutionLabels(this.namespace, res.name, {
-            items: labels
-          })
-              .subscribe(res => {
-                // Do nothing
-              }, err => {
-                // Do nothing
-              }, () => {
-                this.router.navigate(['/', this.namespace, 'workflows', res.name]);
-              });
-
+          this.appRouter.navigateToWorkflowExecution(this.namespace, res.name);
         }, err => {
-
         });
   }
 
-  protected executeCronWorkflowRequest(data: CronWorkflow, labels: any) {
+  protected executeCronWorkflowRequest(data: CronWorkflow) {
       this.cronWorkflowService.createCronWorkflow(this.namespace, data)
           .subscribe(res => {
             this.getCronWorkflows();
@@ -308,7 +298,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
   }
 
   getLabels() {
-    this.workflowServiceService.getWorkflowTemplateLabels(this.namespace, this.uid)
+    this.workflowTemplateServiceService.getWorkflowTemplateLabels(this.namespace, this.uid)
         .subscribe(res => {
           if(!res.labels) {
             return;

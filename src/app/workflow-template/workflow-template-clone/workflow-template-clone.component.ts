@@ -14,7 +14,7 @@ import { AceEditorComponent } from "ng2-ace-editor";
 import * as yaml from 'js-yaml';
 import * as ace from 'brace';
 import { Alert } from "../../alert/alert";
-import { KeyValue, WorkflowServiceService } from "../../../api";
+import { KeyValue, WorkflowServiceService, WorkflowTemplateServiceService } from "../../../api";
 import { LabelsEditComponent } from "../../labels/labels-edit/labels-edit.component";
 import { AppRouter } from "../../router/app-router.service";
 const aceRange = ace.acequire('ace/range').Range;
@@ -73,6 +73,7 @@ export class WorkflowTemplateCloneComponent implements OnInit {
       private workflowService: WorkflowService,
       private workflowTemplateService: WorkflowTemplateService,
       private workflowServiceService: WorkflowServiceService,
+      private workflowTemplateServiceService: WorkflowTemplateServiceService,
       private snackBar: MatSnackBar) { }
 
   ngOnInit() {
@@ -154,7 +155,7 @@ export class WorkflowTemplateCloneComponent implements OnInit {
           manifest: this.manifestTextCurrent,
         })
         .subscribe(res => {
-          this.workflowServiceService.replaceWorkflowTemplateLabels(this.namespace, res.uid, {
+          this.workflowTemplateServiceService.replaceWorkflowTemplateLabels(this.namespace, res.uid, {
             items: this.labels
           }).subscribe( labelRes => {
             // Do nothing
@@ -199,7 +200,7 @@ export class WorkflowTemplateCloneComponent implements OnInit {
   }
 
   getSourceWorkflowLabels(uid: string) {
-    this.workflowServiceService.getWorkflowTemplateLabels(this.namespace, uid)
+    this.workflowTemplateServiceService.getWorkflowTemplateLabels(this.namespace, uid)
         .subscribe(res => {
           if(!res.labels) {
             return;

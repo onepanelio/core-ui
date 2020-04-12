@@ -9,7 +9,7 @@ import { AceEditorComponent } from "ng2-ace-editor";
 import * as yaml from 'js-yaml';
 import * as ace from 'brace';
 import { Alert } from "../../alert/alert";
-import { KeyValue, WorkflowServiceService } from "../../../api";
+import { KeyValue, WorkflowServiceService, WorkflowTemplateServiceService } from "../../../api";
 import { LabelsEditComponent } from "../../labels/labels-edit/labels-edit.component";
 const aceRange = ace.acequire('ace/range').Range;
 
@@ -77,6 +77,7 @@ export class WorkflowTemplateEditComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private workflowService: WorkflowService,
     private workflowTemplateService: WorkflowTemplateService,
+    private workflowTemplateServiceService: WorkflowTemplateServiceService,
     private workflowServiceService: WorkflowServiceService) { }
 
   ngOnInit() {
@@ -171,7 +172,7 @@ export class WorkflowTemplateEditComponent implements OnInit {
           manifest: this.manifestTextCurrent,
         })
       .subscribe(res => {
-        this.workflowServiceService.replaceWorkflowTemplateLabels(this.namespace, this.workflowTemplateDetail.uid, {
+        this.workflowTemplateServiceService.replaceWorkflowTemplateLabels(this.namespace, this.workflowTemplateDetail.uid, {
             items: this.labels
         }).subscribe( labelRes => {
             // Do nothing
@@ -193,7 +194,7 @@ export class WorkflowTemplateEditComponent implements OnInit {
   }
 
   getLabels() {
-    this.workflowServiceService.getWorkflowTemplateLabels(this.namespace, this.uid)
+    this.workflowTemplateServiceService.getWorkflowTemplateLabels(this.namespace, this.uid)
         .subscribe(res => {
             if(!res.labels) {
                 return;
