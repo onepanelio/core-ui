@@ -8,7 +8,6 @@ import { AceEditorComponent } from "ng2-ace-editor";
 import * as yaml from 'js-yaml';
 import * as ace from 'brace';
 import { Alert } from "../../alert/alert";
-import { KeyValue, WorkflowServiceService, WorkflowTemplate, WorkflowTemplateServiceService } from "../../../api";
 import { LabelsEditComponent } from "../../labels/labels-edit/labels-edit.component";
 import {
     WorkflowTemplateSelected,
@@ -16,6 +15,7 @@ import {
     WorkflowTemplateSelectItem
 } from "../../workflow-template-select/workflow-template-select.component";
 import { AppRouter } from "../../router/app-router.service";
+import { KeyValue, WorkflowServiceService, WorkflowTemplate, WorkflowTemplateServiceService } from "../../../api";
 const aceRange = ace.acequire('ace/range').Range;
 
 @Component({
@@ -165,7 +165,6 @@ export class WorkflowTemplateEditComponent implements OnInit {
         return;
     }
 
-    // TODO @todo update clone - but clone doesn't have versions?
     this.workflowTemplateService
       .createWorkflowTemplateVersion(
         this.namespace,
@@ -189,10 +188,11 @@ export class WorkflowTemplateEditComponent implements OnInit {
     this.appRouter.navigateToWorkflowTemplateView(this.namespace, this.workflowTemplate.uid);
   }
 
-  getLabels() {
-    this.workflowTemplateService.getWorkflowTemplateLabels(this.namespace, this.uid)
+  getLabels(version: number|null = null) {
+    this.workflowTemplateService.getWorkflowTemplateLabels(this.namespace, this.uid, version)
         .subscribe(res => {
             if(!res.labels) {
+                this.labels = [];
                 return;
             }
 
@@ -203,5 +203,9 @@ export class WorkflowTemplateEditComponent implements OnInit {
   onVersionSelected(selected: WorkflowTemplateSelected) {
       this.manifestText = selected.manifest;
       this.manifestTextCurrent = selected.manifest;
+
+      let versionNumber = parseInt(selected.name);
+
+      this.getLabels(versionNumber);
   }
 }
