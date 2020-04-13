@@ -1,8 +1,18 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
+export interface WorkflowTemplateSelectHeader {
+  image: string;
+  title: string;
+}
+
 export interface WorkflowTemplateSelected {
   name: string;
   manifest: string;
+}
+
+export interface WorkflowTemplateSelectItem {
+  header: WorkflowTemplateSelectHeader;
+  children: Array<WorkflowTemplateSelected>
 }
 
 @Component({
@@ -12,7 +22,7 @@ export interface WorkflowTemplateSelected {
 })
 export class WorkflowTemplateSelectComponent implements OnInit {
   @Output() templateSelected = new EventEmitter<WorkflowTemplateSelected>();
-  @Input() workflowTemplateSamples: WorkflowTemplateSelected[] = [
+  private static workflowTemplateSamples: WorkflowTemplateSelected[] = [
     {
       name: 'Hello world',
       manifest: `entrypoint: whalesay
@@ -98,7 +108,21 @@ templates:
     }
   ];
 
-  selectedTemplate: string = 'new';
+  @Input() selectedTemplate: string = 'new';
+  @Input() items: Array<WorkflowTemplateSelectItem> = [{
+    header: {
+      title: 'Blank template',
+      image: '/assets/images/workflows-blank-icon.svg'
+    }, children: [{
+      name: 'New',
+      manifest: '',
+    }]
+  }, {
+    header: {
+      title: 'Templates',
+      image: '/assets/images/workflows-templates-icon.svg'
+    }, children: WorkflowTemplateSelectComponent.workflowTemplateSamples
+  }]
 
   constructor() { }
 
@@ -116,12 +140,20 @@ templates:
       return;
     }
 
-    const workflowTemplateSample = this.workflowTemplateSamples.find(value => value.name === name);
+    const workflowTemplateList = this.items.find(list => {
+      return list.children.find(item => item.name === name);
+    });
 
-    if(!workflowTemplateSample) {
+    if(!workflowTemplateList) {
       return;
     }
 
-    this.templateSelected.emit(workflowTemplateSample);
+    const workflowTemplateItem = workflowTemplateList.children.find(item => item.name === name);
+
+    if(!workflowTemplateItem) {
+      return;
+    }
+
+    this.templateSelected.emit(workflowTemplateItem);
   }
 }

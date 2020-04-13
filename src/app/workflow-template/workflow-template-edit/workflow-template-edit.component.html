@@ -9,13 +9,19 @@
         <div>
           <mat-form-field appearance="outline" class="wp-400">
             <mat-label>Template name</mat-label>
-            <input matInput disabled value="{{workflowTemplateDetail?.name}}"/>
+            <input matInput disabled value="{{workflowTemplate?.name}}"/>
           </mat-form-field>
         </div>
         <div class="font-roboto">Need help? <a href="#">How to define workflows</a></div>
       </div>
       <div class="d-flex">
-        <div class="flex-grow-1">
+        <app-workflow-template-select
+                *ngIf="workflowTemplateListItems && selectedWorkflowTemplateVersion"
+                [items]="workflowTemplateListItems"
+                [selectedTemplate]="selectedWorkflowTemplateVersion.toString()"
+                (templateSelected)="onVersionSelected($event)">
+        </app-workflow-template-select>
+        <div class="flex-grow-1 ml-8">
           <app-alert [autoDismiss]="false" [alert]="serverError"></app-alert>
           <div class="two-panels op-border mt-3">
             <ace-editor

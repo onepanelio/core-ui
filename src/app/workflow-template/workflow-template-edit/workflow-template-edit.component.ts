@@ -1,6 +1,5 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { WorkflowTemplateBase, WorkflowTemplateDetail, WorkflowTemplateService } from '../workflow-template.service';
 import { DagComponent } from '../../dag/dag.component';
 import { NodeRenderer } from '../../node/node.service';
 import { WorkflowService } from '../../workflow/workflow.service';
@@ -9,15 +8,20 @@ import { AceEditorComponent } from "ng2-ace-editor";
 import * as yaml from 'js-yaml';
 import * as ace from 'brace';
 import { Alert } from "../../alert/alert";
-import { KeyValue, WorkflowServiceService, WorkflowTemplateServiceService } from "../../../api";
+import { KeyValue, WorkflowServiceService, WorkflowTemplate, WorkflowTemplateServiceService } from "../../../api";
 import { LabelsEditComponent } from "../../labels/labels-edit/labels-edit.component";
+import {
+    WorkflowTemplateSelected,
+    WorkflowTemplateSelectHeader,
+    WorkflowTemplateSelectItem
+} from "../../workflow-template-select/workflow-template-select.component";
+import { AppRouter } from "../../router/app-router.service";
 const aceRange = ace.acequire('ace/range').Range;
 
 @Component({
   selector: 'app-workflow-template-edit',
   templateUrl: './workflow-template-edit.component.html',
   styleUrls: ['./workflow-template-edit.component.scss'],
-  providers: [WorkflowService, WorkflowTemplateService]
 })
 export class WorkflowTemplateEditComponent implements OnInit {
   @ViewChild(DagComponent, {static: false}) dag: DagComponent;
@@ -31,22 +35,28 @@ export class WorkflowTemplateEditComponent implements OnInit {
   namespace: string;
   uid: string;
 
-  workflowTemplateDetail: WorkflowTemplateDetail;
   errorMarkerId;
 
-  labels = new Array<KeyValue>();
 
-  get workflowTemplate(): WorkflowTemplateDetail {
-    return this.workflowTemplateDetail;
+  _workflowTemplate: WorkflowTemplate;
+  labels = new Array<KeyValue>();
+  workflowTemplateVersions: WorkflowTemplate[] = [];
+  selectedWorkflowTemplateVersion: number;
+
+  // This is what we display in the side menu
+  workflowTemplateListItems = new Array<WorkflowTemplateSelectItem>();
+
+  get workflowTemplate(): WorkflowTemplate {
+    return this._workflowTemplate;
   }
 
-  set workflowTemplate(value: WorkflowTemplateDetail) {
+  set workflowTemplate(value: WorkflowTemplate) {
     if (!this.dag) {
       setTimeout( () => this.workflowTemplate = value, 500);
       return;
     }
 
-    this.workflowTemplateDetail = value;
+    this._workflowTemplate = value;
     const g = NodeRenderer.createGraphFromManifest(value.manifest);
     this.dag.display(g);
 
@@ -54,31 +64,11 @@ export class WorkflowTemplateEditComponent implements OnInit {
     this.manifestTextCurrent = value.manifest;
   }
 
-  workflowTemplateVersions: WorkflowTemplateBase[] = [];
-  workflowTemplateVersionsMap = new Map<number, WorkflowTemplateBase>();
-
-  private _selectedWorkflowTemplateVersionValue: number;
-  set selectedWorkflowTemplateVersionValue(value: number) {
-    this._selectedWorkflowTemplateVersionValue = value;
-    const selectedVersion = this.workflowTemplateVersionsMap.get(value);
-
-    this.workflowTemplateService.getWorkflowTemplateForVersion(this.namespace, selectedVersion.uid, selectedVersion.version)
-      .subscribe(res => {
-        this.workflowTemplate = res;
-
-        if (!res.isLatest) {
-          // this.router.navigate(['/', this.namespace, 'workflow-templates', res.uid]);
-        }
-      });
-  }
-
   constructor(
-    private router: Router,
+    private appRouter: AppRouter,
     private activatedRoute: ActivatedRoute,
-    private workflowService: WorkflowService,
-    private workflowTemplateService: WorkflowTemplateService,
-    private workflowTemplateServiceService: WorkflowTemplateServiceService,
-    private workflowServiceService: WorkflowServiceService) { }
+    private workflowTemplateService: WorkflowTemplateServiceService,
+    private workflowService: WorkflowServiceService) { }
 
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(next => {
@@ -95,6 +85,7 @@ export class WorkflowTemplateEditComponent implements OnInit {
     this.workflowTemplateService.getWorkflowTemplate(this.namespace, this.uid)
       .subscribe(res => {
         this.workflowTemplate = res;
+        this.selectedWorkflowTemplateVersion = res.version;
       });
   }
 
@@ -136,23 +127,34 @@ export class WorkflowTemplateEditComponent implements OnInit {
   getWorkflowTemplateVersions() {
     this.workflowTemplateService.listWorkflowTemplateVersions(this.namespace, this.uid)
       .subscribe(res => {
-        this.workflowTemplateVersions = res.workflowTemplates;
+        this.workflowTemplateVersions = res.workflowTemplates.sort((a, b) => {
+            return b.version - a.version;
+        })
 
         if (this.workflowTemplateVersions.length === 0) {
           return;
         }
 
-        // Set the latest version
-        let newestVersion = this.workflowTemplateVersions[0];
-        for (const version of this.workflowTemplateVersions) {
-          this.workflowTemplateVersionsMap.set(version.version, version);
-
-          if (version.isLatest) {
-            newestVersion = version;
-          }
+        let header: WorkflowTemplateSelectHeader = {
+            title: 'Versions',
+            image: '/assets/images/workflows-blank-icon.svg'
         }
 
-        this.selectedWorkflowTemplateVersionValue = newestVersion.version;
+        let children = new Array<WorkflowTemplateSelected>();
+        for(const version of this.workflowTemplateVersions) {
+            let newItem: WorkflowTemplateSelected = {
+                name: version.version.toString(),
+                manifest: version.manifest
+            };
+
+            children.push(newItem);
+        }
+
+        this.workflowTemplateListItems = [{
+            header: header,
+            children: children
+        }];
+
       });
   }
 
@@ -163,24 +165,18 @@ export class WorkflowTemplateEditComponent implements OnInit {
         return;
     }
 
+    // TODO @todo update clone - but clone doesn't have versions?
     this.workflowTemplateService
       .createWorkflowTemplateVersion(
         this.namespace,
-        this.workflowTemplateDetail.uid,
+        this.workflowTemplate.uid,
         {
-          name: this.workflowTemplateDetail.name,
+          name: this.workflowTemplate.name,
           manifest: this.manifestTextCurrent,
+          labels: this.labels,
         })
       .subscribe(res => {
-        this.workflowTemplateServiceService.replaceWorkflowTemplateLabels(this.namespace, this.workflowTemplateDetail.uid, {
-            items: this.labels
-        }).subscribe( labelRes => {
-            // Do nothing
-        }, err => {
-            // Do nothing
-        }, () => {
-            this.router.navigate(['/', this.namespace, 'workflow-templates', this.workflowTemplateDetail.uid]);
-        })
+          this.appRouter.navigateToWorkflowTemplateView(this.namespace, this.workflowTemplate.uid);
       }, (err: HttpErrorResponse) => {
         this.serverError = {
           message: err.error.message,
@@ -190,11 +186,11 @@ export class WorkflowTemplateEditComponent implements OnInit {
   }
 
   cancel() {
-    this.router.navigate(['/', this.namespace, 'workflow-templates', this.workflowTemplateDetail.uid]);
+    this.appRouter.navigateToWorkflowTemplateView(this.namespace, this.workflowTemplate.uid);
   }
 
   getLabels() {
-    this.workflowTemplateServiceService.getWorkflowTemplateLabels(this.namespace, this.uid)
+    this.workflowTemplateService.getWorkflowTemplateLabels(this.namespace, this.uid)
         .subscribe(res => {
             if(!res.labels) {
                 return;
@@ -202,5 +198,10 @@ export class WorkflowTemplateEditComponent implements OnInit {
 
             this.labels = res.labels;
         })
+  }
+
+  onVersionSelected(selected: WorkflowTemplateSelected) {
+      this.manifestText = selected.manifest;
+      this.manifestTextCurrent = selected.manifest;
   }
 }
