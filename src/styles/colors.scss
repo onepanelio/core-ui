@@ -6,6 +6,7 @@ $medium-white: #f7f7f7;
 $dark-white: #c1c1c1;
 $primary-light: #EDF2FD;
 $primary-lighter: #BED2FE;
+$toolbar-white: #F5F5F5;
 $primary: #01579b;
 $primary-dark: rgb(1,87,155);
 $primary-darker: #003D7A;
@@ -26,6 +27,7 @@ $background-color: $light-gray;
 
 $colors: (
   "white": $white,
+  "toolbar-white": $toolbar-white,
   "lighter-white": $lighter-white,
   "light-white": $light-white,
   "medium-white": $medium-white,

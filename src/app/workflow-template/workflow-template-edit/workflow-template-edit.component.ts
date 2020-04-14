@@ -16,6 +16,7 @@ import {
 } from "../../workflow-template-select/workflow-template-select.component";
 import { AppRouter } from "../../router/app-router.service";
 import { KeyValue, WorkflowServiceService, WorkflowTemplate, WorkflowTemplateServiceService } from "../../../api";
+import { ManifestDagEditorComponent } from "../../manifest-dag-editor/manifest-dag-editor.component";
 const aceRange = ace.acequire('ace/range').Range;
 
 @Component({
@@ -24,19 +25,12 @@ const aceRange = ace.acequire('ace/range').Range;
   styleUrls: ['./workflow-template-edit.component.scss'],
 })
 export class WorkflowTemplateEditComponent implements OnInit {
-  @ViewChild(DagComponent, {static: false}) dag: DagComponent;
-  @ViewChild(AceEditorComponent, {static: false}) aceEditor: AceEditorComponent;
+  @ViewChild(ManifestDagEditorComponent, {static: false}) manifestDagEditor: ManifestDagEditorComponent;
   @ViewChild(LabelsEditComponent, {static: false}) labelEditor: LabelsEditComponent;
 
   manifestText: string;
-  manifestTextCurrent: string;
-  serverError: Alert;
-
   namespace: string;
   uid: string;
-
-  errorMarkerId;
-
 
   _workflowTemplate: WorkflowTemplate;
   labels = new Array<KeyValue>();
@@ -51,24 +45,16 @@ export class WorkflowTemplateEditComponent implements OnInit {
   }
 
   set workflowTemplate(value: WorkflowTemplate) {
-    if (!this.dag) {
-      setTimeout( () => this.workflowTemplate = value, 500);
-      return;
-    }
-
     this._workflowTemplate = value;
-    const g = NodeRenderer.createGraphFromManifest(value.manifest);
-    this.dag.display(g);
-
     this.manifestText = value.manifest;
-    this.manifestTextCurrent = value.manifest;
   }
 
   constructor(
     private appRouter: AppRouter,
     private activatedRoute: ActivatedRoute,
-    private workflowTemplateService: WorkflowTemplateServiceService,
-    private workflowService: WorkflowServiceService) { }
+    private workflowTemplateService: WorkflowTemplateServiceService) {
+
+  }
 
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(next => {
@@ -87,41 +73,6 @@ export class WorkflowTemplateEditComponent implements OnInit {
         this.workflowTemplate = res;
         this.selectedWorkflowTemplateVersion = res.version;
       });
-  }
-
-  onManifestChange(newManifest: string) {
-    this.manifestTextCurrent = newManifest;
-
-    if(newManifest === '') {
-      this.dag.clear();
-      return;
-    }
-
-    if(this.errorMarkerId) {
-      this.aceEditor.getEditor().session.removeMarker(this.errorMarkerId)
-    }
-
-    try {
-      const g = NodeRenderer.createGraphFromManifest(newManifest);
-      this.dag.display(g);
-      setTimeout( () => {
-         this.serverError = null;
-      });
-    }
-    catch (e) {
-      if(e instanceof yaml.YAMLException) {
-          const line = e.mark.line + 1;
-          const column = e.mark.column + 1;
-
-          const codeErrorRange = new aceRange(line - 1, 0, line - 1, column);
-          this.errorMarkerId = this.aceEditor.getEditor().session.addMarker(codeErrorRange, "highlight-error", "fullLine");
-
-          this.serverError = {
-              message: e.reason + " at line: " + line + " column: " + column,
-              type: 'danger'
-          };
-      }
-    }
   }
 
   getWorkflowTemplateVersions() {
@@ -159,11 +110,13 @@ export class WorkflowTemplateEditComponent implements OnInit {
   }
 
   update() {
-    // @todo display error message if duplicates.
+    // @todo display error message if there are duplicates in the labels.
     if(!this.labelEditor.isValid) {
         this.labelEditor.markAllAsDirty();
         return;
     }
+
+    const manifestText = this.manifestDagEditor.manifestTextCurrent;
 
     this.workflowTemplateService
       .createWorkflowTemplateVersion(
@@ -171,15 +124,15 @@ export class WorkflowTemplateEditComponent implements OnInit {
         this.workflowTemplate.uid,
         {
           name: this.workflowTemplate.name,
-          manifest: this.manifestTextCurrent,
+          manifest: manifestText,
           labels: this.labels,
         })
       .subscribe(res => {
           this.appRouter.navigateToWorkflowTemplateView(this.namespace, this.workflowTemplate.uid);
       }, (err: HttpErrorResponse) => {
-        this.serverError = {
-          message: err.error.message,
-          type: 'danger',
+        this.manifestDagEditor.serverError = {
+            message: err.error.message,
+            type: 'danger',
         };
       });
   }
@@ -202,10 +155,7 @@ export class WorkflowTemplateEditComponent implements OnInit {
 
   onVersionSelected(selected: WorkflowTemplateSelected) {
       this.manifestText = selected.manifest;
-      this.manifestTextCurrent = selected.manifest;
-
       let versionNumber = parseInt(selected.name);
-
       this.getLabels(versionNumber);
   }
 }
