@@ -14,16 +14,17 @@
         </div>
         <div class="font-roboto">Need help? <a href="#">How to define workflows</a></div>
       </div>
+      <mat-form-field appearance="outline" class="wp-400">
+        <mat-label>Version</mat-label>
+        <mat-select [(value)]="selectedWorkflowTemplateVersion" (valueChange)="onVersionSelected($event)">
+          <mat-option *ngFor="let version of workflowTemplateVersions" [value]="version.version">
+            {{ version.version }} - <app-date [dateTime]="version.createdAt"></app-date>
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
       <div class="d-flex">
-        <app-workflow-template-select
-                *ngIf="workflowTemplateListItems && selectedWorkflowTemplateVersion"
-                class="scroll-overflow"
-                [items]="workflowTemplateListItems"
-                [selectedTemplate]="selectedWorkflowTemplateVersion.toString()"
-                (templateSelected)="onVersionSelected($event)">
-        </app-workflow-template-select>
         <app-manifest-dag-editor
-                class="flex-grow-1 ml-8"
+                class="flex-grow-1"
                 [manifestText]="manifestText">
         </app-manifest-dag-editor>
       </div>

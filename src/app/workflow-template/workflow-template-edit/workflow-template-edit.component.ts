@@ -1,13 +1,6 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DagComponent } from '../../dag/dag.component';
-import { NodeRenderer } from '../../node/node.service';
-import { WorkflowService } from '../../workflow/workflow.service';
 import { HttpErrorResponse } from "@angular/common/http";
-import { AceEditorComponent } from "ng2-ace-editor";
-import * as yaml from 'js-yaml';
-import * as ace from 'brace';
-import { Alert } from "../../alert/alert";
 import { LabelsEditComponent } from "../../labels/labels-edit/labels-edit.component";
 import {
     WorkflowTemplateSelected,
@@ -17,12 +10,13 @@ import {
 import { AppRouter } from "../../router/app-router.service";
 import { KeyValue, WorkflowServiceService, WorkflowTemplate, WorkflowTemplateServiceService } from "../../../api";
 import { ManifestDagEditorComponent } from "../../manifest-dag-editor/manifest-dag-editor.component";
-const aceRange = ace.acequire('ace/range').Range;
+import { DatePipe } from "@angular/common";
 
 @Component({
   selector: 'app-workflow-template-edit',
   templateUrl: './workflow-template-edit.component.html',
   styleUrls: ['./workflow-template-edit.component.scss'],
+  providers: [DatePipe]
 })
 export class WorkflowTemplateEditComponent implements OnInit {
   @ViewChild(ManifestDagEditorComponent, {static: false}) manifestDagEditor: ManifestDagEditorComponent;
@@ -52,7 +46,8 @@ export class WorkflowTemplateEditComponent implements OnInit {
   constructor(
     private appRouter: AppRouter,
     private activatedRoute: ActivatedRoute,
-    private workflowTemplateService: WorkflowTemplateServiceService) {
+    private workflowTemplateService: WorkflowTemplateServiceService,
+    private datePipe: DatePipe) {
 
   }
 
@@ -92,9 +87,11 @@ export class WorkflowTemplateEditComponent implements OnInit {
         }
 
         let children = new Array<WorkflowTemplateSelected>();
+
         for(const version of this.workflowTemplateVersions) {
+            const dateValue = this.datePipe.transform(version.createdAt, 'MMM d, y h:mm:ss a')
             let newItem: WorkflowTemplateSelected = {
-                name: version.version.toString(),
+                name: `${dateValue}`,
                 manifest: version.manifest
             };
 
@@ -153,9 +150,13 @@ export class WorkflowTemplateEditComponent implements OnInit {
         })
   }
 
-  onVersionSelected(selected: WorkflowTemplateSelected) {
-      this.manifestText = selected.manifest;
-      let versionNumber = parseInt(selected.name);
-      this.getLabels(versionNumber);
+  onVersionSelected(selected: number) {
+      const version = this.workflowTemplateVersions.find(wft => wft.version === selected);
+      if(!version) {
+          return;
+      }
+
+      this.manifestText = version.manifest;
+      this.getLabels(version.version);
   }
 }
