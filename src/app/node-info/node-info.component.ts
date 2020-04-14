@@ -66,21 +66,28 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
     this.previousNodeStatus = this.node;
     this.node = node;
 
-    if(node.startedAt) {
-      this.startedAt = new Date(node.startedAt);
-    } else {
-      this.startedAt = node.startedAt;
-    }
+    const skipped = node.phase === 'Skipped';
 
-    if(node.finishedAt) {
-      this.finishedAt = new Date(node.finishedAt);
-    } else {
-      // Error phase has no finished date
-      if (node.phase === 'Error') {
-        this.finishedAt = node.startedAt;
+    if(!skipped) {
+      if (node.startedAt) {
+        this.startedAt = new Date(node.startedAt);
       } else {
-        this.finishedAt = node.finishedAt;
+        this.startedAt = node.startedAt;
       }
+
+      if(node.finishedAt) {
+        this.finishedAt = new Date(node.finishedAt);
+      } else {
+        // Error phase has no finished date
+        if (node.phase === 'Error') {
+          this.finishedAt = node.startedAt;
+        } else {
+          this.finishedAt = node.finishedAt;
+        }
+      }
+    } else {
+      this.startedAt = undefined;
+      this.finishedAt = undefined;
     }
 
     this.status = node.phase;
