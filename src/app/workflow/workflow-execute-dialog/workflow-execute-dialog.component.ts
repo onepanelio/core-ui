@@ -25,7 +25,9 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
 
     if(res && res.arguments && res.arguments.parameters) {
       for(const param of res.arguments.parameters) {
-        parameters.push(param);
+        if(param && typeof param === 'object') {
+          parameters.push(param);
+        }
       }
     }
 

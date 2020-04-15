@@ -4,18 +4,16 @@
         <button mat-button color="primary" class="link-button font-size-regular" (click)="toggleFormRender()">
             <img src="/assets/images/render-icon.svg" class="mr-2 bottom-adjust">
             <ng-container *ngIf="showingRender">
-                Hide form render
+                Show form preview
             </ng-container>
             <ng-container *ngIf="!showingRender">
-                Show form render
+                Show graph preview
             </ng-container>
         </button>
     </div>
     <div class="two-panels">
         <ace-editor
-                class="panel"
-                [class.w-50]="showingRender"
-                [class.w-100]="!showingRender"
+                class="panel w-50"
                 [mode]="'yaml'"
                 [text]="manifestText"
                 (textChanged)="onManifestChange($event)"
@@ -31,7 +29,16 @@
                  [class.hidden]="!showingRender"
                  [class.w-0]="!showingRender"
                  [class.w-50]="showingRender"
-                 [class.ml-4]="showingRender"
-        ></app-dag>
+                 [class.pl-4]="showingRender"
+                 [class.pr-4]="showingRender">
+        </app-dag>
+        <app-form class="panel scroll-overflow"
+                  [fieldData]="parameters"
+                  [class.hidden]="showingRender"
+                  [class.w-0]="showingRender"
+                  [class.w-50]="!showingRender"
+                  [class.p-4]="!showingRender">
+        </app-form>
+
     </div>
 </div>

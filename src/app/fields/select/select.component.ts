@@ -20,7 +20,7 @@ export class SelectComponent implements OnInit {
     }
 
     for(let option of value.options) {
-      if(option.name && option.value) {
+      if(option && option.name && option.value) {
         this.options.push(option);
       }
     }

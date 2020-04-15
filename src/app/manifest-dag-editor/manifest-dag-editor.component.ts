@@ -5,6 +5,7 @@ import { AceEditorComponent } from "ng2-ace-editor";
 import * as yaml from 'js-yaml';
 import * as ace from 'brace';
 import { Alert } from "../alert/alert";
+import { WorkflowExecuteDialogComponent } from "../workflow/workflow-execute-dialog/workflow-execute-dialog.component";
 const aceRange = ace.acequire('ace/range').Range;
 
 @Component({
@@ -22,6 +23,8 @@ export class ManifestDagEditorComponent implements OnInit {
   showingRender: boolean = true;
   manifestTextCurrent: string;
   errorMarkerId;
+
+  parameters = new Array<FieldData>();
 
   constructor() { }
 
@@ -43,6 +46,7 @@ export class ManifestDagEditorComponent implements OnInit {
     try {
       const g = NodeRenderer.createGraphFromManifest(newManifest);
       this.dag.display(g);
+      this.updateParameters(newManifest);
       setTimeout( () => {
         this.serverError = null;
       });
@@ -60,6 +64,15 @@ export class ManifestDagEditorComponent implements OnInit {
           type: 'danger'
         };
       }
+    }
+  }
+
+  private updateParameters(manifest: string) {
+    let previousParameters = this.parameters;
+    try {
+      this.parameters = WorkflowExecuteDialogComponent.pluckParameters(manifest);
+    } catch (e) {
+      this.parameters = previousParameters;
     }
   }
 
