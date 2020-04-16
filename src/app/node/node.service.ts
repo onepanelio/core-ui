@@ -63,7 +63,6 @@ export class NodeRenderer {
   static summaryNodeHeight = 50;
   static nodeWidth = 200;
 
-
   static populateNodeInfoFromTemplate(info: NodeInfo, template?: any): NodeInfo {
     if (!template || (!template.container && !template.resource && !template.script)) {
       return info;
@@ -364,15 +363,15 @@ export class NodeRenderer {
     const graph = new dagre.graphlib.Graph();
     graph.setGraph({});
     graph.setDefaultEdgeLabel(() => ({}));
-    const manifest = yaml.safeLoad(manifestRaw);
+    const spec = yaml.safeLoad(manifestRaw);
 
-    if (!manifest.spec || !manifest.spec.templates) {
+    if (!spec.templates) {
       throw new Error(
         'Could not generate graph. Provided Pipeline had no components.'
       );
     }
 
-    const workflowTemplates = manifest.spec.templates;
+    const workflowTemplates = spec.templates;
 
     const templates = new Map<string, { nodeType: NodeType; template: any }>();
 
@@ -380,7 +379,7 @@ export class NodeRenderer {
     // construct the graph
     for (const template of workflowTemplates.filter(t => !!t && !!t.name)) {
       // Argo allows specifying a single global exit handler. We also highlight that node
-      if (template.name === manifest.spec.onExit) {
+      if (template.name === spec.onExit) {
         const info = new NodeInfo();
         NodeRenderer.populateNodeInfoFromTemplate(info, template);
         graph.setNode(template.name, {
@@ -402,12 +401,12 @@ export class NodeRenderer {
       }
     }
 
-    NodeRenderer.buildDag(graph, manifest.spec.entrypoint, templates, new Map(), '');
+    NodeRenderer.buildDag(graph, spec.entrypoint, templates, new Map(), '');
 
     // If template is not a DAG
     if (graph.nodeCount() === 0) {
       const entryPointTemplate = workflowTemplates.find(
-        t => t.name === manifest.spec.entrypoint
+        t => t.name === spec.entrypoint
       );
       if (entryPointTemplate) {
         graph.setNode(entryPointTemplate.name, {

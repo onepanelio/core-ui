@@ -116,7 +116,7 @@ export class SimpleWorkflowDetail implements WorkflowDetail{
     
     let jsonTemplateManifest = yaml.safeLoad(this.workflowTemplate.manifest);
     if (this.jsonManifest.spec.arguments && this.jsonManifest.spec.arguments.parameters) {
-      jsonTemplateManifest.spec.arguments.parameters = this.jsonManifest.spec.arguments.parameters;
+      jsonTemplateManifest.arguments.parameters = this.jsonManifest.spec.arguments.parameters;
     }
     this.yamlManifest = yaml.safeDump(jsonTemplateManifest);
   }

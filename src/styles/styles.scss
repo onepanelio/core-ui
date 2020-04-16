@@ -33,6 +33,14 @@
 
 $spacer: 0.25rem;
 @for $i from 1 through 20 {
+  .m-#{$i} {
+    margin: ($i * $spacer) !important;
+  }
+
+  .p-#{$i} {
+    padding: ($i * $spacer) !important;
+  }
+
   .mt-#{$i} {
     margin-top: ($i * $spacer) !important;
   }
@@ -139,6 +147,10 @@ a {
   color: black;
 }
 
+.w-0 {
+  width: 0 !important;
+}
+
 .w-50 {
   width: 50% !important;
 }
@@ -148,7 +160,7 @@ a {
 }
 
 .wp-400 {
-  width: 400px;
+  width: 400px !important;
 }
 
 .h-1 {

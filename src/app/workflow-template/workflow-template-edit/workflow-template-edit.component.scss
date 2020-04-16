@@ -16,10 +16,15 @@
 
   app-dag {
     flex-grow: 1;
-    margin-left: 20px;
     width: 50%;
+    box-sizing: content-box;
   }
 
+  app-form {
+    flex-grow: 1;
+    width: 50%;
+    box-sizing: content-box;
+  }
 }
 
 app-workflow-template-select {

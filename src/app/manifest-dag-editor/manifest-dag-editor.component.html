@@ -1,0 +1,44 @@
+<app-alert [autoDismiss]="false" [alert]="serverError"></app-alert>
+<div class="op-border hide-overflow mt-3">
+    <div class="toolbar bg-toolbar-white w-100 op-border-bottom d-flex flex-row-reverse">
+        <button mat-button color="primary" class="link-button font-size-regular" (click)="toggleFormRender()">
+            <img src="/assets/images/render-icon.svg" class="mr-2 bottom-adjust">
+            <ng-container *ngIf="showingRender">
+                Show parameters form preview
+            </ng-container>
+            <ng-container *ngIf="!showingRender">
+                Show graph preview
+            </ng-container>
+        </button>
+    </div>
+    <div class="two-panels">
+        <ace-editor
+                class="panel w-50"
+                [mode]="'yaml'"
+                [text]="manifestText"
+                (textChanged)="onManifestChange($event)"
+                [options]="{
+                            showInvisibles: false,
+                            showPrintMargin: false,
+                            scrollPastEnd: 1,
+                            showLineNumbers: true,
+                            tabSize: 2
+                          }">
+        </ace-editor>
+        <app-dag class="panel"
+                 [class.hidden]="!showingRender"
+                 [class.w-0]="!showingRender"
+                 [class.w-50]="showingRender"
+                 [class.pl-4]="showingRender"
+                 [class.pr-4]="showingRender">
+        </app-dag>
+        <app-form class="panel scroll-overflow"
+                  [fieldData]="parameters"
+                  [class.hidden]="showingRender"
+                  [class.w-0]="showingRender"
+                  [class.w-50]="!showingRender"
+                  [class.p-4]="!showingRender">
+        </app-form>
+
+    </div>
+</div>

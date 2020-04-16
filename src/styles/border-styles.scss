@@ -16,6 +16,22 @@
   @include op-just-border();
 }
 
+.border-radius-top-left {
+  border-top-left-radius: 2px;
+}
+
+.border-radius-top-right {
+  border-top-right-radius: 2px;
+}
+
+.border-radius-bottom-left {
+  border-bottom-left-radius: 2px;
+}
+
+.border-radius-bottom-right {
+  border-bottom-left-radius: 2px;
+}
+
 .op-border-top {
   border-top: solid 1px $gray;
 }

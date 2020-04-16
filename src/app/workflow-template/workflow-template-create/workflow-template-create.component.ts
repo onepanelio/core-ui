@@ -3,21 +3,22 @@ import {
   WorkflowTemplateDetail,
   WorkflowTemplateService
 } from '../workflow-template.service';
-import { DagComponent } from '../../dag/dag.component';
-import { ActivatedRoute, Route, Router } from '@angular/router';
-import { NodeRenderer } from '../../node/node.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import { WorkflowService } from "../../workflow/workflow.service";
-import { WorkflowTemplateSelected } from "../../workflow-template-select/workflow-template-select.component";
-import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from "@angular/material/snack-bar";
+import {
+  WorkflowTemplateSelectComponent,
+  WorkflowTemplateSelected
+} from "../../workflow-template-select/workflow-template-select.component";
+import { MatSnackBar, MatSnackBarRef } from "@angular/material/snack-bar";
 import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { HttpErrorResponse } from "@angular/common/http";
-import { AceEditorComponent } from "ng2-ace-editor";
-import * as yaml from 'js-yaml';
 import * as ace from 'brace';
 import { ClosableSnackComponent } from "../../closable-snack/closable-snack.component";
 import { Alert } from "../../alert/alert";
-import { KeyValue, WorkflowServiceService } from "../../../api";
+import { KeyValue, WorkflowServiceService, WorkflowTemplateServiceService } from "../../../api";
 import { LabelsEditComponent } from "../../labels/labels-edit/labels-edit.component";
+import { ManifestDagEditorComponent } from "../../manifest-dag-editor/manifest-dag-editor.component";
+import { AppRouter } from "../../router/app-router.service";
 const aceRange = ace.acequire('ace/range').Range;
 
 @Component({
@@ -29,13 +30,12 @@ const aceRange = ace.acequire('ace/range').Range;
 export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy {
   private snackbarRefs: Array<MatSnackBarRef<any>> = [];
 
-  @ViewChild(AceEditorComponent, {static:false}) codeEditor: AceEditorComponent;
-  @ViewChild(DagComponent, {static: false}) dag: DagComponent;
+  @ViewChild(WorkflowTemplateSelectComponent, {static: false}) workflowTemplateSelect: WorkflowTemplateSelectComponent;
+  @ViewChild(ManifestDagEditorComponent, {static: false}) manifestDagEditor: ManifestDagEditorComponent;
   @ViewChild(LabelsEditComponent, {static: false}) labelEditor: LabelsEditComponent;
 
   previousManifestText: string;
   manifestText: string;
-  manifestTextCurrent: string;
   serverError: Alert;
 
   namespace: string;
@@ -44,8 +44,6 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy {
   form: FormGroup;
   labels = new Array<KeyValue>();
 
-  private errorMarkerId;
-
   private workflowTemplateDetail: WorkflowTemplateDetail;
 
   get workflowTemplate(): WorkflowTemplateDetail {
@@ -53,25 +51,16 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy {
   }
 
   set workflowTemplate(value: WorkflowTemplateDetail) {
-    if (!this.dag) {
-      setTimeout( () => this.workflowTemplate = value, 500);
-      return;
-    }
-
     this.workflowTemplateDetail = value;
-    const g = NodeRenderer.createGraphFromManifest(value.manifest);
-    this.dag.display(g);
-
-    this.manifestText = value.manifest;
-    this.manifestTextCurrent = value.manifest;
   }
 
   constructor(
       private formBuilder: FormBuilder,
-      private router: Router,
+      private appRouter: AppRouter,
       private activatedRoute: ActivatedRoute,
       private workflowService: WorkflowService,
       private workflowTemplateService: WorkflowTemplateService,
+      private workflowTemplateServiceService: WorkflowTemplateServiceService,
       private workflowServiceService: WorkflowServiceService,
       private snackBar: MatSnackBar) { }
 
@@ -97,38 +86,6 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy {
     }
   }
 
-  onManifestChange(newManifest: string) {
-    this.manifestTextCurrent = newManifest;
-
-    if(newManifest === '') {
-      this.dag.clear();
-      return;
-    }
-
-    if(this.errorMarkerId) {
-      this.codeEditor.getEditor().session.removeMarker(this.errorMarkerId)
-    }
-
-    try {
-      const g = NodeRenderer.createGraphFromManifest(newManifest);
-      this.dag.display(g);
-      this.setServerError(null);
-    } catch (e) {
-      if(e instanceof yaml.YAMLException) {
-        const line = e.mark.line + 1;
-        const column = e.mark.column + 1;
-
-        const codeErrorRange = new aceRange(line - 1, 0, line - 1, column);
-        this.errorMarkerId = this.codeEditor.getEditor().session.addMarker(codeErrorRange, "highlight-error", "fullLine");
-
-        this.setServerError({
-          message: e.reason + " at line: " + line + " column: " + column,
-          type: 'danger'
-        });
-      }
-    }
-  }
-
   save() {
     const templateName = this.templateNameInput.value;
 
@@ -144,21 +101,15 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.workflowTemplateService
-        .create(this.namespace, {
+    const manifestText = this.manifestDagEditor.manifestTextCurrent;
+    this.workflowTemplateServiceService
+        .createWorkflowTemplate(this.namespace, {
           name: templateName,
-          manifest: this.manifestTextCurrent,
+          manifest: manifestText,
+          labels: this.labels
         })
         .subscribe(res => {
-          this.workflowServiceService.replaceWorkflowTemplateLabels(this.namespace, res.uid, {
-            items: this.labels
-          }).subscribe( labelRes => {
-            // Do nothing
-          }, err => {
-            // Do nothing
-          }, () => {
-            this.router.navigate(['/', this.namespace, 'workflow-templates', res.uid]);
-          })
+          this.appRouter.navigateToWorkflowTemplateView(this.namespace, res.uid);
         }, (err: HttpErrorResponse) => {
           if(err.status === 409) {
             this.templateNameInput.setErrors({
@@ -176,23 +127,12 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy {
   }
 
   cancel() {
-    this.router.navigate(['/', this.namespace, 'workflow-templates']);
+    this.appRouter.navigateToWorkflowTemplates(this.namespace);
   }
 
   onTemplateSelected(template: WorkflowTemplateSelected) {
-    if(!this.manifestTextCurrent || (this.manifestText === this.manifestTextCurrent)) {
-      this.manifestText = template.manifest;
-      this.manifestTextCurrent = template.manifest;
-      return;
-    }
-
-    this.previousManifestText = this.manifestTextCurrent;
+    this.previousManifestText = this.manifestDagEditor.manifestTextCurrent;
     this.manifestText = template.manifest;
-    this.manifestTextCurrent = template.manifest;
-
-    // We have to update this because just changing the variable above
-    // does not always update the value in the editor.
-    this.codeEditor.getEditor().session.setValue(template.manifest);
 
     const snackUndo = this.snackBar.openFromComponent(ClosableSnackComponent, {
       data: {
@@ -202,16 +142,10 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy {
     });
 
     snackUndo.onAction().subscribe(res => {
+      this.workflowTemplateSelect.undo();
       this.manifestText = this.previousManifestText;
-      this.manifestTextCurrent = this.previousManifestText;
     });
 
     this.snackbarRefs.push(snackUndo);
-  }
-
-  setServerError(message: Alert) {
-    setTimeout( () => {
-      this.serverError = null;
-    });
   }
 }

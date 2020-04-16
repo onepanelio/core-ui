@@ -9,40 +9,33 @@
         <div>
           <mat-form-field appearance="outline" class="wp-400">
             <mat-label>Template name</mat-label>
-            <input matInput disabled value="{{workflowTemplateDetail?.name}}"/>
+            <input matInput disabled value="{{workflowTemplate?.name}}"/>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="wp-400 ml-5">
+            <mat-label>Version</mat-label>
+            <mat-select [(value)]="selectedWorkflowTemplateVersion" (valueChange)="onVersionSelected($event)">
+              <mat-option *ngFor="let version of workflowTemplateVersions" [value]="version.version">
+                v{{ version.version }} (<app-date [dateTime]="version.createdAt"></app-date>)
+              </mat-option>
+            </mat-select>
           </mat-form-field>
         </div>
         <div class="font-roboto">Need help? <a href="#">How to define workflows</a></div>
       </div>
       <div class="d-flex">
-        <div class="flex-grow-1">
-          <app-alert [autoDismiss]="false" [alert]="serverError"></app-alert>
-          <div class="two-panels op-border mt-3">
-            <ace-editor
-                 class="w-50 panel"
-                 [mode]="'yaml'"
-                 [text]="manifestText"
-                 (textChanged)="onManifestChange($event)"
-                 [options]="{
-                    showInvisibles: false,
-                    showPrintMargin: false,
-                    scrollPastEnd: 1,
-                    showLineNumbers: true,
-                    tabSize: 2
-                  }"
-            ></ace-editor>
-            <app-dag class="w-50 panel"></app-dag>
-          </div>
-          <div class="mt-5">
-            <div class="op-h2">Labels</div>
-            <app-labels-edit class="d-inline-block w-50 mt-3" [labels]="labels" ></app-labels-edit>
-          </div>
-          <div class="mt-5 d-flex justify-content-between">
-            <button mat-button class="font-medium-gray cancel-button" (click)="cancel()">CANCEL</button>
-            <div>
-              <button mat-flat-button color="accent" class="op-rounded op-button border-secondary" (click)="update()">Save</button>
-            </div>
-          </div>
+        <app-manifest-dag-editor
+                class="flex-grow-1"
+                [manifestText]="manifestText">
+        </app-manifest-dag-editor>
+      </div>
+      <div class="mt-5">
+        <div class="op-h2">Labels</div>
+        <app-labels-edit class="d-inline-block w-50 mt-3" [labels]="labels" ></app-labels-edit>
+      </div>
+      <div class="mt-5 d-flex justify-content-between">
+        <button mat-button class="font-medium-gray cancel-button" (click)="cancel()">CANCEL</button>
+        <div>
+          <button mat-flat-button color="accent" class="op-rounded op-button border-secondary" (click)="update()">Save</button>
         </div>
       </div>
     </div>

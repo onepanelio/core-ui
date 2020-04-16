@@ -11,7 +11,6 @@ import { Namespace, NamespaceServiceService } from "../api";
 import { AuthService } from "./auth/auth.service";
 import { environment } from "../environments/environment";
 import { MatDialog } from "@angular/material/dialog";
-import { WorkflowExecuteDialogComponent } from "./workflow/workflow-execute-dialog/workflow-execute-dialog.component";
 import { CreateNamespaceDialogComponent } from "./namespace/create-namespace-dialog/create-namespace-dialog.component";
 
 @Component({
@@ -51,6 +50,8 @@ export class AppComponent implements OnInit {
     this.router.events
         .pipe(filter((e) => e instanceof NavigationEnd))
         .subscribe((e: NavigationEnd) => {
+          this.showNamespaceManager = false;
+          
           if(e.urlAfterRedirects.indexOf('templates') >= 0) {
             this.activeRoute = 'templates';
           }
@@ -105,6 +106,7 @@ export class AppComponent implements OnInit {
   }
 
   logout() {
+      this.showNamespaceManager = false;
       this.authService.clearTokens();
       this.router.navigate(['/', 'login']);
   }

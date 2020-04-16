@@ -250,9 +250,9 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   }
 
   updateYamlSelection() {
-    const manifest = this.workflow.yamlManifest;
-    const parsedYaml = yaml.safeLoad(this.workflow.yamlManifest);
-    const templates = parsedYaml.spec.templates;
+    const spec = this.workflow.yamlManifest;
+    const parsedYaml = yaml.safeLoad(spec);
+    const templates = parsedYaml.templates;
 
     let templateNames = [];
     let selectedTemplate = null;
@@ -263,14 +263,14 @@ export class WorkflowComponent implements OnInit, OnDestroy {
       }
     }
 
-    const manifestLines = manifest.split('\n');
+    const manifestLines = spec.split("\n");
 
     let templatesLineNumber = -1;
     let templatesIndentation = 0;
     for(let i = 0; i < manifestLines.length; i++) {
       const line = manifestLines[i];
       const templateIndex = line.indexOf('templates');
-      if(templateIndex > 0) {
+      if(templateIndex >= 0) {
         templatesLineNumber = i;
         templatesIndentation = templateIndex;
         break;
@@ -283,6 +283,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
 
     for(let i = templatesLineNumber; i < manifestLines.length; i++) {
       const line = manifestLines[i];
+
       const trimmedLine = line.trimLeft();
       if (trimmedLine.length === 0) {
         continue;
@@ -295,12 +296,12 @@ export class WorkflowComponent implements OnInit, OnDestroy {
       }
 
       const nameIndex = line.indexOf('name');
-      if (firstNameIndentation === -1) {
+      if (firstNameIndentation === -1 || (nameIndex < firstNameIndentation)) {
         firstNameIndentation = nameIndex;
       }
 
       if(templateStartLineNumber === -1 && nameIndex > 0 && nameIndex == firstNameIndentation) {
-        if(line.indexOf(this.nodeInfo.templateName) > 0) {
+        if(line.indexOf(this.nodeInfo.templateName) >= 0) {
           templateStartLineNumber = i;
         }
         continue;

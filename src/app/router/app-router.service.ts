@@ -8,11 +8,19 @@ export class AppRouter {
 
   constructor(private router: Router) { }
 
+  public navigateToWorkflowTemplates(namespace: string) {
+    this.router.navigate(['/', namespace, 'workflow-templates']);
+  }
+
   public navigateToWorkflowTemplateView(namespace: string, workflowTemplateUid: string) {
     return this.router.navigate(['/', namespace, 'workflow-templates', workflowTemplateUid]);
   }
 
   public navigateToWorkflowTemplateClone(namespace: string, workflowTemplateUid: string) {
     return this.router.navigate(['/', namespace, 'workflow-templates', workflowTemplateUid, 'clone']);
+  }
+
+  public navigateToWorkflowExecution(namespace: string, name: string) {
+    this.router.navigate(['/', namespace, 'workflows', name]);
   }
 }
