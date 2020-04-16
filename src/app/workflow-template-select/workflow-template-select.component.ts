@@ -108,7 +108,20 @@ templates:
     }
   ];
 
-  @Input() selectedTemplate: string = 'new';
+  previousSelectedTemplate: string = null;
+  _selectedTemplate: string = 'new';
+
+  @Input() set selectedTemplate(value: string) {
+    if(value !== this.previousSelectedTemplate) {
+      this.previousSelectedTemplate = this._selectedTemplate;
+    }
+
+    this._selectedTemplate = value;
+  }
+  get selectedTemplate(): string {
+    return this._selectedTemplate;
+  }
+
   @Input() items: Array<WorkflowTemplateSelectItem> = [{
     header: {
       title: 'Blank template',
@@ -132,14 +145,6 @@ templates:
   selectTemplate(name: string) {
     this.selectedTemplate = name;
 
-    if (name === 'new') {
-      this.templateSelected.emit({
-        name: 'new',
-        manifest: '',
-      });
-      return;
-    }
-
     const workflowTemplateList = this.items.find(list => {
       return list.children.find(item => item.name === name);
     });
@@ -155,5 +160,9 @@ templates:
     }
 
     this.templateSelected.emit(workflowTemplateItem);
+  }
+
+  undo() {
+    this.selectedTemplate = this.previousSelectedTemplate;
   }
 }

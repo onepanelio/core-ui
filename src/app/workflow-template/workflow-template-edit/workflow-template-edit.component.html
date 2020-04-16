@@ -11,17 +11,17 @@
             <mat-label>Template name</mat-label>
             <input matInput disabled value="{{workflowTemplate?.name}}"/>
           </mat-form-field>
+          <mat-form-field appearance="outline" class="wp-400 ml-5">
+            <mat-label>Version</mat-label>
+            <mat-select [(value)]="selectedWorkflowTemplateVersion" (valueChange)="onVersionSelected($event)">
+              <mat-option *ngFor="let version of workflowTemplateVersions" [value]="version.version">
+                {{ version.version }} - <app-date [dateTime]="version.createdAt"></app-date>
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
         </div>
         <div class="font-roboto">Need help? <a href="#">How to define workflows</a></div>
       </div>
-      <mat-form-field appearance="outline" class="wp-400">
-        <mat-label>Version</mat-label>
-        <mat-select [(value)]="selectedWorkflowTemplateVersion" (valueChange)="onVersionSelected($event)">
-          <mat-option *ngFor="let version of workflowTemplateVersions" [value]="version.version">
-            v{{ version.version }} (<app-date [dateTime]="version.createdAt"></app-date>)
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
       <div class="d-flex">
         <app-manifest-dag-editor
                 class="flex-grow-1"

@@ -59,10 +59,12 @@ export class ManifestDagEditorComponent implements OnInit {
         const codeErrorRange = new aceRange(line - 1, 0, line - 1, column);
         this.errorMarkerId = this.aceEditor.getEditor().session.addMarker(codeErrorRange, "highlight-error", "fullLine");
 
-        this.serverError = {
-          message: e.reason + " at line: " + line + " column: " + column,
-          type: 'danger'
-        };
+        setTimeout(() => {
+          this.serverError = {
+            message: e.reason + " at line: " + line + " column: " + column,
+            type: 'danger'
+          };
+        });
       }
     }
   }

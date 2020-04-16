@@ -8,6 +8,10 @@ export class AppRouter {
 
   constructor(private router: Router) { }
 
+  public navigateToWorkflowTemplates(namespace: string) {
+    this.router.navigate(['/', namespace, 'workflow-templates']);
+  }
+
   public navigateToWorkflowTemplateView(namespace: string, workflowTemplateUid: string) {
     return this.router.navigate(['/', namespace, 'workflow-templates', workflowTemplateUid]);
   }
