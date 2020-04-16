@@ -15,7 +15,7 @@
             <mat-label>Version</mat-label>
             <mat-select [(value)]="selectedWorkflowTemplateVersion" (valueChange)="onVersionSelected($event)">
               <mat-option *ngFor="let version of workflowTemplateVersions" [value]="version.version">
-                {{ version.version }} - <app-date [dateTime]="version.createdAt"></app-date>
+                v{{ version.version }} (<app-date [dateTime]="version.createdAt"></app-date>)
               </mat-option>
             </mat-select>
           </mat-form-field>
