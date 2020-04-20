@@ -21,6 +21,10 @@
         <cdk-header-cell *cdkHeaderCellDef>Name</cdk-header-cell>
         <cdk-cell *cdkCellDef="let workflowTemplate" class="flex-grow-1">
           <a class="name-link d-block" [routerLink]="['/', this.namespace, 'workflow-templates', workflowTemplate.uid]">{{workflowTemplate.name}}</a>
+          <div class="d-inline-flex justify-content-between color-medium-gray font-roboto font-size-small mt-2">
+            <div class="mr-5">{{workflowTemplate.versions}} versions</div>
+            <div>{{workflowTemplate.stats.total}} executions</div>
+          </div>
           <app-labels-list-view [labels]="workflowTemplate.labels" class="d-inline-block"></app-labels-list-view>
         </cdk-cell>
       </ng-container>
