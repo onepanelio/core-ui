@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 import { KeyValue } from './keyValue';
+import { WorkflowExecutionStatisticReport } from './workflowExecutionStatisticReport';
 
 
 export interface WorkflowTemplate { 
@@ -21,5 +22,6 @@ export interface WorkflowTemplate {
     isLatest?: boolean;
     isArchived?: boolean;
     labels?: Array<KeyValue>;
+    stats?: WorkflowExecutionStatisticReport;
 }
 

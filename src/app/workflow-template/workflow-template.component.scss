@@ -1,7 +1,57 @@
 .workflow-list {
 }
 
+.cdk-header-cell {
+  flex-grow: 1;
+}
 
 .cdk-column-name {
   flex-basis: 300px;
+
+  /deep/ app-labels-list-view .labels-list-item {
+    margin-top: 10px;
+  }
 }
+
+.cdk-column-status {
+  min-width: 400px;
+
+  app-workflow-template-status {
+    display: block;
+    width: 400px;
+  }
+
+  @media only screen and (max-width: 1140px) {
+    min-width: 300px;
+    app-workflow-template-status {
+      width: 300px;
+    }
+  }
+
+  @media only screen and (max-width: 960px) {
+    min-width: 200px;
+    app-workflow-template-status {
+      width: 200px;
+    }
+  }
+
+  @media only screen and (max-width: 720px) {
+    min-width: 100px;
+    app-workflow-template-status {
+      width: 100px;
+    }
+  }
+}
+
+.cdk-column-actions {
+  flex-basis: 40px;
+}
+
+.cdk-column-createdAt {
+  flex-basis: 180px;
+}
+
+.cdk-column-lastExecuted {
+  flex-basis: 150px;
+}
+

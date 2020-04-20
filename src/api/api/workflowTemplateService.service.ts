@@ -642,13 +642,18 @@ export class WorkflowTemplateServiceService {
      * @param namespace 
      * @param name 
      * @param version 
+     * @param statsTotal 
+     * @param statsLastExecuted 
+     * @param statsRunning 
+     * @param statsCompleted 
+     * @param statsFailed 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getWorkflowTemplateLabels(namespace: string, name: string, version?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetLabelsResponse>;
-    public getWorkflowTemplateLabels(namespace: string, name: string, version?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetLabelsResponse>>;
-    public getWorkflowTemplateLabels(namespace: string, name: string, version?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetLabelsResponse>>;
-    public getWorkflowTemplateLabels(namespace: string, name: string, version?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getWorkflowTemplateLabels(namespace: string, name: string, version?: number, statsTotal?: number, statsLastExecuted?: string, statsRunning?: number, statsCompleted?: number, statsFailed?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetLabelsResponse>;
+    public getWorkflowTemplateLabels(namespace: string, name: string, version?: number, statsTotal?: number, statsLastExecuted?: string, statsRunning?: number, statsCompleted?: number, statsFailed?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetLabelsResponse>>;
+    public getWorkflowTemplateLabels(namespace: string, name: string, version?: number, statsTotal?: number, statsLastExecuted?: string, statsRunning?: number, statsCompleted?: number, statsFailed?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetLabelsResponse>>;
+    public getWorkflowTemplateLabels(namespace: string, name: string, version?: number, statsTotal?: number, statsLastExecuted?: string, statsRunning?: number, statsCompleted?: number, statsFailed?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
             throw new Error('Required parameter namespace was null or undefined when calling getWorkflowTemplateLabels.');
         }
@@ -660,6 +665,26 @@ export class WorkflowTemplateServiceService {
         if (version !== undefined && version !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>version, 'version');
+        }
+        if (statsTotal !== undefined && statsTotal !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>statsTotal, 'stats.total');
+        }
+        if (statsLastExecuted !== undefined && statsLastExecuted !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>statsLastExecuted, 'stats.lastExecuted');
+        }
+        if (statsRunning !== undefined && statsRunning !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>statsRunning, 'stats.running');
+        }
+        if (statsCompleted !== undefined && statsCompleted !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>statsCompleted, 'stats.completed');
+        }
+        if (statsFailed !== undefined && statsFailed !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>statsFailed, 'stats.failed');
         }
 
         let headers = this.defaultHeaders;
