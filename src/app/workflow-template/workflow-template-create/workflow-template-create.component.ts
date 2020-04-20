@@ -119,7 +119,7 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy {
             return;
           }
 
-          this.serverError = {
+          this.manifestDagEditor.serverError = {
             message: err.error.message,
             type: 'danger',
           };
