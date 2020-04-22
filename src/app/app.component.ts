@@ -12,6 +12,7 @@ import { AuthService } from "./auth/auth.service";
 import { environment } from "../environments/environment";
 import { MatDialog } from "@angular/material/dialog";
 import { CreateNamespaceDialogComponent } from "./namespace/create-namespace-dialog/create-namespace-dialog.component";
+import 'hammerjs';
 
 @Component({
   selector: 'app-root',
