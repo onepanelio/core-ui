@@ -90,6 +90,7 @@ import { NamespaceManagerComponent } from './namespace/namespace-manager/namespa
 import { CreateNamespaceDialogComponent } from './namespace/create-namespace-dialog/create-namespace-dialog.component';
 import { WorkflowTemplateCloneComponent } from './workflow-template/workflow-template-clone/workflow-template-clone.component';
 import { ManifestDagEditorComponent } from './manifest-dag-editor/manifest-dag-editor.component';
+import { WorkflowTemplateStatusComponent } from './workflow-template/workflow-template-status/workflow-template-status.component';
 
 @NgModule({
   declarations: [
@@ -152,7 +153,8 @@ import { ManifestDagEditorComponent } from './manifest-dag-editor/manifest-dag-e
     NamespaceManagerComponent,
     CreateNamespaceDialogComponent,
     WorkflowTemplateCloneComponent,
-    ManifestDagEditorComponent
+    ManifestDagEditorComponent,
+    WorkflowTemplateStatusComponent
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,

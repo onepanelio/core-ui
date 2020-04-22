@@ -1,0 +1,24 @@
+<div class="font-roboto">
+    <div class="d-flex justify-content-between">
+        <div *ngIf="values.length > 0">
+            <span class="font-weight-bold">{{values[0]}}</span> running
+        </div>
+
+        <div class="flex-grow-1"></div>
+
+        <div *ngIf="values.length > 1">
+            <span class="font-weight-bold">{{values[1]}}</span> completed
+        </div>
+
+        <div *ngIf="values.length > 2" class="ml-3">
+            <span class="font-weight-bold">{{values[2]}}</span> failed
+        </div>
+    </div>
+    <div>
+        <ng-container *ngFor="let elementStyle of styles; let index = index; let last = last">
+            <div *ngIf="values[index] != 0" [ngStyle]="elementStyle" [matTooltip]="tooltips[index]"
+                 class="d-inline-block">
+            </div>
+        </ng-container>
+    </div>
+</div>
