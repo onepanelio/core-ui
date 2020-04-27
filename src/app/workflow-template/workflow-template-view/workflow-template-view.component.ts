@@ -317,4 +317,8 @@ export class WorkflowTemplateViewComponent implements OnInit {
 
     this.showCronWorkflowsCallToAction = !this.hasCronWorkflows && this.matTabGroup.selectedIndex === 1;
   }
+
+  onWorkflowExecutionTerminated() {
+    this.getWorkflows();
+  }
 }
