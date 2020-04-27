@@ -23,8 +23,8 @@
         <div class="flex-grow-1">
         </div>
 
-        <div *ngIf="activityBar.normalizedStatus === 'failed'" class="failed">
-          <button mat-flat-button color="warn" (click)="runAgain()">RUN AGAIN</button>
+        <div>
+          <button mat-flat-button *ngIf="!workflow?.active" color="primary" (click)="runAgain()">RUN AGAIN</button>
         </div>
       </div>
 
