@@ -10,4 +10,6 @@ export * from './workflowService.service';
 import { WorkflowServiceService } from './workflowService.service';
 export * from './workflowTemplateService.service';
 import { WorkflowTemplateServiceService } from './workflowTemplateService.service';
-export const APIS = [AuthServiceService, CronWorkflowServiceService, NamespaceServiceService, SecretServiceService, WorkflowServiceService, WorkflowTemplateServiceService];
+export * from './workspaceTemplateService.service';
+import { WorkspaceTemplateServiceService } from './workspaceTemplateService.service';
+export const APIS = [AuthServiceService, CronWorkflowServiceService, NamespaceServiceService, SecretServiceService, WorkflowServiceService, WorkflowTemplateServiceService, WorkspaceTemplateServiceService];
