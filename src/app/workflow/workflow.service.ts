@@ -7,6 +7,7 @@ import { NodeStatus } from '../node/node.service';
 import { map } from "rxjs/operators";
 import { environment } from "../../environments/environment";
 import { AuthService } from "../auth/auth.service";
+import { WorkflowExecution as ApiWorkflowExecution, WorkflowTemplate } from "../../api";
 
 export interface Workflow {
   uid: string;
@@ -32,25 +33,7 @@ export interface WorkflowManifest {
   status: WorkflowStatus;
 }
 
-export interface WorkflowDetail extends Workflow {
-  workflowTemplate: WorkflowTemplateDetail;
-}
-
-export interface WorkflowResponse {
-  count: number;
-  workflowExecutions: Workflow[];
-  page: number;
-  pages: number;
-  totalCount: number;
-}
-
-export interface CreateWorkflow {
-  namespace: string;
-  workflowTemplate: WorkflowTemplateDetail;
-  parameters: Array<{name:string, value: string}>;
-}
-
-export class SimpleWorkflowDetail implements WorkflowDetail{
+export class SimpleWorkflowDetail {
   static activePhases = {
     'Pending': true,
     'Running': true
@@ -63,14 +46,14 @@ export class SimpleWorkflowDetail implements WorkflowDetail{
   name: string;
   manifest?: string;
   yamlManifest?: string;
-  workflowTemplate: WorkflowTemplateDetail;
+  workflowTemplate: WorkflowTemplate;
 
-  constructor(workflowDetail: WorkflowDetail) {
-    this.uid = workflowDetail.uid;
-    this.createdAt = workflowDetail.createdAt;
-    this.name = workflowDetail.name;
-    this.manifest = workflowDetail.manifest;
-    this.workflowTemplate = workflowDetail.workflowTemplate;
+  constructor(workflow: ApiWorkflowExecution) {
+    this.uid = workflow.uid;
+    this.createdAt = workflow.createdAt;
+    this.name = workflow.name;
+    this.manifest = workflow.manifest;
+    this.workflowTemplate = workflow.workflowTemplate;
 
     if(this.manifest) {
       this.updateWorkflowManifest(this.manifest);
@@ -301,64 +284,16 @@ export class WorkflowService {
         );
   }
 
-  listWorkflows(request: ListWorkflowRequest): Observable<WorkflowResponse> {
-    const url = `${environment.baseUrl}/apis/v1beta1/${request.namespace}/workflow_executions`;
-    let query = new HttpParams();
-
-    if (request.workflowTemplateUid) {
-      query = query.append('workflowTemplateUid', request.workflowTemplateUid);
-    }
-
-    if (request.workflowTemplateVersion) {
-      query = query.append('workflowTemplateVersion', request.workflowTemplateVersion.toString());
-    }
-
-    if(request.page) {
-      query = query.append('page', request.page.toString());
-    }
-
-    if(request.pageSize) {
-      query = query.append('pageSize', request.pageSize.toString());
-    }
-
-    return this.client.get<WorkflowResponse>(url, {
-      params: query
-    });
-  }
-
-  executeWorkflow(namespace: string, request: CreateWorkflow) {
-    const url = `${environment.baseUrl}/apis/v1beta1/${namespace}/workflow_executions`;
-    return this.client.post<any>(url, request);
-  }
-
   terminateWorkflow(namespace: string, name: string) {
     const url = `${environment.baseUrl}/apis/v1beta1/${namespace}/workflow_executions/${name}/terminate`;
 
     return this.client.put(url, {});
   }
 
-  getWorkflowMetrics(namespace: string, workflowName: string, podId: string) {
-    const url = `${environment.baseUrl}/apis/v1beta1/${namespace}/workflow_executions/${workflowName}/pods/${podId}/metrics`;
-
-    return this.client.get(url, {});
-  }
-
   watchLogs(namespace: string, workflowName: string, podId: string, containerName = 'main') {
     const url =`${environment.baseWsUrl}/apis/v1beta1/${namespace}/workflow_executions/${workflowName}/pods/${podId}/containers/${containerName}/logs`;
 
     return new WebSocket(url);
-  }
-
-  getArtifact(namespace: string, workflowName: string, key: string) {
-    const url = `${environment.baseUrl}/apis/v1beta1/${namespace}/workflow_executions/${workflowName}/artifacts/${encodeURIComponent(String(key))}`;
-
-    return this.client.get(url);
-  }
-
-  listFiles(namespace: string, workflowName: string, key: string) {
-    const url = `${environment.baseUrl}/apis/v1beta1/${namespace}/workflow_executions/${workflowName}/files/${encodeURIComponent(String(key))}`;
-
-    return this.client.get(url);
   }
 }
 

@@ -24,7 +24,6 @@ import { WorkflowTemplateCreateComponent } from './workflow-template/workflow-te
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AceEditorModule } from 'ng2-ace-editor';
 import { WorkflowNodeInfoComponent } from './workflow/workflow-node-info/workflow-node-info.component';
-import { WorkflowListComponent } from './workflow/workflow-list/workflow-list.component';
 import { MomentModule } from 'ngx-moment';
 import { WorkflowTemplateEditComponent } from './workflow-template/workflow-template-edit/workflow-template-edit.component';
 import { NamespaceSelectComponent } from "./namespace-select/namespace-select.component";
@@ -106,7 +105,6 @@ import { WorkflowTemplateStatusComponent } from './workflow-template/workflow-te
     WorkflowTemplateEditComponent,
     WorkflowTemplateCreateComponent,
     WorkflowNodeInfoComponent,
-    WorkflowListComponent,
     WorkflowExecutionsListComponent,
     StatusComponent,
     WorkflowTemplateSelectComponent,

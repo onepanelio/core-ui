@@ -69,6 +69,14 @@
                class="d-flex align-items-baseline op-table-row">
       </cdk-row>
     </cdk-table>
+    <mat-paginator class="no-background font-size-small"
+                   *ngIf="workflowTemplateResponse"
+                   (page)="onPageChange($event)"
+                   [pageIndex]="this.pagination.page"
+                   [length]="this.workflowTemplateResponse.totalCount"
+                   [pageSize]="this.pagination.pageSize"
+                   [pageSizeOptions]="[5, 10, 25, 100]">
+    </mat-paginator>
     <app-call-to-action *ngIf="workflowTemplates.length === 0">
       <img class="icon" width="37" src="../../assets/images/workflows-icon.svg"/>
       <div class="header">Get started with workflows</div>

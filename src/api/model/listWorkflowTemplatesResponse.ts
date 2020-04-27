@@ -15,5 +15,8 @@ import { WorkflowTemplate } from './workflowTemplate';
 export interface ListWorkflowTemplatesResponse { 
     count?: number;
     workflowTemplates?: Array<WorkflowTemplate>;
+    page?: number;
+    pages?: number;
+    totalCount?: number;
 }
 

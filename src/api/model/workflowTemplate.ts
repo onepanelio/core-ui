@@ -17,7 +17,8 @@ export interface WorkflowTemplate {
     createdAt?: string;
     uid?: string;
     name?: string;
-    version?: number;
+    version?: string;
+    versions?: string;
     manifest?: string;
     isLatest?: boolean;
     isArchived?: boolean;

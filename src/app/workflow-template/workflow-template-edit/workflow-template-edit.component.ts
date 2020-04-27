@@ -29,7 +29,7 @@ export class WorkflowTemplateEditComponent implements OnInit {
   _workflowTemplate: WorkflowTemplate;
   labels = new Array<KeyValue>();
   workflowTemplateVersions: WorkflowTemplate[] = [];
-  selectedWorkflowTemplateVersion: number;
+  selectedWorkflowTemplateVersion: string;
 
   // This is what we display in the side menu
   workflowTemplateListItems = new Array<WorkflowTemplateSelectItem>();
@@ -73,10 +73,6 @@ export class WorkflowTemplateEditComponent implements OnInit {
   getWorkflowTemplateVersions() {
     this.workflowTemplateService.listWorkflowTemplateVersions(this.namespace, this.uid)
       .subscribe(res => {
-        this.workflowTemplateVersions = res.workflowTemplates.sort((a, b) => {
-            return b.version - a.version;
-        })
-
         if (this.workflowTemplateVersions.length === 0) {
           return;
         }
@@ -138,7 +134,7 @@ export class WorkflowTemplateEditComponent implements OnInit {
     this.appRouter.navigateToWorkflowTemplateView(this.namespace, this.workflowTemplate.uid);
   }
 
-  getLabels(version: number|null = null) {
+  getLabels(version: string|null = null) {
     this.workflowTemplateService.getWorkflowTemplateLabels(this.namespace, this.uid, version)
         .subscribe(res => {
             if(!res.labels) {
@@ -150,7 +146,7 @@ export class WorkflowTemplateEditComponent implements OnInit {
         })
   }
 
-  onVersionSelected(selected: number) {
+  onVersionSelected(selected: string) {
       const version = this.workflowTemplateVersions.find(wft => wft.version === selected);
       if(!version) {
           return;

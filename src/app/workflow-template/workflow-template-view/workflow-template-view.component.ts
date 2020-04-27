@@ -4,10 +4,6 @@ import { WorkflowTemplateBase, WorkflowTemplateDetail, WorkflowTemplateService }
 import { DagComponent } from '../../dag/dag.component';
 import { NodeRenderer } from '../../node/node.service';
 import {
-  CreateWorkflow,
-  ListWorkflowRequest,
-  Workflow,
-  WorkflowResponse,
   WorkflowService
 } from '../../workflow/workflow.service';
 import { MatTabChangeEvent } from '@angular/material';
@@ -21,8 +17,8 @@ import { Alert } from "../../alert/alert";
 import {
   CronWorkflow,
   CronWorkflowServiceService,
-  KeyValue, ListCronWorkflowsResponse, WorkflowExecution,
-  WorkflowServiceService, WorkflowTemplateServiceService
+  KeyValue, ListCronWorkflowsResponse, ListWorkflowExecutionsResponse, WorkflowExecution,
+  WorkflowServiceService, WorkflowTemplate, WorkflowTemplateServiceService
 } from "../../../api";
 import { MatTabGroup } from "@angular/material/tabs";
 import { AppRouter } from "../../router/app-router.service";
@@ -54,10 +50,10 @@ export class WorkflowTemplateViewComponent implements OnInit {
   namespace: string;
   uid: string;
 
-  workflows: Workflow[] = [];
+  workflows: WorkflowExecution[] = [];
   cronWorkflowResponse: ListCronWorkflowsResponse;
   cronWorkflows: CronWorkflow[] = [];
-  workflowResponse: WorkflowResponse;
+  workflowResponse: ListWorkflowExecutionsResponse;
   workflowPagination = new Pagination();
   cronWorkflowPagination = new Pagination();
 
@@ -85,13 +81,14 @@ export class WorkflowTemplateViewComponent implements OnInit {
   showWorkflowExecutionsCallToAction = false;
   showCronWorkflowsCallToAction = false;
 
-  private workflowTemplateDetail: WorkflowTemplateDetail;
+  // @todo rename
+  private workflowTemplateDetail: WorkflowTemplate;
 
-  get workflowTemplate(): WorkflowTemplateDetail {
+  get workflowTemplate(): WorkflowTemplate {
     return this.workflowTemplateDetail;
   }
 
-  set workflowTemplate(value: WorkflowTemplateDetail) {
+  set workflowTemplate(value: WorkflowTemplate) {
     this.workflowTemplateDetail = value;
     this.manifestText = value.manifest;
     this.showDag();
@@ -126,7 +123,6 @@ export class WorkflowTemplateViewComponent implements OnInit {
       }, 5000);
 
       this.getCronWorkflows();
-      this.getLabels();
     });
   }
 
@@ -137,26 +133,21 @@ export class WorkflowTemplateViewComponent implements OnInit {
   }
 
   getWorkflowTemplate() {
-    this.workflowTemplateService.getWorkflowTemplate(this.namespace, this.uid)
+    this.workflowTemplateServiceService.getWorkflowTemplate(this.namespace, this.uid)
       .subscribe(res => {
         this.workflowTemplate = res;
+        this.labels = res.labels;
       });
   }
 
   getWorkflows() {
-    const request: ListWorkflowRequest = {
-      namespace: this.namespace,
-      workflowTemplateUid: this.uid,
-      pageSize: this.workflowPagination.pageSize,
-      page: this.workflowPagination.page + 1, // Tab is 0 based, so we add 1, since API is 1 based.
-    };
-
-    this.workflowService.listWorkflows(request)
+    const page = this.workflowPagination.page + 1;
+    this.workflowServiceService.listWorkflowExecutions(this.namespace, this.uid, null, this.workflowPagination.pageSize, page)
       .subscribe(res => {
         this.workflowResponse = res;
         this.workflows = res.workflowExecutions;
 
-        this.hasWorkflowExecutions = !(request.page === 1 && !res.workflowExecutions);
+        this.hasWorkflowExecutions = !(page === 1 && !res.workflowExecutions);
       });
   }
 
@@ -295,17 +286,6 @@ export class WorkflowTemplateViewComponent implements OnInit {
             }));
           })
     });
-  }
-
-  getLabels() {
-    this.workflowTemplateServiceService.getWorkflowTemplateLabels(this.namespace, this.uid)
-        .subscribe(res => {
-          if(!res.labels) {
-            return;
-          }
-
-          this.labels = res.labels;
-        })
   }
 
   getCronWorkflows() {

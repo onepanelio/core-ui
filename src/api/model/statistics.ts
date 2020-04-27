@@ -13,7 +13,6 @@
 
 export interface Statistics { 
     workflowStatus?: string;
-    createdAt?: string;
     workflowTemplateId?: string;
 }
 

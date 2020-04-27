@@ -215,10 +215,10 @@ export class WorkflowTemplateServiceService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public cloneWorkflowTemplate(namespace: string, uid: string, name: string, version?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WorkflowTemplate>;
-    public cloneWorkflowTemplate(namespace: string, uid: string, name: string, version?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WorkflowTemplate>>;
-    public cloneWorkflowTemplate(namespace: string, uid: string, name: string, version?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WorkflowTemplate>>;
-    public cloneWorkflowTemplate(namespace: string, uid: string, name: string, version?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public cloneWorkflowTemplate(namespace: string, uid: string, name: string, version?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WorkflowTemplate>;
+    public cloneWorkflowTemplate(namespace: string, uid: string, name: string, version?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WorkflowTemplate>>;
+    public cloneWorkflowTemplate(namespace: string, uid: string, name: string, version?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WorkflowTemplate>>;
+    public cloneWorkflowTemplate(namespace: string, uid: string, name: string, version?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
             throw new Error('Required parameter namespace was null or undefined when calling cloneWorkflowTemplate.');
         }
@@ -280,10 +280,10 @@ export class WorkflowTemplateServiceService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public cloneWorkflowTemplate2(namespace: string, uid: string, name: string, version: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WorkflowTemplate>;
-    public cloneWorkflowTemplate2(namespace: string, uid: string, name: string, version: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WorkflowTemplate>>;
-    public cloneWorkflowTemplate2(namespace: string, uid: string, name: string, version: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WorkflowTemplate>>;
-    public cloneWorkflowTemplate2(namespace: string, uid: string, name: string, version: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public cloneWorkflowTemplate2(namespace: string, uid: string, name: string, version: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WorkflowTemplate>;
+    public cloneWorkflowTemplate2(namespace: string, uid: string, name: string, version: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WorkflowTemplate>>;
+    public cloneWorkflowTemplate2(namespace: string, uid: string, name: string, version: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WorkflowTemplate>>;
+    public cloneWorkflowTemplate2(namespace: string, uid: string, name: string, version: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
             throw new Error('Required parameter namespace was null or undefined when calling cloneWorkflowTemplate2.');
         }
@@ -527,10 +527,10 @@ export class WorkflowTemplateServiceService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getWorkflowTemplate(namespace: string, uid: string, version?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WorkflowTemplate>;
-    public getWorkflowTemplate(namespace: string, uid: string, version?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WorkflowTemplate>>;
-    public getWorkflowTemplate(namespace: string, uid: string, version?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WorkflowTemplate>>;
-    public getWorkflowTemplate(namespace: string, uid: string, version?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getWorkflowTemplate(namespace: string, uid: string, version?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WorkflowTemplate>;
+    public getWorkflowTemplate(namespace: string, uid: string, version?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WorkflowTemplate>>;
+    public getWorkflowTemplate(namespace: string, uid: string, version?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WorkflowTemplate>>;
+    public getWorkflowTemplate(namespace: string, uid: string, version?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
             throw new Error('Required parameter namespace was null or undefined when calling getWorkflowTemplate.');
         }
@@ -588,10 +588,10 @@ export class WorkflowTemplateServiceService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getWorkflowTemplate2(namespace: string, uid: string, version: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WorkflowTemplate>;
-    public getWorkflowTemplate2(namespace: string, uid: string, version: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WorkflowTemplate>>;
-    public getWorkflowTemplate2(namespace: string, uid: string, version: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WorkflowTemplate>>;
-    public getWorkflowTemplate2(namespace: string, uid: string, version: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getWorkflowTemplate2(namespace: string, uid: string, version: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WorkflowTemplate>;
+    public getWorkflowTemplate2(namespace: string, uid: string, version: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WorkflowTemplate>>;
+    public getWorkflowTemplate2(namespace: string, uid: string, version: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WorkflowTemplate>>;
+    public getWorkflowTemplate2(namespace: string, uid: string, version: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
             throw new Error('Required parameter namespace was null or undefined when calling getWorkflowTemplate2.');
         }
@@ -650,10 +650,10 @@ export class WorkflowTemplateServiceService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getWorkflowTemplateLabels(namespace: string, name: string, version?: number, statsTotal?: number, statsLastExecuted?: string, statsRunning?: number, statsCompleted?: number, statsFailed?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetLabelsResponse>;
-    public getWorkflowTemplateLabels(namespace: string, name: string, version?: number, statsTotal?: number, statsLastExecuted?: string, statsRunning?: number, statsCompleted?: number, statsFailed?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetLabelsResponse>>;
-    public getWorkflowTemplateLabels(namespace: string, name: string, version?: number, statsTotal?: number, statsLastExecuted?: string, statsRunning?: number, statsCompleted?: number, statsFailed?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetLabelsResponse>>;
-    public getWorkflowTemplateLabels(namespace: string, name: string, version?: number, statsTotal?: number, statsLastExecuted?: string, statsRunning?: number, statsCompleted?: number, statsFailed?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getWorkflowTemplateLabels(namespace: string, name: string, version?: string, statsTotal?: number, statsLastExecuted?: string, statsRunning?: number, statsCompleted?: number, statsFailed?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetLabelsResponse>;
+    public getWorkflowTemplateLabels(namespace: string, name: string, version?: string, statsTotal?: number, statsLastExecuted?: string, statsRunning?: number, statsCompleted?: number, statsFailed?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetLabelsResponse>>;
+    public getWorkflowTemplateLabels(namespace: string, name: string, version?: string, statsTotal?: number, statsLastExecuted?: string, statsRunning?: number, statsCompleted?: number, statsFailed?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetLabelsResponse>>;
+    public getWorkflowTemplateLabels(namespace: string, name: string, version?: string, statsTotal?: number, statsLastExecuted?: string, statsRunning?: number, statsCompleted?: number, statsFailed?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
             throw new Error('Required parameter namespace was null or undefined when calling getWorkflowTemplateLabels.');
         }
@@ -779,15 +779,27 @@ export class WorkflowTemplateServiceService {
 
     /**
      * @param namespace 
+     * @param pageSize 
+     * @param page 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listWorkflowTemplates(namespace: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ListWorkflowTemplatesResponse>;
-    public listWorkflowTemplates(namespace: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ListWorkflowTemplatesResponse>>;
-    public listWorkflowTemplates(namespace: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ListWorkflowTemplatesResponse>>;
-    public listWorkflowTemplates(namespace: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public listWorkflowTemplates(namespace: string, pageSize?: number, page?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ListWorkflowTemplatesResponse>;
+    public listWorkflowTemplates(namespace: string, pageSize?: number, page?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ListWorkflowTemplatesResponse>>;
+    public listWorkflowTemplates(namespace: string, pageSize?: number, page?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ListWorkflowTemplatesResponse>>;
+    public listWorkflowTemplates(namespace: string, pageSize?: number, page?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
             throw new Error('Required parameter namespace was null or undefined when calling listWorkflowTemplates.');
+        }
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (pageSize !== undefined && pageSize !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>pageSize, 'pageSize');
+        }
+        if (page !== undefined && page !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>page, 'page');
         }
 
         let headers = this.defaultHeaders;
@@ -817,6 +829,7 @@ export class WorkflowTemplateServiceService {
 
         return this.httpClient.get<ListWorkflowTemplatesResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflow_templates`,
             {
+                params: queryParameters,
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
@@ -901,10 +914,10 @@ export class WorkflowTemplateServiceService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateWorkflowTemplateVersion(namespace: string, workflowTemplateUid: string, workflowTemplateVersion: number, body: WorkflowTemplate, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WorkflowTemplate>;
-    public updateWorkflowTemplateVersion(namespace: string, workflowTemplateUid: string, workflowTemplateVersion: number, body: WorkflowTemplate, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WorkflowTemplate>>;
-    public updateWorkflowTemplateVersion(namespace: string, workflowTemplateUid: string, workflowTemplateVersion: number, body: WorkflowTemplate, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WorkflowTemplate>>;
-    public updateWorkflowTemplateVersion(namespace: string, workflowTemplateUid: string, workflowTemplateVersion: number, body: WorkflowTemplate, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public updateWorkflowTemplateVersion(namespace: string, workflowTemplateUid: string, workflowTemplateVersion: string, body: WorkflowTemplate, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WorkflowTemplate>;
+    public updateWorkflowTemplateVersion(namespace: string, workflowTemplateUid: string, workflowTemplateVersion: string, body: WorkflowTemplate, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WorkflowTemplate>>;
+    public updateWorkflowTemplateVersion(namespace: string, workflowTemplateUid: string, workflowTemplateVersion: string, body: WorkflowTemplate, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WorkflowTemplate>>;
+    public updateWorkflowTemplateVersion(namespace: string, workflowTemplateUid: string, workflowTemplateVersion: string, body: WorkflowTemplate, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
             throw new Error('Required parameter namespace was null or undefined when calling updateWorkflowTemplateVersion.');
         }

@@ -4,7 +4,6 @@ import { WorkflowComponent } from './workflow/workflow.component';
 import { WorkflowTemplateComponent } from './workflow-template/workflow-template.component';
 import { WorkflowTemplateViewComponent } from './workflow-template/workflow-template-view/workflow-template-view.component';
 import { WorkflowTemplateCreateComponent } from './workflow-template/workflow-template-create/workflow-template-create.component';
-import { WorkflowListComponent } from './workflow/workflow-list/workflow-list.component';
 import { WorkflowTemplateEditComponent } from './workflow-template/workflow-template-edit/workflow-template-edit.component';
 import { NamespaceSelectComponent } from "./namespace-select/namespace-select.component";
 import { SecretsComponent } from "./secrets/secrets.component";
@@ -42,11 +41,6 @@ const routes: Routes = [
   {
     path: ':namespace/workflow-templates/:uid',
     component: WorkflowTemplateViewComponent,
-    canActivate: [AuthGuard],
-  },
-  {
-    path: ':namespace/workflows',
-    component: WorkflowListComponent,
     canActivate: [AuthGuard],
   },
   {

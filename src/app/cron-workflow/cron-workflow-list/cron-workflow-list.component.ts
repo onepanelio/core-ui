@@ -28,7 +28,7 @@ export class CronWorkflowListComponent implements OnInit {
 
   @Input() namespace: string;
   @Input() cronWorkflows: CronWorkflow[] = [];
-  @Input() template: WorkflowTemplate|WorkflowTemplateDetail;
+  @Input() template: WorkflowTemplate;
 
   // This is fired whenever we add or remove a row from the list.
   @Output() listRowsModified = new EventEmitter();

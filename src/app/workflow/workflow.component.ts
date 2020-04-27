@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SimpleWorkflowDetail, WorkflowService } from './workflow.service';
+import { SimpleWorkflowDetail, Workflow, WorkflowService } from './workflow.service';
 import { NodeRenderer, NodeStatus } from '../node/node.service';
 import { DagClickEvent, DagComponent } from '../dag/dag.component';
 import { NodeInfoComponent } from "../node-info/node-info.component";
@@ -11,7 +11,6 @@ import * as ace from 'brace';
 import { KeyValue, WorkflowExecution, WorkflowServiceService } from "../../api";
 import { MatDialog } from "@angular/material/dialog";
 import { LabelEditDialogComponent } from "../labels/label-edit-dialog/label-edit-dialog.component";
-import { WorkflowExecuteDialogComponent } from "./workflow-execute-dialog/workflow-execute-dialog.component";
 const aceRange = ace.acequire('ace/range').Range;
 
 @Component({
