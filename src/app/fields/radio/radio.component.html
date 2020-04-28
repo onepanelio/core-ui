@@ -1,7 +1,17 @@
-<label [id]="labelId" class="font-roboto">{{data.name}}</label>
-<mat-radio-group class="onepanel-dynamic-radio" [(ngModel)]="data.value" [formControl]="radioControl">
-    <mat-radio-button class="radio-button" *ngFor="let option of options" [value]="option.value">
-        {{option.name}}
-    </mat-radio-button>
-</mat-radio-group>
-<mat-error *ngIf="radioControl.invalid && radioControl.touched">Must select a value</mat-error>
+<div class="font-roboto">
+    <label [id]="labelId">
+        <ng-container *ngIf="data.displayName">
+            {{data.displayName}}
+        </ng-container>
+        <ng-container *ngIf="!data.displayName">
+            {{data.name}}
+        </ng-container>
+    </label>
+    <mat-radio-group class="onepanel-dynamic-radio" [(ngModel)]="data.value" [formControl]="radioControl">
+        <mat-radio-button class="radio-button" *ngFor="let option of options" [value]="option.value">
+            {{option.name}}
+        </mat-radio-button>
+    </mat-radio-group>
+    <mat-hint *ngIf="data.hint">{{data.hint}}</mat-hint>
+    <mat-error *ngIf="radioControl.invalid && radioControl.touched">Must select a value</mat-error>
+</div>

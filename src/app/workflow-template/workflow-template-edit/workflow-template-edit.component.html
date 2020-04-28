@@ -7,11 +7,11 @@
     <div class="op-info-box mt-8">
       <div class="header">
         <div>
-          <mat-form-field appearance="outline" class="wp-400">
+          <mat-form-field appearance="outline" class="wp-400 fix-mat-overflow">
             <mat-label>Template name</mat-label>
             <input matInput disabled value="{{workflowTemplate?.name}}"/>
           </mat-form-field>
-          <mat-form-field appearance="outline" class="wp-400 ml-5">
+          <mat-form-field appearance="outline" class="wp-400 ml-5 fix-mat-overflow">
             <mat-label>Version</mat-label>
             <mat-select [(value)]="selectedWorkflowTemplateVersion" (valueChange)="onVersionSelected($event)">
               <mat-option *ngFor="let version of workflowTemplateVersions" [value]="version.version">
