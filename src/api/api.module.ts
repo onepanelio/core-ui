@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { AuthServiceService } from './api/authService.service';
 import { CronWorkflowServiceService } from './api/cronWorkflowService.service';
+import { LabelServiceService } from './api/labelService.service';
 import { NamespaceServiceService } from './api/namespaceService.service';
 import { SecretServiceService } from './api/secretService.service';
 import { WorkflowServiceService } from './api/workflowService.service';

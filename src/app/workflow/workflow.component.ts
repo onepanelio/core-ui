@@ -8,7 +8,7 @@ import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from "@angular/material/s
 import { AceEditorComponent } from "ng2-ace-editor";
 import * as yaml from 'js-yaml';
 import * as ace from 'brace';
-import { KeyValue, WorkflowExecution, WorkflowServiceService } from "../../api";
+import { KeyValue, LabelServiceService, WorkflowExecution, WorkflowServiceService } from "../../api";
 import { MatDialog } from "@angular/material/dialog";
 import { LabelEditDialogComponent } from "../labels/label-edit-dialog/label-edit-dialog.component";
 const aceRange = ace.acequire('ace/range').Range;
@@ -84,6 +84,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     private workflowService: WorkflowService,
     private workflowServiceService: WorkflowServiceService,
     private apiWorkflowService: WorkflowServiceService,
+    private labelService: LabelServiceService,
     private dialog: MatDialog,
     private router: Router,
     private snackbar: MatSnackBar,
@@ -367,7 +368,8 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   }
 
   getLabels() {
-    this.workflowServiceService.getWorkflowExecutionLabels(this.namespace, this.workflow.name)
+    // todo is this needed, or should it be returned from the workflow execution?
+    this.labelService.getLabels(this.namespace, 'workflow_execution', this.workflow.uid)
         .subscribe(res => {
           if(!res.labels) {
             return;
@@ -396,7 +398,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
         return;
       }
 
-      this.workflowServiceService.replaceWorkflowExecutionLabels(this.namespace, this.workflow.name, {
+      this.labelService.replaceLabels(this.namespace, 'workflow_execution', this.workflow.uid, {
         items: data
       }).subscribe(res => {
         this.labels = res.labels;
@@ -415,6 +417,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
 
     this.workflowServiceService.createWorkflowExecution(this.namespace, data)
         .subscribe(res => {
+          // @todo replace with appRouter
           this.router.navigate(['/', this.namespace, 'workflows', res.name]);
         })
   }

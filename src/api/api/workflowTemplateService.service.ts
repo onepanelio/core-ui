@@ -18,8 +18,6 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { ArchiveWorkflowTemplateResponse } from '../model/models';
-import { GetLabelsResponse } from '../model/models';
-import { Labels } from '../model/models';
 import { ListWorkflowTemplateVersionsResponse } from '../model/models';
 import { ListWorkflowTemplatesResponse } from '../model/models';
 import { WorkflowTemplate } from '../model/models';
@@ -84,73 +82,6 @@ export class WorkflowTemplateServiceService {
             throw Error("key may not be null if value is not object or array");
         }
         return httpParams;
-    }
-
-    /**
-     * @param namespace 
-     * @param name 
-     * @param body 
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public addWorkflowTemplateLabels(namespace: string, name: string, body: Labels, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetLabelsResponse>;
-    public addWorkflowTemplateLabels(namespace: string, name: string, body: Labels, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetLabelsResponse>>;
-    public addWorkflowTemplateLabels(namespace: string, name: string, body: Labels, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetLabelsResponse>>;
-    public addWorkflowTemplateLabels(namespace: string, name: string, body: Labels, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        if (namespace === null || namespace === undefined) {
-            throw new Error('Required parameter namespace was null or undefined when calling addWorkflowTemplateLabels.');
-        }
-        if (name === null || name === undefined) {
-            throw new Error('Required parameter name was null or undefined when calling addWorkflowTemplateLabels.');
-        }
-        if (body === null || body === undefined) {
-            throw new Error('Required parameter body was null or undefined when calling addWorkflowTemplateLabels.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        // authentication (Bearer) required
-        if (this.configuration.apiKeys && this.configuration.apiKeys["authorization"]) {
-            headers = headers.set('authorization', this.configuration.apiKeys["authorization"]);
-        }
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.post<GetLabelsResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflow_templates/${encodeURIComponent(String(name))}/labels`,
-            body,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
     }
 
     /**
@@ -465,63 +396,6 @@ export class WorkflowTemplateServiceService {
 
     /**
      * @param namespace 
-     * @param name 
-     * @param key 
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public deleteWorkflowTemplateLabel(namespace: string, name: string, key: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetLabelsResponse>;
-    public deleteWorkflowTemplateLabel(namespace: string, name: string, key: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetLabelsResponse>>;
-    public deleteWorkflowTemplateLabel(namespace: string, name: string, key: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetLabelsResponse>>;
-    public deleteWorkflowTemplateLabel(namespace: string, name: string, key: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        if (namespace === null || namespace === undefined) {
-            throw new Error('Required parameter namespace was null or undefined when calling deleteWorkflowTemplateLabel.');
-        }
-        if (name === null || name === undefined) {
-            throw new Error('Required parameter name was null or undefined when calling deleteWorkflowTemplateLabel.');
-        }
-        if (key === null || key === undefined) {
-            throw new Error('Required parameter key was null or undefined when calling deleteWorkflowTemplateLabel.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        // authentication (Bearer) required
-        if (this.configuration.apiKeys && this.configuration.apiKeys["authorization"]) {
-            headers = headers.set('authorization', this.configuration.apiKeys["authorization"]);
-        }
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.delete<GetLabelsResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflow_templates/${encodeURIComponent(String(name))}/labels/${encodeURIComponent(String(key))}`,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * @param namespace 
      * @param uid 
      * @param version 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -640,92 +514,6 @@ export class WorkflowTemplateServiceService {
 
     /**
      * @param namespace 
-     * @param name 
-     * @param version 
-     * @param statsTotal 
-     * @param statsLastExecuted 
-     * @param statsRunning 
-     * @param statsCompleted 
-     * @param statsFailed 
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public getWorkflowTemplateLabels(namespace: string, name: string, version?: string, statsTotal?: number, statsLastExecuted?: string, statsRunning?: number, statsCompleted?: number, statsFailed?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetLabelsResponse>;
-    public getWorkflowTemplateLabels(namespace: string, name: string, version?: string, statsTotal?: number, statsLastExecuted?: string, statsRunning?: number, statsCompleted?: number, statsFailed?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetLabelsResponse>>;
-    public getWorkflowTemplateLabels(namespace: string, name: string, version?: string, statsTotal?: number, statsLastExecuted?: string, statsRunning?: number, statsCompleted?: number, statsFailed?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetLabelsResponse>>;
-    public getWorkflowTemplateLabels(namespace: string, name: string, version?: string, statsTotal?: number, statsLastExecuted?: string, statsRunning?: number, statsCompleted?: number, statsFailed?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        if (namespace === null || namespace === undefined) {
-            throw new Error('Required parameter namespace was null or undefined when calling getWorkflowTemplateLabels.');
-        }
-        if (name === null || name === undefined) {
-            throw new Error('Required parameter name was null or undefined when calling getWorkflowTemplateLabels.');
-        }
-
-        let queryParameters = new HttpParams({encoder: this.encoder});
-        if (version !== undefined && version !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>version, 'version');
-        }
-        if (statsTotal !== undefined && statsTotal !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>statsTotal, 'stats.total');
-        }
-        if (statsLastExecuted !== undefined && statsLastExecuted !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>statsLastExecuted, 'stats.lastExecuted');
-        }
-        if (statsRunning !== undefined && statsRunning !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>statsRunning, 'stats.running');
-        }
-        if (statsCompleted !== undefined && statsCompleted !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>statsCompleted, 'stats.completed');
-        }
-        if (statsFailed !== undefined && statsFailed !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>statsFailed, 'stats.failed');
-        }
-
-        let headers = this.defaultHeaders;
-
-        // authentication (Bearer) required
-        if (this.configuration.apiKeys && this.configuration.apiKeys["authorization"]) {
-            headers = headers.set('authorization', this.configuration.apiKeys["authorization"]);
-        }
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.get<GetLabelsResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflow_templates/${encodeURIComponent(String(name))}/labels`,
-            {
-                params: queryParameters,
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * @param namespace 
      * @param uid 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
@@ -830,73 +618,6 @@ export class WorkflowTemplateServiceService {
         return this.httpClient.get<ListWorkflowTemplatesResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflow_templates`,
             {
                 params: queryParameters,
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * @param namespace 
-     * @param name 
-     * @param body 
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public replaceWorkflowTemplateLabels(namespace: string, name: string, body: Labels, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetLabelsResponse>;
-    public replaceWorkflowTemplateLabels(namespace: string, name: string, body: Labels, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetLabelsResponse>>;
-    public replaceWorkflowTemplateLabels(namespace: string, name: string, body: Labels, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetLabelsResponse>>;
-    public replaceWorkflowTemplateLabels(namespace: string, name: string, body: Labels, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        if (namespace === null || namespace === undefined) {
-            throw new Error('Required parameter namespace was null or undefined when calling replaceWorkflowTemplateLabels.');
-        }
-        if (name === null || name === undefined) {
-            throw new Error('Required parameter name was null or undefined when calling replaceWorkflowTemplateLabels.');
-        }
-        if (body === null || body === undefined) {
-            throw new Error('Required parameter body was null or undefined when calling replaceWorkflowTemplateLabels.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        // authentication (Bearer) required
-        if (this.configuration.apiKeys && this.configuration.apiKeys["authorization"]) {
-            headers = headers.set('authorization', this.configuration.apiKeys["authorization"]);
-        }
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.put<GetLabelsResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflow_templates/${encodeURIComponent(String(name))}/labels`,
-            body,
-            {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
