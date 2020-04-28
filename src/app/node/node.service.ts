@@ -138,7 +138,12 @@ export class NodeRenderer {
         html += '<img class="status-icon" src="/assets/images/status-icons/notrun.svg"/>';
       }
 
-      html += `<span class="name font-roboto">${node.name}</span>`;
+      let nameToShow = node.displayName;
+      if(!node.type || node.type === 'StepGroup' || node.type === 'DAG') {
+        nameToShow = node.name;
+      }
+
+      html += `<span class="name font-roboto">${nameToShow}</span>`;
     }
 
     html += '</div>';
@@ -236,6 +241,7 @@ export class NodeRenderer {
 
         info.nodeType = child.nodeType;
         task.type = child.nodeType;
+        task.displayName = task.name;
         graph.setNode(nodeId, {
           labelType: 'html',
           label: NodeRenderer.nodeTemplate(task),
