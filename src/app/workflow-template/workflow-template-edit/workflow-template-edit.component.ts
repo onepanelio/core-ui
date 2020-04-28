@@ -73,7 +73,7 @@ export class WorkflowTemplateEditComponent implements OnInit {
       .subscribe(res => {
         this.workflowTemplate = res;
         this.selectedWorkflowTemplateVersion = res.version;
-        this.labels = res.labels;
+        this.labels = res.labels || [];
       });
   }
 
