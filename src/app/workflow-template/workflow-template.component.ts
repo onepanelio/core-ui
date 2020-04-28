@@ -28,6 +28,11 @@ export class WorkflowTemplateComponent implements OnInit {
     this.activatedRoute.paramMap.subscribe(next => {
       this.namespace = next.get('namespace');
       this.getWorkflowTemplates();
+
+      if(this.getWorkflowTemplatesInterval) {
+        clearInterval(this.getWorkflowTemplatesInterval);
+      }
+
       this.getWorkflowTemplatesInterval = setInterval(() => {
         this.getWorkflowTemplates()
       }, 5000);

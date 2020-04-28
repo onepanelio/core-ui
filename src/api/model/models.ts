@@ -18,6 +18,7 @@ export * from './listSecretsResponse';
 export * from './listWorkflowExecutionsResponse';
 export * from './listWorkflowTemplateVersionsResponse';
 export * from './listWorkflowTemplatesResponse';
+export * from './listWorkspaceTemplatesResponse';
 export * from './logEntry';
 export * from './metric';
 export * from './file';

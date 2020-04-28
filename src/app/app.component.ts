@@ -59,6 +59,10 @@ export class AppComponent implements OnInit {
           if(e.urlAfterRedirects.indexOf('secrets') >= 0) {
             this.activeRoute = 'secrets';
           }
+          if(e.urlAfterRedirects.indexOf('workspaces') >= 0) {
+            this.activeRoute = 'workspaces';
+          }
+
 
           this.loggingIn = e.urlAfterRedirects.indexOf('login') >= 0;
 

@@ -12,6 +12,9 @@ import { EditSecretComponent } from "./secrets/edit-secret/edit-secret.component
 import { LoginComponent } from "./auth/login/login.component";
 import { AuthGuard } from "./auth/auth.guard";
 import { WorkflowTemplateCloneComponent } from "./workflow-template/workflow-template-clone/workflow-template-clone.component";
+import { WorkspaceComponent } from "./workspace/workspace.component";
+import { WorkspaceTemplateListComponent } from "./workspace/workspace-template-list/workspace-template-list.component";
+import { WorkspaceTemplateCreateComponent } from "./workspace/workspace-template-create/workspace-template-create.component";
 
 const routes: Routes = [
   {
@@ -46,6 +49,21 @@ const routes: Routes = [
   {
     path: ':namespace/workflows/:name',
     component: WorkflowComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: ':namespace/workspaces',
+    component: WorkspaceComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: ':namespace/workspace-templates',
+    component: WorkspaceTemplateListComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: ':namespace/workspace-templates/create',
+    component: WorkspaceTemplateCreateComponent,
     canActivate: [AuthGuard],
   },
   {

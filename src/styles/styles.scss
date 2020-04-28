@@ -210,6 +210,21 @@ a {
     display: flex;
     align-items: center;
   }
+
+
+
+  &.mat-stroked-button {
+    border-width: 2px;
+    &.mat-primary {
+      border-color: $primary;
+    }
+  }
+}
+
+.vertical-baseline-mat-icon-fa {
+  .mat-button-wrapper {
+    align-items: baseline;
+  }
 }
 
 .op-expansion-panel.mat-expansion-panel:not([class*='mat-elevation-z']) {
