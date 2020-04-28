@@ -1,6 +1,14 @@
 <mat-form-field *ngIf="inputType !== 'hidden'" appearance="outline" class="onepanel-dynamic-input">
-    <mat-label>{{data.name}}</mat-label>
+    <mat-label>
+        <ng-container *ngIf="data.displayName">
+            {{data.displayName}}
+        </ng-container>
+        <ng-container *ngIf="!data.displayName">
+            {{data.name}}
+        </ng-container>
+    </mat-label>
     <input #inputElement matInput [type]="inputType" [ngModel]="data.value" (ngModelChange)="setDataValue(inputElement.value)" [formControl]="inputControl"/>
+    <mat-hint *ngIf="data.hint">{{data.hint}}</mat-hint>
     <mat-error>
         Must not be blank
         <span *ngIf="inputType === 'number'">

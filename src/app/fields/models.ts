@@ -5,5 +5,7 @@ interface FieldData {
     options: any;
     required?: boolean;
     inputType?: string;
+    displayName?: string;
+    hint?: string;
 }
 
