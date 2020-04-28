@@ -45,11 +45,12 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    const token = `Bearer ${this.tokenInput.value}`;
+    const tokenValue = this.tokenInput.value;
+    const token = `Bearer ${tokenValue}`;
 
     this.apiAuthService.isValidToken({token: token})
         .subscribe(res => {
-            this.authService.setAuthToken(token);
+            this.authService.setAuthToken(tokenValue);
 
             this.namespaceTracker.getNamespaces();
 
