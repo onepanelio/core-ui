@@ -116,6 +116,7 @@ export class NodeRenderer {
 
   static nodeTemplate(node: any, root = false) {
     let nodeRootClasses = 'node-root ';
+
     if (node.type === 'StepGroup' || node.type === 'DAG') {
       nodeRootClasses += ' dashed-circle';
     } else {
@@ -137,12 +138,7 @@ export class NodeRenderer {
         html += '<img class="status-icon" src="/assets/images/status-icons/notrun.svg"/>';
       }
 
-      let nameToShow = node.displayName;
-      if(!node.type || node.type === 'StepGroup' || node.type === 'DAG') {
-        nameToShow = node.name;
-      }
-
-      html += `<span class="name font-roboto">${nameToShow}</span>`;
+      html += `<span class="name font-roboto">${node.name}</span>`;
     }
 
     html += '</div>';
@@ -239,7 +235,7 @@ export class NodeRenderer {
         }
 
         info.nodeType = child.nodeType;
-
+        task.type = child.nodeType;
         graph.setNode(nodeId, {
           labelType: 'html',
           label: NodeRenderer.nodeTemplate(task),
