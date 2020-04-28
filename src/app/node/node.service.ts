@@ -182,14 +182,6 @@ export class NodeRenderer {
       (template.dag.tasks || []).forEach(task => {
         const nodeId = parentFullPath + '/' + task.name;
 
-        // If the user specifies an exit handler, then the compiler will wrap the entire Pipeline
-        // within an additional DAG template prefixed with 'exit-handler'.
-        // If this is the case, we simply treat it as the root of the graph and work from there
-        if (task.name.startsWith('exit-handler')) {
-          this.buildDag(graph, task.template, templates, alreadyVisited, '');
-          return;
-        }
-
         // If this task has already been visited, retrieve the qualified path name that was assigned
         // to it, add an edge, and move on to the next task
         if (alreadyVisited.has(task.name)) {
@@ -247,7 +239,8 @@ export class NodeRenderer {
         }
 
         info.nodeType = child.nodeType;
-
+        task.type = child.nodeType;
+        task.displayName = task.name;
         graph.setNode(nodeId, {
           labelType: 'html',
           label: NodeRenderer.nodeTemplate(task),
@@ -378,16 +371,6 @@ export class NodeRenderer {
     // Iterate through the workflow's templates to construct a map which will be used to traverse and
     // construct the graph
     for (const template of workflowTemplates.filter(t => !!t && !!t.name)) {
-      // Argo allows specifying a single global exit handler. We also highlight that node
-      if (template.name === spec.onExit) {
-        const info = new NodeInfo();
-        NodeRenderer.populateNodeInfoFromTemplate(info, template);
-        graph.setNode(template.name, {
-          info,
-          label: 'onExit - ' + template.name
-        });
-      }
-
       if (template.container || template.script) {
         templates.set(template.name, { nodeType: 'Pod', template });
       } else if (template.resource) {
@@ -401,7 +384,11 @@ export class NodeRenderer {
       }
     }
 
+    // Build DAG for entrypoint
     NodeRenderer.buildDag(graph, spec.entrypoint, templates, new Map(), '');
+
+    // Build DAG for onExit
+    NodeRenderer.buildDag(graph, spec.onExit, templates, new Map(), '');
 
     // If template is not a DAG
     if (graph.nodeCount() === 0) {
