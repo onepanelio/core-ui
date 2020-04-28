@@ -17,6 +17,7 @@
                 [mode]="'yaml'"
                 [text]="manifestText"
                 (textChanged)="onManifestChange($event)"
+                [durationBeforeCallback]="500"
                 [options]="{
                             showInvisibles: false,
                             showPrintMargin: false,

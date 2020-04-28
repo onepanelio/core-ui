@@ -424,7 +424,7 @@ button.logout {
 
 .fix-mat-overflow {
   .mat-form-field-label-wrapper {
-    overflow: visible;
+    overflow: visible !important;
   }
 }
 
