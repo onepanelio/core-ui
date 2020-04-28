@@ -116,7 +116,6 @@ export class NodeRenderer {
 
   static nodeTemplate(node: any, root = false) {
     let nodeRootClasses = 'node-root ';
-
     if (node.type === 'StepGroup' || node.type === 'DAG') {
       nodeRootClasses += ' dashed-circle';
     } else {
