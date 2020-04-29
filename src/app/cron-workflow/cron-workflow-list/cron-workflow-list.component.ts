@@ -72,7 +72,8 @@ export class CronWorkflowListComponent implements OnInit {
 
       let updatedData: CronWorkflow = {
         ...res.cron,
-        workflowExecution: res.workflowExecution
+        workflowExecution: res.workflowExecution,
+        labels: res.labels
       };
       updatedData.workflowExecution.workflowTemplate = this.template;
 
@@ -106,6 +107,7 @@ export class CronWorkflowListComponent implements OnInit {
 
     this.workflowServiceService.createWorkflowExecution(this.namespace, data)
         .subscribe(res => {
+          // @todo appRouter
           this.router.navigate(['/', this.namespace, 'workflows', res.name]);
         });
   }

@@ -220,22 +220,22 @@ export class WorkflowServiceService {
     /**
      * @param namespace 
      * @param name 
-     * @param workflowTemplateId 
+     * @param body 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public cronStartWorkflowExecutionStatistic(namespace: string, name: string, workflowTemplateId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<object>;
-    public cronStartWorkflowExecutionStatistic(namespace: string, name: string, workflowTemplateId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<object>>;
-    public cronStartWorkflowExecutionStatistic(namespace: string, name: string, workflowTemplateId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<object>>;
-    public cronStartWorkflowExecutionStatistic(namespace: string, name: string, workflowTemplateId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public cronStartWorkflowExecutionStatistic(namespace: string, name: string, body: Statistics, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<object>;
+    public cronStartWorkflowExecutionStatistic(namespace: string, name: string, body: Statistics, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<object>>;
+    public cronStartWorkflowExecutionStatistic(namespace: string, name: string, body: Statistics, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<object>>;
+    public cronStartWorkflowExecutionStatistic(namespace: string, name: string, body: Statistics, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
             throw new Error('Required parameter namespace was null or undefined when calling cronStartWorkflowExecutionStatistic.');
         }
         if (name === null || name === undefined) {
             throw new Error('Required parameter name was null or undefined when calling cronStartWorkflowExecutionStatistic.');
         }
-        if (workflowTemplateId === null || workflowTemplateId === undefined) {
-            throw new Error('Required parameter workflowTemplateId was null or undefined when calling cronStartWorkflowExecutionStatistic.');
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling cronStartWorkflowExecutionStatistic.');
         }
 
         let headers = this.defaultHeaders;
@@ -258,12 +258,22 @@ export class WorkflowServiceService {
         }
 
 
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
         let responseType: 'text' | 'json' = 'json';
         if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
             responseType = 'text';
         }
 
-        return this.httpClient.get<object>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflow_executions/${encodeURIComponent(String(name))}/cron_start_statistics/${encodeURIComponent(String(workflowTemplateId))}`,
+        return this.httpClient.post<object>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflow_executions/${encodeURIComponent(String(name))}/cron_start_statistics`,
+            body,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

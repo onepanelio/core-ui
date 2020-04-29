@@ -181,7 +181,8 @@ export class WorkflowTemplateViewComponent implements OnInit {
           startingDeadlineSeconds: result.cron.startingDeadlineSeconds,
           successfulJobsHistoryLimit: result.cron.successfulJobsHistoryLimit,
           failedJobsHistoryLimit: result.cron.failedJobsHistoryLimit,
-          workflowExecution: result.workflowExecution
+          workflowExecution: result.workflowExecution,
+          labels: result.workflowExecution.labels,
         };
 
         this.executeCronWorkflowRequest(request);
@@ -239,6 +240,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
   }
 
   editSelectedWorkflowTemplateVersion() {
+    // @todo use appRouter
     this.router.navigate(['/', this.namespace, 'workflow-templates', this.workflowTemplateDetail.uid, 'edit']);
   }
 

@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { KeyValue } from './keyValue';
 import { WorkflowExecution } from './workflowExecution';
 
 
@@ -22,5 +23,6 @@ export interface CronWorkflow {
     successfulJobsHistoryLimit?: number;
     failedJobsHistoryLimit?: number;
     workflowExecution?: WorkflowExecution;
+    labels?: Array<KeyValue>;
 }
 

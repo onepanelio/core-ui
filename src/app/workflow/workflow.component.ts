@@ -11,6 +11,7 @@ import * as ace from 'brace';
 import { KeyValue, LabelServiceService, WorkflowExecution, WorkflowServiceService } from "../../api";
 import { MatDialog } from "@angular/material/dialog";
 import { LabelEditDialogComponent } from "../labels/label-edit-dialog/label-edit-dialog.component";
+import { AppRouter } from "../router/app-router.service";
 const aceRange = ace.acequire('ace/range').Range;
 
 @Component({
@@ -86,7 +87,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     private apiWorkflowService: WorkflowServiceService,
     private labelService: LabelServiceService,
     private dialog: MatDialog,
-    private router: Router,
+    private appRouter: AppRouter,
     private snackbar: MatSnackBar,
   ) {
   }
@@ -417,8 +418,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
 
     this.workflowServiceService.createWorkflowExecution(this.namespace, data)
         .subscribe(res => {
-          // @todo replace with appRouter
-          this.router.navigate(['/', this.namespace, 'workflows', res.name]);
+          this.appRouter.navigateToWorkflowExecution(this.namespace, res.name);
         })
   }
 }

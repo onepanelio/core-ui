@@ -33,6 +33,9 @@ export class CronWorkflowEditDialogComponent implements OnInit {
       @Inject(MAT_DIALOG_DATA) public data: CronWorkflowEditData) {
     this.setManifest(data);
     this.schedulingText = CronWorkflowFormatter.toYamlString(data.cronWorkflow, true);
+    if(data.cronWorkflow.labels) {
+      this.labels = data.cronWorkflow.labels;
+    }
   }
 
   ngOnInit() {
