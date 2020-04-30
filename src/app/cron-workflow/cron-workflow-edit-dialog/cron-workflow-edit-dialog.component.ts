@@ -52,7 +52,7 @@ export class CronWorkflowEditDialogComponent implements OnInit {
         parameters.push(dataParam);
       }
     }
-    
+
     this.parameters = parameters;
   }
 

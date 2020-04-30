@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NodeRenderer } from "../node/node.service";
 import { DagComponent } from "../dag/dag.component";
 import { AceEditorComponent } from "ng2-ace-editor";
@@ -6,6 +6,8 @@ import * as yaml from 'js-yaml';
 import * as ace from 'brace';
 import { Alert } from "../alert/alert";
 import { WorkflowExecuteDialogComponent } from "../workflow/workflow-execute-dialog/workflow-execute-dialog.component";
+import { Observable, of } from "rxjs";
+import { HttpErrorResponse } from "@angular/common/http";
 const aceRange = ace.acequire('ace/range').Range;
 
 @Component({
@@ -25,6 +27,8 @@ export class ManifestDagEditorComponent implements OnInit {
   errorMarkerId;
 
   parameters = new Array<FieldData>();
+  // Default behavior is to just return itself
+  @Input() manifestInterceptor: (manifest: string) => Observable<string> = (manifest => of(manifest));
 
   constructor() { }
 
@@ -32,8 +36,25 @@ export class ManifestDagEditorComponent implements OnInit {
   }
 
   onManifestChange(newManifest: string) {
-    this.manifestTextCurrent = newManifest;
+    if(!this.manifestInterceptor) {
+      this.onManifestChangeFinalized(newManifest);
+    } else {
+      this.manifestInterceptor(newManifest)
+          .subscribe(res => {
+            this.onManifestChangeFinalized(res);
+          }, (e: HttpErrorResponse) => {
+            setTimeout(() => {
+              this.serverError = {
+                message: e.error.error,
+                type: 'danger'
+              };
+            });
+          })
+    }
+  }
 
+  onManifestChangeFinalized(newManifest: string) {
+    this.manifestTextCurrent = newManifest;
     if(newManifest === '') {
       this.dag.clear();
       return;

@@ -155,10 +155,10 @@ export class WorkspaceTemplateServiceService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public generateWorkspaceTemplateWorkflowTemplate(namespace: string, uid: string, body: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WorkflowTemplate>;
-    public generateWorkspaceTemplateWorkflowTemplate(namespace: string, uid: string, body: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WorkflowTemplate>>;
-    public generateWorkspaceTemplateWorkflowTemplate(namespace: string, uid: string, body: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WorkflowTemplate>>;
-    public generateWorkspaceTemplateWorkflowTemplate(namespace: string, uid: string, body: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public generateWorkspaceTemplateWorkflowTemplate(namespace: string, uid: string, body: WorkspaceTemplate, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WorkflowTemplate>;
+    public generateWorkspaceTemplateWorkflowTemplate(namespace: string, uid: string, body: WorkspaceTemplate, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WorkflowTemplate>>;
+    public generateWorkspaceTemplateWorkflowTemplate(namespace: string, uid: string, body: WorkspaceTemplate, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WorkflowTemplate>>;
+    public generateWorkspaceTemplateWorkflowTemplate(namespace: string, uid: string, body: WorkspaceTemplate, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
             throw new Error('Required parameter namespace was null or undefined when calling generateWorkspaceTemplateWorkflowTemplate.');
         }

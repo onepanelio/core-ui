@@ -91,9 +91,7 @@ export class DagComponent implements OnInit {
   }
 
   clear() {
-    const g = new dagreD3.graphlib.Graph()
-      .setGraph({});
-    this.render(this.inner, g);
+    this.inner.select('.output').remove();
   }
 
   setupZoom() {
