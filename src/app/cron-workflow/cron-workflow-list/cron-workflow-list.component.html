@@ -10,7 +10,7 @@
         <ng-container cdkColumnDef="schedule">
             <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
             <cdk-cell *cdkCellDef="let workflow" class="font-size-regular font-roboto ml-5 d-flex align-items-baseline">
-                <i class="fas fa-clock color-medium-gray"></i> <div class="font-weight-bold color-black ml-2">Scheduled: <span class="font-medium-gray ml-3">{{workflow.schedule}}</span></div>
+                <i class="fas fa-clock color-medium-gray"></i> <div class="font-weight-bold color-black ml-2">Scheduled: <span class="font-medium-gray ml-3">{{parsedCronManifestsMap[workflow.name].schedule}}</span></div>
             </cdk-cell>
         </ng-container>
 

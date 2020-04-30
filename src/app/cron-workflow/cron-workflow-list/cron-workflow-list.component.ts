@@ -13,8 +13,8 @@ import {
   CronWorkflowEditData,
   CronWorkflowEditDialogComponent
 } from "../cron-workflow-edit-dialog/cron-workflow-edit-dialog.component";
-import { WorkflowTemplateDetail } from "../../workflow-template/workflow-template.service";
 import { WorkflowExecuteDialogComponent } from "../../workflow/workflow-execute-dialog/workflow-execute-dialog.component";
+import * as yaml from 'js-yaml';
 
 @Component({
   selector: 'app-cron-workflow-list',
@@ -26,8 +26,22 @@ export class CronWorkflowListComponent implements OnInit {
 
   displayedColumns = ['name','schedule', 'spacer', 'actions'];
 
+  // Maps a CronWorkflow by it's name to it's parsed manifest, providing access to scheduled, etc.
+  parsedCronManifestsMap = new Map<string, object>();
+  _cronWorkflows: CronWorkflow[] = [];
+
   @Input() namespace: string;
-  @Input() cronWorkflows: CronWorkflow[] = [];
+  @Input() set cronWorkflows(value: CronWorkflow[]) {
+    this._cronWorkflows = value;
+
+    this.parsedCronManifestsMap.clear();
+    for(const workflow of value) {
+      this.parsedCronManifestsMap[workflow.name] = yaml.safeLoad(workflow.manifest);
+    }
+  }
+  get cronWorkflows(): CronWorkflow[] {
+    return this._cronWorkflows;
+  }
   @Input() template: WorkflowTemplate;
 
   // This is fired whenever we add or remove a row from the list.
@@ -84,6 +98,8 @@ export class CronWorkflowListComponent implements OnInit {
             for(let key in res) {
               workflow[key] = res[key];
             }
+
+            this.listRowsModified.emit();
           }, err => {
             // Do nothing
           })

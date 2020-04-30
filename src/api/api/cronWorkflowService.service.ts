@@ -200,24 +200,24 @@ export class CronWorkflowServiceService {
 
     /**
      * @param namespace 
-     * @param workflowTemplateUid 
+     * @param workflowTemplateName 
      * @param pageSize 
      * @param page 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listCronWorkflows(namespace: string, workflowTemplateUid?: string, pageSize?: number, page?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ListCronWorkflowsResponse>;
-    public listCronWorkflows(namespace: string, workflowTemplateUid?: string, pageSize?: number, page?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ListCronWorkflowsResponse>>;
-    public listCronWorkflows(namespace: string, workflowTemplateUid?: string, pageSize?: number, page?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ListCronWorkflowsResponse>>;
-    public listCronWorkflows(namespace: string, workflowTemplateUid?: string, pageSize?: number, page?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public listCronWorkflows(namespace: string, workflowTemplateName?: string, pageSize?: number, page?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ListCronWorkflowsResponse>;
+    public listCronWorkflows(namespace: string, workflowTemplateName?: string, pageSize?: number, page?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ListCronWorkflowsResponse>>;
+    public listCronWorkflows(namespace: string, workflowTemplateName?: string, pageSize?: number, page?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ListCronWorkflowsResponse>>;
+    public listCronWorkflows(namespace: string, workflowTemplateName?: string, pageSize?: number, page?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
             throw new Error('Required parameter namespace was null or undefined when calling listCronWorkflows.');
         }
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (workflowTemplateUid !== undefined && workflowTemplateUid !== null) {
+        if (workflowTemplateName !== undefined && workflowTemplateName !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
-            <any>workflowTemplateUid, 'workflow_template_uid');
+            <any>workflowTemplateName, 'workflow_template_name');
         }
         if (pageSize !== undefined && pageSize !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
@@ -267,21 +267,21 @@ export class CronWorkflowServiceService {
 
     /**
      * @param namespace 
-     * @param workflowTemplateUid 
+     * @param workflowTemplateName 
      * @param pageSize 
      * @param page 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listCronWorkflows2(namespace: string, workflowTemplateUid: string, pageSize?: number, page?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ListCronWorkflowsResponse>;
-    public listCronWorkflows2(namespace: string, workflowTemplateUid: string, pageSize?: number, page?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ListCronWorkflowsResponse>>;
-    public listCronWorkflows2(namespace: string, workflowTemplateUid: string, pageSize?: number, page?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ListCronWorkflowsResponse>>;
-    public listCronWorkflows2(namespace: string, workflowTemplateUid: string, pageSize?: number, page?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public listCronWorkflows2(namespace: string, workflowTemplateName: string, pageSize?: number, page?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ListCronWorkflowsResponse>;
+    public listCronWorkflows2(namespace: string, workflowTemplateName: string, pageSize?: number, page?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ListCronWorkflowsResponse>>;
+    public listCronWorkflows2(namespace: string, workflowTemplateName: string, pageSize?: number, page?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ListCronWorkflowsResponse>>;
+    public listCronWorkflows2(namespace: string, workflowTemplateName: string, pageSize?: number, page?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
             throw new Error('Required parameter namespace was null or undefined when calling listCronWorkflows2.');
         }
-        if (workflowTemplateUid === null || workflowTemplateUid === undefined) {
-            throw new Error('Required parameter workflowTemplateUid was null or undefined when calling listCronWorkflows2.');
+        if (workflowTemplateName === null || workflowTemplateName === undefined) {
+            throw new Error('Required parameter workflowTemplateName was null or undefined when calling listCronWorkflows2.');
         }
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -319,7 +319,7 @@ export class CronWorkflowServiceService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<ListCronWorkflowsResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/cron_workflows/${encodeURIComponent(String(workflowTemplateUid))}`,
+        return this.httpClient.get<ListCronWorkflowsResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/cron_workflows/${encodeURIComponent(String(workflowTemplateName))}`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
@@ -439,7 +439,7 @@ export class CronWorkflowServiceService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<CronWorkflow>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/cron_workflow/${encodeURIComponent(String(name))}`,
+        return this.httpClient.put<CronWorkflow>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/cron_workflow/${encodeURIComponent(String(name))}`,
             body,
             {
                 responseType: <any>responseType,

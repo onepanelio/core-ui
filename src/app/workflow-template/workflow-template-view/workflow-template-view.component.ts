@@ -174,13 +174,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
         result.workflowExecution.workflowTemplate = this.workflowTemplate;
 
         const request: CronWorkflow = {
-          schedule: result.cron.schedule,
-          timezone: result.cron.timezone,
-          suspend: result.cron.suspend,
-          concurrencyPolicy: result.cron.concurrencyPolicy,
-          startingDeadlineSeconds: result.cron.startingDeadlineSeconds,
-          successfulJobsHistoryLimit: result.cron.successfulJobsHistoryLimit,
-          failedJobsHistoryLimit: result.cron.failedJobsHistoryLimit,
+          manifest: result.cron.manifest,
           workflowExecution: result.workflowExecution,
           labels: result.workflowExecution.labels,
         };
