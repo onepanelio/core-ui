@@ -94,6 +94,7 @@ import { WorkspaceComponent } from "./workspace/workspace.component";
 import { WorkspaceTemplateViewComponent } from './workspace/workspace-template-view/workspace-template-view.component';
 import { WorkspaceTemplateListComponent } from './workspace/workspace-template-list/workspace-template-list.component';
 import { WorkspaceTemplateCreateComponent } from './workspace/workspace-template-create/workspace-template-create.component';
+import { WorkspaceViewComponent } from "./workspace/workspace-view/workspace-view.component";
 
 @NgModule({
   declarations: [
@@ -158,6 +159,7 @@ import { WorkspaceTemplateCreateComponent } from './workspace/workspace-template
     ManifestDagEditorComponent,
     WorkflowTemplateStatusComponent,
     WorkspaceComponent,
+    WorkspaceViewComponent,
     WorkspaceTemplateViewComponent,
     WorkspaceTemplateListComponent,
     WorkspaceTemplateCreateComponent

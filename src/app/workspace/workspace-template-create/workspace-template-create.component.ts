@@ -37,4 +37,12 @@ export class WorkspaceTemplateCreateComponent implements OnInit {
   ngOnInit() {
   }
 
+  cancel() {
+
+  }
+
+  save() {
+
+  }
+
 }
