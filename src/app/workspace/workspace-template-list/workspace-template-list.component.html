@@ -1,2 +1,75 @@
-<button *ngIf="this.namespace" [routerLink]="['/', this.namespace, 'workspace-templates', 'create']">New</button>
-<p>workspace-template-list works!</p>
+<div class="page">
+    <div class="page-links">
+    </div>
+    <div class="page-alerts mb-5">
+        <app-alert-panel></app-alert-panel>
+    </div>
+    <div class="page-header d-flex align-items-baseline">
+        <a [routerLink]="['/', this.namespace, 'workspaces']" class="op-back-link">
+            <i class="fas fa-chevron-left"></i>
+            <span>Back to workflows</span>
+        </a>
+        <div class="flex-grow-1"></div>
+        <div class="page-title-text text-center">
+            Workspace template builder
+
+            <div class="font-size-large color-black mt-3">
+                Select an option to build your own template or start with a predefined workspace to customize.
+            </div>
+        </div>
+
+        <div class="flex-grow-1"></div>
+    </div>
+
+    <div class="page-body mt-3 workflow-list d-flex flex-wrap" [ngClass]="{minified: showWorkspaceTemplateEditor }">
+        <div>
+            <div class="color-dark-gray font-roboto mb-3">New template</div>
+            <app-workspace-template-summary-view
+                    (click)="newWorkspaceTemplate()"
+                    class="mr-3 pointer-hover"
+                    [ngClass]="{selected: selectedTemplate === 'new'}"
+                    [template]="blankTemplate">
+            </app-workspace-template-summary-view>
+        </div>
+        <div *ngFor="let template of workspaceTemplates; let index = index">
+            <div class="color-dark-gray font-roboto mb-3">
+                <ng-container *ngIf="index === 0">
+                    Saved templates
+                </ng-container>
+                <ng-container *ngIf="index !== 0">
+                    &nbsp;
+                </ng-container>
+            </div>
+            <app-workspace-template-summary-view
+                    (click)="selectTemplate(template)"
+                    class="mr-3 pointer-hover"
+                    [ngClass]="{selected: selectedTemplate === template.name}"
+                    [template]="template">
+            </app-workspace-template-summary-view>
+        </div>
+    </div>
+
+    <app-workspace-template-create
+            *ngIf="showWorkspaceTemplateEditor && selectedTemplate === 'new'"
+            (cancelEmitted)="cancelWorkspaceTemplate()"
+            (saveEmitted)="onCreate($event)">
+
+    </app-workspace-template-create>
+
+<!--        <mat-paginator class="no-background font-size-small"-->
+<!--                       *ngIf="workflowTemplateResponse"-->
+<!--                       (page)="onPageChange($event)"-->
+<!--                       [pageIndex]="this.pagination.page"-->
+<!--                       [length]="this.workflowTemplateResponse.totalCount"-->
+<!--                       [pageSize]="this.pagination.pageSize"-->
+<!--                       [pageSizeOptions]="[5, 10, 25, 100]">-->
+<!--        </mat-paginator>-->
+<!--        <app-call-to-action *ngIf="workflowTemplates.length === 0">-->
+<!--            <img class="icon" width="37" src="../../assets/images/workflows-icon.svg"/>-->
+<!--            <div class="header">Get started with workflows</div>-->
+<!--            <div class="body">This is where all your workflow templates live.</div>-->
+<!--            <a class="action underline pointer-hover" [routerLink]="['/', this.namespace, 'workflow-templates', 'create']">Creating a new workflow template</a>-->
+<!--        </app-call-to-action>-->
+<!--    </div>-->
+</div>
+

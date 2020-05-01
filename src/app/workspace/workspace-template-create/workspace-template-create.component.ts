@@ -1,11 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { KeyValue, WorkspaceTemplateServiceService } from "../../../api";
+import { KeyValue, WorkspaceTemplate, WorkspaceTemplateServiceService } from "../../../api";
 import { ActivatedRoute } from "@angular/router";
-import * as yaml from 'js-yaml';
-import { Observable } from "rxjs";
-import { fromObservable } from "rxjs/internal/observable/fromObservable";
 import { map } from "rxjs/operators";
+import { LabelsEditComponent } from "../../labels/labels-edit/labels-edit.component";
+import { ManifestDagEditorComponent } from "../../manifest-dag-editor/manifest-dag-editor.component";
 
 @Component({
   selector: 'app-workspace-template-create',
@@ -13,6 +12,11 @@ import { map } from "rxjs/operators";
   styleUrls: ['./workspace-template-create.component.scss']
 })
 export class WorkspaceTemplateCreateComponent implements OnInit {
+  @ViewChild(ManifestDagEditorComponent, {static: false}) manifestDagEditor: ManifestDagEditorComponent;
+  @ViewChild(LabelsEditComponent, {static: false}) labelEditor: LabelsEditComponent;
+
+  @Output() cancelEmitted = new EventEmitter();
+  @Output() saveEmitted = new EventEmitter<WorkspaceTemplate>();
 
   namespace: string;
   manifest = "";
@@ -54,10 +58,26 @@ export class WorkspaceTemplateCreateComponent implements OnInit {
   }
 
   cancel() {
-
+    this.cancelEmitted.emit();
   }
 
   save() {
+    const templateName = this.templateNameInput.value;
 
+    if(!templateName) {
+      return;
+    }
+
+    if(!this.labelEditor.isValid) {
+      this.labelEditor.markAllAsDirty();
+      return;
+    }
+
+    const body: WorkspaceTemplate = {
+      name: templateName,
+      manifest: this.manifestDagEditor.rawManifest
+    };
+
+    this.saveEmitted.emit(body);
   }
 }

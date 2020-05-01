@@ -1,0 +1,18 @@
+.page-title-text {
+  max-width: 600px;
+}
+
+.minified {
+  flex-wrap: nowrap !important;
+  overflow: scroll;
+}
+
+/deep/ app-workspace-template-summary-view {
+  &.selected {
+    .workspace-template-summary-view {
+      border-color: #01579B;
+      border-width: 2px;
+      background-color: #EDF2FD !important;
+    }
+  }
+}

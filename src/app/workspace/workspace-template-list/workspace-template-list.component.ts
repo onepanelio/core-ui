@@ -9,12 +9,18 @@ import { Pagination } from "../../workflow-template/workflow-template-view/workf
   styleUrls: ['./workspace-template-list.component.scss']
 })
 export class WorkspaceTemplateListComponent implements OnInit {
+  blankTemplate: WorkspaceTemplate = {
+    name: 'Blank template'
+  }
+
+  showWorkspaceTemplateEditor = false;
 
   namespace: string;
-
   pagination = new Pagination();
   workspaceTemplatesResponse: ListWorkspaceTemplatesResponse;
   workspaceTemplates: WorkspaceTemplate[] = [];
+
+  selectedTemplate = null;
 
   constructor(
       private workspaceTemplateService: WorkspaceTemplateServiceService,
@@ -34,6 +40,30 @@ export class WorkspaceTemplateListComponent implements OnInit {
         .subscribe(res => {
           this.workspaceTemplatesResponse = res;
           this.workspaceTemplates = res.workspaceTemplates;
+        })
+  }
+
+  newWorkspaceTemplate() {
+    this.showWorkspaceTemplateEditor = true;
+    this.selectedTemplate = 'new';
+  }
+
+  selectTemplate(template: WorkspaceTemplate) {
+    this.selectedTemplate = template.name;
+  }
+
+  cancelWorkspaceTemplate() {
+    this.showWorkspaceTemplateEditor = false;
+    this.selectedTemplate = null;
+  }
+
+  onCreate(template: WorkspaceTemplate) {
+    this.workspaceTemplateService.createWorkspaceTemplate(this.namespace, template)
+        .subscribe(res => {
+          this.getWorkspaceTemplates();
+          this.cancelWorkspaceTemplate();
+        }, err => {
+          console.log(err);
         })
   }
 }

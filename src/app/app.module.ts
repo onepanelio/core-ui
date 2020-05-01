@@ -95,6 +95,7 @@ import { WorkspaceTemplateViewComponent } from './workspace/workspace-template-v
 import { WorkspaceTemplateListComponent } from './workspace/workspace-template-list/workspace-template-list.component';
 import { WorkspaceTemplateCreateComponent } from './workspace/workspace-template-create/workspace-template-create.component';
 import { WorkspaceViewComponent } from "./workspace/workspace-view/workspace-view.component";
+import { WorkspaceTemplateSummaryViewComponent } from './workspace/workspace-template/workspace-template-summary-view/workspace-template-summary-view.component';
 
 @NgModule({
   declarations: [
@@ -162,7 +163,8 @@ import { WorkspaceViewComponent } from "./workspace/workspace-view/workspace-vie
     WorkspaceViewComponent,
     WorkspaceTemplateViewComponent,
     WorkspaceTemplateListComponent,
-    WorkspaceTemplateCreateComponent
+    WorkspaceTemplateCreateComponent,
+    WorkspaceTemplateSummaryViewComponent
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,

@@ -27,6 +27,9 @@ export class ManifestDagEditorComponent implements OnInit {
   errorMarkerId;
 
   parameters = new Array<FieldData>();
+
+
+  rawManifest: string;
   // Default behavior is to just return itself
   @Input() manifestInterceptor: (manifest: string) => Observable<string> = (manifest => of(manifest));
 
@@ -36,6 +39,7 @@ export class ManifestDagEditorComponent implements OnInit {
   }
 
   onManifestChange(newManifest: string) {
+    this.rawManifest = newManifest;
     if(!this.manifestInterceptor) {
       this.onManifestChangeFinalized(newManifest);
     } else {
