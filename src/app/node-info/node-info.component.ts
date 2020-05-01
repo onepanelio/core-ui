@@ -58,6 +58,10 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   }
 
   updateNodeStatus(node: NodeStatus) {
+    if(!node) {
+      return;
+    }
+    
     let loaded = null;
 
     this.inputParameters = [];
