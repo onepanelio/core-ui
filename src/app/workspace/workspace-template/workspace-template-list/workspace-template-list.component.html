@@ -21,13 +21,13 @@
         <div class="flex-grow-1"></div>
     </div>
 
-    <div class="page-body mt-3 workflow-list d-flex flex-wrap" [ngClass]="{minified: showWorkspaceTemplateEditor }">
+    <div class="page-body mt-3 workflow-list d-flex flex-wrap">
         <div>
             <div class="color-dark-gray font-roboto mb-3">New template</div>
             <app-workspace-template-summary-view
                     (click)="newWorkspaceTemplate()"
                     class="mr-3 pointer-hover"
-                    [ngClass]="{selected: selectedTemplate === 'new'}"
+                    [ngClass]="{selected: selectedTemplate?.name === 'new'}"
                     [template]="blankTemplate">
             </app-workspace-template-summary-view>
         </div>
@@ -43,18 +43,23 @@
             <app-workspace-template-summary-view
                     (click)="selectTemplate(template)"
                     class="mr-3 pointer-hover"
-                    [ngClass]="{selected: selectedTemplate === template.name}"
+                    [ngClass]="{selected: selectedTemplate?.name === template.name}"
                     [template]="template">
             </app-workspace-template-summary-view>
         </div>
     </div>
 
     <app-workspace-template-create
-            *ngIf="showWorkspaceTemplateEditor && selectedTemplate === 'new'"
+            *ngIf="showWorkspaceTemplateEditor && selectedTemplate?.name === 'new'"
             (cancelEmitted)="cancelWorkspaceTemplate()"
             (saveEmitted)="onCreate($event)">
-
     </app-workspace-template-create>
+
+    <app-workspace-template-edit
+        *ngIf="showWorkspaceTemplateEditor && selectedTemplate?.name !== 'new'"
+        [namespace]="namespace"
+        [workspaceTemplate]="selectedTemplate">
+    </app-workspace-template-edit>
 
 <!--        <mat-paginator class="no-background font-size-small"-->
 <!--                       *ngIf="workflowTemplateResponse"-->

@@ -1,10 +1,10 @@
 import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { KeyValue, WorkspaceTemplate, WorkspaceTemplateServiceService } from "../../../api";
+import { KeyValue, WorkspaceTemplate, WorkspaceTemplateServiceService } from "../../../../api";
 import { ActivatedRoute } from "@angular/router";
 import { map } from "rxjs/operators";
-import { LabelsEditComponent } from "../../labels/labels-edit/labels-edit.component";
-import { ManifestDagEditorComponent } from "../../manifest-dag-editor/manifest-dag-editor.component";
+import { LabelsEditComponent } from "../../../labels/labels-edit/labels-edit.component";
+import { ManifestDagEditorComponent } from "../../../manifest-dag-editor/manifest-dag-editor.component";
 
 @Component({
   selector: 'app-workspace-template-create',

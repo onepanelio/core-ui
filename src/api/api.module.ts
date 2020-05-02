@@ -10,6 +10,7 @@ import { NamespaceServiceService } from './api/namespaceService.service';
 import { SecretServiceService } from './api/secretService.service';
 import { WorkflowServiceService } from './api/workflowService.service';
 import { WorkflowTemplateServiceService } from './api/workflowTemplateService.service';
+import { WorkspaceServiceService } from './api/workspaceService.service';
 import { WorkspaceTemplateServiceService } from './api/workspaceTemplateService.service';
 
 @NgModule({

@@ -11,7 +11,7 @@
  */
 
 
-export interface WorkflowExecutionParameter { 
+export interface Parameter { 
     name?: string;
     value?: string;
 }

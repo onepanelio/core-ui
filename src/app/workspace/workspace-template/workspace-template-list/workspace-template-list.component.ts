@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ListWorkspaceTemplatesResponse, WorkspaceTemplate, WorkspaceTemplateServiceService } from "../../../api";
+import { ListWorkspaceTemplatesResponse, WorkspaceTemplate, WorkspaceTemplateServiceService } from "../../../../api";
 import { ActivatedRoute } from "@angular/router";
-import { Pagination } from "../../workflow-template/workflow-template-view/workflow-template-view.component";
+import { Pagination } from "../../../workflow-template/workflow-template-view/workflow-template-view.component";
 
 @Component({
   selector: 'app-workspace-template-list',
@@ -20,7 +20,7 @@ export class WorkspaceTemplateListComponent implements OnInit {
   workspaceTemplatesResponse: ListWorkspaceTemplatesResponse;
   workspaceTemplates: WorkspaceTemplate[] = [];
 
-  selectedTemplate = null;
+  selectedTemplate: WorkspaceTemplate = null;
 
   constructor(
       private workspaceTemplateService: WorkspaceTemplateServiceService,
@@ -45,11 +45,14 @@ export class WorkspaceTemplateListComponent implements OnInit {
 
   newWorkspaceTemplate() {
     this.showWorkspaceTemplateEditor = true;
-    this.selectedTemplate = 'new';
+    this.selectedTemplate = {
+      name: 'new'
+    }
   }
 
   selectTemplate(template: WorkspaceTemplate) {
-    this.selectedTemplate = template.name;
+    this.showWorkspaceTemplateEditor = true;
+    this.selectedTemplate = template;
   }
 
   cancelWorkspaceTemplate() {

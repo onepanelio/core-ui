@@ -2,11 +2,6 @@
   max-width: 600px;
 }
 
-.minified {
-  flex-wrap: nowrap !important;
-  overflow: scroll;
-}
-
 /deep/ app-workspace-template-summary-view {
   &.selected {
     .workspace-template-summary-view {

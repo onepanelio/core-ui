@@ -9,21 +9,16 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { KeyValue } from './keyValue';
-import { WorkflowTemplate } from './workflowTemplate';
+import { WorkspaceTemplate } from './workspaceTemplate';
 import { Parameter } from './parameter';
 
 
-export interface WorkflowExecution { 
-    createdAt?: string;
+export interface Workspace { 
     uid?: string;
     name?: string;
-    phase?: string;
-    startedAt?: string;
-    finishedAt?: string;
-    manifest?: string;
+    version?: string;
+    createdAt?: string;
     parameters?: Array<Parameter>;
-    workflowTemplate?: WorkflowTemplate;
-    labels?: Array<KeyValue>;
+    workspaceTemplate?: WorkspaceTemplate;
 }
 
