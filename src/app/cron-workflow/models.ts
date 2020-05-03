@@ -36,7 +36,7 @@ export class CronWorkflowFormatter {
 
         let workflow: CronWorkflow = {
             name: data.name,
-            manifest: yaml.safeDump(data)
+            manifest: JSON.stringify(data)
         };
 
         return workflow;
