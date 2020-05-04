@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ListWorkspaceTemplatesResponse, WorkspaceTemplate, WorkspaceTemplateServiceService } from "../../../../api";
 import { ActivatedRoute } from "@angular/router";
 import { Pagination } from "../../../workflow-template/workflow-template-view/workflow-template-view.component";
+import { WorkspaceTemplateEditComponent } from "../workspace-template-edit/workspace-template-edit.component";
 
 @Component({
   selector: 'app-workspace-template-list',
@@ -9,6 +10,8 @@ import { Pagination } from "../../../workflow-template/workflow-template-view/wo
   styleUrls: ['./workspace-template-list.component.scss']
 })
 export class WorkspaceTemplateListComponent implements OnInit {
+  @ViewChild(WorkspaceTemplateEditComponent, {static: false}) workspaceTemplateEditor: WorkspaceTemplateEditComponent;
+
   blankTemplate: WorkspaceTemplate = {
     name: 'Blank template'
   }
@@ -71,6 +74,9 @@ export class WorkspaceTemplateListComponent implements OnInit {
   }
 
   onEditUpdate(template: WorkspaceTemplate) {
-    console.log(template);
+    this.workspaceTemplateService.updateWorkspaceTemplate(this.namespace, template.name, template)
+        .subscribe(res => {
+          this.workspaceTemplateEditor.getWorkspaceTemplateVersions();
+        })
   }
 }

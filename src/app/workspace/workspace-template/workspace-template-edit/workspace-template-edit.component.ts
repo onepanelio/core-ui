@@ -98,7 +98,16 @@ export class WorkspaceTemplateEditComponent implements OnInit {
     this.saveEmitted.emit(body);
   }
 
-  onVersionSelected(version: any) {
-    console.log(version);
+  onVersionSelected(version: string) {
+    let workspaceTemplateVersion = this.workspaceTemplateVersions.find((value => {
+      return value.version === version;
+    }))
+
+    if(!workspaceTemplateVersion) {
+      return;
+    }
+
+    this.selectedWorkspaceTemplateVersion = version;
+    this.manifest = workspaceTemplateVersion.manifest;
   }
 }

@@ -59,7 +59,8 @@
         *ngIf="showWorkspaceTemplateEditor && selectedTemplate?.name !== 'new'"
         [namespace]="namespace"
         [workspaceTemplate]="selectedTemplate"
-        (saveEmitted)="onEditUpdate($event)">
+        (saveEmitted)="onEditUpdate($event)"
+        (cancelEmitted)="cancelWorkspaceTemplate()">
     </app-workspace-template-edit>
 
 <!--        <mat-paginator class="no-background font-size-small"-->
