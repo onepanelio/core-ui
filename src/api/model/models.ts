@@ -9,6 +9,7 @@ export * from './getLabelsResponse';
 export * from './getWorkflowExecutionMetricsResponse';
 export * from './googleProtobufAny';
 export * from './grpcGatewayRuntimeStreamError';
+export * from './isValidTokenResponse';
 export * from './keyValue';
 export * from './labels';
 export * from './listCronWorkflowsResponse';

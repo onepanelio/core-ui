@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { AuthService } from "../auth.service";
-import { Router } from "@angular/router";
 import { AuthServiceService } from "../../../api";
 import { NamespaceTracker } from "../../namespace/namespace-tracker.service";
+import { AppRouter } from "../../router/app-router.service";
 
 @Component({
   selector: 'app-login',
@@ -19,7 +19,7 @@ export class LoginComponent implements OnInit {
   constructor(
       private formBuilder: FormBuilder,
       private authService: AuthService,
-      private router: Router,
+      private appRouter: AppRouter,
       private apiAuthService: AuthServiceService,
       private namespaceTracker: NamespaceTracker
   ) {
@@ -50,16 +50,16 @@ export class LoginComponent implements OnInit {
 
     this.apiAuthService.isValidToken({token: token})
         .subscribe(res => {
-            this.authService.setAuthToken(tokenValue);
+            this.authService.setAuthToken(tokenValue, res.domain);
 
             this.namespaceTracker.getNamespaces();
 
             if(this.redirectUrl) {
-              this.router.navigateByUrl(this.redirectUrl);
+              this.appRouter.navigateByUrl(this.redirectUrl);
               return;
             }
 
-            this.router.navigate(['/']);
+            this.appRouter.navigateToHomePage();
         }, err => {
           this.tokenInput.setErrors({error: 'Invalid token'})
         })

@@ -23,10 +23,17 @@ export class AuthService {
 
   constructor() { }
 
-  setAuthToken(token: string) {
+  setAuthToken(token: string, domain?: string) {
     localStorage.setItem('auth-token', token);
     const expires = new Date(new Date().setFullYear(new Date().getFullYear() + 10)).toUTCString();
-    document.cookie = 'auth-token=' + token + ';path=/;expires=' + expires;
+
+    let cookieString = 'auth-token=' + token + ';path=/;expires=' + expires;
+    if(domain) {
+      cookieString += ';domain=' + domain;
+    }
+
+    console.log('Attempting to set cookie to:', cookieString);
+    document.cookie = cookieString;
 
     this.authToken = token;
   }
