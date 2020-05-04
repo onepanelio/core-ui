@@ -9,16 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ParameterOption } from './parameterOption';
+import { WorkspaceTemplate } from './workspaceTemplate';
 
 
-export interface Parameter { 
-    name?: string;
-    value?: string;
-    type?: string;
-    displayName?: string;
-    hint?: string;
-    required?: boolean;
-    options?: Array<ParameterOption>;
+export interface ListWorkspaceTemplateVersionsResponse { 
+    count?: number;
+    workspaceTemplates?: Array<WorkspaceTemplate>;
 }
 

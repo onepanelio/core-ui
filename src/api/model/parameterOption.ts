@@ -9,16 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ParameterOption } from './parameterOption';
 
 
-export interface Parameter { 
+export interface ParameterOption { 
     name?: string;
     value?: string;
-    type?: string;
-    displayName?: string;
-    hint?: string;
-    required?: boolean;
-    options?: Array<ParameterOption>;
 }
 

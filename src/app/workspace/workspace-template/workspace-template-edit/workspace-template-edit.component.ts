@@ -72,12 +72,13 @@ export class WorkspaceTemplateEditComponent implements OnInit {
   }
 
   getWorkspaceTemplateVersions() {
-    this.workspaceTemplateService.listWorkspaceTemplateVersions(this.namespace, this.workspaceTemplate.name)
+    this.workspaceTemplateService.listWorkspaceTemplateVersions(this.namespace, this.workspaceTemplate.uid)
         .subscribe(res => {
-          if(res.workflowTemplates && res.workflowTemplates.length > 0) {
-            this.selectedWorkspaceTemplateVersion = res.workflowTemplates[0].version;
-            this.workspaceTemplateVersions = res.workflowTemplates;
-            this.manifest = res.workflowTemplates[0].manifest;
+          if(res.workspaceTemplates && res.workspaceTemplates.length > 0) {
+            console.log('setting manifest to', res.workspaceTemplates[0]);
+            this.selectedWorkspaceTemplateVersion = res.workspaceTemplates[0].version;
+            this.workspaceTemplateVersions = res.workspaceTemplates;
+            this.manifest = res.workspaceTemplates[0].manifest;
             this.manifestDagEditor.onManifestChange(this.manifest);
           }
         })

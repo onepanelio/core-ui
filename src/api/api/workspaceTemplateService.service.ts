@@ -17,7 +17,7 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { ListWorkflowTemplateVersionsResponse } from '../model/models';
+import { ListWorkspaceTemplateVersionsResponse } from '../model/models';
 import { ListWorkspaceTemplatesResponse } from '../model/models';
 import { WorkflowTemplate } from '../model/models';
 import { WorkspaceTemplate } from '../model/models';
@@ -217,20 +217,28 @@ export class WorkspaceTemplateServiceService {
     }
 
     /**
+     * Get a WorkspaceTemplate
      * @param namespace 
-     * @param name 
+     * @param uid 
+     * @param version 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listWorkspaceTemplateVersions(namespace: string, name: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ListWorkflowTemplateVersionsResponse>;
-    public listWorkspaceTemplateVersions(namespace: string, name: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ListWorkflowTemplateVersionsResponse>>;
-    public listWorkspaceTemplateVersions(namespace: string, name: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ListWorkflowTemplateVersionsResponse>>;
-    public listWorkspaceTemplateVersions(namespace: string, name: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getWorkspaceTemplate(namespace: string, uid: string, version?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WorkspaceTemplate>;
+    public getWorkspaceTemplate(namespace: string, uid: string, version?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WorkspaceTemplate>>;
+    public getWorkspaceTemplate(namespace: string, uid: string, version?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WorkspaceTemplate>>;
+    public getWorkspaceTemplate(namespace: string, uid: string, version?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
-            throw new Error('Required parameter namespace was null or undefined when calling listWorkspaceTemplateVersions.');
+            throw new Error('Required parameter namespace was null or undefined when calling getWorkspaceTemplate.');
         }
-        if (name === null || name === undefined) {
-            throw new Error('Required parameter name was null or undefined when calling listWorkspaceTemplateVersions.');
+        if (uid === null || uid === undefined) {
+            throw new Error('Required parameter uid was null or undefined when calling getWorkspaceTemplate.');
+        }
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (version !== undefined && version !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>version, 'version');
         }
 
         let headers = this.defaultHeaders;
@@ -258,7 +266,61 @@ export class WorkspaceTemplateServiceService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<ListWorkflowTemplateVersionsResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workspace_templates/${encodeURIComponent(String(name))}/versions`,
+        return this.httpClient.get<WorkspaceTemplate>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workspace_templates/${encodeURIComponent(String(uid))}`,
+            {
+                params: queryParameters,
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * @param namespace 
+     * @param uid 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public listWorkspaceTemplateVersions(namespace: string, uid: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ListWorkspaceTemplateVersionsResponse>;
+    public listWorkspaceTemplateVersions(namespace: string, uid: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ListWorkspaceTemplateVersionsResponse>>;
+    public listWorkspaceTemplateVersions(namespace: string, uid: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ListWorkspaceTemplateVersionsResponse>>;
+    public listWorkspaceTemplateVersions(namespace: string, uid: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        if (namespace === null || namespace === undefined) {
+            throw new Error('Required parameter namespace was null or undefined when calling listWorkspaceTemplateVersions.');
+        }
+        if (uid === null || uid === undefined) {
+            throw new Error('Required parameter uid was null or undefined when calling listWorkspaceTemplateVersions.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // authentication (Bearer) required
+        if (this.configuration.apiKeys && this.configuration.apiKeys["authorization"]) {
+            headers = headers.set('authorization', this.configuration.apiKeys["authorization"]);
+        }
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<ListWorkspaceTemplateVersionsResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workspace_templates/${encodeURIComponent(String(uid))}/versions`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
