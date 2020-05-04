@@ -3,9 +3,7 @@
         <div class="header fix-mat-overflow">
             <mat-form-field appearance="outline" class="wp-400">
                 <mat-label>Template name</mat-label>
-                <input formControlName="templateNameInput" matInput/>
-                <mat-error *ngIf="!templateNameInput.hasError('conflict')">Name must not be empty</mat-error>
-                <mat-error *ngIf="templateNameInput.hasError('conflict')">That name is already taken</mat-error>
+                <input matInput disabled value="{{workspaceTemplate?.name}}"/>
             </mat-form-field>
             <mat-form-field appearance="outline" class="wp-400 ml-5 fix-mat-overflow">
                 <mat-label>Version</mat-label>

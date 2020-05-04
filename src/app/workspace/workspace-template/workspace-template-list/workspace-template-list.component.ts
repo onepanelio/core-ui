@@ -69,4 +69,8 @@ export class WorkspaceTemplateListComponent implements OnInit {
           console.log(err);
         })
   }
+
+  onEditUpdate(template: WorkspaceTemplate) {
+    console.log(template);
+  }
 }

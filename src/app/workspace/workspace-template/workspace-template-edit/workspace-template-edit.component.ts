@@ -34,8 +34,7 @@ export class WorkspaceTemplateEditComponent implements OnInit {
   @Output() cancelEmitted = new EventEmitter();
   @Output() saveEmitted = new EventEmitter<WorkspaceTemplate>();
 
-  manifest = "";
-  templateNameInput: AbstractControl;
+  manifest = '';
   form: FormGroup;
   labels = new Array<KeyValue>();
   apiManifestInterceptor = undefined;
@@ -55,8 +54,6 @@ export class WorkspaceTemplateEditComponent implements OnInit {
           Validators.required,
         ]),
       ]});
-
-    this.templateNameInput = this.form.get('templateNameInput');
   }
 
   ngOnInit() {
@@ -75,7 +72,6 @@ export class WorkspaceTemplateEditComponent implements OnInit {
     this.workspaceTemplateService.listWorkspaceTemplateVersions(this.namespace, this.workspaceTemplate.uid)
         .subscribe(res => {
           if(res.workspaceTemplates && res.workspaceTemplates.length > 0) {
-            console.log('setting manifest to', res.workspaceTemplates[0]);
             this.selectedWorkspaceTemplateVersion = res.workspaceTemplates[0].version;
             this.workspaceTemplateVersions = res.workspaceTemplates;
             this.manifest = res.workspaceTemplates[0].manifest;
@@ -89,19 +85,13 @@ export class WorkspaceTemplateEditComponent implements OnInit {
   }
 
   save() {
-    const templateName = this.templateNameInput.value;
-
-    if(!templateName) {
-      return;
-    }
-
     if(!this.labelEditor.isValid) {
       this.labelEditor.markAllAsDirty();
       return;
     }
 
     const body: WorkspaceTemplate = {
-      name: templateName,
+      name: this.workspaceTemplate.name,
       manifest: this.manifestDagEditor.rawManifest
     };
 
