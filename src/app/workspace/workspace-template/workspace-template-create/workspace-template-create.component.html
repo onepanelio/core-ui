@@ -1,4 +1,4 @@
-<form [formGroup]="form" class="page-body">
+<form [formGroup]="form" class="page-body workspace-template-create">
     <div class="op-info-box mt-8">
         <div class="header fix-mat-overflow">
             <mat-form-field appearance="outline" class="wp-400">
@@ -9,13 +9,10 @@
             </mat-form-field>
             <div class="font-roboto">Need help? <a href="#">How to define workflows</a></div>
         </div>
-        <div class="d-flex">
-            <app-manifest-dag-editor
-                    class="flex-grow-1"
-                    [manifestText]="manifest"
-                    [manifestInterceptor]="apiManifestInterceptor">
-            </app-manifest-dag-editor>
-        </div>
+        <app-manifest-dag-editor
+                [manifestText]="manifest"
+                [manifestInterceptor]="apiManifestInterceptor">
+        </app-manifest-dag-editor>
         <div class="mt-5">
             <div class="op-h2">Labels</div>
             <app-labels-edit class="d-inline-block mt-3" [labels]="labels" ></app-labels-edit>
