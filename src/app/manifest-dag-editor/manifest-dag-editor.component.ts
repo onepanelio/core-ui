@@ -21,6 +21,7 @@ export class ManifestDagEditorComponent implements OnInit {
 
   @Input() manifestText: string;
   @Input() serverError: Alert;
+  @Input() notification: Alert;
 
   showingRender: boolean = true;
   manifestTextCurrent: string;

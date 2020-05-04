@@ -3,6 +3,7 @@ import { ListWorkspaceTemplatesResponse, WorkspaceTemplate, WorkspaceTemplateSer
 import { ActivatedRoute } from "@angular/router";
 import { Pagination } from "../../../workflow-template/workflow-template-view/workflow-template-view.component";
 import { WorkspaceTemplateEditComponent } from "../workspace-template-edit/workspace-template-edit.component";
+import { Alert } from "../../../alert/alert";
 
 @Component({
   selector: 'app-workspace-template-list',
@@ -77,6 +78,10 @@ export class WorkspaceTemplateListComponent implements OnInit {
     this.workspaceTemplateService.updateWorkspaceTemplate(this.namespace, template.name, template)
         .subscribe(res => {
           this.workspaceTemplateEditor.getWorkspaceTemplateVersions();
+          this.workspaceTemplateEditor.setAlert(new Alert({
+            type: 'success',
+            message: 'Template has been updated'
+          }))
         })
   }
 }
