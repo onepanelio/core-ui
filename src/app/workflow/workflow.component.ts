@@ -12,6 +12,7 @@ import { KeyValue, LabelServiceService, WorkflowExecution, WorkflowServiceServic
 import { MatDialog } from "@angular/material/dialog";
 import { LabelEditDialogComponent } from "../labels/label-edit-dialog/label-edit-dialog.component";
 import { AppRouter } from "../router/app-router.service";
+import { ClockComponent } from "../clock/clock.component";
 const aceRange = ace.acequire('ace/range').Range;
 
 @Component({
@@ -27,6 +28,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   private snackbarRef: MatSnackBarRef<SimpleSnackBar>;
 
   @ViewChild('yamlEditor', {static: true}) yamlEditor: AceEditorComponent;
+  @ViewChild(ClockComponent, {static: false}) clock: ClockComponent;
   @ViewChild(DagComponent, {static: false}) dag: DagComponent;
   @ViewChild('pageContent', {static: false}) set pageContent(value: ElementRef) {
     setTimeout( () => {
@@ -90,14 +92,16 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     private appRouter: AppRouter,
     private snackbar: MatSnackBar,
   ) {
+    this.activatedRoute.paramMap.subscribe(next => {
+      this.setNamespaceName(next.get('namespace'), next.get('name'));
+      if(this.clock) {
+        this.clock.reset(true);
+      }
+      this.startCheckingWorkflow();
+    });
   }
 
   ngOnInit() {
-    this.activatedRoute.paramMap.subscribe(next => {
-      this.setNamespaceName(next.get('namespace'), next.get('name'));
-
-      this.startCheckingWorkflow();
-    });
   }
 
   startCheckingWorkflow() {
@@ -181,7 +185,6 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     }
 
     if(this.selectedNodeId && this.selectedNodeId !== this.workflow.name) {
-      // TODO node here.
       this.nodeInfo = status.nodes[this.selectedNodeId];
 
       if(this._nodeInfoElement) {
@@ -412,11 +415,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   }
 
   runAgain() {
-    let data: WorkflowExecution = {
-      workflowTemplate: this.workflow.workflowTemplate,
-    };
-
-    this.workflowServiceService.createWorkflowExecution(this.namespace, data)
+    this.workflowServiceService.cloneWorkflowExecution(this.namespace, this.name)
         .subscribe(res => {
           this.appRouter.navigateToWorkflowExecution(this.namespace, res.name);
         })

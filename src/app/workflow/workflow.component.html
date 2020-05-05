@@ -10,7 +10,7 @@
   </div>
 
   <div class="page-body">
-    <app-activity-bar #activityBar *ngIf="workflow?.phase" [status]="workflow.phase" class="mt-4">
+    <app-activity-bar *ngIf="workflow?.phase" [status]="workflow.phase" class="mt-4">
       <div class="d-flex align-items-center w-100">
         <app-status *ngIf="workflow" class="font-roboto-bold font-weight-bold" [phase]="workflow.phase"></app-status>
         <span *ngIf="workflow && workflow.succeeded" class="ml-1"> in </span>
