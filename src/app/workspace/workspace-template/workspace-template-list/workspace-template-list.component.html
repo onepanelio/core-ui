@@ -24,7 +24,7 @@
             <app-workspace-template-summary-view
                     (click)="newWorkspaceTemplate()"
                     class="mr-3 pointer-hover"
-                    [ngClass]="{selected: selectedTemplate?.name === 'new'}"
+                    [ngClass]="{selected: selectedTemplate === null}"
                     [template]="blankTemplate">
             </app-workspace-template-summary-view>
         </div>
@@ -47,13 +47,15 @@
     </div>
 
     <app-workspace-template-create
-            *ngIf="showWorkspaceTemplateEditor && selectedTemplate?.name === 'new'"
+            *ngIf="showWorkspaceTemplateEditor && selectedTemplate === null"
             (cancelEmitted)="cancelWorkspaceTemplate()"
             (saveEmitted)="onCreate($event)">
     </app-workspace-template-create>
-
+<!--    showWorkspaceTemplateEditor && selectedTemplate?.name !== 'new'-->
+<!---->
+<!--    TODO @todo hide and see if that fixes the dag issue.-->
     <app-workspace-template-edit
-        *ngIf="showWorkspaceTemplateEditor && selectedTemplate?.name !== 'new'"
+        [class.d-none]="!showWorkspaceTemplateEditor || selectedTemplate === null"
         [namespace]="namespace"
         [workspaceTemplate]="selectedTemplate"
         (saveEmitted)="onEditUpdate($event)"

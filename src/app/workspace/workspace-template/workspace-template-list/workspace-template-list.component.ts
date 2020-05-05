@@ -49,9 +49,7 @@ export class WorkspaceTemplateListComponent implements OnInit {
 
   newWorkspaceTemplate() {
     this.showWorkspaceTemplateEditor = true;
-    this.selectedTemplate = {
-      name: 'new'
-    }
+    this.selectedTemplate = null;
   }
 
   selectTemplate(template: WorkspaceTemplate) {

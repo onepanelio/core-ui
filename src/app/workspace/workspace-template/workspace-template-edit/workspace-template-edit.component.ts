@@ -20,6 +20,10 @@ export class WorkspaceTemplateEditComponent implements OnInit {
 
   private _workspaceTemplate: WorkspaceTemplate;
   @Input() set workspaceTemplate(value: WorkspaceTemplate) {
+    if(!value) {
+      return;
+    }
+
     if(value && this._workspaceTemplate && value.name === this._workspaceTemplate.name) {
       return;
     }
