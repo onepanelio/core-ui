@@ -96,9 +96,13 @@ export class SimpleWorkflowDetail {
 
   updateWorkflowManifest(manifest: string) {
     this.jsonManifest = JSON.parse(manifest);
-    
+
     let jsonTemplateManifest = yaml.safeLoad(this.workflowTemplate.manifest);
     if (this.jsonManifest.spec.arguments && this.jsonManifest.spec.arguments.parameters) {
+      if(!jsonTemplateManifest.arguments) {
+        jsonTemplateManifest.arguments = {};
+      }
+
       jsonTemplateManifest.arguments.parameters = this.jsonManifest.spec.arguments.parameters;
     }
     this.yamlManifest = yaml.safeDump(jsonTemplateManifest);
