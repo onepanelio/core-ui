@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { WorkspaceTemplate } from "../../../../api";
 
 @Component({
@@ -9,9 +9,16 @@ import { WorkspaceTemplate } from "../../../../api";
 export class WorkspaceTemplateSummaryViewComponent implements OnInit {
   @Input() iconClass = 'fas fa-desktop';
   @Input() template: WorkspaceTemplate;
+  @Input() showMenu = true;
+
+  @Output() createWorkspaceClicked = new EventEmitter<WorkspaceTemplate>();
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  createWorkspace() {
+    this.createWorkspaceClicked.emit(this.template);
   }
 }

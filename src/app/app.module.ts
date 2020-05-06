@@ -97,6 +97,7 @@ import { WorkspaceTemplateCreateComponent } from './workspace/workspace-template
 import { WorkspaceViewComponent } from "./workspace/workspace-view/workspace-view.component";
 import { WorkspaceTemplateSummaryViewComponent } from './workspace/workspace-template/workspace-template-summary-view/workspace-template-summary-view.component';
 import { WorkspaceTemplateEditComponent } from './workspace/workspace-template/workspace-template-edit/workspace-template-edit.component';
+import { MatMenuModule } from "@angular/material/menu";
 
 @NgModule({
   declarations: [
@@ -203,7 +204,8 @@ import { WorkspaceTemplateEditComponent } from './workspace/workspace-template/w
         ApiModule,
         MatProgressSpinnerModule,
         MatTooltipModule,
-        MatChipsModule
+        MatChipsModule,
+        MatMenuModule
     ],
   providers: [
       NamespaceTracker,

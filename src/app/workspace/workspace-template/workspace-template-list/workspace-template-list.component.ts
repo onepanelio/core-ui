@@ -1,5 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ListWorkspaceTemplatesResponse, WorkspaceTemplate, WorkspaceTemplateServiceService } from "../../../../api";
+import {
+  ListWorkspaceTemplatesResponse, Workspace,
+  WorkspaceServiceService,
+  WorkspaceTemplate,
+  WorkspaceTemplateServiceService
+} from "../../../../api";
 import { ActivatedRoute } from "@angular/router";
 import { Pagination } from "../../../workflow-template/workflow-template-view/workflow-template-view.component";
 import { WorkspaceTemplateEditComponent } from "../workspace-template-edit/workspace-template-edit.component";
@@ -28,6 +33,7 @@ export class WorkspaceTemplateListComponent implements OnInit {
 
   constructor(
       private workspaceTemplateService: WorkspaceTemplateServiceService,
+      private workspaceService: WorkspaceServiceService,
       private activatedRoute: ActivatedRoute
   ) { }
 
@@ -80,6 +86,18 @@ export class WorkspaceTemplateListComponent implements OnInit {
             type: 'success',
             message: 'Template has been updated'
           }))
+        })
+  }
+
+  createWorkspace(template: WorkspaceTemplate) {
+    const workspace: Workspace = {
+      name: "name",
+      workspaceTemplate: template,
+    }
+
+    this.workspaceService.createWorkspace(this.namespace, workspace)
+        .subscribe(res => {
+          console.log(res);
         })
   }
 }

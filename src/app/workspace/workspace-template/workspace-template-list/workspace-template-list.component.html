@@ -24,6 +24,7 @@
             <app-workspace-template-summary-view
                     (click)="newWorkspaceTemplate()"
                     class="mr-3 pointer-hover"
+                    [showMenu]="false"
                     [ngClass]="{selected: selectedTemplate === null}"
                     [template]="blankTemplate">
             </app-workspace-template-summary-view>
@@ -39,6 +40,7 @@
             </div>
             <app-workspace-template-summary-view
                     (click)="selectTemplate(template)"
+                    (createWorkspaceClicked)="createWorkspace($event)"
                     class="mr-3 pointer-hover"
                     [ngClass]="{selected: selectedTemplate?.name === template.name}"
                     [template]="template">
