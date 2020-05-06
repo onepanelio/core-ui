@@ -9,6 +9,9 @@ import { ActivatedRoute } from "@angular/router";
 import { Pagination } from "../../../workflow-template/workflow-template-view/workflow-template-view.component";
 import { WorkspaceTemplateEditComponent } from "../workspace-template-edit/workspace-template-edit.component";
 import { Alert } from "../../../alert/alert";
+import { MatDialog } from "@angular/material/dialog";
+import { WorkflowExecuteDialogComponent } from "../../../workflow/workflow-execute-dialog/workflow-execute-dialog.component";
+import { WorkspaceExecuteDialogComponent } from "../../workspace-execute-dialog/workspace-execute-dialog.component";
 
 @Component({
   selector: 'app-workspace-template-list',
@@ -34,7 +37,8 @@ export class WorkspaceTemplateListComponent implements OnInit {
   constructor(
       private workspaceTemplateService: WorkspaceTemplateServiceService,
       private workspaceService: WorkspaceServiceService,
-      private activatedRoute: ActivatedRoute
+      private activatedRoute: ActivatedRoute,
+      private dialog: MatDialog,
   ) { }
 
   ngOnInit() {
@@ -90,14 +94,32 @@ export class WorkspaceTemplateListComponent implements OnInit {
   }
 
   createWorkspace(template: WorkspaceTemplate) {
-    const workspace: Workspace = {
-      name: "name",
-      workspaceTemplate: template,
-    }
+    const dialogRef = this.dialog.open(WorkspaceExecuteDialogComponent, {
+      width: '60vw',
+      maxHeight: '100vh',
+      data: {
+        namespace: this.namespace,
+        template: template,
+      }
+    });
 
-    this.workspaceService.createWorkspace(this.namespace, workspace)
-        .subscribe(res => {
-          console.log(res);
-        })
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) {
+        return;
+      }
+
+      const workspace: Workspace = {
+        name: result.name,
+        workspaceTemplate: result.template,
+        parameters: result.parameters,
+        labels: result.labels
+      };
+
+      this.workspaceService.createWorkspace(this.namespace, workspace)
+          .subscribe(res => {
+            // @todo redirect to new workspace page.
+            console.log('created workspace!');
+          })
+    });
   }
 }

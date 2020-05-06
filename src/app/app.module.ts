@@ -98,6 +98,7 @@ import { WorkspaceViewComponent } from "./workspace/workspace-view/workspace-vie
 import { WorkspaceTemplateSummaryViewComponent } from './workspace/workspace-template/workspace-template-summary-view/workspace-template-summary-view.component';
 import { WorkspaceTemplateEditComponent } from './workspace/workspace-template/workspace-template-edit/workspace-template-edit.component';
 import { MatMenuModule } from "@angular/material/menu";
+import { WorkspaceExecuteDialogComponent } from './workspace/workspace-execute-dialog/workspace-execute-dialog.component';
 
 @NgModule({
   declarations: [
@@ -167,7 +168,8 @@ import { MatMenuModule } from "@angular/material/menu";
     WorkspaceTemplateListComponent,
     WorkspaceTemplateCreateComponent,
     WorkspaceTemplateSummaryViewComponent,
-    WorkspaceTemplateEditComponent
+    WorkspaceTemplateEditComponent,
+    WorkspaceExecuteDialogComponent
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,
@@ -176,6 +178,7 @@ import { MatMenuModule } from "@angular/material/menu";
         ClosableSnackComponent,
         LabelEditDialogComponent,
         CreateNamespaceDialogComponent,
+        WorkspaceExecuteDialogComponent
     ],
     imports: [
         BrowserModule,

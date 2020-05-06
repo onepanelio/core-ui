@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { KeyValue } from './keyValue';
 import { WorkspaceTemplate } from './workspaceTemplate';
 import { Parameter } from './parameter';
 import { WorkspaceStatus } from './workspaceStatus';
@@ -22,5 +23,6 @@ export interface Workspace {
     parameters?: Array<Parameter>;
     workspaceTemplate?: WorkspaceTemplate;
     status?: WorkspaceStatus;
+    labels?: Array<KeyValue>;
 }
 
