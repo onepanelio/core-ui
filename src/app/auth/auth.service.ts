@@ -32,7 +32,6 @@ export class AuthService {
       cookieString += ';domain=' + domain;
     }
 
-    console.log('Attempting to set cookie to:', cookieString);
     document.cookie = cookieString;
 
     this.authToken = token;
