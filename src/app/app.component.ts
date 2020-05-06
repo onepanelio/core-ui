@@ -54,7 +54,7 @@ export class AppComponent implements OnInit {
           const url = e.urlAfterRedirects;
 
           this.showNamespaceManager = false;
-          
+
           if(url.indexOf('templates') >= 0 || url.indexOf('workflows') >= 0) {
             this.activeRoute = 'templates';
           } else if(url.indexOf('secrets') >= 0) {

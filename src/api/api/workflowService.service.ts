@@ -19,9 +19,12 @@ import { Observable }                                        from 'rxjs';
 
 import { ArtifactResponse } from '../model/models';
 import { GetWorkflowExecutionMetricsResponse } from '../model/models';
+import { GrpcGatewayRuntimeError } from '../model/models';
 import { ListFilesResponse } from '../model/models';
 import { ListWorkflowExecutionsResponse } from '../model/models';
 import { Statistics } from '../model/models';
+import { StreamResultOfLogEntry } from '../model/models';
+import { StreamResultOfWorkflowExecution } from '../model/models';
 import { WorkflowExecution } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -154,7 +157,6 @@ export class WorkflowServiceService {
     }
 
     /**
-     * Clone a Workflow. This is the same as running it again.
      * @param namespace 
      * @param name 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -209,7 +211,6 @@ export class WorkflowServiceService {
     }
 
     /**
-     * Creates a Workflow
      * @param namespace 
      * @param body 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -457,9 +458,9 @@ export class WorkflowServiceService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getWorkflowExecutionLogs(namespace: string, name: string, podName: string, containerName: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<object>;
-    public getWorkflowExecutionLogs(namespace: string, name: string, podName: string, containerName: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<object>>;
-    public getWorkflowExecutionLogs(namespace: string, name: string, podName: string, containerName: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<object>>;
+    public getWorkflowExecutionLogs(namespace: string, name: string, podName: string, containerName: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<StreamResultOfLogEntry>;
+    public getWorkflowExecutionLogs(namespace: string, name: string, podName: string, containerName: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<StreamResultOfLogEntry>>;
+    public getWorkflowExecutionLogs(namespace: string, name: string, podName: string, containerName: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<StreamResultOfLogEntry>>;
     public getWorkflowExecutionLogs(namespace: string, name: string, podName: string, containerName: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
             throw new Error('Required parameter namespace was null or undefined when calling getWorkflowExecutionLogs.');
@@ -499,7 +500,7 @@ export class WorkflowServiceService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<object>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflow_executions/${encodeURIComponent(String(name))}/pods/${encodeURIComponent(String(podName))}/containers/${encodeURIComponent(String(containerName))}/logs`,
+        return this.httpClient.get<StreamResultOfLogEntry>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflow_executions/${encodeURIComponent(String(name))}/pods/${encodeURIComponent(String(podName))}/containers/${encodeURIComponent(String(containerName))}/logs`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -810,9 +811,9 @@ export class WorkflowServiceService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public watchWorkflowExecution(namespace: string, name: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<object>;
-    public watchWorkflowExecution(namespace: string, name: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<object>>;
-    public watchWorkflowExecution(namespace: string, name: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<object>>;
+    public watchWorkflowExecution(namespace: string, name: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<StreamResultOfWorkflowExecution>;
+    public watchWorkflowExecution(namespace: string, name: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<StreamResultOfWorkflowExecution>>;
+    public watchWorkflowExecution(namespace: string, name: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<StreamResultOfWorkflowExecution>>;
     public watchWorkflowExecution(namespace: string, name: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
             throw new Error('Required parameter namespace was null or undefined when calling watchWorkflowExecution.');
@@ -846,7 +847,7 @@ export class WorkflowServiceService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<object>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflow_executions/${encodeURIComponent(String(name))}/watch`,
+        return this.httpClient.get<StreamResultOfWorkflowExecution>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflow_executions/${encodeURIComponent(String(name))}/watch`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

@@ -20,6 +20,7 @@ import { Observable }                                        from 'rxjs';
 import { AddSecretKeyValueResponse } from '../model/models';
 import { DeleteSecretKeyResponse } from '../model/models';
 import { DeleteSecretResponse } from '../model/models';
+import { GrpcGatewayRuntimeError } from '../model/models';
 import { ListSecretsResponse } from '../model/models';
 import { Secret } from '../model/models';
 import { SecretExistsResponse } from '../model/models';

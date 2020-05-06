@@ -11,6 +11,7 @@
  */
 import { WorkspaceTemplate } from './workspaceTemplate';
 import { Parameter } from './parameter';
+import { WorkspaceStatus } from './workspaceStatus';
 
 
 export interface Workspace { 
@@ -20,5 +21,6 @@ export interface Workspace {
     createdAt?: string;
     parameters?: Array<Parameter>;
     workspaceTemplate?: WorkspaceTemplate;
+    status?: WorkspaceStatus;
 }
 

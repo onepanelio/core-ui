@@ -17,6 +17,7 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
+import { GrpcGatewayRuntimeError } from '../model/models';
 import { ListWorkspaceTemplateVersionsResponse } from '../model/models';
 import { ListWorkspaceTemplatesResponse } from '../model/models';
 import { WorkflowTemplate } from '../model/models';
@@ -85,7 +86,6 @@ export class WorkspaceTemplateServiceService {
     }
 
     /**
-     * Creates a WorkspaceTemplate
      * @param namespace 
      * @param body 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -149,7 +149,6 @@ export class WorkspaceTemplateServiceService {
     }
 
     /**
-     * Get the generated WorkflowTemplate for a WorkspaceTemplate
      * @param namespace 
      * @param uid 
      * @param body 
@@ -217,7 +216,6 @@ export class WorkspaceTemplateServiceService {
     }
 
     /**
-     * Get a WorkspaceTemplate
      * @param namespace 
      * @param uid 
      * @param version 
@@ -394,7 +392,6 @@ export class WorkspaceTemplateServiceService {
     }
 
     /**
-     * Updates a WorkspaceTemplate
      * @param namespace 
      * @param name 
      * @param body 

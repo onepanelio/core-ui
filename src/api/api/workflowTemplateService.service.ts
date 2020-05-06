@@ -18,6 +18,7 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { ArchiveWorkflowTemplateResponse } from '../model/models';
+import { GrpcGatewayRuntimeError } from '../model/models';
 import { ListWorkflowTemplateVersionsResponse } from '../model/models';
 import { ListWorkflowTemplatesResponse } from '../model/models';
 import { WorkflowTemplate } from '../model/models';

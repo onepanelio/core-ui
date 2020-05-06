@@ -18,6 +18,7 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { CronWorkflow } from '../model/models';
+import { GrpcGatewayRuntimeError } from '../model/models';
 import { ListCronWorkflowsResponse } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';

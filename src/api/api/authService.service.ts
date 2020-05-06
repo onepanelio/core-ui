@@ -17,6 +17,7 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
+import { GrpcGatewayRuntimeError } from '../model/models';
 import { IsValidTokenResponse } from '../model/models';
 import { TokenWrapper } from '../model/models';
 
