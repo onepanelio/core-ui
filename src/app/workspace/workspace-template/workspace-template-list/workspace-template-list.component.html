@@ -53,9 +53,6 @@
             (cancelEmitted)="cancelWorkspaceTemplate()"
             (saveEmitted)="onCreate($event)">
     </app-workspace-template-create>
-<!--    showWorkspaceTemplateEditor && selectedTemplate?.name !== 'new'-->
-<!---->
-<!--    TODO @todo hide and see if that fixes the dag issue.-->
     <app-workspace-template-edit
         [class.d-none]="!showWorkspaceTemplateEditor || selectedTemplate === null"
         [namespace]="namespace"

@@ -99,6 +99,8 @@ import { WorkspaceTemplateSummaryViewComponent } from './workspace/workspace-tem
 import { WorkspaceTemplateEditComponent } from './workspace/workspace-template/workspace-template-edit/workspace-template-edit.component';
 import { MatMenuModule } from "@angular/material/menu";
 import { WorkspaceExecuteDialogComponent } from './workspace/workspace-execute-dialog/workspace-execute-dialog.component';
+import { WorkspaceStatusComponent } from './workspace/workspace-status/workspace-status.component';
+import { WorkspacePhaseImagePipe } from "./pipes/workspace-phase-image/workspace-phase-image.pipe";
 
 @NgModule({
   declarations: [
@@ -169,7 +171,9 @@ import { WorkspaceExecuteDialogComponent } from './workspace/workspace-execute-d
     WorkspaceTemplateCreateComponent,
     WorkspaceTemplateSummaryViewComponent,
     WorkspaceTemplateEditComponent,
-    WorkspaceExecuteDialogComponent
+    WorkspaceExecuteDialogComponent,
+    WorkspaceStatusComponent,
+    WorkspacePhaseImagePipe
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,

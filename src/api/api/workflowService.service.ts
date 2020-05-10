@@ -18,6 +18,7 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { ArtifactResponse } from '../model/models';
+import { CreateWorkflowExecutionBody } from '../model/models';
 import { GetWorkflowExecutionMetricsResponse } from '../model/models';
 import { GrpcGatewayRuntimeError } from '../model/models';
 import { ListFilesResponse } from '../model/models';
@@ -216,10 +217,10 @@ export class WorkflowServiceService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public createWorkflowExecution(namespace: string, body: WorkflowExecution, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WorkflowExecution>;
-    public createWorkflowExecution(namespace: string, body: WorkflowExecution, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WorkflowExecution>>;
-    public createWorkflowExecution(namespace: string, body: WorkflowExecution, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WorkflowExecution>>;
-    public createWorkflowExecution(namespace: string, body: WorkflowExecution, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public createWorkflowExecution(namespace: string, body: CreateWorkflowExecutionBody, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WorkflowExecution>;
+    public createWorkflowExecution(namespace: string, body: CreateWorkflowExecutionBody, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WorkflowExecution>>;
+    public createWorkflowExecution(namespace: string, body: CreateWorkflowExecutionBody, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WorkflowExecution>>;
+    public createWorkflowExecution(namespace: string, body: CreateWorkflowExecutionBody, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
             throw new Error('Required parameter namespace was null or undefined when calling createWorkflowExecution.');
         }

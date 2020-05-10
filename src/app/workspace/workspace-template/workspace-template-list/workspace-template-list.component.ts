@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {
-  ListWorkspaceTemplatesResponse, Workspace,
+  CreateWorkspaceBody,
+  ListWorkspaceTemplatesResponse,
   WorkspaceServiceService,
   WorkspaceTemplate,
   WorkspaceTemplateServiceService
@@ -108,9 +109,8 @@ export class WorkspaceTemplateListComponent implements OnInit {
         return;
       }
 
-      const workspace: Workspace = {
-        name: result.name,
-        workspaceTemplate: result.template,
+      const workspace: CreateWorkspaceBody = {
+        workspaceTemplateUid: result.template.uid,
         parameters: result.parameters,
         labels: result.labels
       };

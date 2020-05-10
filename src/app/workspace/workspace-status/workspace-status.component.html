@@ -1,0 +1,6 @@
+<mat-spinner *ngIf="workspace.status.phase == 'Started'"
+             color="primary"
+             [diameter]="20">
+</mat-spinner>
+<img *ngIf="workspace.status.phase !== 'Started'" [src]="workspace.status.phase | workspacePhaseImage" />
+

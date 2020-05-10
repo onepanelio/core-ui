@@ -19,25 +19,22 @@
     </div>
 
     <div class="page-body mt-3 workflow-list">
-        <cdk-table [dataSource]="workflowTemplates">
+        <cdk-table [dataSource]="workspaces">
             <ng-container cdkColumnDef="name">
                 <cdk-header-cell *cdkHeaderCellDef>Name</cdk-header-cell>
-                <cdk-cell *cdkCellDef="let workflowTemplate">
-                    <a class="name-link" [routerLink]="['/', this.namespace, 'workflow-templates', workflowTemplate.uid]">{{workflowTemplate.name}}</a>
+                <cdk-cell *cdkCellDef="let workspace">
+                    <a class="name-link" [routerLink]="['/', this.namespace, 'workspaces', workspace.uid]">{{workspace.name}}</a>
+                    <app-labels-list-view
+                            *ngIf="workspace.labels"
+                            class="mt-2 d-block"
+                            [labels]="workspace.labels"></app-labels-list-view>
                 </cdk-cell>
             </ng-container>
 
-            <ng-container cdkColumnDef="createdAt">
-                <cdk-header-cell *cdkHeaderCellDef>Created</cdk-header-cell>
-                <cdk-cell *cdkCellDef="let workflowTemplate">
-                    <app-date [dateTime]="workflowTemplate.createdAt"></app-date>
-                </cdk-cell>
-            </ng-container>
-
-            <ng-container cdkColumnDef="actions">
-                <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
-                <cdk-cell *cdkCellDef="let workflowTemplate">
-                    <a class="link-button" [routerLink]="['/', this.namespace, 'workflow-templates', workflowTemplate.uid]">View</a>
+            <ng-container cdkColumnDef="status">
+                <cdk-header-cell *cdkHeaderCellDef>Status</cdk-header-cell>
+                <cdk-cell *cdkCellDef="let workspace">
+                    <app-workspace-status [workspace]="workspace"></app-workspace-status>
                 </cdk-cell>
             </ng-container>
 
@@ -46,13 +43,23 @@
                 <cdk-cell *cdkCellDef="let workflow" class="flex-grow-1"></cdk-cell>
             </ng-container>
 
+            <ng-container cdkColumnDef="actions">
+                <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+                <cdk-cell *cdkCellDef="let workspace" class="">
+                    <a class="link-button" [routerLink]="['/', this.namespace, 'workspaces', workspace.uid]">Open</a>
+                    <button mat-icon-button [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{'workspace' :workspace}">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                </cdk-cell>
+            </ng-container>
+
             <!-- Header and Row Declarations -->
             <cdk-header-row *cdkHeaderRowDef="displayedColumns" class="d-flex align-items-baseline op-table-header"></cdk-header-row>
             <cdk-row *cdkRowDef="let workflowTemplate; columns: displayedColumns"
                      class="d-flex align-items-baseline op-table-row">
             </cdk-row>
         </cdk-table>
-        <app-call-to-action *ngIf="workflowTemplates.length === 0">
+        <app-call-to-action *ngIf="workspaces.length === 0">
             <img class="icon" width="37" src="../../assets/images/workflows-icon.svg"/>
             <div class="header">Get started with workflows</div>
             <div class="body">This is where all your workflow templates live.</div>
@@ -60,3 +67,12 @@
         </app-call-to-action>
     </div>
 </div>
+
+<mat-menu #appMenu="matMenu">
+    <ng-template matMenuContent let-workspace="workspace">
+        <button mat-menu-item>Pause</button>
+        <button mat-menu-item>Delete</button>
+    </ng-template>
+    <!--    @todo icons-->
+
+</mat-menu>

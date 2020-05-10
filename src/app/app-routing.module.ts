@@ -15,6 +15,7 @@ import { WorkflowTemplateCloneComponent } from "./workflow-template/workflow-tem
 import { WorkspaceComponent } from "./workspace/workspace.component";
 import { WorkspaceTemplateListComponent } from "./workspace/workspace-template/workspace-template-list/workspace-template-list.component";
 import { WorkspaceTemplateCreateComponent } from "./workspace/workspace-template/workspace-template-create/workspace-template-create.component";
+import { WorkspaceViewComponent } from "./workspace/workspace-view/workspace-view.component";
 
 const routes: Routes = [
   {
@@ -54,6 +55,11 @@ const routes: Routes = [
   {
     path: ':namespace/workspaces',
     component: WorkspaceComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: ':namespace/workspaces/:uid',
+    component: WorkspaceViewComponent,
     canActivate: [AuthGuard],
   },
   {

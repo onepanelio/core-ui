@@ -55,13 +55,28 @@ export class AppComponent implements OnInit {
 
           this.showNamespaceManager = false;
 
-          if(url.indexOf('templates') >= 0 || url.indexOf('workflows') >= 0) {
-            this.activeRoute = 'templates';
-          } else if(url.indexOf('secrets') >= 0) {
-            this.activeRoute = 'secrets';
-          } else if(url.indexOf('workspace') >= 0) {
-            this.activeRoute = 'workspaces';
+          const urlParts = url.split('/');
+
+          for(const urlPart of urlParts) {
+            if(urlPart === 'workspace-templates') {
+                this.activeRoute = 'workspaces';
+                break;
+            }
+            if(urlPart.indexOf('templates') >= 0 || urlPart.indexOf('workflows') >= 0) {
+                this.activeRoute = 'templates';
+                break;
+            }
+            if(urlPart.indexOf('secrets') >= 0) {
+                this.activeRoute = 'secrets';
+                break;
+            }
+            if(urlPart.indexOf('workspace') >= 0) {
+                this.activeRoute = 'workspaces';
+                break;
+            }
           }
+
+
 
           this.loggingIn = e.urlAfterRedirects.indexOf('login') >= 0;
 

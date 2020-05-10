@@ -15,6 +15,7 @@ import { ConfirmationDialogComponent } from "../../confirmation-dialog/confirmat
 import { AlertService } from "../../alert/alert.service";
 import { Alert } from "../../alert/alert";
 import {
+  CreateWorkflowExecutionBody,
   CronWorkflow,
   CronWorkflowServiceService,
   KeyValue, ListCronWorkflowsResponse, ListWorkflowExecutionsResponse, WorkflowExecution,
@@ -182,8 +183,8 @@ export class WorkflowTemplateViewComponent implements OnInit {
         this.executeCronWorkflowRequest(request);
 
       } else {
-        const request: WorkflowExecution = {
-          workflowTemplate: this.workflowTemplate,
+        const request: CreateWorkflowExecutionBody = {
+          workflowTemplateUid: this.workflowTemplate.uid,
           parameters: result.workflowExecution.parameters,
           labels: result.workflowExecution.labels,
         };
@@ -193,7 +194,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
     });
   }
 
-  protected executeWorkflowRequest(request: WorkflowExecution) {
+  protected executeWorkflowRequest(request: CreateWorkflowExecutionBody) {
     this.workflowServiceService.createWorkflowExecution(this.namespace, request)
         .subscribe(res => {
           this.appRouter.navigateToWorkflowExecution(this.namespace, res.name);

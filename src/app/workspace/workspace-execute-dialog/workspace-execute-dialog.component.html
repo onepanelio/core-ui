@@ -10,12 +10,6 @@
                 </mat-option>
             </mat-select>
         </mat-form-field>
-
-        <mat-form-field class="fix-mat-overflow w-100" appearance="outline">
-            <mat-label>Workspace name</mat-label>
-            <input formControlName="workspaceNameInput" matInput/>
-        </mat-form-field>
-
         <app-form
                 *ngIf="parameters"
                 [fieldData]="parameters"

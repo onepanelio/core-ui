@@ -21,7 +21,6 @@ export class WorkspaceExecuteDialogComponent implements OnInit {
   labels = new Array<KeyValue>();
   parameters: Array<FieldData>;
 
-  workspaceNameInput: AbstractControl;
   form: FormGroup;
 
   constructor(
@@ -30,15 +29,8 @@ export class WorkspaceExecuteDialogComponent implements OnInit {
       private workspaceTemplateService: WorkspaceTemplateServiceService,
       @Inject(MAT_DIALOG_DATA) public data: WorkspaceExecuteDialogData
   ) {
-    this.form = this.formBuilder.group({
-      workspaceNameInput: [
-        '',
-        Validators.compose([
-          Validators.required,
-        ]),
-      ]});
+    this.form = this.formBuilder.group({});
 
-    this.workspaceNameInput = this.form.get('workspaceNameInput');
     this.workspaceTemplate = data.template;
 
     this.workspaceTemplateService.getWorkspaceTemplate(data.namespace, data.template.uid)
@@ -62,7 +54,6 @@ export class WorkspaceExecuteDialogComponent implements OnInit {
 
   createAndRun() {
     this.dialogRef.close({
-      name: this.workspaceNameInput.value,
       template: this.workspaceTemplate,
       parameters: this.parameters,
       labels: this.labels,
