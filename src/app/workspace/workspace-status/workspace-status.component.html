@@ -1,6 +1,51 @@
-<mat-spinner *ngIf="workspace.status.phase == 'Started'"
-             color="primary"
-             [diameter]="20">
-</mat-spinner>
-<img *ngIf="workspace.status.phase !== 'Started'" [src]="workspace.status.phase | workspacePhaseImage" />
-
+<div class="font-roboto">
+    <mat-spinner *ngIf="workspace.status.phase == 'Started'"
+                 color="primary"
+                 class="d-inline-block"
+                 [diameter]="16">
+    </mat-spinner>
+    <img class="adjust-top" *ngIf="workspace.status.phase !== 'Started'" [src]="workspace.status.phase | workspacePhaseImage" />
+    <div class="d-inline-block ml-2 font-size-regular color-black" [ngSwitch]="workspace.status.phase">
+        <ng-container *ngSwitchCase="'Started'">
+            Launching...
+        </ng-container>
+        <ng-container *ngSwitchCase="'Running'">
+            Running
+        </ng-container>
+        <ng-container *ngSwitchCase="'Pausing'">
+            Pausing
+        </ng-container>
+        <ng-container *ngSwitchCase="'Paused'">
+            Paused
+        </ng-container>
+        <ng-container *ngSwitchCase="'Terminating'">
+            Terminating
+        </ng-container>
+        <ng-container *ngSwitchCase="'Terminated'">
+            Terminated
+        </ng-container>
+    </div>
+</div>
+<div class="offset-by-spinner font-roboto font-size-small color-medium-gray" [ngSwitch]="workspace.status.phase">
+    <ng-container *ngSwitchCase="'Started'">
+        <app-launching-timer [startedAt]="workspace.status.startedAt"></app-launching-timer>
+    </ng-container>
+    <ng-container *ngSwitchCase="'Running'">
+        <app-clock
+                [startedAt]="workspace.status.startedAt"
+                [durationFormatter]="daysDurationFormatter">
+        </app-clock>
+    </ng-container>
+    <ng-container *ngSwitchCase="'Pausing'">
+    </ng-container>
+    <ng-container *ngSwitchCase="'Paused'">
+        <app-clock
+                [startedAt]="workspace.status.pausedAt"
+                [durationFormatter]="daysDurationFormatter">
+        </app-clock>
+    </ng-container>
+    <ng-container *ngSwitchCase="'Terminating'">
+    </ng-container>
+    <ng-container *ngSwitchCase="'Terminated'">
+    </ng-container>
+</div>

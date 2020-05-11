@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Workspace } from "../../../api";
+import { Duration } from "../../duration/Duration";
 
 @Component({
   selector: 'app-workspace-status',
@@ -9,6 +10,8 @@ import { Workspace } from "../../../api";
 export class WorkspaceStatusComponent implements OnInit {
 
   @Input() workspace: Workspace;
+
+  daysDurationFormatter = Duration.formatDurationToDays;
 
   constructor() { }
 

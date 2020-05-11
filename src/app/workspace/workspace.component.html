@@ -23,7 +23,7 @@
             <ng-container cdkColumnDef="name">
                 <cdk-header-cell *cdkHeaderCellDef>Name</cdk-header-cell>
                 <cdk-cell *cdkCellDef="let workspace">
-                    <a class="name-link" [routerLink]="['/', this.namespace, 'workspaces', workspace.uid]">{{workspace.name}}</a>
+                    <a class="name-link font-roboto-bold font-weight-bold" [routerLink]="['/', this.namespace, 'workspaces', workspace.uid]">{{workspace.name}}</a>
                     <app-labels-list-view
                             *ngIf="workspace.labels"
                             class="mt-2 d-block"
@@ -38,6 +38,15 @@
                 </cdk-cell>
             </ng-container>
 
+            <ng-container cdkColumnDef="template">
+                <cdk-header-cell *cdkHeaderCellDef>Template</cdk-header-cell>
+                <cdk-cell *cdkCellDef="let workspace">
+                    <app-workspace-template-summary
+                            [workspaceTemplate]="workspace.workspaceTemplate">
+                    </app-workspace-template-summary>
+                </cdk-cell>
+            </ng-container>
+
             <ng-container cdkColumnDef="spacer">
                 <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
                 <cdk-cell *cdkCellDef="let workflow" class="flex-grow-1"></cdk-cell>
@@ -45,9 +54,9 @@
 
             <ng-container cdkColumnDef="actions">
                 <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
-                <cdk-cell *cdkCellDef="let workspace" class="">
+                <cdk-cell *cdkCellDef="let workspace" class="flex align-items-center">
                     <a class="link-button" [routerLink]="['/', this.namespace, 'workspaces', workspace.uid]">Open</a>
-                    <button mat-icon-button [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{'workspace' :workspace}">
+                    <button mat-icon-button color="primary" class="ml-3" [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{'workspace' :workspace}">
                         <mat-icon>more_vert</mat-icon>
                     </button>
                 </cdk-cell>
@@ -67,6 +76,14 @@
         </app-call-to-action>
     </div>
 </div>
+<mat-paginator class="no-background font-size-small"
+               *ngIf="workspaceResponse"
+               (page)="onPageChange($event)"
+               [pageIndex]="this.pagination.page"
+               [length]="this.workspaceResponse.totalCount"
+               [pageSize]="this.pagination.pageSize"
+               [pageSizeOptions]="[5, 10, 25, 100]">
+</mat-paginator>
 
 <mat-menu #appMenu="matMenu">
     <ng-template matMenuContent let-workspace="workspace">
