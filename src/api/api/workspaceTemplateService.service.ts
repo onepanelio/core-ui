@@ -393,20 +393,20 @@ export class WorkspaceTemplateServiceService {
 
     /**
      * @param namespace 
-     * @param name 
+     * @param uid 
      * @param body 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateWorkspaceTemplate(namespace: string, name: string, body: WorkspaceTemplate, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WorkspaceTemplate>;
-    public updateWorkspaceTemplate(namespace: string, name: string, body: WorkspaceTemplate, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WorkspaceTemplate>>;
-    public updateWorkspaceTemplate(namespace: string, name: string, body: WorkspaceTemplate, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WorkspaceTemplate>>;
-    public updateWorkspaceTemplate(namespace: string, name: string, body: WorkspaceTemplate, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public updateWorkspaceTemplate(namespace: string, uid: string, body: WorkspaceTemplate, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<WorkspaceTemplate>;
+    public updateWorkspaceTemplate(namespace: string, uid: string, body: WorkspaceTemplate, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<WorkspaceTemplate>>;
+    public updateWorkspaceTemplate(namespace: string, uid: string, body: WorkspaceTemplate, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<WorkspaceTemplate>>;
+    public updateWorkspaceTemplate(namespace: string, uid: string, body: WorkspaceTemplate, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
             throw new Error('Required parameter namespace was null or undefined when calling updateWorkspaceTemplate.');
         }
-        if (name === null || name === undefined) {
-            throw new Error('Required parameter name was null or undefined when calling updateWorkspaceTemplate.');
+        if (uid === null || uid === undefined) {
+            throw new Error('Required parameter uid was null or undefined when calling updateWorkspaceTemplate.');
         }
         if (body === null || body === undefined) {
             throw new Error('Required parameter body was null or undefined when calling updateWorkspaceTemplate.');
@@ -446,7 +446,7 @@ export class WorkspaceTemplateServiceService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<WorkspaceTemplate>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workspace_templates/${encodeURIComponent(String(name))}`,
+        return this.httpClient.put<WorkspaceTemplate>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workspace_templates/${encodeURIComponent(String(uid))}`,
             body,
             {
                 responseType: <any>responseType,

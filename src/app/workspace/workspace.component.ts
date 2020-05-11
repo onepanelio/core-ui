@@ -88,4 +88,18 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
           })
     });
   }
+
+  onPause(workspace: Workspace) {
+    this.workspaceService.pauseWorkspace(this.namespace, workspace.uid)
+        .subscribe(res => {
+          // Do nothing
+        })
+  }
+
+  onDelete(workspace: Workspace) {
+    this.workspaceService.deleteWorkspace(this.namespace, workspace.uid)
+        .subscribe(res => {
+          // Do nothing
+        })
+  }
 }
