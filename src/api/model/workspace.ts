@@ -24,5 +24,6 @@ export interface Workspace {
     workspaceTemplate?: WorkspaceTemplate;
     status?: WorkspaceStatus;
     labels?: Array<KeyValue>;
+    path?: string;
 }
 

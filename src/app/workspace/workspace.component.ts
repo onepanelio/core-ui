@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { WorkflowTemplateBase, WorkflowTemplateService } from "../workflow-template/workflow-template.service";
 import { ActivatedRoute } from "@angular/router";
 import { CreateWorkspaceBody, ListWorkspaceResponse, Workspace, WorkspaceServiceService } from "../../api";
 import { Pagination } from "../workflow-template/workflow-template-view/workflow-template-view.component";

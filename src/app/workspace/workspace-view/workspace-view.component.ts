@@ -36,11 +36,7 @@ export class WorkspaceViewComponent implements OnInit {
     this.workspaceService.getWorkspace(this.namespace, this.workspaceUid).subscribe(res => {
       this.workspace = res;
 
-      let url = `https://${res.name}--${this.namespace}.andrey.onepanel.io`;
-
-      this.workspaceUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(url);
-
-      console.log(this.workspaceUrl);
+      this.workspaceUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(res.path);
     })
   }
 }
