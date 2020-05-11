@@ -33,7 +33,7 @@ export class AppRouter {
   }
 
   public navigateToWorkspace(namespace: string, name: string) {
-    return this.router.navigateByUrl(['/', namespace, 'workspaces', name]);
+    return this.router.navigate(['/', namespace, 'workspaces', name]);
   }
 
   public navigateByUrl(url: string|UrlTree, extras?: NavigationExtras) {
