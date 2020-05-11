@@ -24,7 +24,6 @@ import { WorkflowTemplateCreateComponent } from './workflow-template/workflow-te
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AceEditorModule } from 'ng2-ace-editor';
 import { WorkflowNodeInfoComponent } from './workflow/workflow-node-info/workflow-node-info.component';
-import { WorkflowListComponent } from './workflow/workflow-list/workflow-list.component';
 import { MomentModule } from 'ngx-moment';
 import { WorkflowTemplateEditComponent } from './workflow-template/workflow-template-edit/workflow-template-edit.component';
 import { NamespaceSelectComponent } from "./namespace-select/namespace-select.component";
@@ -91,6 +90,19 @@ import { CreateNamespaceDialogComponent } from './namespace/create-namespace-dia
 import { WorkflowTemplateCloneComponent } from './workflow-template/workflow-template-clone/workflow-template-clone.component';
 import { ManifestDagEditorComponent } from './manifest-dag-editor/manifest-dag-editor.component';
 import { WorkflowTemplateStatusComponent } from './workflow-template/workflow-template-status/workflow-template-status.component';
+import { WorkspaceComponent } from "./workspace/workspace.component";
+import { WorkspaceTemplateViewComponent } from './workspace/workspace-template/workspace-template-view/workspace-template-view.component';
+import { WorkspaceTemplateListComponent } from './workspace/workspace-template/workspace-template-list/workspace-template-list.component';
+import { WorkspaceTemplateCreateComponent } from './workspace/workspace-template/workspace-template-create/workspace-template-create.component';
+import { WorkspaceViewComponent } from "./workspace/workspace-view/workspace-view.component";
+import { WorkspaceTemplateSummaryViewComponent } from './workspace/workspace-template/workspace-template-summary-view/workspace-template-summary-view.component';
+import { WorkspaceTemplateEditComponent } from './workspace/workspace-template/workspace-template-edit/workspace-template-edit.component';
+import { MatMenuModule } from "@angular/material/menu";
+import { WorkspaceExecuteDialogComponent } from './workspace/workspace-execute-dialog/workspace-execute-dialog.component';
+import { WorkspaceStatusComponent } from './workspace/workspace-status/workspace-status.component';
+import { WorkspacePhaseImagePipe } from "./pipes/workspace-phase-image/workspace-phase-image.pipe";
+import { LaunchingTimerComponent } from './workspace/workspace-status/launching-timer/launching-timer.component';
+import { WorkspaceTemplateSummaryComponent } from './workspace/workspace-template-summary/workspace-template-summary.component';
 
 @NgModule({
   declarations: [
@@ -106,7 +118,6 @@ import { WorkflowTemplateStatusComponent } from './workflow-template/workflow-te
     WorkflowTemplateEditComponent,
     WorkflowTemplateCreateComponent,
     WorkflowNodeInfoComponent,
-    WorkflowListComponent,
     WorkflowExecutionsListComponent,
     StatusComponent,
     WorkflowTemplateSelectComponent,
@@ -154,7 +165,19 @@ import { WorkflowTemplateStatusComponent } from './workflow-template/workflow-te
     CreateNamespaceDialogComponent,
     WorkflowTemplateCloneComponent,
     ManifestDagEditorComponent,
-    WorkflowTemplateStatusComponent
+    WorkflowTemplateStatusComponent,
+    WorkspaceComponent,
+    WorkspaceViewComponent,
+    WorkspaceTemplateViewComponent,
+    WorkspaceTemplateListComponent,
+    WorkspaceTemplateCreateComponent,
+    WorkspaceTemplateSummaryViewComponent,
+    WorkspaceTemplateEditComponent,
+    WorkspaceExecuteDialogComponent,
+    WorkspaceStatusComponent,
+    WorkspacePhaseImagePipe,
+    LaunchingTimerComponent,
+    WorkspaceTemplateSummaryComponent
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,
@@ -163,6 +186,7 @@ import { WorkflowTemplateStatusComponent } from './workflow-template/workflow-te
         ClosableSnackComponent,
         LabelEditDialogComponent,
         CreateNamespaceDialogComponent,
+        WorkspaceExecuteDialogComponent
     ],
     imports: [
         BrowserModule,
@@ -191,7 +215,8 @@ import { WorkflowTemplateStatusComponent } from './workflow-template/workflow-te
         ApiModule,
         MatProgressSpinnerModule,
         MatTooltipModule,
-        MatChipsModule
+        MatChipsModule,
+        MatMenuModule
     ],
   providers: [
       NamespaceTracker,

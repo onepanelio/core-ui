@@ -1,0 +1,13 @@
+.workspace-template-create {
+  margin-left: -40px;
+  margin-right: -40px;
+
+  .op-info-box {
+    border-radius: 0;
+    .header {
+      &.no-justify {
+        justify-content: unset;
+      }
+    }
+  }
+}

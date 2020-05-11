@@ -34,4 +34,35 @@ export class Duration {
 
         return `${minutes}:${remainingSeconds}`;
     }
+
+    static formatDurationToDays(started: Date, finished: Date) {
+        const seconds = Math.floor((finished.getTime() - started.getTime()) / 1000.0);
+        if(seconds < 0) {
+            return null;
+        }
+
+        let minutes = Math.floor(seconds / 60) % 60;
+        let hours = Math.floor(seconds / 3600) % 60;
+        let days = Math.floor(seconds / 86400);
+
+        if(days > 0) {
+            let word = 'day';
+            if(days > 1) {
+                word = 'days';
+            }
+
+            return `${days.toFixed(0)} ${word}`;
+        }
+
+        if(hours > 0) {
+            let minutesString = `${minutes}`;
+            if(minutes < 10) {
+                minutesString = '0' + minutesString;
+            }
+
+            return `${hours.toFixed(0)}:${minutesString} hours`;
+        }
+
+        return Duration.formatDuration(started, finished) + ' min';
+    }
 }

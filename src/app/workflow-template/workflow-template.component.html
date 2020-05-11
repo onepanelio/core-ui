@@ -23,8 +23,9 @@
           <a class="name-link d-block" [routerLink]="['/', this.namespace, 'workflow-templates', workflowTemplate.uid]">{{workflowTemplate.name}}</a>
           <div class="d-inline-flex justify-content-between color-medium-gray font-roboto font-size-small mt-2">
             <div class="mr-5">{{workflowTemplate.versions}} versions</div>
-            <div *ngIf="workflowTemplate.stats">{{workflowTemplate.stats?.total}} executions</div>
-            <div *ngIf="!workflowTemplate.stats">0 executions</div>
+            <div class="mr-5" *ngIf="workflowTemplate.stats">{{workflowTemplate.stats?.total}} executions</div>
+            <div class="mr-5" *ngIf="!workflowTemplate.stats">0 executions</div>
+            <div *ngIf="workflowTemplate.cronStats">{{workflowTemplate.cronStats?.total}} crons</div>
           </div>
           <app-labels-list-view [labels]="workflowTemplate.labels" class="d-block"></app-labels-list-view>
         </cdk-cell>
@@ -69,6 +70,14 @@
                class="d-flex align-items-baseline op-table-row">
       </cdk-row>
     </cdk-table>
+    <mat-paginator class="no-background font-size-small"
+                   *ngIf="workflowTemplateResponse"
+                   (page)="onPageChange($event)"
+                   [pageIndex]="this.pagination.page"
+                   [length]="this.workflowTemplateResponse.totalCount"
+                   [pageSize]="this.pagination.pageSize"
+                   [pageSizeOptions]="[5, 10, 25, 100]">
+    </mat-paginator>
     <app-call-to-action *ngIf="workflowTemplates.length === 0">
       <img class="icon" width="37" src="../../assets/images/workflows-icon.svg"/>
       <div class="header">Get started with workflows</div>

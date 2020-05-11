@@ -67,7 +67,11 @@ export class DagComponent implements OnInit {
 
       // Persist the node selection.
       if(this.selectedNodeId) {
-        this.svg.select(`#${this.selectedNodeId}`).classed('selected', true);
+        try {
+          this.svg.select(`#${this.selectedNodeId}`).classed('selected', true);
+        } catch (e) {
+          this.selectedNodeId = null;
+        }
       }
     } catch (e) {
       console.error(e);
@@ -91,9 +95,7 @@ export class DagComponent implements OnInit {
   }
 
   clear() {
-    const g = new dagreD3.graphlib.Graph()
-      .setGraph({});
-    this.render(this.inner, g);
+    this.inner.select('.output').remove();
   }
 
   setupZoom() {

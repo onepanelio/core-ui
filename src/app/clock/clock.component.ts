@@ -20,6 +20,7 @@ export class ClockComponent implements OnInit, OnDestroy {
       return;
     }
 
+
     if(typeof(value) === 'string') {
       this._startedAt = new Date(value);
     } else {
@@ -65,11 +66,20 @@ export class ClockComponent implements OnInit, OnDestroy {
   @Input() interval = 1000;
 
   durationString = this.defaultString;
-  durationFormatter = Duration.formatDuration;
+  @Input() durationFormatter = Duration.formatDuration;
 
   constructor() { }
 
   ngOnInit() {
+    this.reset();
+  }
+
+  public reset(resetTimestamps = false) {
+    if(resetTimestamps) {
+      this._startedAt = undefined;
+      this._finishedAt = undefined;
+    }
+
     this.updateDuration();
 
     this.timer = setInterval(() => {

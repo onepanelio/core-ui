@@ -18,8 +18,7 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { CronWorkflow } from '../model/models';
-import { GetLabelsResponse } from '../model/models';
-import { Labels } from '../model/models';
+import { GrpcGatewayRuntimeError } from '../model/models';
 import { ListCronWorkflowsResponse } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -82,73 +81,6 @@ export class CronWorkflowServiceService {
             throw Error("key may not be null if value is not object or array");
         }
         return httpParams;
-    }
-
-    /**
-     * @param namespace 
-     * @param name 
-     * @param body 
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public addCronWorkflowLabels(namespace: string, name: string, body: Labels, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetLabelsResponse>;
-    public addCronWorkflowLabels(namespace: string, name: string, body: Labels, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetLabelsResponse>>;
-    public addCronWorkflowLabels(namespace: string, name: string, body: Labels, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetLabelsResponse>>;
-    public addCronWorkflowLabels(namespace: string, name: string, body: Labels, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        if (namespace === null || namespace === undefined) {
-            throw new Error('Required parameter namespace was null or undefined when calling addCronWorkflowLabels.');
-        }
-        if (name === null || name === undefined) {
-            throw new Error('Required parameter name was null or undefined when calling addCronWorkflowLabels.');
-        }
-        if (body === null || body === undefined) {
-            throw new Error('Required parameter body was null or undefined when calling addCronWorkflowLabels.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        // authentication (Bearer) required
-        if (this.configuration.apiKeys && this.configuration.apiKeys["authorization"]) {
-            headers = headers.set('authorization', this.configuration.apiKeys["authorization"]);
-        }
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.post<GetLabelsResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/cron_workflows/${encodeURIComponent(String(name))}/labels`,
-            body,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
     }
 
     /**
@@ -217,63 +149,6 @@ export class CronWorkflowServiceService {
     /**
      * @param namespace 
      * @param name 
-     * @param key 
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public deleteCronWorkflowLabel(namespace: string, name: string, key: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetLabelsResponse>;
-    public deleteCronWorkflowLabel(namespace: string, name: string, key: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetLabelsResponse>>;
-    public deleteCronWorkflowLabel(namespace: string, name: string, key: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetLabelsResponse>>;
-    public deleteCronWorkflowLabel(namespace: string, name: string, key: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        if (namespace === null || namespace === undefined) {
-            throw new Error('Required parameter namespace was null or undefined when calling deleteCronWorkflowLabel.');
-        }
-        if (name === null || name === undefined) {
-            throw new Error('Required parameter name was null or undefined when calling deleteCronWorkflowLabel.');
-        }
-        if (key === null || key === undefined) {
-            throw new Error('Required parameter key was null or undefined when calling deleteCronWorkflowLabel.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        // authentication (Bearer) required
-        if (this.configuration.apiKeys && this.configuration.apiKeys["authorization"]) {
-            headers = headers.set('authorization', this.configuration.apiKeys["authorization"]);
-        }
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.delete<GetLabelsResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/cron_workflows/${encodeURIComponent(String(name))}/labels/${encodeURIComponent(String(key))}`,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * @param namespace 
-     * @param name 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
@@ -326,77 +201,24 @@ export class CronWorkflowServiceService {
 
     /**
      * @param namespace 
-     * @param name 
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public getCronWorkflowLabels(namespace: string, name: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetLabelsResponse>;
-    public getCronWorkflowLabels(namespace: string, name: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetLabelsResponse>>;
-    public getCronWorkflowLabels(namespace: string, name: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetLabelsResponse>>;
-    public getCronWorkflowLabels(namespace: string, name: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        if (namespace === null || namespace === undefined) {
-            throw new Error('Required parameter namespace was null or undefined when calling getCronWorkflowLabels.');
-        }
-        if (name === null || name === undefined) {
-            throw new Error('Required parameter name was null or undefined when calling getCronWorkflowLabels.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        // authentication (Bearer) required
-        if (this.configuration.apiKeys && this.configuration.apiKeys["authorization"]) {
-            headers = headers.set('authorization', this.configuration.apiKeys["authorization"]);
-        }
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.get<GetLabelsResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/cron_workflows/${encodeURIComponent(String(name))}/labels`,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * @param namespace 
-     * @param workflowTemplateUid 
+     * @param workflowTemplateName 
      * @param pageSize 
      * @param page 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listCronWorkflows(namespace: string, workflowTemplateUid?: string, pageSize?: number, page?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ListCronWorkflowsResponse>;
-    public listCronWorkflows(namespace: string, workflowTemplateUid?: string, pageSize?: number, page?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ListCronWorkflowsResponse>>;
-    public listCronWorkflows(namespace: string, workflowTemplateUid?: string, pageSize?: number, page?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ListCronWorkflowsResponse>>;
-    public listCronWorkflows(namespace: string, workflowTemplateUid?: string, pageSize?: number, page?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public listCronWorkflows(namespace: string, workflowTemplateName?: string, pageSize?: number, page?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ListCronWorkflowsResponse>;
+    public listCronWorkflows(namespace: string, workflowTemplateName?: string, pageSize?: number, page?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ListCronWorkflowsResponse>>;
+    public listCronWorkflows(namespace: string, workflowTemplateName?: string, pageSize?: number, page?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ListCronWorkflowsResponse>>;
+    public listCronWorkflows(namespace: string, workflowTemplateName?: string, pageSize?: number, page?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
             throw new Error('Required parameter namespace was null or undefined when calling listCronWorkflows.');
         }
 
         let queryParameters = new HttpParams({encoder: this.encoder});
-        if (workflowTemplateUid !== undefined && workflowTemplateUid !== null) {
+        if (workflowTemplateName !== undefined && workflowTemplateName !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
-            <any>workflowTemplateUid, 'workflow_template_uid');
+            <any>workflowTemplateName, 'workflow_template_name');
         }
         if (pageSize !== undefined && pageSize !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
@@ -446,21 +268,21 @@ export class CronWorkflowServiceService {
 
     /**
      * @param namespace 
-     * @param workflowTemplateUid 
+     * @param workflowTemplateName 
      * @param pageSize 
      * @param page 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listCronWorkflows2(namespace: string, workflowTemplateUid: string, pageSize?: number, page?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ListCronWorkflowsResponse>;
-    public listCronWorkflows2(namespace: string, workflowTemplateUid: string, pageSize?: number, page?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ListCronWorkflowsResponse>>;
-    public listCronWorkflows2(namespace: string, workflowTemplateUid: string, pageSize?: number, page?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ListCronWorkflowsResponse>>;
-    public listCronWorkflows2(namespace: string, workflowTemplateUid: string, pageSize?: number, page?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public listCronWorkflows2(namespace: string, workflowTemplateName: string, pageSize?: number, page?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ListCronWorkflowsResponse>;
+    public listCronWorkflows2(namespace: string, workflowTemplateName: string, pageSize?: number, page?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ListCronWorkflowsResponse>>;
+    public listCronWorkflows2(namespace: string, workflowTemplateName: string, pageSize?: number, page?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ListCronWorkflowsResponse>>;
+    public listCronWorkflows2(namespace: string, workflowTemplateName: string, pageSize?: number, page?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
             throw new Error('Required parameter namespace was null or undefined when calling listCronWorkflows2.');
         }
-        if (workflowTemplateUid === null || workflowTemplateUid === undefined) {
-            throw new Error('Required parameter workflowTemplateUid was null or undefined when calling listCronWorkflows2.');
+        if (workflowTemplateName === null || workflowTemplateName === undefined) {
+            throw new Error('Required parameter workflowTemplateName was null or undefined when calling listCronWorkflows2.');
         }
 
         let queryParameters = new HttpParams({encoder: this.encoder});
@@ -498,76 +320,9 @@ export class CronWorkflowServiceService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<ListCronWorkflowsResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/cron_workflows/${encodeURIComponent(String(workflowTemplateUid))}`,
+        return this.httpClient.get<ListCronWorkflowsResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/cron_workflows/${encodeURIComponent(String(workflowTemplateName))}`,
             {
                 params: queryParameters,
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * @param namespace 
-     * @param name 
-     * @param body 
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public replaceCronWorkflowLabels(namespace: string, name: string, body: Labels, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<GetLabelsResponse>;
-    public replaceCronWorkflowLabels(namespace: string, name: string, body: Labels, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<GetLabelsResponse>>;
-    public replaceCronWorkflowLabels(namespace: string, name: string, body: Labels, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<GetLabelsResponse>>;
-    public replaceCronWorkflowLabels(namespace: string, name: string, body: Labels, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        if (namespace === null || namespace === undefined) {
-            throw new Error('Required parameter namespace was null or undefined when calling replaceCronWorkflowLabels.');
-        }
-        if (name === null || name === undefined) {
-            throw new Error('Required parameter name was null or undefined when calling replaceCronWorkflowLabels.');
-        }
-        if (body === null || body === undefined) {
-            throw new Error('Required parameter body was null or undefined when calling replaceCronWorkflowLabels.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        // authentication (Bearer) required
-        if (this.configuration.apiKeys && this.configuration.apiKeys["authorization"]) {
-            headers = headers.set('authorization', this.configuration.apiKeys["authorization"]);
-        }
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.put<GetLabelsResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/cron_workflows/${encodeURIComponent(String(name))}/labels`,
-            body,
-            {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
@@ -685,7 +440,7 @@ export class CronWorkflowServiceService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<CronWorkflow>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/cron_workflow/${encodeURIComponent(String(name))}`,
+        return this.httpClient.put<CronWorkflow>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/cron_workflow/${encodeURIComponent(String(name))}`,
             body,
             {
                 responseType: <any>responseType,

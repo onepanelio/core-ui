@@ -17,6 +17,7 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
+import { GrpcGatewayRuntimeError } from '../model/models';
 import { ListNamespacesResponse } from '../model/models';
 import { Namespace } from '../model/models';
 

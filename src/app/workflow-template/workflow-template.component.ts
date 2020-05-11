@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { WorkflowTemplate, WorkflowTemplateServiceService } from "../../api";
+import { ListWorkflowTemplatesResponse, WorkflowTemplate, WorkflowTemplateServiceService } from "../../api";
+import { Pagination } from "./workflow-template-view/workflow-template-view.component";
+import { PageEvent } from "@angular/material/paginator";
 
 @Component({
   selector: 'app-workflow-template',
@@ -12,7 +14,10 @@ export class WorkflowTemplateComponent implements OnInit {
 
   displayedColumns = ['name', 'lastExecuted','status', 'createdAt', 'actions'];
 
+  workflowTemplateResponse: ListWorkflowTemplatesResponse;
   workflowTemplates: WorkflowTemplate[] = [];
+  pagination = new Pagination();
+  getWorkflowTemplatesInterval;
 
   constructor(
       private activatedRoute: ActivatedRoute,
@@ -23,17 +28,40 @@ export class WorkflowTemplateComponent implements OnInit {
     this.activatedRoute.paramMap.subscribe(next => {
       this.namespace = next.get('namespace');
       this.getWorkflowTemplates();
+
+      if(this.getWorkflowTemplatesInterval) {
+        clearInterval(this.getWorkflowTemplatesInterval);
+      }
+
+      this.getWorkflowTemplatesInterval = setInterval(() => {
+        this.getWorkflowTemplates()
+      }, 5000);
     });
   }
 
+  ngOnDestroy() {
+    if(this.getWorkflowTemplatesInterval) {
+      clearInterval(this.getWorkflowTemplatesInterval);
+    }
+  }
+
   getWorkflowTemplates() {
-    this.workflowTemplateService.listWorkflowTemplates(this.namespace)
+    this.workflowTemplateService.listWorkflowTemplates(this.namespace, this.pagination.pageSize, this.pagination.page + 1)
         .subscribe(res => {
+          this.workflowTemplateResponse = res;
+
           if(res.workflowTemplates) {
             this.workflowTemplates = res.workflowTemplates;
           } else {
             this.workflowTemplates = [];
           }
         })
+  }
+
+  onPageChange(event: PageEvent) {
+    this.pagination.page = event.pageIndex;
+    this.pagination.pageSize = event.pageSize;
+
+    this.getWorkflowTemplates();
   }
 }

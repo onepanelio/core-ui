@@ -17,6 +17,8 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
+import { GrpcGatewayRuntimeError } from '../model/models';
+import { IsValidTokenResponse } from '../model/models';
 import { TokenWrapper } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -86,9 +88,9 @@ export class AuthServiceService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public isValidToken(body: TokenWrapper, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<object>;
-    public isValidToken(body: TokenWrapper, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<object>>;
-    public isValidToken(body: TokenWrapper, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<object>>;
+    public isValidToken(body: TokenWrapper, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<IsValidTokenResponse>;
+    public isValidToken(body: TokenWrapper, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<IsValidTokenResponse>>;
+    public isValidToken(body: TokenWrapper, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<IsValidTokenResponse>>;
     public isValidToken(body: TokenWrapper, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (body === null || body === undefined) {
             throw new Error('Required parameter body was null or undefined when calling isValidToken.');
@@ -128,7 +130,7 @@ export class AuthServiceService {
             responseType = 'text';
         }
 
-        return this.httpClient.post<object>(`${this.configuration.basePath}/apis/v1beta1/auth/token`,
+        return this.httpClient.post<IsValidTokenResponse>(`${this.configuration.basePath}/apis/v1beta1/auth/token`,
             body,
             {
                 responseType: <any>responseType,

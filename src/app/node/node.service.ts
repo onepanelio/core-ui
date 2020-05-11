@@ -114,7 +114,7 @@ export class NodeRenderer {
     return info;
   }
 
-  static nodeTemplate(node: any, root = false) {
+  static nodeTemplate(node: any) {
     let nodeRootClasses = 'node-root ';
     if (node.type === 'StepGroup' || node.type === 'DAG') {
       nodeRootClasses += ' dashed-circle';
@@ -122,7 +122,11 @@ export class NodeRenderer {
       nodeRootClasses += ' rect';
     }
 
-    let html = `<div id="${node.id}" class="${nodeRootClasses}">`;
+    let html = `<div class="${nodeRootClasses}"`;
+    if(node.id) {
+      html += ` id="${node.id}"`
+    }
+    html += '>';
 
     const showInfo = !(node.type === 'StepGroup' || node.type === 'DAG');
 
@@ -331,7 +335,7 @@ export class NodeRenderer {
       graph.setNode(nodeStatus.id, {
         id: nodeStatus.id,
         labelType: 'html',
-        label: NodeRenderer.nodeTemplate(nodeStatus, root),
+        label: NodeRenderer.nodeTemplate(nodeStatus),
         padding: 0,
         class: nodeClasses,
         ...NodeRenderer.getNodeDisplayProperties(nodeStatus, root),

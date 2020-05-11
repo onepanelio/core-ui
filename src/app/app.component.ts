@@ -51,14 +51,32 @@ export class AppComponent implements OnInit {
     this.router.events
         .pipe(filter((e) => e instanceof NavigationEnd))
         .subscribe((e: NavigationEnd) => {
+          const url = e.urlAfterRedirects;
+
           this.showNamespaceManager = false;
-          
-          if(e.urlAfterRedirects.indexOf('templates') >= 0) {
-            this.activeRoute = 'templates';
+
+          const urlParts = url.split('/');
+
+          for(const urlPart of urlParts) {
+            if(urlPart === 'workspace-templates') {
+                this.activeRoute = 'workspaces';
+                break;
+            }
+            if(urlPart.indexOf('templates') >= 0 || urlPart.indexOf('workflows') >= 0) {
+                this.activeRoute = 'templates';
+                break;
+            }
+            if(urlPart.indexOf('secrets') >= 0) {
+                this.activeRoute = 'secrets';
+                break;
+            }
+            if(urlPart.indexOf('workspace') >= 0) {
+                this.activeRoute = 'workspaces';
+                break;
+            }
           }
-          if(e.urlAfterRedirects.indexOf('secrets') >= 0) {
-            this.activeRoute = 'secrets';
-          }
+
+
 
           this.loggingIn = e.urlAfterRedirects.indexOf('login') >= 0;
 

@@ -1,4 +1,5 @@
 <app-alert [autoDismiss]="false" [alert]="serverError"></app-alert>
+<app-alert *ngIf="notification" [autoDismiss]="false" [alert]="notification"></app-alert>
 <div class="op-border hide-overflow mt-3">
     <div class="toolbar bg-toolbar-white w-100 op-border-bottom d-flex flex-row-reverse">
         <button mat-button color="primary" class="link-button font-size-regular" (click)="toggleFormRender()">

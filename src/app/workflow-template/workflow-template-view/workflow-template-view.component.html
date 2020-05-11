@@ -54,7 +54,8 @@
           <app-workflow-executions-list
               *ngIf="workflows"
               [namespace]="namespace"
-              [workflows]="workflows">
+              [workflows]="workflows"
+              (executionTerminated)="onWorkflowExecutionTerminated()">
           </app-workflow-executions-list>
           <mat-paginator class="no-background font-size-small"
                   *ngIf="workflowResponse"

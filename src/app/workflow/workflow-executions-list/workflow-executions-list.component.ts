@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import {
     Workflow,
     WorkflowExecution,
@@ -21,15 +21,21 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
     watchingWorkflowsMap = new Map<string, WebSocket>();
     executionWorkflowsMap = new Map<string, WorkflowExecution>();
 
+    @Output() executionTerminated = new EventEmitter();
+
     @Input() namespace: string;
     @Input() set workflows(value: Workflow[]) {
         // Check if we have any new data. If we don't, don't update.
         // This is done because this method may be called repeated on a timer.
         let newData = false;
-        for(let workflow of value) {
-            if(!this.executionWorkflowsMap.has(workflow.uid)) {
-                newData = true;
-                break;
+        if(value.length !== this.executionWorkflowsMap.size) {
+            newData = true;
+        } else {
+            for (let workflow of value) {
+                if (!this.executionWorkflowsMap.has(workflow.uid)) {
+                    newData = true;
+                    break;
+                }
             }
         }
 
@@ -102,7 +108,7 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
                 return;
             }
 
-            if(parsedData.result.manifest) {
+            if(parsedData.result && parsedData.result.manifest) {
                 workflowDetail.updateWorkflowManifest(parsedData.result.manifest);
             }
         };
@@ -114,6 +120,7 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
         this.workflowService.terminateWorkflow(this.namespace, workflow.name)
             .subscribe(res => {
                 this.snackbarRef = this.snackbar.open('Workflow stopped', 'OK');
+                this.executionTerminated.emit();
             }, err => {
                 this.snackbarRef = this.snackbar.open('Unable to stop workflow', 'OK');
             })

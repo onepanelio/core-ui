@@ -4,10 +4,8 @@ import { CronWorkflow, KeyValue } from "../../../api";
 import { NamespaceTracker } from "../../namespace/namespace-tracker.service";
 import { Router } from "@angular/router";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import {
-  WorkflowExecuteDialogComponent,
-} from "../../workflow/workflow-execute-dialog/workflow-execute-dialog.component";
 import { CronWorkflowFormatter } from "../models";
+import * as yaml from 'js-yaml';
 
 export interface CronWorkflowEditData {
   cronWorkflow: CronWorkflow,
@@ -31,24 +29,27 @@ export class CronWorkflowEditDialogComponent implements OnInit {
       private router: Router,
       public dialogRef: MatDialogRef<CronWorkflowEditDialogComponent>,
       @Inject(MAT_DIALOG_DATA) public data: CronWorkflowEditData) {
-    this.setManifest(data);
+    this.setManifest(data.cronWorkflow.manifest);
     this.schedulingText = CronWorkflowFormatter.toYamlString(data.cronWorkflow, true);
+    if(data.cronWorkflow.labels) {
+      this.labels = data.cronWorkflow.labels;
+    }
   }
 
   ngOnInit() {
   }
 
-  private setManifest(data: CronWorkflowEditData) {
-    let parameters = WorkflowExecuteDialogComponent.pluckParameters(data.manifest);
+  private setManifest(manifest: string) {
+    let parsedManifest = yaml.safeLoad(manifest);
+    let parameters = [];
 
-    if(data.cronWorkflow.workflowExecution && data.cronWorkflow.workflowExecution.parameters) {
-      for (let dataParam of data.cronWorkflow.workflowExecution.parameters) {
-        for(let param of parameters) {
-          if(param.name === dataParam.name) {
-            param.value = dataParam.value;
-            break;
-          }
-        }
+    if(parsedManifest.workflowSpec && parsedManifest.workflowSpec.arguments) {
+      if(!parsedManifest.workflowSpec.arguments.parameters) {
+        return [];
+      }
+
+      for (let dataParam of parsedManifest.workflowSpec.arguments.parameters) {
+        parameters.push(dataParam);
       }
     }
 

@@ -8,7 +8,13 @@ import {
     WorkflowTemplateSelectItem
 } from "../../workflow-template-select/workflow-template-select.component";
 import { AppRouter } from "../../router/app-router.service";
-import { KeyValue, WorkflowServiceService, WorkflowTemplate, WorkflowTemplateServiceService } from "../../../api";
+import {
+    KeyValue,
+    LabelServiceService,
+    WorkflowServiceService,
+    WorkflowTemplate,
+    WorkflowTemplateServiceService
+} from "../../../api";
 import { ManifestDagEditorComponent } from "../../manifest-dag-editor/manifest-dag-editor.component";
 import { DatePipe } from "@angular/common";
 
@@ -29,7 +35,7 @@ export class WorkflowTemplateEditComponent implements OnInit {
   _workflowTemplate: WorkflowTemplate;
   labels = new Array<KeyValue>();
   workflowTemplateVersions: WorkflowTemplate[] = [];
-  selectedWorkflowTemplateVersion: number;
+  selectedWorkflowTemplateVersion: string;
 
   // This is what we display in the side menu
   workflowTemplateListItems = new Array<WorkflowTemplateSelectItem>();
@@ -47,6 +53,7 @@ export class WorkflowTemplateEditComponent implements OnInit {
     private appRouter: AppRouter,
     private activatedRoute: ActivatedRoute,
     private workflowTemplateService: WorkflowTemplateServiceService,
+    private labelService: LabelServiceService,
     private datePipe: DatePipe) {
 
   }
@@ -58,7 +65,6 @@ export class WorkflowTemplateEditComponent implements OnInit {
 
       this.getWorkflowTemplate();
       this.getWorkflowTemplateVersions();
-      this.getLabels();
     });
   }
 
@@ -67,16 +73,14 @@ export class WorkflowTemplateEditComponent implements OnInit {
       .subscribe(res => {
         this.workflowTemplate = res;
         this.selectedWorkflowTemplateVersion = res.version;
+        this.labels = res.labels || [];
       });
   }
 
   getWorkflowTemplateVersions() {
     this.workflowTemplateService.listWorkflowTemplateVersions(this.namespace, this.uid)
       .subscribe(res => {
-        this.workflowTemplateVersions = res.workflowTemplates.sort((a, b) => {
-            return b.version - a.version;
-        })
-
+        this.workflowTemplateVersions = res.workflowTemplates;
         if (this.workflowTemplateVersions.length === 0) {
           return;
         }
@@ -138,8 +142,13 @@ export class WorkflowTemplateEditComponent implements OnInit {
     this.appRouter.navigateToWorkflowTemplateView(this.namespace, this.workflowTemplate.uid);
   }
 
-  getLabels(version: number|null = null) {
-    this.workflowTemplateService.getWorkflowTemplateLabels(this.namespace, this.uid, version)
+  getLabels(version: string|null = null) {
+      const templateVersion = this.workflowTemplateVersions.find(wft => wft.version === version);
+      if(!templateVersion) {
+          return;
+      }
+
+      this.labelService.getLabels(this.namespace, 'workflow_template_version', templateVersion.uid)
         .subscribe(res => {
             if(!res.labels) {
                 this.labels = [];
@@ -150,7 +159,7 @@ export class WorkflowTemplateEditComponent implements OnInit {
         })
   }
 
-  onVersionSelected(selected: number) {
+  onVersionSelected(selected: string) {
       const version = this.workflowTemplateVersions.find(wft => wft.version === selected);
       if(!version) {
           return;

@@ -11,8 +11,10 @@
  */
 
 
-export interface WorkflowExecutionParameter { 
-    name?: string;
-    value?: string;
+export interface WorkspaceStatus { 
+    phase?: string;
+    startedAt?: string;
+    pausedAt?: string;
+    terminatedAt?: string;
 }
 
