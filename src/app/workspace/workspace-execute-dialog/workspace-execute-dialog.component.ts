@@ -4,11 +4,11 @@ import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import {
   WorkflowExecuteDialogComponent,
 } from "../../workflow/workflow-execute-dialog/workflow-execute-dialog.component";
-import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { FormBuilder, FormGroup } from "@angular/forms";
 
 export interface WorkspaceExecuteDialogData {
   namespace: string;
-  template: WorkspaceTemplate;
+  template?: WorkspaceTemplate;
 }
 
 @Component({
@@ -17,7 +17,9 @@ export interface WorkspaceExecuteDialogData {
   styleUrls: ['./workspace-execute-dialog.component.scss']
 })
 export class WorkspaceExecuteDialogComponent implements OnInit {
+  workspaceTemplates: WorkspaceTemplate[] = [];
   workspaceTemplate: WorkspaceTemplate;
+  workspaceTemplateUid: string = '';
   labels = new Array<KeyValue>();
   parameters: Array<FieldData>;
 
@@ -31,18 +33,17 @@ export class WorkspaceExecuteDialogComponent implements OnInit {
   ) {
     this.form = this.formBuilder.group({});
 
-    this.workspaceTemplate = data.template;
-
-    this.workspaceTemplateService.getWorkspaceTemplate(data.namespace, data.template.uid)
-        .subscribe(res => {
-          this.workspaceTemplate = res;
-
-          this.workspaceTemplateService.generateWorkspaceTemplateWorkflowTemplate(data.namespace, 'generated', res)
-              .subscribe(generatedRes => {
-                this.parameters = WorkflowExecuteDialogComponent.pluckParameters(generatedRes.manifest);
-              })
-        });
-
+    if(data.template) {
+      this.workspaceTemplates = [data.template];
+      this.workspaceTemplate = data.template;
+      this.workspaceTemplateUid = data.template.uid;
+      this.getWorkspaceTemplate(data.namespace, data.template.uid);
+    } else {
+      this.workspaceTemplateService.listWorkspaceTemplates(data.namespace)
+          .subscribe(res => {
+            this.workspaceTemplates = res.workspaceTemplates;
+          })
+    }
   }
 
   ngOnInit() {
@@ -58,5 +59,22 @@ export class WorkspaceExecuteDialogComponent implements OnInit {
       parameters: this.parameters,
       labels: this.labels,
     });
+  }
+
+  private getWorkspaceTemplate(namespace: string, templateUid: string) {
+    this.workspaceTemplateService.getWorkspaceTemplate(namespace, templateUid)
+        .subscribe(res => {
+          this.workspaceTemplate = res;
+
+          this.workspaceTemplateService.generateWorkspaceTemplateWorkflowTemplate(namespace, 'generated', res)
+              .subscribe(generatedRes => {
+                this.parameters = WorkflowExecuteDialogComponent.pluckParameters(generatedRes.manifest);
+              })
+        });
+  }
+
+  onSelectWorkspaceTemplate(workspaceTemplateUid: string) {
+    this.workspaceTemplateUid = workspaceTemplateUid;
+    this.getWorkspaceTemplate(this.data.namespace, workspaceTemplateUid);
   }
 }

@@ -1,9 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { WorkflowTemplateBase, WorkflowTemplateService } from "../workflow-template/workflow-template.service";
 import { ActivatedRoute } from "@angular/router";
-import { ListWorkspaceResponse, Workspace, WorkspaceServiceService } from "../../api";
+import { CreateWorkspaceBody, ListWorkspaceResponse, Workspace, WorkspaceServiceService } from "../../api";
 import { Pagination } from "../workflow-template/workflow-template-view/workflow-template-view.component";
 import { PageEvent } from "@angular/material/paginator";
+import { WorkspaceExecuteDialogComponent } from "./workspace-execute-dialog/workspace-execute-dialog.component";
+import { MatDialog } from "@angular/material/dialog";
+import { AppRouter } from "../router/app-router.service";
 
 @Component({
   selector: 'app-workspace',
@@ -20,8 +23,10 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
   getWorkspacesInterval: number;
 
   constructor(
+      private appRouter: AppRouter,
       private activatedRoute: ActivatedRoute,
-      private workspaceService: WorkspaceServiceService
+      private workspaceService: WorkspaceServiceService,
+      private dialog: MatDialog
   ) {
     this.activatedRoute.paramMap.subscribe(next => {
       this.namespace = next.get('namespace');
@@ -45,7 +50,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
   getWorkspaces() {
     this.workspaceService.listWorkspaces(this.namespace, this.pagination.pageSize, this.pagination.page + 1)
         .subscribe(res => {
-          console.log(res);
           this.workspaceResponse = res;
           this.workspaces = res.workspaces;
         })
@@ -56,5 +60,32 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
     this.pagination.pageSize = event.pageSize;
 
     this.getWorkspaces();
+  }
+
+  createWorkspace() {
+    const dialogRef = this.dialog.open(WorkspaceExecuteDialogComponent, {
+      width: '60vw',
+      maxHeight: '100vh',
+      data: {
+        namespace: this.namespace,
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) {
+        return;
+      }
+
+      const workspace: CreateWorkspaceBody = {
+        workspaceTemplateUid: result.template.uid,
+        parameters: result.parameters,
+        labels: result.labels
+      };
+
+      this.workspaceService.createWorkspace(this.namespace, workspace)
+          .subscribe(res => {
+            this.appRouter.navigateToWorkspace(this.namespace, res.name);
+          })
+    });
   }
 }
