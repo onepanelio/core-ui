@@ -96,6 +96,7 @@ export class WorkspaceTemplateEditComponent implements OnInit {
     }
 
     const body: WorkspaceTemplate = {
+      uid: this.workspaceTemplate.uid,
       name: this.workspaceTemplate.name,
       manifest: this.manifestDagEditor.rawManifest
     };
