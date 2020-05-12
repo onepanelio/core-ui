@@ -106,6 +106,9 @@ import { WorkspaceTemplateSummaryComponent } from './workspace/workspace-templat
 import { WorkspaceLaunchingComponent } from './workspace/workspace-status/workspace-launching/workspace-launching.component';
 import { MatProgressBarModule } from "@angular/material/progress-bar";
 import { WorkspacePausedComponent } from './workspace/workspace-status/workspace-paused/workspace-paused.component';
+import { WorkspaceStatusBarComponent } from './workspace/workspace-status/workspace-status-bar/workspace-status-bar.component';
+import { WorkspacePhaseIconComponent } from './workspace/workspace-status/workspace-phase-icon/workspace-phase-icon.component';
+import { WorkspacePhaseStatusPipe } from './workspace/workspace-phase-status/workspace-phase-status.pipe';
 
 @NgModule({
   declarations: [
@@ -182,7 +185,10 @@ import { WorkspacePausedComponent } from './workspace/workspace-status/workspace
     LaunchingTimerComponent,
     WorkspaceTemplateSummaryComponent,
     WorkspaceLaunchingComponent,
-    WorkspacePausedComponent
+    WorkspacePausedComponent,
+    WorkspaceStatusBarComponent,
+    WorkspacePhaseIconComponent,
+    WorkspacePhaseStatusPipe
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,

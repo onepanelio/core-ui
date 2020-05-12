@@ -1,0 +1,12 @@
+<div class="workspace-status-bar font-roboto d-flex align-items-center">
+    <app-workspace-phase-icon [phase]="workspace.status.phase" class="ml-2">
+    </app-workspace-phase-icon>
+    <div class="d-inline-block ml-2 font-size-regular color-black">
+        {{workspace.status.phase | workspacePhaseStatus}}
+    </div>
+    <app-clock
+            class="ml-2"
+            [startedAt]="workspace.status.startedAt"
+            [durationFormatter]="daysDurationFormatter">
+    </app-clock>
+</div>

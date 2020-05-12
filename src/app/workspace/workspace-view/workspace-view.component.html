@@ -9,5 +9,18 @@
         [workspace]="workspace"
         (onResume)="onResume($event)">
 </app-workspace-paused>
-<iframe *ngIf="workspace?.status.phase === 'Running' && workspaceUrl" [src]="workspaceUrl">
-</iframe>
+<div *ngIf="workspace?.status.phase === 'Running' && workspaceUrl">
+    <iframe [src]="workspaceUrl">
+    </iframe>
+
+    <div class="bg-primary rounded-circle op-info-button shadow-lg pointer-hover" (click)="onToggleWorkspaceDetails()">
+    </div>
+
+    <div class="workspace-info">
+        <app-workspace-status-bar
+            *ngIf="showWorkspaceDetails"
+            [workspace]="workspace">
+
+        </app-workspace-status-bar>
+    </div>
+</div>

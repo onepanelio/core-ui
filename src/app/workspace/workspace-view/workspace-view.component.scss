@@ -1,5 +1,30 @@
+@import "../../../styles/colors";
+
 iframe {
   width: 100vw;
   height: calc(100vh - 50px);
   border: none;
+}
+
+.op-info-button {
+  width: 60px;
+  height: 60px;
+
+  background-image: url("/assets/images/onepanel-logo-white.svg");
+  background-position: center;
+  background-repeat: no-repeat;
+
+  position: fixed;
+  bottom: 40px;
+  left: 40px;
+}
+
+app-workspace-status-bar {
+  width: 100%;
+}
+
+.workspace-info {
+  position: fixed;
+  bottom: 0;
+  width: 100vw;
 }

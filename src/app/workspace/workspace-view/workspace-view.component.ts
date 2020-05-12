@@ -18,6 +18,7 @@ export class WorkspaceViewComponent implements OnInit, OnDestroy {
   workspaceUrl: SafeResourceUrl;
   workspaceChecker: number;
   state: WorkspaceState;
+  showWorkspaceDetails = false;
 
   constructor(
       private activatedRoute: ActivatedRoute,
@@ -81,5 +82,9 @@ export class WorkspaceViewComponent implements OnInit, OnDestroy {
         .subscribe(res => {
           this.startWorkspaceChecker(true);
         })
+  }
+
+  onToggleWorkspaceDetails() {
+    this.showWorkspaceDetails = !this.showWorkspaceDetails;
   }
 }

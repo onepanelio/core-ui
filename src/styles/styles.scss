@@ -187,6 +187,10 @@ a {
   max-width: 1400px;
 }
 
+.rounded-circle {
+  border-radius: 50% !important;
+}
+
 .op-rounded {
   border-radius: $cornerRadiusSmall !important;
 }
@@ -210,8 +214,6 @@ a {
     display: flex;
     align-items: center;
   }
-
-
 
   &.mat-stroked-button {
     border-width: 2px;
@@ -445,6 +447,10 @@ button.logout {
 
 .shadow {
   box-shadow: 0 .5rem 1rem rgba(0,0,0,.15)!important
+}
+
+.shadow-lg {
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
 }
 
 .word-break-all {
