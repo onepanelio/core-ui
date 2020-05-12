@@ -84,7 +84,7 @@ export class WorkspaceTemplateListComponent implements OnInit {
   }
 
   onEditUpdate(template: WorkspaceTemplate) {
-    this.workspaceTemplateService.updateWorkspaceTemplate(this.namespace, template.name, template)
+    this.workspaceTemplateService.updateWorkspaceTemplate(this.namespace, template.uid, template)
         .subscribe(res => {
           this.workspaceTemplateEditor.getWorkspaceTemplateVersions();
           this.workspaceTemplateEditor.setAlert(new Alert({
