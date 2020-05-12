@@ -11,8 +11,8 @@ import { Pagination } from "../../../workflow-template/workflow-template-view/wo
 import { WorkspaceTemplateEditComponent } from "../workspace-template-edit/workspace-template-edit.component";
 import { Alert } from "../../../alert/alert";
 import { MatDialog } from "@angular/material/dialog";
-import { WorkflowExecuteDialogComponent } from "../../../workflow/workflow-execute-dialog/workflow-execute-dialog.component";
 import { WorkspaceExecuteDialogComponent } from "../../workspace-execute-dialog/workspace-execute-dialog.component";
+import { PageEvent } from "@angular/material/paginator";
 
 @Component({
   selector: 'app-workspace-template-list',
@@ -26,7 +26,7 @@ export class WorkspaceTemplateListComponent implements OnInit {
     name: 'Blank template'
   }
 
-  showWorkspaceTemplateEditor = false;
+  showWorkspaceTemplateEditor = true;
 
   namespace: string;
   pagination = new Pagination();
@@ -121,5 +121,12 @@ export class WorkspaceTemplateListComponent implements OnInit {
             console.log('created workspace!');
           })
     });
+  }
+
+  onPageChange(event: PageEvent) {
+    this.pagination.page = event.pageIndex;
+    this.pagination.pageSize = event.pageSize;
+
+    this.getWorkspaceTemplates();
   }
 }

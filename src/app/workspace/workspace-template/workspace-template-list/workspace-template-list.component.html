@@ -47,6 +47,14 @@
             </app-workspace-template-summary-view>
         </div>
     </div>
+    <mat-paginator class="no-background font-size-small"
+                   *ngIf="workspaceTemplatesResponse"
+                   (page)="onPageChange($event)"
+                   [pageIndex]="this.pagination.page"
+                   [length]="this.workspaceTemplatesResponse.totalCount"
+                   [pageSize]="this.pagination.pageSize"
+                   [pageSizeOptions]="[5, 10, 25, 100]">
+    </mat-paginator>
 
     <app-workspace-template-create
             *ngIf="showWorkspaceTemplateEditor && selectedTemplate === null"
@@ -60,21 +68,5 @@
         (saveEmitted)="onEditUpdate($event)"
         (cancelEmitted)="cancelWorkspaceTemplate()">
     </app-workspace-template-edit>
-
-<!--        <mat-paginator class="no-background font-size-small"-->
-<!--                       *ngIf="workflowTemplateResponse"-->
-<!--                       (page)="onPageChange($event)"-->
-<!--                       [pageIndex]="this.pagination.page"-->
-<!--                       [length]="this.workflowTemplateResponse.totalCount"-->
-<!--                       [pageSize]="this.pagination.pageSize"-->
-<!--                       [pageSizeOptions]="[5, 10, 25, 100]">-->
-<!--        </mat-paginator>-->
-<!--        <app-call-to-action *ngIf="workflowTemplates.length === 0">-->
-<!--            <img class="icon" width="37" src="../../assets/images/workflows-icon.svg"/>-->
-<!--            <div class="header">Get started with workflows</div>-->
-<!--            <div class="body">This is where all your workflow templates live.</div>-->
-<!--            <a class="action underline pointer-hover" [routerLink]="['/', this.namespace, 'workflow-templates', 'create']">Creating a new workflow template</a>-->
-<!--        </app-call-to-action>-->
-<!--    </div>-->
 </div>
 
