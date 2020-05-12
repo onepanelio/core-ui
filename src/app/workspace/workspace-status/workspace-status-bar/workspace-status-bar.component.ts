@@ -17,4 +17,7 @@ export class WorkspaceStatusBarComponent implements OnInit {
   ngOnInit() {
   }
 
+  onPause(workspace: Workspace) {
+    console.log('pause');
+  }
 }
