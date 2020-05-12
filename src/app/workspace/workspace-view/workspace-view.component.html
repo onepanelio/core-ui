@@ -1,3 +1,4 @@
-<iframe *ngIf="workspaceUrl" [src]="workspaceUrl">
-
+<app-workspace-launching *ngIf="workspace?.status.phase === 'Started'" [workspace]="workspace">
+</app-workspace-launching>
+<iframe *ngIf="workspace?.status.phase === 'Running' && workspaceUrl" [src]="workspaceUrl">
 </iframe>

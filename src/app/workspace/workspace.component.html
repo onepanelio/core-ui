@@ -87,9 +87,13 @@
 
 <mat-menu #appMenu="matMenu">
     <ng-template matMenuContent let-workspace="workspace">
-        <button mat-menu-item (click)="onPause(workspace)">Pause</button>
-        <button mat-menu-item (click)="onDelete(workspace)">Delete</button>
+        <button mat-menu-item (click)="onPause(workspace)">
+            <i class="far fa-pause-circle mr-1 workspace-menu-icon"></i>
+            Pause
+        </button>
+        <button mat-menu-item (click)="onDelete(workspace)">
+            <i class="fas fa-trash mr-1 workspace-menu-icon"></i>
+            Delete
+        </button>
     </ng-template>
-    <!--    @todo icons-->
-
 </mat-menu>

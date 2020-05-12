@@ -30,6 +30,7 @@ export class LaunchingTimerComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if(this.timer) {
       clearInterval(this.timer);
+      this.timer = null;
     }
   }
 

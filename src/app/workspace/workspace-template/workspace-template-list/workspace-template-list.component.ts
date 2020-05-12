@@ -13,6 +13,7 @@ import { Alert } from "../../../alert/alert";
 import { MatDialog } from "@angular/material/dialog";
 import { WorkspaceExecuteDialogComponent } from "../../workspace-execute-dialog/workspace-execute-dialog.component";
 import { PageEvent } from "@angular/material/paginator";
+import { AppRouter } from "../../../router/app-router.service";
 
 @Component({
   selector: 'app-workspace-template-list',
@@ -36,6 +37,7 @@ export class WorkspaceTemplateListComponent implements OnInit {
   selectedTemplate: WorkspaceTemplate = null;
 
   constructor(
+      private appRouter: AppRouter,
       private workspaceTemplateService: WorkspaceTemplateServiceService,
       private workspaceService: WorkspaceServiceService,
       private activatedRoute: ActivatedRoute,
@@ -117,8 +119,7 @@ export class WorkspaceTemplateListComponent implements OnInit {
 
       this.workspaceService.createWorkspace(this.namespace, workspace)
           .subscribe(res => {
-            // @todo redirect to new workspace page.
-            console.log('created workspace!');
+            this.appRouter.navigateToWorkspace(this.namespace, res.name);
           })
     });
   }

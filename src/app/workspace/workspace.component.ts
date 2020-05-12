@@ -43,6 +43,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if(this.getWorkspacesInterval) {
       clearInterval(this.getWorkspacesInterval);
+      this.getWorkspacesInterval = null;
     }
   }
 

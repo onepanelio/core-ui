@@ -1,0 +1,25 @@
+.workspace-launching {
+  margin-top: 80px !important;
+  margin-bottom: 40px !important;
+  width: 600px;
+  // 170 = 50px heaer + 40px margin bottom + 80px margin top
+  height: calc(100vh - 170px);
+
+  .loading {
+    width: 90%;
+    text-align: center;
+    border-radius: 5px;
+
+    mat-progress-bar {
+      height: 11px;
+    }
+  }
+}
+
+.launching-workspace-title {
+  font-size: 42px;
+}
+
+.loading-message {
+  font-size: 20px;
+}
