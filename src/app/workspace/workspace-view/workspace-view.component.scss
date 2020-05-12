@@ -6,6 +6,14 @@ iframe {
   border: none;
 }
 
+.bottom-panel {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  position: fixed;
+  bottom: 0;
+}
+
 .op-info-button {
   width: 60px;
   height: 60px;
@@ -14,9 +22,8 @@ iframe {
   background-position: center;
   background-repeat: no-repeat;
 
-  position: fixed;
-  bottom: 40px;
-  left: 40px;
+  margin-bottom: 20px;
+  margin-left: 20px;
 }
 
 app-workspace-status-bar {
@@ -24,7 +31,4 @@ app-workspace-status-bar {
 }
 
 .workspace-info {
-  position: fixed;
-  bottom: 0;
-  width: 100vw;
 }

@@ -13,15 +13,21 @@
     <iframe [src]="workspaceUrl">
     </iframe>
 
-    <div class="bg-primary rounded-circle op-info-button shadow-lg pointer-hover" (click)="onToggleWorkspaceDetails()">
-    </div>
+    <div class="bottom-panel">
+        <div class="bg-primary rounded-circle op-info-button shadow-lg pointer-hover" (click)="onToggleWorkspaceDetails()">
+        </div>
 
-    <div class="workspace-info">
-        <app-workspace-status-bar
-            *ngIf="showWorkspaceDetails"
-            [workspace]="workspace"
-            (pause)="onPause($event)"
-            (delete)="onDelete($event)">
-        </app-workspace-status-bar>
+        <div class="workspace-info" *ngIf="showWorkspaceDetails">
+            <app-workspace-status-bar
+                [workspace]="workspace"
+                (pause)="onPause($event)"
+                (delete)="onDelete($event)">
+            </app-workspace-status-bar>
+            <div class="p-4 bg-background-color">
+                <app-workspace-identifier
+                    [workspace]="workspace">
+                </app-workspace-identifier>
+            </div>
+        </div>
     </div>
 </div>

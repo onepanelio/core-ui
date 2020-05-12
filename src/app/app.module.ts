@@ -109,6 +109,7 @@ import { WorkspacePausedComponent } from './workspace/workspace-status/workspace
 import { WorkspaceStatusBarComponent } from './workspace/workspace-status/workspace-status-bar/workspace-status-bar.component';
 import { WorkspacePhaseIconComponent } from './workspace/workspace-status/workspace-phase-icon/workspace-phase-icon.component';
 import { WorkspacePhaseStatusPipe } from './workspace/workspace-phase-status/workspace-phase-status.pipe';
+import { WorkspaceIdentifierComponent } from './workspace/workspace-info/workspace-identifier/workspace-identifier.component';
 
 @NgModule({
   declarations: [
@@ -188,7 +189,8 @@ import { WorkspacePhaseStatusPipe } from './workspace/workspace-phase-status/wor
     WorkspacePausedComponent,
     WorkspaceStatusBarComponent,
     WorkspacePhaseIconComponent,
-    WorkspacePhaseStatusPipe
+    WorkspacePhaseStatusPipe,
+    WorkspaceIdentifierComponent
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,
