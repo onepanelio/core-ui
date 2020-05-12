@@ -1,0 +1,8 @@
+<div class="workspace-paused m-auto font-proxima d-flex flex-column align-items-center">
+    <img src="/assets/images/workspace-paused.png" width="198"/>
+    <div class="mt-8 color-primary font-size-XXL">Workspace paused</div>
+    <button class="mt-8 op-rounded op-button border-secondary" mat-flat-button color="accent" (click)="onResumeClick()" [disabled]="disabled">
+        <mat-icon class="workspace-paused-icon" [fontSet]="'far'" [fontIcon]="'fa-play-circle'"></mat-icon>
+        <span class="ml-1">Resume</span>
+    </button>
+</div>

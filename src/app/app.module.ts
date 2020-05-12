@@ -105,6 +105,7 @@ import { LaunchingTimerComponent } from './workspace/workspace-status/launching-
 import { WorkspaceTemplateSummaryComponent } from './workspace/workspace-template-summary/workspace-template-summary.component';
 import { WorkspaceLaunchingComponent } from './workspace/workspace-status/workspace-launching/workspace-launching.component';
 import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { WorkspacePausedComponent } from './workspace/workspace-status/workspace-paused/workspace-paused.component';
 
 @NgModule({
   declarations: [
@@ -180,7 +181,8 @@ import { MatProgressBarModule } from "@angular/material/progress-bar";
     WorkspacePhaseImagePipe,
     LaunchingTimerComponent,
     WorkspaceTemplateSummaryComponent,
-    WorkspaceLaunchingComponent
+    WorkspaceLaunchingComponent,
+    WorkspacePausedComponent
   ],
     entryComponents: [
         WorkflowExecuteDialogComponent,

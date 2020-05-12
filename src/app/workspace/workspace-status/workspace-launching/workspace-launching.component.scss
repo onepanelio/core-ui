@@ -2,7 +2,7 @@
   margin-top: 80px !important;
   margin-bottom: 40px !important;
   width: 600px;
-  // 170 = 50px heaer + 40px margin bottom + 80px margin top
+  // 170 = 50px header + 40px margin bottom + 80px margin top
   height: calc(100vh - 170px);
 
   .loading {
@@ -14,12 +14,4 @@
       height: 11px;
     }
   }
-}
-
-.launching-workspace-title {
-  font-size: 42px;
-}
-
-.loading-message {
-  font-size: 20px;
 }

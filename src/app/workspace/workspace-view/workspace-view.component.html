@@ -1,4 +1,13 @@
-<app-workspace-launching *ngIf="workspace?.status.phase === 'Started'" [workspace]="workspace">
+<app-workspace-launching
+        *ngIf="workspace?.status.phase === 'Started'"
+        [workspace]="workspace">
 </app-workspace-launching>
+
+<app-workspace-paused
+        *ngIf="workspace?.status.phase === 'Paused'"
+        [disabled]="state === 'Resuming'"
+        [workspace]="workspace"
+        (onResume)="onResume($event)">
+</app-workspace-paused>
 <iframe *ngIf="workspace?.status.phase === 'Running' && workspaceUrl" [src]="workspaceUrl">
 </iframe>

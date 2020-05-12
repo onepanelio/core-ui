@@ -6,6 +6,7 @@ $fontRegularLarge: 18px;
 $fontLarge: 20px;
 $fontLarger: 24px;
 $fontXL: 30px;
+$fontXXL: 42px;
 
 $fontSizes: (
   "smaller": $fontSmaller,
@@ -14,6 +15,7 @@ $fontSizes: (
   "large": $fontLarge,
   "larger": $fontLarger,
   "XL": $fontXL,
+  "XXL": $fontXXL,
 );
 
 $fontProxima: 'Proxima Nova Regular', sans-serif;
