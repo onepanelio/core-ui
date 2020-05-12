@@ -19,8 +19,9 @@
     <div class="workspace-info">
         <app-workspace-status-bar
             *ngIf="showWorkspaceDetails"
-            [workspace]="workspace">
-
+            [workspace]="workspace"
+            (pause)="onPause($event)"
+            (delete)="onDelete($event)">
         </app-workspace-status-bar>
     </div>
 </div>
