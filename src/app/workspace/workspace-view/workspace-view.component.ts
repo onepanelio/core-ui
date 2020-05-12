@@ -36,7 +36,7 @@ export class WorkspaceViewComponent implements OnInit {
     this.workspaceService.getWorkspace(this.namespace, this.workspaceUid).subscribe(res => {
       this.workspace = res;
 
-      this.workspaceUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(res.path);
+      this.workspaceUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(res.url);
     })
   }
 }
