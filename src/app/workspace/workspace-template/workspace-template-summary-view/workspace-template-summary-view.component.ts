@@ -12,6 +12,9 @@ export class WorkspaceTemplateSummaryViewComponent implements OnInit {
   @Input() showMenu = true;
 
   @Output() createWorkspaceClicked = new EventEmitter<WorkspaceTemplate>();
+  @Output() cloneWorkspaceTemplateClicked = new EventEmitter<WorkspaceTemplate>();
+  @Output() deleteWorkspaceTemplateClicked = new EventEmitter<WorkspaceTemplate>();
+
 
   constructor() { }
 
@@ -20,5 +23,13 @@ export class WorkspaceTemplateSummaryViewComponent implements OnInit {
 
   createWorkspace() {
     this.createWorkspaceClicked.emit(this.template);
+  }
+
+  cloneWorkspaceTemplate(template: WorkspaceTemplate) {
+    this.cloneWorkspaceTemplateClicked.emit(template);
+  }
+
+  deleteWorkspaceTemplate(template: WorkspaceTemplate) {
+    this.deleteWorkspaceTemplateClicked.emit(template);
   }
 }

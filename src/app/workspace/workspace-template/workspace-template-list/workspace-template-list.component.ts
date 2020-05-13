@@ -129,6 +129,10 @@ export class WorkspaceTemplateListComponent implements OnInit {
     });
   }
 
+  deleteWorkspaceTemplate(template: WorkspaceTemplate) {
+    // TODO
+  }
+
   onPageChange(event: PageEvent) {
     this.pagination.page = event.pageIndex;
     this.pagination.pageSize = event.pageSize;

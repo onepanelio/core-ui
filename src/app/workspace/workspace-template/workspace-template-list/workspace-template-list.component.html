@@ -41,6 +41,7 @@
             <app-workspace-template-summary-view
                     (click)="selectTemplate(template)"
                     (createWorkspaceClicked)="createWorkspace($event)"
+                    (deleteWorkspaceTemplateClicked)="deleteWorkspaceTemplate($event)"
                     class="mr-3 pointer-hover"
                     [ngClass]="{selected: selectedTemplate?.name === template.name}"
                     [template]="template">
