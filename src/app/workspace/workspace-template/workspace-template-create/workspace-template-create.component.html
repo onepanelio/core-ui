@@ -7,7 +7,6 @@
                 <mat-error *ngIf="!templateNameInput.hasError('conflict')">Name must not be empty</mat-error>
                 <mat-error *ngIf="templateNameInput.hasError('conflict')">That name is already taken</mat-error>
             </mat-form-field>
-            <div class="font-roboto">Need help? <a href="#">How to define workflows</a></div>
         </div>
         <app-manifest-dag-editor
                 [manifestText]="manifest"

@@ -1,4 +1,4 @@
-<mat-toolbar *ngIf="!loggingIn" color="primary" class="app-toolbar">
+<mat-toolbar *ngIf="!loggingIn" color="primary" class="app-toolbar scroll-overflow">
   <a style="height: 32px;" [routerLink]="['/']" matTooltip="Version: {{version}}"><img src="/assets/images/onepanel-logo-white.svg"/></a>
   <div class="d-flex font-roboto dropdown bg-light-gray align-items-center ml-5" (click)="onFormFieldClick()">
     <i class="far fa-sticky-note color-primary"></i>
@@ -17,6 +17,9 @@
     <a [routerLink]="['/', namespaceTracker.activeNamespace, 'secrets']">SETTINGS</a>
   </div>
   <div class="flex-grow-1"></div>
+  <div class="ml-5 font-size-regular font-roboto-bold font-white link-wrapper" [class.active]="activeRoute === 'secrets'" >
+    <a href="https://docs.onepanel.ai">DOCS</a>
+  </div>
   <button mat-stroked-button class="logout mr-3" (click)="logout()">LOG OUT</button>
 </mat-toolbar>
 <app-namespace-manager
