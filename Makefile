@@ -32,9 +32,5 @@ docker-push:
 
 docker: dist-prod docker-build docker-push
 	docker build -t core-ui-nginx .
-	docker tag core-ui-nginx:latest onepanel/core-ui:1.0.0-beta.1
+	docker tag core-ui-nginx:latest onepanel/core-ui:$(COMMIT_HASH)
 
-docker-push:
-	docker push onepanel/core-ui:1.0.0-beta.1
-
-all: dist-prod docker-build docker-push
