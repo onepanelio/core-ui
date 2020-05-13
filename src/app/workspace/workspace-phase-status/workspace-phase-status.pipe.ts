@@ -5,7 +5,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class WorkspacePhaseStatusPipe implements PipeTransform {
   static mapping = new Map<string, string>([
-      ['Started', 'Launching...'],
+      ['Launching', 'Launching...'],
       ['Running', 'Running'],
       ['Pausing', 'Pausing'],
       ['Paused', 'Paused'],

@@ -6,7 +6,7 @@
     </div>
 </div>
 <div class="offset-by-spinner font-roboto font-size-small color-medium-gray" [ngSwitch]="workspace.status.phase">
-    <ng-container *ngSwitchCase="'Started'">
+    <ng-container *ngSwitchCase="'Launching'">
         <app-launching-timer [startedAt]="workspace.status.startedAt"></app-launching-timer>
     </ng-container>
     <ng-container *ngSwitchCase="'Running'">

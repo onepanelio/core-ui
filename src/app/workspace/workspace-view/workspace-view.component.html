@@ -1,5 +1,5 @@
 <app-workspace-launching
-        *ngIf="workspace?.status.phase === 'Started'"
+        *ngIf="workspace?.status.phase === 'Launching'"
         [workspace]="workspace">
 </app-workspace-launching>
 
@@ -25,6 +25,7 @@
             </app-workspace-status-bar>
             <div class="p-4 bg-background-color">
                 <app-workspace-identifier
+                    [namespace]="namespace"
                     [workspace]="workspace">
                 </app-workspace-identifier>
             </div>

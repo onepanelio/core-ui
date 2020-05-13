@@ -9,7 +9,7 @@ import {
 } from "../../confirmation-dialog/confirmation-dialog.component";
 import { AppRouter } from "../../router/app-router.service";
 
-type WorkspaceState = 'Starting' | 'Pausing' | 'Paused' | 'Resuming' | 'Running' | 'Deleting';
+type WorkspaceState = 'Launching' | 'Pausing' | 'Paused' | 'Resuming' | 'Running' | 'Deleting';
 
 @Component({
   selector: 'app-workspace-view',
