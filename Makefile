@@ -11,23 +11,6 @@ ifndef path
 endif
 	rm -rf ./src/api
 	mkdir -p ./src/api
-	swagger-codegen generate \
-		    -p packageName=onepanel.core.api,projectName=onepanel.core.api,packageVersion=$(version) \
-    		-i $(path) \
-    		-g typescript-angular \
-    		-o ./src/api
-
-api-docker:
-ifndef version
-	err = $(error version is undefined)
-	$(err)
-endif
-ifndef path
-	err = $(error path is undefined)
-	$(err)
-endif
-	rm -rf ./src/api
-	mkdir -p ./src/api
 	docker run --rm -v ${PWD}:/local -v ${path}:/local_in openapitools/openapi-generator-cli generate \
 	    -p packageName=onepanel.core.api,projectName=onepanel.core.api,packageVersion=$(version) \
 		-i /local_in \
