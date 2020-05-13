@@ -1,13 +1,11 @@
 .workspace-template-summary-view {
   width: 290px;
   height: 190px;
-  padding: 27px;
   box-sizing: border-box;
   background-color: white;
 
-  .icon-content {
-    position: relative;
-    left: 20px;
+  .content {
+    padding: 0 27px 27px 27px;
   }
 
   i {
