@@ -87,9 +87,13 @@
 
 <mat-menu #appMenu="matMenu">
     <ng-template matMenuContent let-workspace="workspace">
-        <button mat-menu-item (click)="onPause(workspace)">
+        <button *ngIf="workspace.status.phase === 'Running'" mat-menu-item (click)="onPause(workspace)">
             <i class="far fa-pause-circle mr-1 workspace-menu-icon"></i>
             Pause
+        </button>
+        <button *ngIf="workspace.status.phase === 'Paused'" mat-menu-item (click)="onResume(workspace)">
+            <i class="far fa-play-circle mr-1 workspace-menu-icon"></i>
+            Resume
         </button>
         <button mat-menu-item (click)="onDelete(workspace)">
             <i class="fas fa-trash mr-1 workspace-menu-icon"></i>
