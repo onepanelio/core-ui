@@ -11,11 +11,14 @@ ifndef path
 endif
 	rm -rf ./src/api
 	mkdir -p ./src/api
-	docker run --rm -v ${PWD}:/local -v ${path}:/local_in openapitools/openapi-generator-cli generate \
-	    -p packageName=onepanel.core.api,projectName=onepanel.core.api,packageVersion=$(version) \
-		-i /local_in \
+	cp $(path) ./src/api/
+	docker run --rm -v ${PWD}:/local openapitools/openapi-generator-cli \
+	    generate -p packageName=onepanel.core.api,projectName=onepanel.core.api,packageVersion=$(version) \
+		-i /local/src/api/api.swagger.json \
 		-g typescript-angular \
 		-o /local/src/api
+	rm ./src/api/api.swagger.json ./src/api/.gitignore ./src/api/.openapi-generator-ignore
+	rm -rf ./src/api/.openapi-generator
 
 dist-prod:
 	ng build --prod
