@@ -34,7 +34,12 @@ export class WorkspaceTemplateListComponent implements OnInit {
   workspaceTemplatesResponse: ListWorkspaceTemplatesResponse;
   workspaceTemplates: WorkspaceTemplate[] = [];
 
-  selectedTemplate: WorkspaceTemplate = null;
+  /**
+   * null means the selected template is the blank template.
+   * undefined means no template is selected.
+   * otherwise we do have a specific template selected.
+   */
+  selectedTemplate: WorkspaceTemplate|null|undefined = null;
 
   constructor(
       private appRouter: AppRouter,
@@ -127,6 +132,9 @@ export class WorkspaceTemplateListComponent implements OnInit {
   onPageChange(event: PageEvent) {
     this.pagination.page = event.pageIndex;
     this.pagination.pageSize = event.pageSize;
+
+    this.showWorkspaceTemplateEditor = false;
+    this.selectedTemplate = undefined;
 
     this.getWorkspaceTemplates();
   }
