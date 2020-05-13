@@ -1,4 +1,4 @@
-<mat-toolbar *ngIf="!loggingIn" color="primary" class="app-toolbar scroll-overflow">
+<mat-toolbar *ngIf="!loggingIn && showNavigationBar" color="primary" class="app-toolbar scroll-overflow">
   <a style="height: 32px;" [routerLink]="['/']" matTooltip="Version: {{version}}"><img src="/assets/images/onepanel-logo-white.svg"/></a>
   <div class="d-flex font-roboto dropdown bg-light-gray align-items-center ml-5" (click)="onFormFieldClick()">
     <i class="far fa-sticky-note color-primary"></i>
@@ -28,4 +28,6 @@
         (namespaceSelected)="onNamespaceChange($event)"
         (newNamespaceClick)="onNewNamespace()">
 </app-namespace-manager>
-<router-outlet></router-outlet>
+<router-outlet
+        (activate)="onRouterOutletActivate($event)">
+</router-outlet>

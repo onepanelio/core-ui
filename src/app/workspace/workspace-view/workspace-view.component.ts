@@ -18,6 +18,8 @@ type WorkspaceState = 'Launching' | 'Pausing' | 'Paused' | 'Resuming' | 'Running
 })
 export class WorkspaceViewComponent implements OnInit, OnDestroy {
 
+  hideNavigationBar = true;
+
   namespace: string;
   workspaceUid: string;
   workspace: Workspace;

@@ -13,7 +13,6 @@ import { AppRouter } from "../router/app-router.service";
   styleUrls: ['./workspace.component.scss']
 })
 export class WorkspaceComponent implements OnInit, OnDestroy {
-
   namespace: string;
   displayedColumns = ['name', 'status', 'template', 'spacer', 'actions'];
   workspaceResponse: ListWorkspaceResponse;
