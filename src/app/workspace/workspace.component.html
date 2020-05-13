@@ -23,7 +23,7 @@
             <ng-container cdkColumnDef="name">
                 <cdk-header-cell *cdkHeaderCellDef>Name</cdk-header-cell>
                 <cdk-cell *cdkCellDef="let workspace">
-                    <a class="name-link font-roboto-bold font-weight-bold" [routerLink]="['/', this.namespace, 'workspaces', workspace.uid]">{{workspace.name}}</a>
+                    <a class="name-link font-roboto-bold font-weight-bold" target="_blank" [routerLink]="['/', this.namespace, 'workspaces', workspace.uid]">{{workspace.name}}</a>
                     <app-labels-list-view
                             *ngIf="workspace.labels"
                             class="mt-2 d-block"
@@ -55,7 +55,7 @@
             <ng-container cdkColumnDef="actions">
                 <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
                 <cdk-cell *cdkCellDef="let workspace" class="flex align-items-center">
-                    <a class="link-button" [routerLink]="['/', this.namespace, 'workspaces', workspace.uid]">Open</a>
+                    <a class="link-button" target="_blank" [routerLink]="['/', this.namespace, 'workspaces', workspace.uid]">Open</a>
                     <button mat-icon-button color="primary" class="ml-3" [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{'workspace' :workspace}">
                         <mat-icon>more_vert</mat-icon>
                     </button>
