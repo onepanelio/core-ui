@@ -140,7 +140,6 @@ export class WorkspaceViewComponent implements OnInit, OnDestroy {
 
     setTimeout(() => {
       const top = document.getElementById("bottom-panel").offsetHeight;
-      console.log(top);
       this.buttonBottom = (top + 20) + 'px';
     }, 1);
   }
