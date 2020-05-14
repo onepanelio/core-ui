@@ -31,12 +31,9 @@
                     [workspace]="workspace">
                 </app-workspace-identifier>
 
-                <div>
-                    <div *ngFor="let parameter of parameters">
-                        <div>{{parameter.name}}</div>
-                        <div class="mb-3">{{parameter | appFieldValue}}</div>
-                    </div>
-                </div>
+                <app-workspace-view-parameters [workspace]="workspace">
+
+                </app-workspace-view-parameters>
             </div>
         </div>
     </div>
