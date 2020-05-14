@@ -7,7 +7,7 @@ import { WorkflowExecutionStatisticReport, WorkflowTemplate } from "../../../api
   styleUrls: ['./workflow-template-status.component.scss']
 })
 export class WorkflowTemplateStatusComponent implements OnInit {
-  @Input() colors = ['#01579B', '#37AD58', '#D32345'];
+  @Input() colors = ['#01579B', '#37AD58', '#D32345', '#D32345'];
   @Input() labels = [];
 
   styles = [];
@@ -70,8 +70,9 @@ export class WorkflowTemplateStatusComponent implements OnInit {
     const running = value.running || 0;
     const completed = value.completed || 0;
     const failed = value.failed || 0;
+    const terminated = value.terminated || 0;
 
-    this.values = [running, completed, failed];
+    this.values = [running, completed, failed, terminated];
   }
 
   tooltips = [];
@@ -88,6 +89,8 @@ export class WorkflowTemplateStatusComponent implements OnInit {
       word = 'Completed:';
     } else if(index === 2) {
       word = 'Failed:';
+    } else if(index === 3) {
+      word = 'Terminated';
     }
 
     return `${word} ${this.values[index]}`;

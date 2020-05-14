@@ -99,7 +99,8 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
     this.statusClass = {
       'font-primary': ['Pending', 'Running'].indexOf(this.status) > -1,
-      'font-success': this.status === 'Succeeded'
+      'font-success': this.status === 'Succeeded',
+      'font-error': this.status === 'Terminated'
     };
 
     this.logsAvailable = node.type === 'Pod';

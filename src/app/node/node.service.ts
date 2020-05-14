@@ -135,6 +135,8 @@ export class NodeRenderer {
         html += '<img class="status-icon" src="/assets/images/status-icons/completed.svg"/>';
       } else if (node.phase === 'Running') {
         html += '<img class="status-icon" src="/assets/images/status-icons/running-blue.svg"/>';
+      } else if (node.phase === 'Terminated') {
+        html += '<img class="status-icon" src="/assets/images/status-icons/failed.svg"/>';
       } else if (node.phase === 'Failed' || node.phase === 'Error') {
         html += '<img class="status-icon" src="/assets/images/status-icons/failed.svg"/>';
       } else {
