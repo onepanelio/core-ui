@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { Parameter, Workspace, WorkspaceServiceService } from "../../../api";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
@@ -18,6 +18,9 @@ type WorkspaceState = 'Launching' | 'Pausing' | 'Paused' | 'Resuming' | 'Running
   styleUrls: ['./workspace-view.component.scss']
 })
 export class WorkspaceViewComponent implements OnInit, OnDestroy {
+  @ViewChild('bottomPanel', {static: false}) bottomPanel: ElementRef;
+
+  buttonBottom = '20px';
 
   hideNavigationBar = true;
 
@@ -134,5 +137,11 @@ export class WorkspaceViewComponent implements OnInit, OnDestroy {
 
   onToggleWorkspaceDetails() {
     this.showWorkspaceDetails = !this.showWorkspaceDetails;
+
+    setTimeout(() => {
+      const top = document.getElementById("bottom-panel").offsetHeight;
+      console.log(top);
+      this.buttonBottom = (top + 20) + 'px';
+    }, 1);
   }
 }

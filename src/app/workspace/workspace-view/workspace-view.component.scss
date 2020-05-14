@@ -15,15 +15,21 @@ iframe {
 }
 
 .op-info-button {
-  width: 60px;
-  height: 60px;
+  width: 40px;
+  height: 40px;
+  transition: bottom 0.05s;
+  z-index: 1000;
 
-  background-image: url("/assets/images/onepanel-logo-white.svg");
-  background-position: center;
-  background-repeat: no-repeat;
+  position: fixed;
+  right: 20px;
 
-  margin-bottom: 20px;
-  margin-left: 20px;
+  img {
+    position: relative;
+    top: 10px;
+    left: 9.5px;
+    width: 20px;
+    height: 20px;
+  }
 }
 
 app-workspace-status-bar {
