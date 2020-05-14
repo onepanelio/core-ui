@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { KeyValue, WorkspaceTemplate, WorkspaceTemplateServiceService } from "../../../api";
+import { KeyValue, Parameter, WorkspaceTemplate, WorkspaceTemplateServiceService } from "../../../api";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import {
   WorkflowExecuteDialogComponent,
@@ -21,7 +21,7 @@ export class WorkspaceExecuteDialogComponent implements OnInit {
   workspaceTemplate: WorkspaceTemplate;
   workspaceTemplateUid: string = '';
   labels = new Array<KeyValue>();
-  parameters: Array<FieldData>;
+  parameters: Array<Parameter>;
 
   form: FormGroup;
 

@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from "@angular/forms";
+import { Parameter } from "../../../api";
 
 @Component({
   selector: 'app-form',
@@ -7,15 +8,15 @@ import { FormBuilder, FormGroup } from "@angular/forms";
   styleUrls: ['./form.component.scss']
 })
 export class FormComponent implements OnInit {
-  _fieldData = new Array<FieldData>();
+  _fieldData = new Array<Parameter>();
 
   form: FormGroup;
 
-  @Input() set fieldData(value: Array<FieldData>) {
+  @Input() set fieldData(value: Array<Parameter>) {
     this._fieldData = value;
   }
 
-  get fieldData(): Array<FieldData> {
+  get fieldData(): Array<Parameter> {
     return this._fieldData;
   }
 
@@ -26,7 +27,7 @@ export class FormComponent implements OnInit {
   ngOnInit() {
   }
 
-  isFieldInput(fieldData: FieldData): boolean {
+  isFieldInput(fieldData: Parameter): boolean {
     if(!fieldData.type) {
       return true;
     }

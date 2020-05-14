@@ -62,8 +62,9 @@
             (cancelEmitted)="cancelWorkspaceTemplate()"
             (saveEmitted)="onCreate($event)">
     </app-workspace-template-create>
+
     <app-workspace-template-edit
-        [class.d-none]="!showWorkspaceTemplateEditor || selectedTemplate === null"
+        *ngIf="showWorkspaceTemplateEditor && selectedTemplate"
         [namespace]="namespace"
         [workspaceTemplate]="selectedTemplate"
         (saveEmitted)="onEditUpdate($event)"

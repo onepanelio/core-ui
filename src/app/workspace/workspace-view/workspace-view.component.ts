@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
-import { Workspace, WorkspaceServiceService } from "../../../api";
+import { Parameter, Workspace, WorkspaceServiceService } from "../../../api";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { MatDialog } from "@angular/material/dialog";
 import {
@@ -8,6 +8,7 @@ import {
   ConfirmationDialogData
 } from "../../confirmation-dialog/confirmation-dialog.component";
 import { AppRouter } from "../../router/app-router.service";
+import { WorkflowExecuteDialogComponent } from "../../workflow/workflow-execute-dialog/workflow-execute-dialog.component";
 
 type WorkspaceState = 'Launching' | 'Pausing' | 'Paused' | 'Resuming' | 'Running' | 'Deleting';
 
@@ -27,6 +28,8 @@ export class WorkspaceViewComponent implements OnInit, OnDestroy {
   workspaceChecker: number;
   state: WorkspaceState;
   showWorkspaceDetails = false;
+
+  parameters: Array<Parameter> = [];
 
   constructor(
       private appRouter: AppRouter,
@@ -72,6 +75,8 @@ export class WorkspaceViewComponent implements OnInit, OnDestroy {
       this.workspace = res;
       this.workspaceUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(res.url);
 
+      this.parameters = res.parameters;
+      
       switch(res.status.phase)
       {
         case 'Running':

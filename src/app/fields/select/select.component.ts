@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { Parameter, ParameterOption } from "../../../api";
 
 @Component({
   selector: 'app-select',
@@ -7,11 +8,11 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
   styleUrls: ['./select.component.scss']
 })
 export class SelectComponent implements OnInit {
-  private _data: FieldData;
-  options = new Array<{name: string, value: string}>();
+  private _data: Parameter;
+  options = new Array<ParameterOption>();
 
   @Input() form: FormGroup;
-  @Input() set data(value: FieldData) {
+  @Input() set data(value: Parameter) {
     this._data = value;
 
     this.options = [];
@@ -28,7 +29,7 @@ export class SelectComponent implements OnInit {
     this.selectControl.setValue(this.data.value);
   }
 
-  get data(): FieldData {
+  get data(): Parameter {
     return this._data;
   }
 

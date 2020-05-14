@@ -8,6 +8,7 @@ import { Alert } from "../alert/alert";
 import { WorkflowExecuteDialogComponent } from "../workflow/workflow-execute-dialog/workflow-execute-dialog.component";
 import { Observable, of } from "rxjs";
 import { HttpErrorResponse } from "@angular/common/http";
+import { Parameter } from "../../api";
 const aceRange = ace.acequire('ace/range').Range;
 
 @Component({
@@ -27,7 +28,7 @@ export class ManifestDagEditorComponent implements OnInit {
   manifestTextCurrent: string;
   errorMarkerId;
 
-  parameters = new Array<FieldData>();
+  parameters = new Array<Parameter>();
 
 
   rawManifest: string;
