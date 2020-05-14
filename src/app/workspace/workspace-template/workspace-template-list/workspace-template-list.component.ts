@@ -124,7 +124,7 @@ export class WorkspaceTemplateListComponent implements OnInit {
 
       this.workspaceService.createWorkspace(this.namespace, workspace)
           .subscribe(res => {
-            this.appRouter.navigateToWorkspace(this.namespace, res.name);
+            this.appRouter.navigateToWorkspaces(this.namespace);
           })
     });
   }
