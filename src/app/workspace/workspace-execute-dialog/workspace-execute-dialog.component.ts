@@ -1,15 +1,25 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { KeyValue, Parameter, WorkspaceTemplate, WorkspaceTemplateServiceService } from "../../../api";
+import {
+  KeyValue,
+  NamespaceServiceService,
+  Parameter,
+  WorkspaceTemplate,
+  WorkspaceTemplateServiceService
+} from "../../../api";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import {
   WorkflowExecuteDialogComponent,
 } from "../../workflow/workflow-execute-dialog/workflow-execute-dialog.component";
 import { FormBuilder, FormGroup } from "@angular/forms";
+import { NamespaceTracker } from "../../namespace/namespace-tracker.service";
+import { AppRouter } from "../../router/app-router.service";
 
 export interface WorkspaceExecuteDialogData {
   namespace: string;
   template?: WorkspaceTemplate;
 }
+
+type WorkspaceExecutionState = 'loading' | 'ready' | 'no-templates';
 
 @Component({
   selector: 'app-workspace-execute-dialog',
@@ -23,10 +33,14 @@ export class WorkspaceExecuteDialogComponent implements OnInit {
   labels = new Array<KeyValue>();
   parameters: Array<Parameter>;
 
+  state: WorkspaceExecutionState = 'loading';
+
   form: FormGroup;
 
   constructor(
       public dialogRef: MatDialogRef<WorkspaceExecuteDialogComponent>,
+      public namespaceTracker: NamespaceTracker,
+      private appRouter: AppRouter,
       private formBuilder: FormBuilder,
       private workspaceTemplateService: WorkspaceTemplateServiceService,
       @Inject(MAT_DIALOG_DATA) public data: WorkspaceExecuteDialogData
@@ -42,6 +56,11 @@ export class WorkspaceExecuteDialogComponent implements OnInit {
       this.workspaceTemplateService.listWorkspaceTemplates(data.namespace)
           .subscribe(res => {
             this.workspaceTemplates = res.workspaceTemplates;
+            if(!res.workspaceTemplates) {
+              this.state = 'no-templates';
+            } else {
+              this.state = 'ready';
+            }
           })
     }
   }
@@ -76,5 +95,10 @@ export class WorkspaceExecuteDialogComponent implements OnInit {
   onSelectWorkspaceTemplate(workspaceTemplateUid: string) {
     this.workspaceTemplateUid = workspaceTemplateUid;
     this.getWorkspaceTemplate(this.data.namespace, workspaceTemplateUid);
+  }
+
+  goToWorkspaceTemplates() {
+    this.dialogRef.close();
+    this.appRouter.navigateToWorkspaceTemplates(this.namespaceTracker.activeNamespace);
   }
 }

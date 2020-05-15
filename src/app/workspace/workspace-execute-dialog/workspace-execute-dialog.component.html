@@ -1,8 +1,9 @@
 <div class="op-h1">Create Workspace</div>
 
+
 <form [formGroup]="form">
     <div class="mr-12">
-        <mat-form-field class="mt-7 fix-mat-overflow w-100" appearance="outline">
+        <mat-form-field *ngIf="state !== 'no-templates'" class="mt-7 fix-mat-overflow w-100" appearance="outline">
             <mat-label>Template</mat-label>
             <mat-select [value]="workspaceTemplateUid" (valueChange)="onSelectWorkspaceTemplate($event)">
                 <mat-option *ngFor="let workspaceTemplate of workspaceTemplates" value="{{workspaceTemplate.uid}}">
@@ -10,6 +11,9 @@
                 </mat-option>
             </mat-select>
         </mat-form-field>
+        <div *ngIf="state === 'no-templates'" class="mt-7 font-roboto color-medium-gray">
+            You have no templates, <a class="action underline pointer-hover color-medium-gray" (click)="goToWorkspaceTemplates()">Create a workspace template</a>
+        </div>
         <app-form
                 *ngIf="parameters"
                 [fieldData]="parameters"

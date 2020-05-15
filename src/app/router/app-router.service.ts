@@ -32,6 +32,10 @@ export class AppRouter {
     return this.router.navigate(['/', namespace, 'workflows', name]);
   }
 
+  public navigateToWorkspaceTemplates(namespace: string) {
+    return this.router.navigate(['/', namespace, 'workspace-templates']);
+  }
+
   public navigateToWorkspaces(namespace: string) {
     return this.router.navigate(['/', namespace, 'workspaces']);
   }
