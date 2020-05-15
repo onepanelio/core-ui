@@ -70,7 +70,7 @@
       </cdk-row>
     </cdk-table>
     <mat-paginator class="no-background font-size-small"
-                   *ngIf="workflowTemplateResponse"
+                   *ngIf="workflowTemplateResponse?.workflowTemplates"
                    (page)="onPageChange($event)"
                    [pageIndex]="this.pagination.page"
                    [length]="this.workflowTemplateResponse.totalCount"
