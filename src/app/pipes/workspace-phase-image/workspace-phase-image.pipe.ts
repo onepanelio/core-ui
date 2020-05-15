@@ -13,6 +13,7 @@ export class WorkspacePhaseImagePipe implements PipeTransform {
 
   static statusMap = new Map<string, string>([
     ['Launching', WorkspacePhaseImagePipe.startedImageSource],
+    ['Updating', WorkspacePhaseImagePipe.startedImageSource],
     ['Running', WorkspacePhaseImagePipe.runningImageSource],
     ['Pausing', WorkspacePhaseImagePipe.pausingImageSource],
     ['Paused', WorkspacePhaseImagePipe.pausedImageSource],

@@ -112,6 +112,7 @@ import { WorkspacePhaseStatusPipe } from './workspace/workspace-phase-status/wor
 import { WorkspaceIdentifierComponent } from './workspace/workspace-info/workspace-identifier/workspace-identifier.component';
 import { ValuePipe } from "./fields/pipes/value.pipe";
 import { WorkspaceViewParametersComponent } from './workspace/workspace-view/workspace-view-parameters/workspace-view-parameters.component';
+import { WorkspaceUpdatingComponent } from './workspace/workspace-status/workspace-updating/workspace-updating.component';
 
 @NgModule({
     declarations: [
@@ -195,6 +196,7 @@ import { WorkspaceViewParametersComponent } from './workspace/workspace-view/wor
         WorkspaceIdentifierComponent,
         ValuePipe,
         WorkspaceViewParametersComponent,
+        WorkspaceUpdatingComponent,
     ],
     entryComponents: [
         WorkflowExecuteDialogComponent,

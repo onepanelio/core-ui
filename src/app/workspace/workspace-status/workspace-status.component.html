@@ -9,6 +9,9 @@
     <ng-container *ngSwitchCase="'Launching'">
         <app-launching-timer [startedAt]="workspace.status.startedAt"></app-launching-timer>
     </ng-container>
+    <ng-container *ngSwitchCase="'Updating'">
+        <app-launching-timer [startedAt]="workspace.status.startedAt"></app-launching-timer>
+    </ng-container>
     <ng-container *ngSwitchCase="'Running'">
         <app-clock
                 [startedAt]="workspace.status.startedAt"

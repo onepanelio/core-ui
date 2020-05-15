@@ -3,6 +3,11 @@
         [workspace]="workspace">
 </app-workspace-launching>
 
+<app-workspace-updating
+        *ngIf="workspace?.status.phase === 'Updating'"
+        [workspace]="workspace">
+</app-workspace-updating>
+
 <app-workspace-paused
         *ngIf="workspace?.status.phase === 'Paused'"
         [disabled]="state === 'Resuming'"
@@ -32,8 +37,9 @@
 
                 <app-workspace-view-parameters
                         [workspace]="workspace"
+                        [state]="state"
+                        (updateWorkspace)="onUpdateWorkspace($event)"
                         class="pl-6">
-
                 </app-workspace-view-parameters>
             </div>
         </div>

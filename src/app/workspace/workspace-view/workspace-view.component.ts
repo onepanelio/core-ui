@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
-import { Parameter, Workspace, WorkspaceServiceService } from "../../../api";
+import { Parameter, UpdateWorkspaceBody, Workspace, WorkspaceServiceService } from "../../../api";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { MatDialog } from "@angular/material/dialog";
 import {
@@ -10,7 +10,7 @@ import {
 import { AppRouter } from "../../router/app-router.service";
 import { WorkflowExecuteDialogComponent } from "../../workflow/workflow-execute-dialog/workflow-execute-dialog.component";
 
-type WorkspaceState = 'Launching' | 'Pausing' | 'Paused' | 'Resuming' | 'Running' | 'Deleting';
+export type WorkspaceState = 'Launching' | 'Updating' | 'Pausing' | 'Paused' | 'Resuming' | 'Running' | 'Deleting';
 
 @Component({
   selector: 'app-workspace-view',
@@ -55,6 +55,8 @@ export class WorkspaceViewComponent implements OnInit, OnDestroy {
   }
 
   private startWorkspaceChecker(runNow: boolean = true) {
+    this.clearWorkspaceChecker();
+
     if(runNow) {
       this.getWorkspace();
     }
@@ -87,6 +89,9 @@ export class WorkspaceViewComponent implements OnInit, OnDestroy {
         case 'Paused':
           this.state = 'Paused';
           this.clearWorkspaceChecker();
+          break;
+        case 'Updating':
+          this.state = 'Updating';
           break;
       }
     })
@@ -140,5 +145,18 @@ export class WorkspaceViewComponent implements OnInit, OnDestroy {
       const top = document.getElementById("bottom-panel").offsetHeight;
       this.buttonBottom = (top + 20) + 'px';
     }, 1);
+  }
+
+  onUpdateWorkspace(parameters: Array<Parameter>) {
+    this.state = 'Updating';
+
+    const body: UpdateWorkspaceBody = {
+      parameters: parameters,
+    };
+
+    this.workspaceService.updateWorkspace(this.namespace, this.workspace.uid, body)
+        .subscribe(res => {
+          this.startWorkspaceChecker(true);
+        })
   }
 }
