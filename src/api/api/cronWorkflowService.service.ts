@@ -155,19 +155,19 @@ export class CronWorkflowServiceService {
 
     /**
      * @param namespace 
-     * @param name 
+     * @param uid 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getCronWorkflow(namespace: string, name: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<CronWorkflow>;
-    public getCronWorkflow(namespace: string, name: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<CronWorkflow>>;
-    public getCronWorkflow(namespace: string, name: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<CronWorkflow>>;
-    public getCronWorkflow(namespace: string, name: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public getCronWorkflow(namespace: string, uid: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<CronWorkflow>;
+    public getCronWorkflow(namespace: string, uid: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<CronWorkflow>>;
+    public getCronWorkflow(namespace: string, uid: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<CronWorkflow>>;
+    public getCronWorkflow(namespace: string, uid: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
             throw new Error('Required parameter namespace was null or undefined when calling getCronWorkflow.');
         }
-        if (name === null || name === undefined) {
-            throw new Error('Required parameter name was null or undefined when calling getCronWorkflow.');
+        if (uid === null || uid === undefined) {
+            throw new Error('Required parameter uid was null or undefined when calling getCronWorkflow.');
         }
 
         let headers = this.defaultHeaders;
@@ -198,7 +198,7 @@ export class CronWorkflowServiceService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<CronWorkflow>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/cron_workflow/${encodeURIComponent(String(name))}`,
+        return this.httpClient.get<CronWorkflow>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/cron_workflow/${encodeURIComponent(String(uid))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -350,19 +350,19 @@ export class CronWorkflowServiceService {
 
     /**
      * @param namespace 
-     * @param name 
+     * @param uid 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public terminateCronWorkflow(namespace: string, name: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<object>;
-    public terminateCronWorkflow(namespace: string, name: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<object>>;
-    public terminateCronWorkflow(namespace: string, name: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<object>>;
-    public terminateCronWorkflow(namespace: string, name: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public terminateCronWorkflow(namespace: string, uid: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<object>;
+    public terminateCronWorkflow(namespace: string, uid: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<object>>;
+    public terminateCronWorkflow(namespace: string, uid: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<object>>;
+    public terminateCronWorkflow(namespace: string, uid: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
             throw new Error('Required parameter namespace was null or undefined when calling terminateCronWorkflow.');
         }
-        if (name === null || name === undefined) {
-            throw new Error('Required parameter name was null or undefined when calling terminateCronWorkflow.');
+        if (uid === null || uid === undefined) {
+            throw new Error('Required parameter uid was null or undefined when calling terminateCronWorkflow.');
         }
 
         let headers = this.defaultHeaders;
@@ -393,7 +393,7 @@ export class CronWorkflowServiceService {
             responseType = 'text';
         }
 
-        return this.httpClient.delete<object>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/cron_workflows/${encodeURIComponent(String(name))}/terminate`,
+        return this.httpClient.delete<object>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/cron_workflows/${encodeURIComponent(String(uid))}/terminate`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -406,20 +406,20 @@ export class CronWorkflowServiceService {
 
     /**
      * @param namespace 
-     * @param name 
+     * @param uid 
      * @param body 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public updateCronWorkflow(namespace: string, name: string, body: CronWorkflow, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<CronWorkflow>;
-    public updateCronWorkflow(namespace: string, name: string, body: CronWorkflow, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<CronWorkflow>>;
-    public updateCronWorkflow(namespace: string, name: string, body: CronWorkflow, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<CronWorkflow>>;
-    public updateCronWorkflow(namespace: string, name: string, body: CronWorkflow, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public updateCronWorkflow(namespace: string, uid: string, body: CronWorkflow, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<CronWorkflow>;
+    public updateCronWorkflow(namespace: string, uid: string, body: CronWorkflow, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<CronWorkflow>>;
+    public updateCronWorkflow(namespace: string, uid: string, body: CronWorkflow, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<CronWorkflow>>;
+    public updateCronWorkflow(namespace: string, uid: string, body: CronWorkflow, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
             throw new Error('Required parameter namespace was null or undefined when calling updateCronWorkflow.');
         }
-        if (name === null || name === undefined) {
-            throw new Error('Required parameter name was null or undefined when calling updateCronWorkflow.');
+        if (uid === null || uid === undefined) {
+            throw new Error('Required parameter uid was null or undefined when calling updateCronWorkflow.');
         }
         if (body === null || body === undefined) {
             throw new Error('Required parameter body was null or undefined when calling updateCronWorkflow.');
@@ -462,7 +462,7 @@ export class CronWorkflowServiceService {
             responseType = 'text';
         }
 
-        return this.httpClient.put<CronWorkflow>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/cron_workflow/${encodeURIComponent(String(name))}`,
+        return this.httpClient.put<CronWorkflow>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/cron_workflow/${encodeURIComponent(String(uid))}`,
             body,
             {
                 responseType: <any>responseType,
