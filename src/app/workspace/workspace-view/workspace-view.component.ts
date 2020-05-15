@@ -18,8 +18,6 @@ type WorkspaceState = 'Launching' | 'Pausing' | 'Paused' | 'Resuming' | 'Running
   styleUrls: ['./workspace-view.component.scss']
 })
 export class WorkspaceViewComponent implements OnInit, OnDestroy {
-  @ViewChild('bottomPanel', {static: false}) bottomPanel: ElementRef;
-
   buttonBottom = '20px';
 
   hideNavigationBar = true;

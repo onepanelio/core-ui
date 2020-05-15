@@ -13,12 +13,11 @@
     <iframe [src]="workspaceUrl">
     </iframe>
 
-
     <div class="bg-primary rounded-circle op-info-button shadow-lg pointer-hover" [style.bottom]="buttonBottom" (click)="onToggleWorkspaceDetails()">
         <img src="/assets/images/onepanel-logo-white.svg"/>
     </div>
 
-    <div #bottomPanel id="bottom-panel" class="bottom-panel">
+    <div id="bottom-panel" class="bottom-panel">
         <div class="workspace-info" *ngIf="showWorkspaceDetails">
             <app-workspace-status-bar
                 [workspace]="workspace"
@@ -31,7 +30,9 @@
                     [workspace]="workspace">
                 </app-workspace-identifier>
 
-                <app-workspace-view-parameters [workspace]="workspace">
+                <app-workspace-view-parameters
+                        [workspace]="workspace"
+                        class="pl-6">
 
                 </app-workspace-view-parameters>
             </div>

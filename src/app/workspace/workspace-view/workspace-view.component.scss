@@ -36,5 +36,10 @@ app-workspace-status-bar {
   width: 100%;
 }
 
+app-workspace-identifier {
+  width: 400px;
+  border-right: 1px solid $gray;
+}
+
 .workspace-info {
 }
