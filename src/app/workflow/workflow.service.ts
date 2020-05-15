@@ -19,7 +19,7 @@ export interface Workflow {
 }
 
 // https://github.com/argoproj/argo/issues/1849#issuecomment-565640866
-export type WorkflowPhase = 'Pending' | 'Running' | 'Succeeded' | 'Skipped' | 'Failed' | 'Error';
+export type WorkflowPhase = 'Pending' | 'Running' | 'Succeeded' | 'Skipped' | 'Failed' | 'Error' | 'Terminated';
 
 export interface WorkflowStatus {
   phase: WorkflowPhase;
@@ -94,6 +94,15 @@ export class SimpleWorkflowDetail {
     return this.phase === 'Succeeded';
   }
 
+  get terminated(): boolean {
+    const phase = this.phase;
+    if(!phase) {
+      return false;
+    }
+
+    return this.phase === 'Terminated';
+  }
+
   updateWorkflowManifest(manifest: string) {
     this.jsonManifest = JSON.parse(manifest);
 
@@ -155,6 +164,15 @@ export class WorkflowExecution {
     }
 
     return this.phase === 'Succeeded';
+  }
+
+  get terminated(): boolean {
+    const phase = this.phase;
+    if(!phase) {
+      return false;
+    }
+
+    return this.phase === 'Terminated';
   }
 
   updateWorkflowManifest(manifest: string) {
