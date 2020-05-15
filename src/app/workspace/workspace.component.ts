@@ -50,7 +50,9 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
     this.workspaceService.listWorkspaces(this.namespace, this.pagination.pageSize, this.pagination.page + 1)
         .subscribe(res => {
           this.workspaceResponse = res;
-          this.workspaces = res.workspaces;
+          if(res.workspaces) {
+            this.workspaces = res.workspaces;
+          }
         })
   }
 
