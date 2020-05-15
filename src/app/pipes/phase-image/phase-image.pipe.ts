@@ -20,7 +20,7 @@ export class PhaseImagePipe implements PipeTransform {
     ['Running', PhaseImagePipe.runningBlueImageSource],
     ['Failed', PhaseImagePipe.failedImageSource],
     ['Error', PhaseImagePipe.failedImageSource],
-    ['Terminated', PhaseImagePipe.failedImageSource],
+    ['Terminated', PhaseImagePipe.stoppedImageSource],
     ['Skipped', PhaseImagePipe.skippedImageSource]
   ]);
 

@@ -7,7 +7,7 @@ import { WorkflowExecutionStatisticReport, WorkflowTemplate } from "../../../api
   styleUrls: ['./workflow-template-status.component.scss']
 })
 export class WorkflowTemplateStatusComponent implements OnInit {
-  @Input() colors = ['#01579B', '#37AD58', '#D32345', '#D32345'];
+  @Input() colors = ['#01579B', '#37AD58', '#D32345', '#FFC84C'];
   @Input() labels = [];
 
   styles = [];
