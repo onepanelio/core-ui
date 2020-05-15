@@ -15,6 +15,12 @@ export class WorkspaceViewParametersComponent implements OnInit {
   @Input() state: WorkspaceState;
 
   @Input() set workspace(value: Workspace) {
+    if(!value.parameters) {
+      this.formattedParameters = [];
+      this.machineType = null;
+      return;
+    }
+
     this._workspace = value;
     let parameters = [];
 
