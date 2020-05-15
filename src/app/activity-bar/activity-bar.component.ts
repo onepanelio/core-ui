@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-type NormalizedStatus = 'success' | 'progress' | 'failed';
+type NormalizedStatus = 'success' | 'progress' | 'failed' | 'terminated';
 
 @Component({
   selector: 'app-activity-bar',
