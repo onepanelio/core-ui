@@ -23,6 +23,11 @@ export class LabelsEditComponent implements OnInit {
   items = new Array<LabelItem>();
 
   @Input() set labels(value: Array<KeyValue>) {
+    if(!value) {
+      this.items = [];
+      return;
+    }
+
     this._labels = value;
     let newItems = new Array<LabelItem>();
 
