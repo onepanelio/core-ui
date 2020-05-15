@@ -1,33 +1,15 @@
 <div class="font-roboto">
-    <mat-spinner *ngIf="workspace.status.phase == 'Started'"
-                 color="primary"
-                 class="d-inline-block"
-                 [diameter]="16">
-    </mat-spinner>
-    <img class="adjust-top" *ngIf="workspace.status.phase !== 'Started'" [src]="workspace.status.phase | workspacePhaseImage" />
-    <div class="d-inline-block ml-2 font-size-regular color-black" [ngSwitch]="workspace.status.phase">
-        <ng-container *ngSwitchCase="'Started'">
-            Launching...
-        </ng-container>
-        <ng-container *ngSwitchCase="'Running'">
-            Running
-        </ng-container>
-        <ng-container *ngSwitchCase="'Pausing'">
-            Pausing
-        </ng-container>
-        <ng-container *ngSwitchCase="'Paused'">
-            Paused
-        </ng-container>
-        <ng-container *ngSwitchCase="'Terminating'">
-            Terminating
-        </ng-container>
-        <ng-container *ngSwitchCase="'Terminated'">
-            Terminated
-        </ng-container>
+    <app-workspace-phase-icon [phase]="workspace.status.phase">
+    </app-workspace-phase-icon>
+    <div class="d-inline-block ml-2 font-size-regular color-black">
+        {{workspace.status.phase | workspacePhaseStatus}}
     </div>
 </div>
 <div class="offset-by-spinner font-roboto font-size-small color-medium-gray" [ngSwitch]="workspace.status.phase">
-    <ng-container *ngSwitchCase="'Started'">
+    <ng-container *ngSwitchCase="'Launching'">
+        <app-launching-timer [startedAt]="workspace.status.startedAt"></app-launching-timer>
+    </ng-container>
+    <ng-container *ngSwitchCase="'Updating'">
         <app-launching-timer [startedAt]="workspace.status.startedAt"></app-launching-timer>
     </ng-container>
     <ng-container *ngSwitchCase="'Running'">

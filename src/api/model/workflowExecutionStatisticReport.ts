@@ -17,5 +17,6 @@ export interface WorkflowExecutionStatisticReport {
     running?: number;
     completed?: number;
     failed?: number;
+    terminated?: number;
 }
 

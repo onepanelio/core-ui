@@ -11,8 +11,9 @@ import { Pagination } from "../../../workflow-template/workflow-template-view/wo
 import { WorkspaceTemplateEditComponent } from "../workspace-template-edit/workspace-template-edit.component";
 import { Alert } from "../../../alert/alert";
 import { MatDialog } from "@angular/material/dialog";
-import { WorkflowExecuteDialogComponent } from "../../../workflow/workflow-execute-dialog/workflow-execute-dialog.component";
 import { WorkspaceExecuteDialogComponent } from "../../workspace-execute-dialog/workspace-execute-dialog.component";
+import { PageEvent } from "@angular/material/paginator";
+import { AppRouter } from "../../../router/app-router.service";
 
 @Component({
   selector: 'app-workspace-template-list',
@@ -26,16 +27,22 @@ export class WorkspaceTemplateListComponent implements OnInit {
     name: 'Blank template'
   }
 
-  showWorkspaceTemplateEditor = false;
+  showWorkspaceTemplateEditor = true;
 
   namespace: string;
   pagination = new Pagination();
   workspaceTemplatesResponse: ListWorkspaceTemplatesResponse;
   workspaceTemplates: WorkspaceTemplate[] = [];
 
-  selectedTemplate: WorkspaceTemplate = null;
+  /**
+   * null means the selected template is the blank template.
+   * undefined means no template is selected.
+   * otherwise we do have a specific template selected.
+   */
+  selectedTemplate: WorkspaceTemplate|null|undefined = null;
 
   constructor(
+      private appRouter: AppRouter,
       private workspaceTemplateService: WorkspaceTemplateServiceService,
       private workspaceService: WorkspaceServiceService,
       private activatedRoute: ActivatedRoute,
@@ -117,9 +124,22 @@ export class WorkspaceTemplateListComponent implements OnInit {
 
       this.workspaceService.createWorkspace(this.namespace, workspace)
           .subscribe(res => {
-            // @todo redirect to new workspace page.
-            console.log('created workspace!');
+            this.appRouter.navigateToWorkspaces(this.namespace);
           })
     });
+  }
+
+  deleteWorkspaceTemplate(template: WorkspaceTemplate) {
+    // TODO
+  }
+
+  onPageChange(event: PageEvent) {
+    this.pagination.page = event.pageIndex;
+    this.pagination.pageSize = event.pageSize;
+
+    this.showWorkspaceTemplateEditor = false;
+    this.selectedTemplate = undefined;
+
+    this.getWorkspaceTemplates();
   }
 }

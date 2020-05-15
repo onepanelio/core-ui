@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormComponent } from "../../fields/form/form.component";
-import { CronWorkflow, KeyValue } from "../../../api";
+import { CronWorkflow, KeyValue, Parameter } from "../../../api";
 import { NamespaceTracker } from "../../namespace/namespace-tracker.service";
 import { Router } from "@angular/router";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
@@ -20,7 +20,7 @@ export interface CronWorkflowEditData {
 export class CronWorkflowEditDialogComponent implements OnInit {
   @ViewChild(FormComponent, {static: false}) form: FormComponent;
 
-  parameters: Array<FieldData> = [];
+  parameters: Array<Parameter> = [];
   labels = new Array<KeyValue>();
   schedulingText = '';
 

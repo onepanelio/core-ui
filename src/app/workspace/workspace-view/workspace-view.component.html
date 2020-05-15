@@ -1,3 +1,47 @@
-<iframe *ngIf="workspaceUrl" [src]="workspaceUrl">
+<app-workspace-launching
+        *ngIf="workspace?.status.phase === 'Launching'"
+        [workspace]="workspace">
+</app-workspace-launching>
 
-</iframe>
+<app-workspace-updating
+        *ngIf="workspace?.status.phase === 'Updating'"
+        [workspace]="workspace">
+</app-workspace-updating>
+
+<app-workspace-paused
+        *ngIf="workspace?.status.phase === 'Paused'"
+        [disabled]="state === 'Resuming'"
+        [workspace]="workspace"
+        (onResume)="onResume($event)">
+</app-workspace-paused>
+<div *ngIf="workspace?.status.phase === 'Running' && workspaceUrl">
+    <iframe [src]="workspaceUrl">
+    </iframe>
+
+    <div class="bg-primary rounded-circle op-info-button shadow-lg pointer-hover" [style.bottom]="buttonBottom" (click)="onToggleWorkspaceDetails()">
+        <img src="/assets/images/onepanel-logo-white.svg"/>
+    </div>
+
+    <div id="bottom-panel" class="bottom-panel">
+        <div class="workspace-info" *ngIf="showWorkspaceDetails">
+            <app-workspace-status-bar
+                [workspace]="workspace"
+                (pause)="onPause($event)"
+                (delete)="onDelete($event)">
+            </app-workspace-status-bar>
+            <div class="p-4 bg-background-color d-flex w-100">
+                <app-workspace-identifier
+                    [namespace]="namespace"
+                    [workspace]="workspace">
+                </app-workspace-identifier>
+
+                <app-workspace-view-parameters
+                        [workspace]="workspace"
+                        [state]="state"
+                        (updateWorkspace)="onUpdateWorkspace($event)"
+                        class="pl-6">
+                </app-workspace-view-parameters>
+            </div>
+        </div>
+    </div>
+</div>

@@ -7,7 +7,7 @@
     <div class="page-header d-flex align-items-baseline">
         <a [routerLink]="['/', this.namespace, 'workspaces']" class="op-back-link">
             <i class="fas fa-chevron-left"></i>
-            <span>Back to workflows</span>
+            <span>Back to workspaces</span>
         </a>
         <div class="page-title-text text-center flex-grow-1">
             Workspace template builder
@@ -41,40 +41,34 @@
             <app-workspace-template-summary-view
                     (click)="selectTemplate(template)"
                     (createWorkspaceClicked)="createWorkspace($event)"
+                    (deleteWorkspaceTemplateClicked)="deleteWorkspaceTemplate($event)"
                     class="mr-3 pointer-hover"
                     [ngClass]="{selected: selectedTemplate?.name === template.name}"
                     [template]="template">
             </app-workspace-template-summary-view>
         </div>
     </div>
+    <mat-paginator class="no-background font-size-small"
+                   *ngIf="workspaceTemplatesResponse"
+                   (page)="onPageChange($event)"
+                   [pageIndex]="this.pagination.page"
+                   [length]="this.workspaceTemplatesResponse.totalCount"
+                   [pageSize]="this.pagination.pageSize"
+                   [pageSizeOptions]="[5, 10, 25, 100]">
+    </mat-paginator>
 
     <app-workspace-template-create
             *ngIf="showWorkspaceTemplateEditor && selectedTemplate === null"
             (cancelEmitted)="cancelWorkspaceTemplate()"
             (saveEmitted)="onCreate($event)">
     </app-workspace-template-create>
+
     <app-workspace-template-edit
-        [class.d-none]="!showWorkspaceTemplateEditor || selectedTemplate === null"
+        *ngIf="showWorkspaceTemplateEditor && selectedTemplate"
         [namespace]="namespace"
         [workspaceTemplate]="selectedTemplate"
         (saveEmitted)="onEditUpdate($event)"
         (cancelEmitted)="cancelWorkspaceTemplate()">
     </app-workspace-template-edit>
-
-<!--        <mat-paginator class="no-background font-size-small"-->
-<!--                       *ngIf="workflowTemplateResponse"-->
-<!--                       (page)="onPageChange($event)"-->
-<!--                       [pageIndex]="this.pagination.page"-->
-<!--                       [length]="this.workflowTemplateResponse.totalCount"-->
-<!--                       [pageSize]="this.pagination.pageSize"-->
-<!--                       [pageSizeOptions]="[5, 10, 25, 100]">-->
-<!--        </mat-paginator>-->
-<!--        <app-call-to-action *ngIf="workflowTemplates.length === 0">-->
-<!--            <img class="icon" width="37" src="../../assets/images/workflows-icon.svg"/>-->
-<!--            <div class="header">Get started with workflows</div>-->
-<!--            <div class="body">This is where all your workflow templates live.</div>-->
-<!--            <a class="action underline pointer-hover" [routerLink]="['/', this.namespace, 'workflow-templates', 'create']">Creating a new workflow template</a>-->
-<!--        </app-call-to-action>-->
-<!--    </div>-->
 </div>
 

@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-type NormalizedStatus = 'success' | 'progress' | 'failed';
+type NormalizedStatus = 'success' | 'progress' | 'failed' | 'terminated';
 
 @Component({
   selector: 'app-activity-bar',
@@ -36,6 +36,13 @@ export class ActivityBarComponent implements OnInit {
         'border-danger': true,
       }
     }
+
+    if(this._status === 'terminated') {
+      this.classes = {
+        'bg-primary-light': true,
+        'border-primary': true,
+      }
+    }
   }
   get normalizedStatus(): NormalizedStatus {
     return this._status;
@@ -57,6 +64,10 @@ export class ActivityBarComponent implements OnInit {
 
     if(value === 'Failed' || value === 'failed' || value === 'Error' || value === 'error') {
       return 'failed';
+    }
+
+    if(value === 'Terminated' || value === 'terminated') {
+      return 'terminated';
     }
   }
 }

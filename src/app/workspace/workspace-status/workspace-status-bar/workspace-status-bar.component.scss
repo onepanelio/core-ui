@@ -1,0 +1,12 @@
+.workspace-status-bar {
+  height: 36px;
+  background-color: #DEE7FC;
+}
+
+/deep/ app-workspace-phase-icon {
+  img {
+    vertical-align: middle;
+    position: relative;
+    bottom: 2px;
+  }
+}

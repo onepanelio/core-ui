@@ -4,7 +4,7 @@ import * as yaml from 'js-yaml';
 import { NamespaceTracker } from "../../namespace/namespace-tracker.service";
 import { Router } from "@angular/router";
 import { FormComponent } from "../../fields/form/form.component";
-import { KeyValue } from "../../../api";
+import { KeyValue, Parameter } from "../../../api";
 import { MatCheckboxChange } from "@angular/material/checkbox";
 import { CronWorkflowFormatter } from "../../cron-workflow/models";
 
@@ -37,7 +37,7 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
   @ViewChild(FormComponent, {static: false}) form: FormComponent;
 
   showCron = false;
-  parameters: Array<FieldData> = [];
+  parameters: Array<Parameter> = [];
   labels = new Array<KeyValue>();
   schedulingText: string = CronWorkflowFormatter.toYamlString({}, true);
 

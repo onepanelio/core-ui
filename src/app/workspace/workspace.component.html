@@ -23,7 +23,7 @@
             <ng-container cdkColumnDef="name">
                 <cdk-header-cell *cdkHeaderCellDef>Name</cdk-header-cell>
                 <cdk-cell *cdkCellDef="let workspace">
-                    <a class="name-link font-roboto-bold font-weight-bold" [routerLink]="['/', this.namespace, 'workspaces', workspace.uid]">{{workspace.name}}</a>
+                    <a class="name-link font-roboto-bold font-weight-bold" target="_blank" [routerLink]="['/', this.namespace, 'workspaces', workspace.uid]">{{workspace.name}}</a>
                     <app-labels-list-view
                             *ngIf="workspace.labels"
                             class="mt-2 d-block"
@@ -55,7 +55,7 @@
             <ng-container cdkColumnDef="actions">
                 <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
                 <cdk-cell *cdkCellDef="let workspace" class="flex align-items-center">
-                    <a class="link-button" [routerLink]="['/', this.namespace, 'workspaces', workspace.uid]">Open</a>
+                    <a class="link-button" target="_blank" [routerLink]="['/', this.namespace, 'workspaces', workspace.uid]">Open</a>
                     <button mat-icon-button color="primary" class="ml-3" [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{'workspace' :workspace}">
                         <mat-icon>more_vert</mat-icon>
                     </button>
@@ -87,9 +87,17 @@
 
 <mat-menu #appMenu="matMenu">
     <ng-template matMenuContent let-workspace="workspace">
-        <button mat-menu-item (click)="onPause(workspace)">Pause</button>
-        <button mat-menu-item (click)="onDelete(workspace)">Delete</button>
+        <button *ngIf="workspace.status.phase === 'Running'" mat-menu-item (click)="onPause(workspace)">
+            <i class="far fa-pause-circle mr-1 workspace-menu-icon"></i>
+            Pause
+        </button>
+        <button *ngIf="workspace.status.phase === 'Paused'" mat-menu-item (click)="onResume(workspace)">
+            <i class="far fa-play-circle mr-1 workspace-menu-icon"></i>
+            Resume
+        </button>
+        <button mat-menu-item (click)="onDelete(workspace)">
+            <i class="fas fa-trash mr-1 workspace-menu-icon"></i>
+            Delete
+        </button>
     </ng-template>
-    <!--    @todo icons-->
-
 </mat-menu>

@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import * as d3 from 'd3';
 import * as dagre from 'dagre';
 import * as dagreD3 from 'dagre-d3';
@@ -16,6 +24,9 @@ export interface DagClickEvent {
   styleUrls: ['./dag.component.scss'],
 })
 export class DagComponent implements OnInit {
+  @ViewChild('content', {static: true}) contentElement: ElementRef;
+  @ViewChild('buffer', {static: true}) bufferElement: ElementRef;
+
   private render;
   private svg;
   private inner;
@@ -37,13 +48,13 @@ export class DagComponent implements OnInit {
 
   ngOnInit() {
     this.render = new dagreD3.render();
-    this.svg = d3.select('svg.content');
+    this.svg = d3.select(this.contentElement.nativeElement);
     this.svg.attr('height', '100%');
     this.svg.attr('width', '100%');
     this.inner = this.svg.select('g');
     this.init = true;
 
-    this.bufferSvg = d3.select('svg.buffer');
+    this.bufferSvg = d3.select(this.bufferElement.nativeElement);
     this.bufferInner = this.bufferSvg.select('g');
 
     this.setupZoom();

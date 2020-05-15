@@ -25,5 +25,6 @@ export interface Workspace {
     status?: WorkspaceStatus;
     labels?: Array<KeyValue>;
     url?: string;
+    templateParameters?: Array<Parameter>;
 }
 

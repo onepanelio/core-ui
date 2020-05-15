@@ -38,6 +38,7 @@ export * from './streamResultOfLogEntry';
 export * from './streamResultOfWorkflowExecution';
 export * from './tokenWrapper';
 export * from './updateSecretKeyValueResponse';
+export * from './updateWorkspaceBody';
 export * from './workflowExecution';
 export * from './workflowExecutionStatisticReport';
 export * from './workflowTemplate';

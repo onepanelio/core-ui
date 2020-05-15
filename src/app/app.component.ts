@@ -27,6 +27,7 @@ export class AppComponent implements OnInit {
   loggingIn = false;
   version: string = '1.0.0';
   showNamespaceManager = false;
+  showNavigationBar = true;
 
   constructor(public namespaceTracker: NamespaceTracker,
               private authService: AuthService,
@@ -128,5 +129,13 @@ export class AppComponent implements OnInit {
       this.showNamespaceManager = false;
       this.authService.clearTokens();
       this.router.navigate(['/', 'login']);
+  }
+
+  onRouterOutletActivate(data) {
+    if(data.hideNavigationBar) {
+        this.showNavigationBar = false;
+    } else {
+        this.showNavigationBar = true;
+    }
   }
 }

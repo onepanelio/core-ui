@@ -31,6 +31,7 @@ export class WorkflowTemplateComponent implements OnInit {
 
       if(this.getWorkflowTemplatesInterval) {
         clearInterval(this.getWorkflowTemplatesInterval);
+        this.getWorkflowTemplatesInterval = null;
       }
 
       this.getWorkflowTemplatesInterval = setInterval(() => {
@@ -42,6 +43,7 @@ export class WorkflowTemplateComponent implements OnInit {
   ngOnDestroy() {
     if(this.getWorkflowTemplatesInterval) {
       clearInterval(this.getWorkflowTemplatesInterval);
+      this.getWorkflowTemplatesInterval = null;
     }
   }
 

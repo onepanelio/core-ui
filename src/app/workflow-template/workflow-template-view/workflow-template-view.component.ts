@@ -130,6 +130,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
   ngOnDestroy() {
     if(this.workflowsInterval) {
       clearInterval(this.workflowsInterval);
+      this.workflowsInterval = null;
     }
   }
 

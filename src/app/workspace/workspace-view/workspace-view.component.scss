@@ -1,5 +1,45 @@
+@import "../../../styles/colors";
+
 iframe {
   width: 100vw;
-  height: calc(100vh - 50px);
+  height: 100vh;
   border: none;
+}
+
+.bottom-panel {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  position: fixed;
+  bottom: 0;
+}
+
+.op-info-button {
+  width: 40px;
+  height: 40px;
+  transition: bottom 0.05s;
+  z-index: 1000;
+
+  position: fixed;
+  right: 20px;
+
+  img {
+    position: relative;
+    top: 10px;
+    left: 9.5px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+app-workspace-status-bar {
+  width: 100%;
+}
+
+app-workspace-identifier {
+  width: 400px;
+  border-right: 1px solid $gray;
+}
+
+.workspace-info {
 }

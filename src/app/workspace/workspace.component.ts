@@ -13,7 +13,6 @@ import { AppRouter } from "../router/app-router.service";
   styleUrls: ['./workspace.component.scss']
 })
 export class WorkspaceComponent implements OnInit, OnDestroy {
-
   namespace: string;
   displayedColumns = ['name', 'status', 'template', 'spacer', 'actions'];
   workspaceResponse: ListWorkspaceResponse;
@@ -43,6 +42,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     if(this.getWorkspacesInterval) {
       clearInterval(this.getWorkspacesInterval);
+      this.getWorkspacesInterval = null;
     }
   }
 
@@ -83,13 +83,20 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
 
       this.workspaceService.createWorkspace(this.namespace, workspace)
           .subscribe(res => {
-            this.appRouter.navigateToWorkspace(this.namespace, res.name);
+            this.appRouter.navigateToWorkspaces(this.namespace);
           })
     });
   }
 
   onPause(workspace: Workspace) {
     this.workspaceService.pauseWorkspace(this.namespace, workspace.uid)
+        .subscribe(res => {
+          // Do nothing
+        })
+  }
+
+  onResume(workspace: Workspace) {
+    this.workspaceService.resumeWorkspace(this.namespace, workspace.uid)
         .subscribe(res => {
           // Do nothing
         })

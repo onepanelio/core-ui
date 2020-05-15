@@ -1,0 +1,11 @@
+<div class="font-roboto">
+    <div class="font-weight-bold font-size-regular">{{workspace.name}}</div>
+    <div class="font-size-small color-medium-gray">{{workspace.workspaceTemplate.name}}</div>
+
+    <div class="d-inline-block color-medium-gray font-size-small">
+        Labels:
+        <ng-container *ngIf="!workspace.labels">no labels</ng-container>
+        <app-labels-list-view [labels]="workspace.labels"></app-labels-list-view>
+    </div>
+    <button mat-button color="primary" class="font-proxima-bold font-size-regular ml-2" (click)="onEditLabels()"><i class="fas fa-pencil-alt mr-2"></i> EDIT LABELS</button>
+</div>

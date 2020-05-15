@@ -12,7 +12,8 @@ export class WorkspacePhaseImagePipe implements PipeTransform {
   static terminatedSource = '/assets/images/status-icons/failed.svg';
 
   static statusMap = new Map<string, string>([
-    ['Started', WorkspacePhaseImagePipe.startedImageSource],
+    ['Launching', WorkspacePhaseImagePipe.startedImageSource],
+    ['Updating', WorkspacePhaseImagePipe.startedImageSource],
     ['Running', WorkspacePhaseImagePipe.runningImageSource],
     ['Pausing', WorkspacePhaseImagePipe.pausingImageSource],
     ['Paused', WorkspacePhaseImagePipe.pausedImageSource],

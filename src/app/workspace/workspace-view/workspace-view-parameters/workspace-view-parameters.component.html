@@ -1,0 +1,28 @@
+<div *ngIf="machineType" class="d-flex align-items-baseline">
+    <app-form [fieldData]="[machineType]"></app-form>
+    <button mat-flat-button color="accent" class="op-rounded op-button ml-10"
+            (click)="update()"
+            [disabled]="state === 'Updating'">
+        <mat-spinner *ngIf="state === 'Updating'"
+                     color="primary"
+                     class="mr-2"
+                     [diameter]="20"
+                     [mode]="'indeterminate'">
+        </mat-spinner>
+        Update
+    </button>
+</div>
+
+<ng-container *ngFor="let param of formattedParameters">
+    <div class="font-roboto font-weight-bold mt-3">
+        <ng-container *ngIf="param.displayName">
+            {{param.displayName}}
+        </ng-container>
+        <ng-container *ngIf="!param.displayName">
+            {{param.name}}
+        </ng-container>
+    </div>
+    <div class="font-roboto">
+        {{param.value}}
+    </div>
+</ng-container>
