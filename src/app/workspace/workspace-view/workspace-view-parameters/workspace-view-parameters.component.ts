@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Parameter, Workspace } from "../../../../api";
 import { WorkspaceState } from "../workspace-view.component";
-import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-workspace-view-parameters',
