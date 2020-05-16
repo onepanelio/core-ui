@@ -1,7 +1,7 @@
 <div class="workspace-updating d-flex flex-column m-auto align-items-center font-proxima justify-content-between">
     <div class="d-flex flex-column align-items-center">
         <img src="/assets/images/workspace-launch.svg" width="198"/>
-        <div class="launching-workspace-title mt-5 color-primary font-size-XXL">Updating your workspace ...</div>
+        <div class="launching-workspace-title mt-5 color-primary font-size-XXL">{{workspace?.status.phase | titlecase}} your workspace ...</div>
         <div class="mt-5 loading">
             <mat-progress-bar color="accent" mode="indeterminate"></mat-progress-bar>
         </div>
