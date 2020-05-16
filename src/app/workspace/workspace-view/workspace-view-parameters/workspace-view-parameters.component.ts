@@ -25,10 +25,10 @@ export class WorkspaceViewParametersComponent implements OnInit {
     this._workspace = value;
 
     let parameters = [];
-    let parameterMap = new Map();
+    let parametersMap = new Map<string, Parameter>();
 
     for(let param of value.templateParameters) {
-      parameterMap[param.name] = param;
+      parametersMap[param.name] = param;
     }
 
     for(let param of value.parameters) {
@@ -37,7 +37,7 @@ export class WorkspaceViewParametersComponent implements OnInit {
         continue;
       }
 
-      let p = parameterMap[param.name];
+      let p = parametersMap[param.name];
       p.value = param.value;
       if(param.name !== 'sys-node-pool') {
         parameters.push(p);
