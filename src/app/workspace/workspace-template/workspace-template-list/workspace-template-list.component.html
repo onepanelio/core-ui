@@ -65,6 +65,7 @@
 
     <app-workspace-template-edit
         *ngIf="showWorkspaceTemplateEditor && selectedTemplate"
+        [loading]="workspaceTemplateEditLoading"
         [namespace]="namespace"
         [workspaceTemplate]="selectedTemplate"
         (saveEmitted)="onEditUpdate($event)"

@@ -41,6 +41,8 @@ export class WorkspaceTemplateListComponent implements OnInit {
    */
   selectedTemplate: WorkspaceTemplate|null|undefined = null;
 
+  workspaceTemplateEditLoading = false;
+
   constructor(
       private appRouter: AppRouter,
       private workspaceTemplateService: WorkspaceTemplateServiceService,
@@ -91,6 +93,7 @@ export class WorkspaceTemplateListComponent implements OnInit {
   }
 
   onEditUpdate(template: WorkspaceTemplate) {
+    this.workspaceTemplateEditLoading = true;
     this.workspaceTemplateService.updateWorkspaceTemplate(this.namespace, template.uid, template)
         .subscribe(res => {
           this.workspaceTemplateEditor.getWorkspaceTemplateVersions();
@@ -98,6 +101,9 @@ export class WorkspaceTemplateListComponent implements OnInit {
             type: 'success',
             message: 'Template has been updated'
           }))
+          this.workspaceTemplateEditLoading = false;
+        }, err => {
+          this.workspaceTemplateEditLoading = false;
         })
   }
 
