@@ -7,6 +7,7 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from "@angular/material/snack-bar";
 import { Subscription } from "rxjs";
+import { WorkflowServiceService } from "../../../api";
 
 @Component({
     selector: 'app-workflow-executions-list',
@@ -70,6 +71,7 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
     constructor(
         private activatedRoute: ActivatedRoute,
         private workflowService: WorkflowService,
+        private workflowServiceService: WorkflowServiceService,
         private snackbar: MatSnackBar) { }
 
     clearWatchers() {
@@ -117,7 +119,7 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
     }
 
     onTerminate(workflow: WorkflowExecution) {
-        this.workflowService.terminateWorkflow(this.namespace, workflow.name)
+        this.workflowServiceService.terminateWorkflowExecution(this.namespace, workflow.uid)
             .subscribe(res => {
                 this.snackbarRef = this.snackbar.open('Workflow stopped', 'OK');
                 this.executionTerminated.emit();
