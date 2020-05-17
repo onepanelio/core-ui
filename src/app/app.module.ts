@@ -114,6 +114,7 @@ import { ValuePipe } from "./fields/pipes/value.pipe";
 import { WorkspaceViewParametersComponent } from './workspace/workspace-view/workspace-view-parameters/workspace-view-parameters.component';
 import { WorkspaceUpdatingComponent } from './workspace/workspace-status/workspace-updating/workspace-updating.component';
 import { ButtonComponent } from './ui-tools/button/button.component';
+import { LoadingContentComponent } from './ui-tools/loading-content/loading-content.component';
 
 @NgModule({
     declarations: [
@@ -199,6 +200,7 @@ import { ButtonComponent } from './ui-tools/button/button.component';
         WorkspaceViewParametersComponent,
         WorkspaceUpdatingComponent,
         ButtonComponent,
+        LoadingContentComponent,
     ],
     entryComponents: [
         WorkflowExecuteDialogComponent,

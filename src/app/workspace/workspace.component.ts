@@ -7,6 +7,8 @@ import { WorkspaceExecuteDialogComponent } from "./workspace-execute-dialog/work
 import { MatDialog } from "@angular/material/dialog";
 import { AppRouter } from "../router/app-router.service";
 
+type WorkspaceState = 'loading-initial-data' | 'loading' | 'new';
+
 @Component({
   selector: 'app-workspace',
   templateUrl: './workspace.component.html',
@@ -19,6 +21,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
   workspaces: Workspace[] = [];
   pagination = new Pagination();
   getWorkspacesInterval: number;
+  state: WorkspaceState = 'loading-initial-data';
 
   constructor(
       private appRouter: AppRouter,
@@ -35,6 +38,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.getWorkspacesInterval = setInterval(() => {
+      this.state = 'loading';
       this.getWorkspaces()
     }, 5000);
   }
@@ -53,6 +57,10 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
           if(res.workspaces) {
             this.workspaces = res.workspaces;
           }
+
+          this.state = 'new';
+        }, err => {
+          this.state = 'new';
         })
   }
 

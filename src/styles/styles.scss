@@ -456,3 +456,13 @@ button.logout {
 .vertical-baseline {
   vertical-align: baseline !important;
 }
+
+mat-spinner.color-medium-gray {
+    &.mat-progress-spinner {
+      svg {
+        circle {
+          stroke: $medium-gray;
+        }
+      }
+    }
+}
