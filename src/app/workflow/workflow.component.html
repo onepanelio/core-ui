@@ -23,9 +23,14 @@
         <div class="flex-grow-1">
         </div>
 
-        <div>
-          <button mat-flat-button *ngIf="!workflow?.active" color="primary" (click)="runAgain()">RUN AGAIN</button>
-        </div>
+        <app-button
+                *ngIf="!workflow?.active"
+                color="primary"
+                (click)="runAgain()"
+                [loading]="cloning">
+          <span>RUN AGAIN</span>
+          <span class="loading">RUNNING AGAIN</span>
+        </app-button>
       </div>
 
       <div>

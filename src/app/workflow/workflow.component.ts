@@ -72,6 +72,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   showAllParameters = false;
 
   loadingLabels = false;
+  cloning = false;
 
   private socketClosedCount = 0;
   private socketErrorCount = 0;
@@ -408,9 +409,13 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   }
 
   runAgain() {
+    this.cloning = true;
     this.workflowServiceService.cloneWorkflowExecution(this.namespace, this.uid)
         .subscribe(res => {
           this.appRouter.navigateToWorkflowExecution(this.namespace, res.uid);
+          this.cloning = false;
+        }, err => {
+          this.cloning = false;
         })
   }
 }

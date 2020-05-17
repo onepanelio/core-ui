@@ -7,7 +7,7 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class ButtonComponent implements OnInit {
   @Input() loading = false;
-
+  @Input() color = 'accent';
 
   constructor() { }
 
