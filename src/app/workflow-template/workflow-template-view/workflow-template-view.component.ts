@@ -29,6 +29,8 @@ export class Pagination {
   pageSize: number = 15;
 }
 
+type WorkflowTemplateViewState = 'new' | 'executing';
+
 @Component({
   selector: 'app-workflow-template-view',
   templateUrl: './workflow-template-view.component.html',
@@ -50,6 +52,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
   manifestText: string;
   namespace: string;
   uid: string;
+  state: WorkflowTemplateViewState = 'new';
 
   workflows: WorkflowExecution[] = [];
   cronWorkflowResponse: ListCronWorkflowsResponse;
@@ -196,6 +199,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
   }
 
   protected executeWorkflowRequest(request: CreateWorkflowExecutionBody) {
+    this.state = 'executing';
     this.workflowServiceService.createWorkflowExecution(this.namespace, request)
         .subscribe(res => {
           this.appRouter.navigateToWorkflowExecution(this.namespace, res.name);
@@ -204,17 +208,20 @@ export class WorkflowTemplateViewComponent implements OnInit {
   }
 
   protected executeCronWorkflowRequest(data: CronWorkflow) {
-      this.cronWorkflowService.createCronWorkflow(this.namespace, data)
-          .subscribe(res => {
-            this.getCronWorkflows();
-            this.matTabGroup.selectedIndex = 1;
-            this.alertService.storeAlert(new Alert({
-              message: `You have scheduled "${res.name}"`,
-              type: "success"
-            }))
-          }, err => {
+    this.state = 'executing';
 
-          });
+    this.cronWorkflowService.createCronWorkflow(this.namespace, data)
+        .subscribe(res => {
+          this.getCronWorkflows();
+          this.matTabGroup.selectedIndex = 1;
+          this.alertService.storeAlert(new Alert({
+            message: `You have scheduled "${res.name}"`,
+            type: "success"
+          }))
+          this.state = 'new';
+        }, err => {
+          this.state = 'new';
+        });
   }
 
   showDag() {
