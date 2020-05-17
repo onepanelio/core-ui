@@ -22,9 +22,13 @@ export class WorkspaceViewParametersComponent implements OnInit {
     }
 
     this._workspace = value;
-    let parameters = [];
 
-    let selectedMachineType = '';
+    let parameters = [];
+    let parametersMap = new Map<string, Parameter>();
+
+    for(let param of value.templateParameters) {
+      parametersMap[param.name] = param;
+    }
 
     for(let param of value.parameters) {
       // Skip name as we already display it elsewhere
@@ -32,19 +36,12 @@ export class WorkspaceViewParametersComponent implements OnInit {
         continue;
       }
 
+      let p = parametersMap[param.name];
+      p.value = param.value;
       if(param.name !== 'sys-node-pool') {
-        parameters.push(param);
+        parameters.push(p);
       } else {
-        selectedMachineType = param.value;
-      }
-    }
-
-    // Get sys-node-pool from template, as only the template parameters have the stored options too.
-    // We need the options to display them in the select box.
-    for(let param of value.templateParameters) {
-      if(param.name === 'sys-node-pool') {
-        param.value = selectedMachineType;
-        this.machineType = param;
+        this.machineType = p;
       }
     }
 

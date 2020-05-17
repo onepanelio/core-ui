@@ -4,7 +4,7 @@
 </app-workspace-launching>
 
 <app-workspace-updating
-        *ngIf="workspace?.status.phase === 'Updating'"
+        *ngIf="workspace?.status.phase === 'Updating' || workspace?.status.phase === 'Pausing'"
         [workspace]="workspace">
 </app-workspace-updating>
 
