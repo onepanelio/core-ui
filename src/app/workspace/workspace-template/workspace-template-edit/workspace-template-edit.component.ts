@@ -78,6 +78,14 @@ export class WorkspaceTemplateEditComponent implements OnInit {
         .subscribe(res => {
           if(res.workspaceTemplates && res.workspaceTemplates.length > 0) {
             this.selectedWorkspaceTemplateVersion = res.workspaceTemplates[0].version;
+
+            const labels = res.workspaceTemplates[0].labels;
+            if(labels) {
+              this.labels = labels;
+            } else {
+              this.labels = [];
+            }
+
             this.workspaceTemplateVersions = res.workspaceTemplates;
             this.manifest = res.workspaceTemplates[0].manifest;
             this.manifestDagEditor.onManifestChange(this.manifest);
@@ -98,9 +106,10 @@ export class WorkspaceTemplateEditComponent implements OnInit {
     const body: WorkspaceTemplate = {
       uid: this.workspaceTemplate.uid,
       name: this.workspaceTemplate.name,
-      manifest: this.manifestDagEditor.rawManifest
+      manifest: this.manifestDagEditor.rawManifest,
+      labels: this.labels,
     };
-
+    
     this.saveEmitted.emit(body);
   }
 
@@ -114,6 +123,7 @@ export class WorkspaceTemplateEditComponent implements OnInit {
     }
 
     this.selectedWorkspaceTemplateVersion = version;
+    this.labels = workspaceTemplateVersion.labels;
     this.manifest = workspaceTemplateVersion.manifest;
   }
 
