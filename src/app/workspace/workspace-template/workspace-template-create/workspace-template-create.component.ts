@@ -75,7 +75,8 @@ export class WorkspaceTemplateCreateComponent implements OnInit {
 
     const body: WorkspaceTemplate = {
       name: templateName,
-      manifest: this.manifestDagEditor.rawManifest
+      manifest: this.manifestDagEditor.rawManifest,
+      labels: this.labels,
     };
 
     this.saveEmitted.emit(body);

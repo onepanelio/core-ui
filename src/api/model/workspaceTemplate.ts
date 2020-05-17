@@ -9,6 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { KeyValue } from './keyValue';
 import { WorkflowTemplate } from './workflowTemplate';
 
 
@@ -20,5 +21,6 @@ export interface WorkspaceTemplate {
     isLatest?: boolean;
     createdAt?: string;
     workflowTemplate?: WorkflowTemplate;
+    labels?: Array<KeyValue>;
 }
 
