@@ -6,7 +6,7 @@
   <form [formGroup]="form" class="page-body">
     <div class="op-info-box mt-8">
       <div class="header">
-        <mat-form-field appearance="outline" class="wp-400">
+        <mat-form-field appearance="outline" class="wp-400 fix-mat-overflow">
           <mat-label>Template name</mat-label>
           <input formControlName="templateNameInput" matInput/>
           <mat-error *ngIf="!templateNameInput.hasError('conflict')">Name must not be empty</mat-error>
@@ -29,7 +29,10 @@
       <div class="mt-5 d-flex justify-content-between">
         <button mat-button class="font-medium-gray cancel-button" (click)="cancel()">CANCEL</button>
         <div>
-          <button mat-flat-button color="accent" class="op-rounded op-button border-secondary" (click)="save()">Save</button>
+          <app-button (click)="save()" [loading]="state === 'creating'">
+            <span>Save</span>
+            <span class="loading">Saving</span>
+          </app-button>
         </div>
       </div>
     </div>
