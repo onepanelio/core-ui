@@ -297,21 +297,6 @@ export class WorkflowService {
     return new WebSocket(url);
   }
 
-  getWorkflow(namespace: string, uid: string) {
-    return this.client.get<SimpleWorkflowDetail>(`${environment.baseUrl}/apis/v1beta1/${namespace}/workflow_executions/${uid}`)
-        .pipe(
-            map(res => {
-              return new SimpleWorkflowDetail(res);
-            })
-        );
-  }
-
-  terminateWorkflow(namespace: string, name: string) {
-    const url = `${environment.baseUrl}/apis/v1beta1/${namespace}/workflow_executions/${name}/terminate`;
-
-    return this.client.put(url, {});
-  }
-
   watchLogs(namespace: string, workflowName: string, podId: string, containerName = 'main') {
     const url =`${environment.baseWsUrl}/apis/v1beta1/${namespace}/workflow_executions/${workflowName}/pods/${podId}/containers/${containerName}/logs`;
 

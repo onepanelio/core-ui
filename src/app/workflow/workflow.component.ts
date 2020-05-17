@@ -51,7 +51,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   }
 
   namespace: string;
-  name: string;
+  uid: string;
   workflow: SimpleWorkflowDetail;
 
   socket: WebSocket;
@@ -71,6 +71,8 @@ export class WorkflowComponent implements OnInit, OnDestroy {
 
   showAllParameters = false;
 
+  loadingLabels = false;
+
   private socketClosedCount = 0;
   private socketErrorCount = 0;
 
@@ -78,7 +80,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     return {
       type: 'workflow',
       namespace: this.namespace,
-      name: this.name,
+      name: this.uid,
     };
   }
 
@@ -93,7 +95,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     private snackbar: MatSnackBar,
   ) {
     this.activatedRoute.paramMap.subscribe(next => {
-      this.setNamespaceName(next.get('namespace'), next.get('name'));
+      this.setNamespaceUid(next.get('namespace'), next.get('uid'));
       if(this.clock) {
         this.clock.reset(true);
       }
@@ -105,9 +107,10 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   }
 
   startCheckingWorkflow() {
-    this.workflowService.getWorkflow(this.namespace, this.name)
+    this.workflowServiceService.getWorkflowExecution(this.namespace, this.uid)
         .subscribe(res => {
-          this.workflow = res;
+          this.workflow = new SimpleWorkflowDetail(res);
+          this.labels = res.labels;
 
           let parsedManifest = JSON.parse(res.manifest);
 
@@ -115,14 +118,12 @@ export class WorkflowComponent implements OnInit, OnDestroy {
             this.parameters = parsedManifest.spec.arguments.parameters;
           }
 
-          this.getLabels();
-
           if(this.socket) {
             this.socket.close();
             this.socket = null;
           }
 
-          this.socket = this.workflowService.watchWorkflow(this.namespace, this.name);
+          this.socket = this.workflowService.watchWorkflow(this.namespace, this.uid);
           this.socket.onmessage = (event) => {
             this.onWorkflowExecutionUpdate(event.data);
           };
@@ -155,9 +156,9 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     }
   }
 
-  setNamespaceName(namespace: string, name: string) {
+  setNamespaceUid(namespace: string, uid: string) {
     this.namespace = namespace;
-    this.name = name;
+    this.uid = uid;
   }
 
   onWorkflowExecutionUpdate(rawData: any) {
@@ -351,7 +352,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   }
 
   onTerminate() {
-    this.workflowService.terminateWorkflow(this.namespace, this.workflow.name)
+    this.workflowServiceService.terminateWorkflowExecution(this.namespace, this.workflow.uid)
         .subscribe(res => {
           this.snackbarRef = this.snackbar.open('Workflow stopped', 'OK');
         }, err => {
@@ -369,18 +370,6 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     }
 
     this.showYaml = true;
-  }
-
-  getLabels() {
-    // todo is this needed, or should it be returned from the workflow execution?
-    this.labelService.getLabels(this.namespace, 'workflow_execution', this.workflow.uid)
-        .subscribe(res => {
-          if(!res.labels) {
-            return;
-          }
-
-          this.labels = res.labels;
-        })
   }
 
   onEdit() {
@@ -402,10 +391,14 @@ export class WorkflowComponent implements OnInit, OnDestroy {
         return;
       }
 
+      this.loadingLabels = true;
       this.labelService.replaceLabels(this.namespace, 'workflow_execution', this.workflow.uid, {
         items: data
       }).subscribe(res => {
         this.labels = res.labels;
+        this.loadingLabels = false;
+      }, err => {
+        this.loadingLabels = false;
       })
     });
   }
@@ -415,9 +408,9 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   }
 
   runAgain() {
-    this.workflowServiceService.cloneWorkflowExecution(this.namespace, this.name)
+    this.workflowServiceService.cloneWorkflowExecution(this.namespace, this.uid)
         .subscribe(res => {
-          this.appRouter.navigateToWorkflowExecution(this.namespace, res.name);
+          this.appRouter.navigateToWorkflowExecution(this.namespace, res.uid);
         })
   }
 }
