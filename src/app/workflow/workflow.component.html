@@ -16,8 +16,8 @@
         <span *ngIf="workflow && workflow.succeeded" class="ml-1"> in </span>
         <app-clock *ngIf="workflow"
                    class="ml-1"
-                   [startedAt]="workflow.workflowStatus.startedAt"
-                   [finishedAt]="workflow.workflowStatus.finishedAt">
+                   [startedAt]="startedAt"
+                   [finishedAt]="finishedAt">
         </app-clock>
 
         <div class="flex-grow-1">
@@ -50,10 +50,10 @@
       </div>
       <div class="d-flex align-items-center font-roboto font-size-small color-medium-gray mt-3">
         <div>
-          Started: <app-date *ngIf="workflow" [dateTime]="workflow.workflowStatus.startedAt"></app-date>
+          Started: <app-date *ngIf="workflow" [dateTime]="startedAt"></app-date>
         </div>
         <div *ngIf="workflow?.workflowStatus?.finishedAt" class="ml-5">
-          Ended: <app-date *ngIf="workflow" [dateTime]="workflow.workflowStatus.finishedAt"></app-date>
+          Ended: <app-date *ngIf="workflow" [dateTime]="finishedAt"></app-date>
         </div>
 
         <div *ngIf="labels?.length > 0 || loadingLabels " class="ml-5">Labels</div>

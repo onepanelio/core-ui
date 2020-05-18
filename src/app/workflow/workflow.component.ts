@@ -74,6 +74,9 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   loadingLabels = false;
   cloning = false;
 
+  startedAt;
+  finishedAt;
+
   private socketClosedCount = 0;
   private socketErrorCount = 0;
 
@@ -118,6 +121,13 @@ export class WorkflowComponent implements OnInit, OnDestroy {
           if(parsedManifest.spec && parsedManifest.spec.arguments && parsedManifest.spec.arguments.parameters) {
             this.parameters = parsedManifest.spec.arguments.parameters;
           }
+
+          if(res.phase === 'Terminated') {
+            this.workflow.phase = 'Terminated';
+            this.startedAt = res.startedAt;
+            this.finishedAt = res.finishedAt;
+          }
+
 
           if(this.socket) {
             this.socket.close();
@@ -178,7 +188,16 @@ export class WorkflowComponent implements OnInit, OnDestroy {
       return;
     }
 
+
+    const wasTerminated = this.workflow.phase === 'Terminated';
     this.workflow.updateWorkflowManifest(data.result.manifest);
+    this.startedAt = this.workflow.workflowStatus.startedAt;
+    this.finishedAt = this.workflow.workflowStatus.finishedAt;
+
+    if(wasTerminated) {
+      this.workflow.phase = 'Terminated';
+    }
+
     const status = this.workflow.workflowStatus;
 
     // It is possible there is no node data yet. In which case, we can't display a dag.
@@ -355,6 +374,12 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   onTerminate() {
     this.workflowServiceService.terminateWorkflowExecution(this.namespace, this.workflow.uid)
         .subscribe(res => {
+          if (this.socket) {
+            this.socket.close();
+          }
+
+          this.finishedAt = new Date();
+          this.workflow.phase = 'Terminated';
           this.snackbarRef = this.snackbar.open('Workflow stopped', 'OK');
         }, err => {
           this.snackbarRef = this.snackbar.open('Unable to stop workflow', 'OK');

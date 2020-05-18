@@ -47,6 +47,7 @@ export class SimpleWorkflowDetail {
   manifest?: string;
   yamlManifest?: string;
   workflowTemplate: WorkflowTemplate;
+  _phase: WorkflowPhase;
 
   constructor(workflow: ApiWorkflowExecution) {
     this.uid = workflow.uid;
@@ -68,7 +69,15 @@ export class SimpleWorkflowDetail {
     return this.jsonManifest.status;
   }
 
+  set phase(value: WorkflowPhase) {
+    this._phase = value;
+  }
+
   get phase(): WorkflowPhase|null {
+    if(this._phase) {
+      return this._phase;
+    }
+
     if(!this.jsonManifest) {
       return null;
     }
