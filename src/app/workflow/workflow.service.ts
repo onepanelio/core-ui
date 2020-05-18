@@ -12,6 +12,7 @@ import { WorkflowExecution as ApiWorkflowExecution, WorkflowTemplate } from "../
 export interface Workflow {
   uid: string;
   createdAt: string;
+  startedAt: string;
   finishedAt?: string;
   name: string;
   manifest?: string;
@@ -136,6 +137,7 @@ export class SimpleWorkflowDetail {
   }
 }
 
+// todo deprecated. Remove this and use API generated WorkflowExecution.
 export class WorkflowExecution {
   uid: string;
   createdAt: string;
