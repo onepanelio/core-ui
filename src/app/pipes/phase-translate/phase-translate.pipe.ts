@@ -11,7 +11,8 @@ export class PhaseTranslatePipe implements PipeTransform {
     ['Running', 'Running'],
     ['Failed', 'Failed'],
     ['Error', 'Error'],
-    ['Skipped', 'Skipped']
+    ['Skipped', 'Skipped'],
+    ['Terminated', 'Terminated']
   ]);
 
   transform(phase: WorkflowPhase, ...args: any[]): any {
