@@ -4,6 +4,7 @@ import { AuthService } from "../auth.service";
 import { AuthServiceService } from "../../../api";
 import { NamespaceTracker } from "../../namespace/namespace-tracker.service";
 import { AppRouter } from "../../router/app-router.service";
+import { MatSnackBar } from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-login',
@@ -17,6 +18,7 @@ export class LoginComponent implements OnInit {
   redirectUrl = null;
 
   constructor(
+      private snackBar: MatSnackBar,
       private formBuilder: FormBuilder,
       private authService: AuthService,
       private appRouter: AppRouter,
@@ -33,6 +35,8 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.snackBar.dismiss();
+
     const state = history.state;
     if(state.referer) {
       this.redirectUrl = state.referer;
@@ -50,7 +54,7 @@ export class LoginComponent implements OnInit {
 
     this.apiAuthService.isValidToken({token: token})
         .subscribe(res => {
-            this.authService.setAuthToken(tokenValue, res.domain);
+            this.authService.setAuthToken(tokenValue);
 
             this.namespaceTracker.getNamespaces();
 
