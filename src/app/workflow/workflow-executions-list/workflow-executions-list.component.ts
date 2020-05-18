@@ -42,16 +42,11 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
         this.workflowServiceService.terminateWorkflowExecution(this.namespace, workflow.uid)
             .subscribe(res => {
                 workflow.phase = 'Terminated';
-                // todo check below
                 workflow.finishedAt = (new Date()).toLocaleDateString();
                 this.snackbarRef = this.snackbar.open('Workflow terminated', 'OK');
                 this.executionTerminated.emit();
             }, err => {
                 this.snackbarRef = this.snackbar.open('Unable to terminate workflow', 'OK');
             })
-    }
-
-    key(namespace: string, name:string): string {
-        return `${namespace}_${name}`;
     }
 }
