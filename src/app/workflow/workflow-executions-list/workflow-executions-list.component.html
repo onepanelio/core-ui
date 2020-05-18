@@ -27,7 +27,6 @@
                 <img *ngIf="workflow.phase" class="phase-image" [src]="workflow.phase | phaseImage"/>
                 <div class="ml-2 font-roboto-bold font-weight-bold">{{workflow.phase | phaseTranslate}}</div>
                 <span *ngIf="workflow && workflow.succeeded" class="ml-1"> in </span>
-                <span *ngIf="workflow && workflow.terminated" class="ml-1"> Terminated </span>
                 <app-clock
                            class="ml-2"
                            [startedAt]="workflow.startedAt"

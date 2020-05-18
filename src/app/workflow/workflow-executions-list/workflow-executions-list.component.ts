@@ -121,6 +121,13 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
     onTerminate(workflow: WorkflowExecution) {
         this.workflowServiceService.terminateWorkflowExecution(this.namespace, workflow.uid)
             .subscribe(res => {
+                const key = this.key(this.namespace, workflow.name);
+                if(this.watchingWorkflowsMap.has(key)) {
+                    this.watchingWorkflowsMap.get(key).close();
+                    this.watchingWorkflowsMap.delete(key);
+                }
+                workflow.phase = 'Terminated';
+                workflow.finishedAt = new Date();
                 this.snackbarRef = this.snackbar.open('Workflow stopped', 'OK');
                 this.executionTerminated.emit();
             }, err => {
