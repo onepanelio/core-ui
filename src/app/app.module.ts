@@ -116,6 +116,7 @@ import { WorkspaceUpdatingComponent } from './workspace/workspace-status/workspa
 import { ButtonComponent } from './ui-tools/button/button.component';
 import { LoadingContentComponent } from './ui-tools/loading-content/loading-content.component';
 import { LabelsViewerComponent } from './labels/labels-viewer/labels-viewer.component';
+import { WorkflowIsActivePipe } from './workflow/pipes/workflow-is-active/workflow-is-active.pipe';
 
 @NgModule({
     declarations: [
@@ -203,6 +204,7 @@ import { LabelsViewerComponent } from './labels/labels-viewer/labels-viewer.comp
         ButtonComponent,
         LoadingContentComponent,
         LabelsViewerComponent,
+        WorkflowIsActivePipe,
     ],
     entryComponents: [
         WorkflowExecuteDialogComponent,
