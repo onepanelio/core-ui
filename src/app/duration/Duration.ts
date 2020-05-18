@@ -66,7 +66,7 @@ export class Duration {
                 minutesString = '0' + minutesString;
             }
 
-            return `${hours.toFixed(0)}:${minutesString} hours`;
+            return `${hours.toFixed(0)}:${minutesString} hr`;
         }
 
         return Duration.formatDuration(started, finished) + ' min';
@@ -97,7 +97,7 @@ export class Duration {
                 minutesString = '0' + minutesString;
             }
 
-            return `${hours.toFixed(0)}:${minutesString} hours`;
+            return `${hours.toFixed(0)}:${minutesString} hr`;
         }
 
         return Duration.formatDuration(started, finished) + ' min';
