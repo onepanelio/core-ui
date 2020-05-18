@@ -128,10 +128,10 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
                 }
                 workflow.phase = 'Terminated';
                 workflow.finishedAt = new Date();
-                this.snackbarRef = this.snackbar.open('Workflow stopped', 'OK');
+                this.snackbarRef = this.snackbar.open('Workflow terminated', 'OK');
                 this.executionTerminated.emit();
             }, err => {
-                this.snackbarRef = this.snackbar.open('Unable to stop workflow', 'OK');
+                this.snackbarRef = this.snackbar.open('Unable to terminate workflow', 'OK');
             })
     }
 

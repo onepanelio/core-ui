@@ -141,7 +141,7 @@ export class WorkflowExecution {
   createdAt: string;
 
   startedAt: string;
-  finishedAt: string;
+  finishedAt: string|Date;
 
   name: string;
   phase?: string;
