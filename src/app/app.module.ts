@@ -115,6 +115,7 @@ import { WorkspaceViewParametersComponent } from './workspace/workspace-view/wor
 import { WorkspaceUpdatingComponent } from './workspace/workspace-status/workspace-updating/workspace-updating.component';
 import { ButtonComponent } from './ui-tools/button/button.component';
 import { LoadingContentComponent } from './ui-tools/loading-content/loading-content.component';
+import { LabelsViewerComponent } from './labels/labels-viewer/labels-viewer.component';
 
 @NgModule({
     declarations: [
@@ -201,6 +202,7 @@ import { LoadingContentComponent } from './ui-tools/loading-content/loading-cont
         WorkspaceUpdatingComponent,
         ButtonComponent,
         LoadingContentComponent,
+        LabelsViewerComponent,
     ],
     entryComponents: [
         WorkflowExecuteDialogComponent,

@@ -128,7 +128,6 @@ export class WorkflowComponent implements OnInit, OnDestroy {
             this.finishedAt = res.finishedAt;
           }
 
-
           if(this.socket) {
             this.socket.close();
             this.socket = null;
