@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } 
 import { NodeStatus } from "../node/node.service";
 import { AceEditorComponent } from "ng2-ace-editor";
 import { WorkflowService } from "../workflow/workflow.service";
-import { Subscription } from "rxjs";
+import { strings } from "../../utility/strings";
 
 @Component({
   selector: 'app-logs',
@@ -41,6 +41,19 @@ export class LogsComponent implements OnInit, OnDestroy {
   @Input() namespace: string;
   @Input() workflowName: string;
   @Input() podId: string;
+
+  /**
+   * Maximum number of lines to display in the log
+   */
+  @Input() maxLines = 2000;
+
+  /**
+   * How many lines we delete one the maxLines limit is reached.
+   *
+   * So if you have 100 max lines, and a linesChunkDelete of 10, once you hit 100 lines, the lines will be reduced to
+   * 90, deleting from the front.
+   */
+  @Input() linesChunkDelete = 100;
   @Output() closeClicked = new EventEmitter();
 
   private _nodeInfo;
@@ -95,9 +108,67 @@ export class LogsComponent implements OnInit, OnDestroy {
   // Utility to determine if we can change the scrollToBottom value.
   canChangeScrollToBottom = true;
 
+  // The number of lines of log text we have.
+  private lines: number = 0;
+
+  // The total number of lines we have had.
+  private totalLines: number = 0;
+
   constructor(private workflowService: WorkflowService) { }
 
   ngOnInit(): void {
+  }
+
+  clearLog() {
+    this.logText = '';
+    this.lines = 0;
+    this.totalLines = 0;
+
+    this.onLogsUpdated();
+  }
+
+  /**
+   * Append text to the log.
+   *
+   * @param text
+   */
+  writeLog(text: string) {
+    if(this.lines > this.maxLines) {
+      const indexCount = strings.findNthIndex(this.logText, "\n", this.linesChunkDelete);
+
+      const index = indexCount['index'];
+      const count = indexCount['count'];
+
+      if(index > -1) {
+        this.logText = this.logText.substr(index + 1);
+
+        this.lines -= count;
+
+        // keep track of the total lines, so the editor displays the correct line number
+        this.aceEditor.setOptions({
+          firstLineNumber: this.totalLines - this.lines + 1
+        })
+
+      }
+    }
+
+    this.logText += text;
+
+    // Weird, but fast?
+    // https://stackoverflow.com/questions/881085/count-the-number-of-occurrences-of-a-character-in-a-string-in-javascript
+    const newLineCount = (text.split("\n").length - 1);
+    this.lines += newLineCount;
+    this.totalLines += newLineCount;
+
+    this.onLogsUpdated();
+  }
+
+  /**
+   * Append text to the log, and then append a newline.
+   * @param text
+   */
+  writeLogLn(text: string) {
+    this.writeLog(text + "\n");
   }
 
   getLogs() {
@@ -114,7 +185,7 @@ export class LogsComponent implements OnInit, OnDestroy {
     }
 
     // Clean up the log text as the new node/logs provider will have new logs.
-    this.logText = '';
+    this.clearLog();
 
     this.socket = this.workflowService.watchLogs(this.namespace, this.workflowName, this.podId);
     this.socket.onmessage = (event) => {
@@ -122,9 +193,7 @@ export class LogsComponent implements OnInit, OnDestroy {
           const jsonData = JSON.parse(event.data);
 
           if (jsonData.result && jsonData.result.content) {
-            this.logText += jsonData.result.content + '\n';
-
-            this.onLogsUpdated();
+            this.writeLogLn(jsonData.result.content);
           }
         } catch (e) {
            console.error(e);
