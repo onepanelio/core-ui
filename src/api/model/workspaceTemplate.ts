@@ -22,5 +22,6 @@ export interface WorkspaceTemplate {
     createdAt?: string;
     workflowTemplate?: WorkflowTemplate;
     labels?: Array<KeyValue>;
+    isArchived?: boolean;
 }
 

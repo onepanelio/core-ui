@@ -11,6 +11,7 @@ import { MatDialog } from "@angular/material/dialog";
 export class WorkspaceIdentifierComponent implements OnInit {
   @Input() namespace: string;
   @Input() workspace: Workspace;
+  loadingLabels = false;
 
   constructor(
       private labelService: LabelServiceService,
@@ -38,10 +39,15 @@ export class WorkspaceIdentifierComponent implements OnInit {
         return;
       }
 
+      this.loadingLabels = true;
+
       this.labelService.replaceLabels(this.namespace, 'workspace', this.workspace.uid, {
         items: data
       }).subscribe(res => {
+        this.loadingLabels = false;
         this.workspace.labels = res.labels;
+      }, err => {
+        this.loadingLabels = false;
       })
     });
   }

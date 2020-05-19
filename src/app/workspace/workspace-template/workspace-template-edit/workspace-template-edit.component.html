@@ -24,9 +24,10 @@
         </div>
         <div class="mt-5 d-flex justify-content-between">
             <button mat-button class="font-medium-gray cancel-button" (click)="cancel()">CANCEL</button>
-            <div>
-                <button mat-flat-button color="accent" class="op-rounded op-button border-secondary" (click)="save()">Save</button>
-            </div>
+            <app-button (click)="save()" [loading]="loading">
+                <span>Save</span>
+                <span class="loading">Saving</span>
+            </app-button>
         </div>
     </div>
 </form>

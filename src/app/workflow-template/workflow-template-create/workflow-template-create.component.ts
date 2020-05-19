@@ -21,6 +21,8 @@ import { ManifestDagEditorComponent } from "../../manifest-dag-editor/manifest-d
 import { AppRouter } from "../../router/app-router.service";
 const aceRange = ace.acequire('ace/range').Range;
 
+type WorkflowTemplateCreateState = 'new' | 'creating';
+
 @Component({
   selector: 'app-workflow-template-create',
   templateUrl: './workflow-template-create.component.html',
@@ -36,7 +38,8 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy {
 
   previousManifestText: string;
   manifestText: string;
-  serverError: Alert;
+  state: WorkflowTemplateCreateState = 'new';
+  loading = true;
 
   namespace: string;
 
@@ -101,6 +104,7 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy {
       return;
     }
 
+    this.state = 'creating';
     const manifestText = this.manifestDagEditor.manifestTextCurrent;
     this.workflowTemplateServiceService
         .createWorkflowTemplate(this.namespace, {
@@ -110,7 +114,10 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy {
         })
         .subscribe(res => {
           this.appRouter.navigateToWorkflowTemplateView(this.namespace, res.uid);
+          this.state = 'new';
         }, (err: HttpErrorResponse) => {
+          this.state = 'new';
+
           if(err.status === 409) {
             this.templateNameInput.setErrors({
               conflict: 'true',

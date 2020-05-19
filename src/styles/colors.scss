@@ -10,7 +10,8 @@ $toolbar-white: #F5F5F5;
 $primary: #01579b;
 $primary-dark: rgb(1,87,155);
 $primary-darker: #003D7A;
-$secondary: #ff9100;
+$secondary: #FFC84C;
+$secondary-light: #FFF7E4;
 $danger: #d32345;
 $danger-medium: #E4CACF;
 $danger-light: #FEE9ED;
@@ -40,6 +41,7 @@ $colors: (
   "primary-dark": $primary-dark,
   "primary-darker": $primary-darker,
   "secondary": $secondary,
+  "secondary-light": $secondary-light,
   "danger": $danger,
   "danger-medium": $danger-medium,
   "danger-light": $danger-light,

@@ -16,16 +16,21 @@
         <span *ngIf="workflow && workflow.succeeded" class="ml-1"> in </span>
         <app-clock *ngIf="workflow"
                    class="ml-1"
-                   [startedAt]="workflow.workflowStatus.startedAt"
-                   [finishedAt]="workflow.workflowStatus.finishedAt">
+                   [startedAt]="startedAt"
+                   [finishedAt]="finishedAt">
         </app-clock>
 
         <div class="flex-grow-1">
         </div>
 
-        <div>
-          <button mat-flat-button *ngIf="!workflow?.active" color="primary" (click)="runAgain()">RUN AGAIN</button>
-        </div>
+        <app-button
+                *ngIf="!workflow?.active"
+                color="primary"
+                (click)="runAgain()"
+                [loading]="cloning">
+          <span>RUN AGAIN</span>
+          <span class="loading">RUNNING AGAIN</span>
+        </app-button>
       </div>
 
       <div>
@@ -43,16 +48,20 @@
           <button mat-button color="primary" class="font-proxima-bold font-size-regular ml-2" (click)="onShowTotalYaml()"><i class="fas fa-terminal mr-2"></i>VIEW YAML</button>
         </div>
       </div>
-      <div class="d-flex align-items-center font-roboto font-size-small color-medium-gray mt-3">
+      <div class="d-flex align-items-baseline font-roboto font-size-small color-medium-gray mt-3">
         <div>
-          Started: <app-date *ngIf="workflow" [dateTime]="workflow.workflowStatus.startedAt"></app-date>
+          Started: <app-date *ngIf="workflow" [dateTime]="startedAt"></app-date>
         </div>
         <div *ngIf="workflow?.workflowStatus?.finishedAt" class="ml-5">
-          Ended: <app-date *ngIf="workflow" [dateTime]="workflow.workflowStatus.finishedAt"></app-date>
+          Ended: <app-date *ngIf="workflow" [dateTime]="finishedAt"></app-date>
         </div>
 
-        <div *ngIf="labels?.length > 0" class="ml-5">Labels</div>
-        <app-labels-list-view *ngIf="labels?.length > 0" [labels]="labels" class="d-inline-block ml-2"></app-labels-list-view>
+        <app-labels-viewer
+                *ngIf="labels?.length !== 0 || loadingLabels"
+                class="ml-2"
+                [labels]="labels"
+                [loading]="loadingLabels">
+        </app-labels-viewer>
       </div>
 
       <div class="op-h2 mt-4 mb-4">Parameters</div>
@@ -88,7 +97,7 @@
        class="ml-3 op-border scroll-overflow"
        [ngClass]="{ 'visible': showNodeInfo, 'hidden': !showNodeInfo }"
        [namespace]="namespace"
-       [name]="name"
+       [name]="uid"
        [visible]="showNodeInfo"
        [style.height]="nodeInfoHeight"
        [style.minHeight]="nodeInfoHeight"

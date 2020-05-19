@@ -66,7 +66,7 @@ export class ClockComponent implements OnInit, OnDestroy {
   @Input() interval = 1000;
 
   durationString = this.defaultString;
-  @Input() durationFormatter = Duration.formatDuration;
+  @Input() durationFormatter = Duration.formatDurationToHours;
 
   constructor() { }
 

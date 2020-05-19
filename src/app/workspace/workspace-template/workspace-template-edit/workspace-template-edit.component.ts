@@ -47,6 +47,8 @@ export class WorkspaceTemplateEditComponent implements OnInit {
   selectedWorkspaceTemplateVersion: string = "";
   workspaceTemplateVersions: WorkflowTemplate[] = [];
 
+  @Input() loading = false;
+
   constructor(
       private formBuilder: FormBuilder,
       private activatedRoute: ActivatedRoute,

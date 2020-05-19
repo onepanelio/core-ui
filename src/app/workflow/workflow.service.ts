@@ -12,6 +12,7 @@ import { WorkflowExecution as ApiWorkflowExecution, WorkflowTemplate } from "../
 export interface Workflow {
   uid: string;
   createdAt: string;
+  startedAt: string;
   finishedAt?: string;
   name: string;
   manifest?: string;
@@ -47,6 +48,7 @@ export class SimpleWorkflowDetail {
   manifest?: string;
   yamlManifest?: string;
   workflowTemplate: WorkflowTemplate;
+  _phase: WorkflowPhase;
 
   constructor(workflow: ApiWorkflowExecution) {
     this.uid = workflow.uid;
@@ -68,7 +70,15 @@ export class SimpleWorkflowDetail {
     return this.jsonManifest.status;
   }
 
+  set phase(value: WorkflowPhase) {
+    this._phase = value;
+  }
+
   get phase(): WorkflowPhase|null {
+    if(this._phase) {
+      return this._phase;
+    }
+
     if(!this.jsonManifest) {
       return null;
     }
@@ -127,12 +137,13 @@ export class SimpleWorkflowDetail {
   }
 }
 
+// todo deprecated. Remove this and use API generated WorkflowExecution.
 export class WorkflowExecution {
   uid: string;
   createdAt: string;
 
   startedAt: string;
-  finishedAt: string;
+  finishedAt: string|Date;
 
   name: string;
   phase?: string;
@@ -194,122 +205,12 @@ export class WorkflowExecution {
   }
 }
 
-export interface ListWorkflowRequest {
-  namespace: string;
-  workflowTemplateUid?: string;
-  workflowTemplateVersion?: number;
-  pageSize?: number;
-  page?: number;
-}
-
-export class ReadableStreamWrapper {
-  private decoder = new TextDecoder('utf-8');
-  private line = '';
-  private cancelled;
-  private readableStream;
-
-  subscriber;
-  reader;
-
-  constructor() {
-  }
-
-  getReader() {
-    if(this.readableStream) {
-      return this.readableStream;
-    }
-
-    const self = this;
-
-    this.readableStream = new ReadableStream({
-      start(controller) {
-        return pump();
-        function pump() {
-          if(self.cancelled) {
-            controller.close();
-            return () => {};
-          }
-
-          return self.reader.read().then(({ done, value }) => {
-            if(self.cancelled) {
-              controller.close();
-              return () => {};
-            }
-            try {
-
-              // When no more data needs to be consumed, close the stream
-              if (done) {
-                controller.close();
-                self.subscriber.complete();
-                return;
-              }
-              // Enqueue the next data chunk into our target stream
-              controller.enqueue(value);
-
-              let res = '';
-              const textValue = self.decoder.decode(value);
-
-              for (const textItem of textValue.split('\n')) {
-                if (textItem) {
-                  self.line += textItem;
-                  try {
-                    res = JSON.parse(self.line);
-
-                    self.subscriber.next(res);
-                    self.line = '';
-
-                  } catch (e) {
-                    // Keep going, line is not ready yet.
-                  }
-                }
-              }
-
-            } catch (e) {
-              self.subscriber.error(e);
-            }
-            return pump();
-          });
-        }
-      }
-    });
-
-    return this.readableStream;
-  }
-
-  cancel(reason?: any) {
-    this.cancelled = true;
-    if(this.readableStream) {
-      this.readableStream.cancel(reason);
-    }
-  }
-}
-
 @Injectable()
 export class WorkflowService {
-  constructor(
-      private client: HttpClient,
-      private authService: AuthService) {
-  }
-
   watchWorkflow(namespace: string, name: string) {
     const url =`${environment.baseWsUrl}/apis/v1beta1/${namespace}/workflow_executions/${name}/watch`;
 
     return new WebSocket(url);
-  }
-
-  getWorkflow(namespace: string, uid: string) {
-    return this.client.get<SimpleWorkflowDetail>(`${environment.baseUrl}/apis/v1beta1/${namespace}/workflow_executions/${uid}`)
-        .pipe(
-            map(res => {
-              return new SimpleWorkflowDetail(res);
-            })
-        );
-  }
-
-  terminateWorkflow(namespace: string, name: string) {
-    const url = `${environment.baseUrl}/apis/v1beta1/${namespace}/workflow_executions/${name}/terminate`;
-
-    return this.client.put(url, {});
   }
 
   watchLogs(namespace: string, workflowName: string, podId: string, containerName = 'main') {

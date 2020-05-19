@@ -4,6 +4,8 @@ import { ListWorkflowTemplatesResponse, WorkflowTemplate, WorkflowTemplateServic
 import { Pagination } from "./workflow-template-view/workflow-template-view.component";
 import { PageEvent } from "@angular/material/paginator";
 
+type WorkflowTemplateState = 'loading-initial-data' | 'loading' | 'new';
+
 @Component({
   selector: 'app-workflow-template',
   templateUrl: './workflow-template.component.html',
@@ -18,6 +20,7 @@ export class WorkflowTemplateComponent implements OnInit {
   workflowTemplates: WorkflowTemplate[] = [];
   pagination = new Pagination();
   getWorkflowTemplatesInterval;
+  state: WorkflowTemplateState = 'loading-initial-data';
 
   constructor(
       private activatedRoute: ActivatedRoute,
@@ -35,6 +38,7 @@ export class WorkflowTemplateComponent implements OnInit {
       }
 
       this.getWorkflowTemplatesInterval = setInterval(() => {
+        this.state = 'loading';
         this.getWorkflowTemplates()
       }, 5000);
     });
@@ -57,6 +61,10 @@ export class WorkflowTemplateComponent implements OnInit {
           } else {
             this.workflowTemplates = [];
           }
+
+          this.state = 'new';
+        }, err => {
+          this.state = 'new';
         })
   }
 

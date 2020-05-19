@@ -11,7 +11,6 @@ import { AppRouter } from "../../router/app-router.service";
 import {
     KeyValue,
     LabelServiceService,
-    WorkflowServiceService,
     WorkflowTemplate,
     WorkflowTemplateServiceService
 } from "../../../api";

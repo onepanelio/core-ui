@@ -45,7 +45,10 @@
     <div class="d-flex align-items-baseline mt-5">
       <div class="header-2-text">Activity</div>
       <div class="flex-grow-1"></div>
-      <button mat-flat-button color="accent" class="op-rounded op-button" (click)="executeWorkflow()">Execute Workflow</button>
+      <app-button (click)="executeWorkflow()" [loading]="state === 'executing'">
+        <span>Execute Workflow</span>
+        <span class="loading">Executing Workflow</span>
+      </app-button>
     </div>
 
     <mat-tab-group class="no-bottom-border" (selectedTabChange)="onTabChange($event)" [dynamicHeight]="true">
@@ -54,7 +57,7 @@
           <app-workflow-executions-list
               *ngIf="workflows"
               [namespace]="namespace"
-              [workflows]="workflows"
+              [workflowExecutions]="workflows"
               (executionTerminated)="onWorkflowExecutionTerminated()">
           </app-workflow-executions-list>
           <mat-paginator class="no-background font-size-small"

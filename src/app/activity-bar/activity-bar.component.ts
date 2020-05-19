@@ -39,8 +39,8 @@ export class ActivityBarComponent implements OnInit {
 
     if(this._status === 'terminated') {
       this.classes = {
-        'bg-primary-light': true,
-        'border-primary': true,
+        'bg-secondary-light': true,
+        'border-secondary': true,
       }
     }
   }

@@ -113,6 +113,10 @@ import { WorkspaceIdentifierComponent } from './workspace/workspace-info/workspa
 import { ValuePipe } from "./fields/pipes/value.pipe";
 import { WorkspaceViewParametersComponent } from './workspace/workspace-view/workspace-view-parameters/workspace-view-parameters.component';
 import { WorkspaceUpdatingComponent } from './workspace/workspace-status/workspace-updating/workspace-updating.component';
+import { ButtonComponent } from './ui-tools/button/button.component';
+import { LoadingContentComponent } from './ui-tools/loading-content/loading-content.component';
+import { LabelsViewerComponent } from './labels/labels-viewer/labels-viewer.component';
+import { WorkflowIsActivePipe } from './workflow/pipes/workflow-is-active/workflow-is-active.pipe';
 
 @NgModule({
     declarations: [
@@ -197,6 +201,10 @@ import { WorkspaceUpdatingComponent } from './workspace/workspace-status/workspa
         ValuePipe,
         WorkspaceViewParametersComponent,
         WorkspaceUpdatingComponent,
+        ButtonComponent,
+        LoadingContentComponent,
+        LabelsViewerComponent,
+        WorkflowIsActivePipe,
     ],
     entryComponents: [
         WorkflowExecuteDialogComponent,
