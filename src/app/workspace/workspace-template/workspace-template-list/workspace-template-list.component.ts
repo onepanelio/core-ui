@@ -15,6 +15,7 @@ import { WorkspaceExecuteDialogComponent } from "../../workspace-execute-dialog/
 import { PageEvent } from "@angular/material/paginator";
 import { AppRouter } from "../../../router/app-router.service";
 import { AlertService } from "../../../alert/alert.service";
+import { HttpErrorResponse } from "@angular/common/http";
 
 @Component({
   selector: 'app-workspace-template-list',
@@ -146,11 +147,20 @@ export class WorkspaceTemplateListComponent implements OnInit {
           }
 
           this.getWorkspaceTemplates();
-        }, err => {
+        }, (err: HttpErrorResponse) => {
+          if(err.status === 400 && err.error.code  === 9) {
+            this.alertService.storeAlert(new Alert({
+              message: 'Error deleting template ' + template.uid + ', it has running workspaces',
+              type: 'danger',
+            }));
+            return;
+          }
+
           this.alertService.storeAlert(new Alert({
             message: 'Error deleting template ' + template.uid,
             type: 'danger',
           }));
+
         })
   }
 
