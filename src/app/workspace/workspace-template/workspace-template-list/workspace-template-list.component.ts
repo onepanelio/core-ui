@@ -14,6 +14,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { WorkspaceExecuteDialogComponent } from "../../workspace-execute-dialog/workspace-execute-dialog.component";
 import { PageEvent } from "@angular/material/paginator";
 import { AppRouter } from "../../../router/app-router.service";
+import { AlertService } from "../../../alert/alert.service";
 
 @Component({
   selector: 'app-workspace-template-list',
@@ -49,6 +50,7 @@ export class WorkspaceTemplateListComponent implements OnInit {
       private workspaceService: WorkspaceServiceService,
       private activatedRoute: ActivatedRoute,
       private dialog: MatDialog,
+      private alertService: AlertService,
   ) { }
 
   ngOnInit() {
@@ -136,7 +138,20 @@ export class WorkspaceTemplateListComponent implements OnInit {
   }
 
   deleteWorkspaceTemplate(template: WorkspaceTemplate) {
-    // TODO
+    this.workspaceTemplateService.archiveWorkspaceTemplate(this.namespace, template.uid)
+        .subscribe(res => {
+          const templateIndex = this.workspaceTemplates.indexOf(template);
+          if(templateIndex > -1) {
+            this.workspaceTemplates.splice(templateIndex, 1);
+          }
+
+          this.getWorkspaceTemplates();
+        }, err => {
+          this.alertService.storeAlert(new Alert({
+            message: 'Error deleting template ' + template.uid,
+            type: 'danger',
+          }));
+        })
   }
 
   onPageChange(event: PageEvent) {
