@@ -83,7 +83,7 @@
       <div class="body">This is where all your workflow templates live.</div>
       <a class="action underline pointer-hover" [routerLink]="['/', this.namespace, 'workflow-templates', 'create']">Creating a new workflow template</a>
     </app-call-to-action>
-    <app-loading-content *ngIf="state === 'loading-initial-data'">
+    <app-loading-content *ngIf="state === 'initialization'">
       Loading Workflows
     </app-loading-content>
   </div>

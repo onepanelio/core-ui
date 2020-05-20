@@ -54,7 +54,7 @@ export class LoginComponent implements OnInit {
 
     this.apiAuthService.isValidToken({token: token})
         .subscribe(res => {
-            this.authService.setAuthToken(tokenValue);
+            this.authService.setAuthToken(tokenValue, res.domain);
 
             this.namespaceTracker.getNamespaces();
 
