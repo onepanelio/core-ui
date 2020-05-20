@@ -16,6 +16,7 @@ import { PageEvent } from "@angular/material/paginator";
 import { AppRouter } from "../../../router/app-router.service";
 import { AlertService } from "../../../alert/alert.service";
 import { HttpErrorResponse } from "@angular/common/http";
+import { WorkspaceTemplateCreateComponent } from "../workspace-template-create/workspace-template-create.component";
 
 @Component({
   selector: 'app-workspace-template-list',
@@ -23,6 +24,7 @@ import { HttpErrorResponse } from "@angular/common/http";
   styleUrls: ['./workspace-template-list.component.scss']
 })
 export class WorkspaceTemplateListComponent implements OnInit {
+  @ViewChild(WorkspaceTemplateCreateComponent, {static: false}) workspaceTemplateCreateEditor: WorkspaceTemplateCreateComponent;
   @ViewChild(WorkspaceTemplateEditComponent, {static: false}) workspaceTemplateEditor: WorkspaceTemplateEditComponent;
 
   blankTemplate: WorkspaceTemplate = {
@@ -90,8 +92,13 @@ export class WorkspaceTemplateListComponent implements OnInit {
         .subscribe(res => {
           this.getWorkspaceTemplates();
           this.cancelWorkspaceTemplate();
-        }, err => {
-          console.log(err);
+        }, (err: HttpErrorResponse) => {
+          if(err.status === 409) {
+            this.workspaceTemplateCreateEditor.setAlert(new Alert({
+              message: err.error.message,
+              type: 'danger',
+            }));
+          }
         })
   }
 
