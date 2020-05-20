@@ -45,7 +45,7 @@ export class LogsComponent implements OnInit, OnDestroy {
   /**
    * Maximum number of lines to display in the log
    */
-  @Input() maxLines = 2000;
+  @Input() maxLines = 30000;
 
   /**
    * How many lines we delete one the maxLines limit is reached.
@@ -149,8 +149,11 @@ export class LogsComponent implements OnInit, OnDestroy {
           firstLineNumber: this.totalLines - this.lines + 1
         })
 
+        this.aceEditor.setText(this.logText);
       }
     }
+
+    this.aceEditor.getEditor().insert(text);
 
     this.logText += text;
 
