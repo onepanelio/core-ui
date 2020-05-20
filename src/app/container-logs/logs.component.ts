@@ -45,7 +45,7 @@ export class LogsComponent implements OnInit, OnDestroy {
   /**
    * Maximum number of lines to display in the log
    */
-  @Input() maxLines = 300000;
+  @Input() maxLines = 30000;
 
   /**
    * How many lines we delete one the maxLines limit is reached.
