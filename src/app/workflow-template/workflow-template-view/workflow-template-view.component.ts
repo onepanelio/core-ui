@@ -216,6 +216,11 @@ export class WorkflowTemplateViewComponent implements OnInit {
         .subscribe(res => {
           this.appRouter.navigateToWorkflowExecution(this.namespace, res.name);
         }, err => {
+          this.state = 'new';
+          this.alertService.storeAlert(new Alert({
+            message: 'Unable to execute workflow',
+            type: 'danger'
+          }));
         });
   }
 
