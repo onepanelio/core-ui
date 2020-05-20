@@ -103,6 +103,11 @@ export class WorkflowComponent implements OnInit, OnDestroy {
       if(this.clock) {
         this.clock.reset(true);
       }
+      
+      this.showNodeInfo = false;
+      this.selectedNodeId = null;
+      this.showLogs = false;
+      this.showYaml = false;
       this.startCheckingWorkflow();
     });
   }
