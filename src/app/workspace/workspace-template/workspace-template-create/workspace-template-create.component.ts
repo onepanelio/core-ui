@@ -5,6 +5,7 @@ import { ActivatedRoute } from "@angular/router";
 import { map } from "rxjs/operators";
 import { LabelsEditComponent } from "../../../labels/labels-edit/labels-edit.component";
 import { ManifestDagEditorComponent } from "../../../manifest-dag-editor/manifest-dag-editor.component";
+import { Alert } from "../../../alert/alert";
 
 @Component({
   selector: 'app-workspace-template-create',
@@ -80,5 +81,9 @@ export class WorkspaceTemplateCreateComponent implements OnInit {
     };
 
     this.saveEmitted.emit(body);
+  }
+
+  setAlert(alert: Alert) {
+    this.manifestDagEditor.notification = alert;
   }
 }
