@@ -29,7 +29,8 @@ export class Pagination {
   pageSize: number = 15;
 }
 
-type WorkflowTemplateViewState = 'new' | 'executing';
+type WorkflowTemplateViewState = 'initialization' | 'new' | 'executing';
+type WorkflowTemplateViewExecutionsState = 'initialization' | 'new' | 'loading';
 
 @Component({
   selector: 'app-workflow-template-view',
@@ -52,7 +53,8 @@ export class WorkflowTemplateViewComponent implements OnInit {
   manifestText: string;
   namespace: string;
   uid: string;
-  state: WorkflowTemplateViewState = 'new';
+  state: WorkflowTemplateViewState = 'initialization';
+  workflowExecutionsState: WorkflowTemplateViewExecutionsState = 'initialization';
 
   workflows: WorkflowExecution[] = [];
   cronWorkflowResponse: ListCronWorkflowsResponse;
@@ -98,7 +100,10 @@ export class WorkflowTemplateViewComponent implements OnInit {
     this.showDag();
   }
 
-  workflowsInterval;
+  /**
+   * refers to a setInterval. Used to make requests to update the workflows.
+   */
+  workflowsInterval: number;
 
   constructor(
     private snackBar: MatSnackBar,
@@ -116,6 +121,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
 
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(next => {
+      this.state = 'initialization';
       this.namespace = next.get('namespace');
       this.uid = next.get('uid');
 
@@ -142,16 +148,22 @@ export class WorkflowTemplateViewComponent implements OnInit {
       .subscribe(res => {
         this.workflowTemplate = res;
         this.labels = res.labels;
+        this.state = 'new';
       });
   }
 
   getWorkflows() {
+    if(this.workflowExecutionsState !== 'initialization') {
+      this.workflowExecutionsState = 'loading';
+    }
+
     const page = this.workflowPagination.page + 1;
     this.workflowServiceService.listWorkflowExecutions(this.namespace, this.uid, null, this.workflowPagination.pageSize, page)
       .subscribe(res => {
         this.workflowResponse = res;
         this.workflows = res.workflowExecutions;
 
+        this.workflowExecutionsState = 'new';
         this.hasWorkflowExecutions = !(page === 1 && !res.workflowExecutions);
       });
   }

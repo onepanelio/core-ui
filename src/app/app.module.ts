@@ -8,7 +8,6 @@ import { NodeComponent } from './node/node.component';
 import { WorkflowComponent } from './workflow/workflow.component';
 import { NodeInfoComponent } from './node-info/node-info.component';
 import { WorkflowTemplateComponent } from './workflow-template/workflow-template.component';
-import { WorkflowTemplateListComponent } from './workflow-template/workflow-template-list/workflow-template-list.component';
 import { HttpClientModule } from '@angular/common/http';
 import { WorkflowTemplateViewComponent } from './workflow-template/workflow-template-view/workflow-template-view.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -127,7 +126,6 @@ import { WorkflowIsActivePipe } from './workflow/pipes/workflow-is-active/workfl
         WorkflowComponent,
         NodeInfoComponent,
         WorkflowTemplateComponent,
-        WorkflowTemplateListComponent,
         WorkflowTemplateViewComponent,
         WorkflowTemplateEditComponent,
         WorkflowTemplateCreateComponent,
