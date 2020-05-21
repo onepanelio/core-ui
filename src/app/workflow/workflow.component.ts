@@ -17,6 +17,7 @@ import {
   ConfirmationDialogComponent,
   ConfirmationDialogData
 } from "../confirmation-dialog/confirmation-dialog.component";
+import { WorkflowExecutionConstants } from "./models";
 const aceRange = ace.acequire('ace/range').Range;
 
 @Component({
@@ -380,13 +381,8 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   }
 
   onTerminate() {
-    const confirmData: ConfirmationDialogData = {
-      title: 'Are you sure you want to terminate the workflow?',
-      confirmText: 'TERMINATE',
-      type: 'delete',
-    };
     const dialog = this.dialog.open(ConfirmationDialogComponent, {
-      data: confirmData,
+      data: WorkflowExecutionConstants.getConfirmTerminateDialogData(),
     })
 
     dialog.afterClosed().subscribe(res => {
