@@ -124,7 +124,9 @@ export class SimpleWorkflowDetail {
 
       jsonTemplateManifest.arguments.parameters = this.jsonManifest.spec.arguments.parameters;
     }
-    this.yamlManifest = yaml.safeDump(jsonTemplateManifest);
+    this.yamlManifest = yaml.safeDump(jsonTemplateManifest, {
+      lineWidth: 10000, // arbitrary large value, we don't want to restrict on width.
+    });
   }
 
   getNodeStatus(nodeId: string): NodeStatus|null {
