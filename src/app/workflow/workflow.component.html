@@ -87,6 +87,7 @@
         <app-dag
           class="mt-4 h-100"
           [style.height]="height"
+          [style.minHeight]="'500px'"
           (nodeClicked)="handleNodeClicked($event)"
           [identifier]="dagIdentifier">
         </app-dag>
