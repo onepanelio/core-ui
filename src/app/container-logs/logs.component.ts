@@ -127,6 +127,14 @@ export class LogsComponent implements OnInit, OnDestroy {
     this.onLogsUpdated();
   }
 
+  private appendTextToAceEditor(text: string) {
+    const session = this.aceEditor.getEditor().session;
+    session.insert({
+      row: session.getLength(),
+      column: 0
+    }, text);
+  }
+
   /**
    * Append text to the log.
    *
@@ -153,7 +161,7 @@ export class LogsComponent implements OnInit, OnDestroy {
       }
     }
 
-    this.aceEditor.getEditor().insert(text);
+    this.appendTextToAceEditor(text);
 
     this.logText += text;
 
