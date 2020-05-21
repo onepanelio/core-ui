@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { Parameter } from "../../../api";
 
 @Component({
   selector: 'app-workflow-parameter',
@@ -6,8 +7,7 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./workflow-parameter.component.scss']
 })
 export class WorkflowParameterComponent implements OnInit {
-  @Input() key: string;
-  @Input() value: string;
+  @Input() parameter: Parameter;
 
   constructor() { }
 

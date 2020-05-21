@@ -8,7 +8,7 @@ import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from "@angular/material/s
 import { AceEditorComponent } from "ng2-ace-editor";
 import * as yaml from 'js-yaml';
 import * as ace from 'brace';
-import { KeyValue, LabelServiceService, WorkflowExecution, WorkflowServiceService } from "../../api";
+import { KeyValue, LabelServiceService, Parameter, WorkflowExecution, WorkflowServiceService } from "../../api";
 import { MatDialog } from "@angular/material/dialog";
 import { LabelEditDialogComponent } from "../labels/label-edit-dialog/label-edit-dialog.component";
 import { AppRouter } from "../router/app-router.service";
@@ -72,7 +72,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   showYaml = false;
 
   labels = new Array<KeyValue>();
-  parameters = new Array<{name: string, value: string}>();
+  parameters = new Array<Parameter>();
 
   showAllParameters = false;
 
@@ -125,12 +125,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
         .subscribe(res => {
           this.workflow = new SimpleWorkflowDetail(res);
           this.labels = res.labels;
-
-          let parsedManifest = JSON.parse(res.manifest);
-
-          if(parsedManifest.spec && parsedManifest.spec.arguments && parsedManifest.spec.arguments.parameters) {
-            this.parameters = parsedManifest.spec.arguments.parameters;
-          }
+          this.parameters = res.parameters;
 
           if(res.phase === 'Terminated') {
             this.workflow.phase = 'Terminated';
