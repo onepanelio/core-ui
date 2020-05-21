@@ -13,7 +13,10 @@
     </div>
 
     <div class="mr-5">
-        <button mat-button class="font-weight-bold font-size-regular" color="primary" (click)="onPause(workspace)">
+        <button mat-button
+                class="font-weight-bold font-size-regular" color="primary"
+                (click)="onPause(workspace)"
+                [disabled]="workspace.status.phase !== 'Running'">
             <mat-icon class="vertical-baseline" [fontSet]="'fas'" [fontIcon]="'fa-pause-circle'"></mat-icon>
             PAUSE
         </button>
