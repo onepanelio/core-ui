@@ -2,14 +2,14 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { Parameter } from "../../../api";
 
 @Pipe({
-  name: 'appFieldValue'
+  name: 'appParameterValue'
 })
 export class ValuePipe implements PipeTransform {
   transform(value: any, ...args: any[]): any {
     return this.transfromHint(value);
   }
 
-  // transform, but with types.
+  // transform, but with types for IDE and sanity.
   private transfromHint(value: Parameter): string {
     if(value.type === 'select.select') {
       return this.transformSelect(value);

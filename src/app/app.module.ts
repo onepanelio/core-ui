@@ -108,7 +108,7 @@ import { WorkspaceStatusBarComponent } from './workspace/workspace-status/worksp
 import { WorkspacePhaseIconComponent } from './workspace/workspace-status/workspace-phase-icon/workspace-phase-icon.component';
 import { WorkspacePhaseStatusPipe } from './workspace/workspace-phase-status/workspace-phase-status.pipe';
 import { WorkspaceIdentifierComponent } from './workspace/workspace-info/workspace-identifier/workspace-identifier.component';
-import { ValuePipe } from "./fields/pipes/value.pipe";
+import { ValuePipe } from "./parameters/pipes/value.pipe";
 import { WorkspaceViewParametersComponent } from './workspace/workspace-view/workspace-view-parameters/workspace-view-parameters.component';
 import { WorkspaceUpdatingComponent } from './workspace/workspace-status/workspace-updating/workspace-updating.component';
 import { ButtonComponent } from './ui-tools/button/button.component';

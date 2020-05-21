@@ -1,4 +1,4 @@
-import { WorkflowExecution } from "../../api";
+import { Parameter, WorkflowExecution } from "../../api";
 import { ConfirmationDialogData } from "../confirmation-dialog/confirmation-dialog.component";
 
 export class WorkflowExecutionExtensions {

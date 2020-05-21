@@ -18,6 +18,7 @@ import {
   ConfirmationDialogData
 } from "../confirmation-dialog/confirmation-dialog.component";
 import { WorkflowExecutionConstants } from "./models";
+import { ParameterUtils } from "../parameters/models";
 const aceRange = ace.acequire('ace/range').Range;
 
 @Component({
@@ -120,12 +121,24 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   ngOnInit() {
   }
 
+  private getWorkflowTemplateParametersFromWorkflow(workflow: WorkflowExecution): Array<Parameter> {
+    try {
+      const workflowTemplateManifest = yaml.safeLoad(workflow.workflowTemplate.manifest);
+      return workflowTemplateManifest.arguments.parameters;
+    } catch (e) {
+      console.error(e);
+      return [];
+    }
+  }
+
   startCheckingWorkflow() {
     this.workflowServiceService.getWorkflowExecution(this.namespace, this.uid)
         .subscribe(res => {
           this.workflow = new SimpleWorkflowDetail(res);
           this.labels = res.labels;
-          this.parameters = res.parameters;
+
+          const templateParameters = this.getWorkflowTemplateParametersFromWorkflow(res);
+          this.parameters = ParameterUtils.combineValueAndTemplate(res.parameters, templateParameters);
 
           if(res.phase === 'Terminated') {
             this.workflow.phase = 'Terminated';
