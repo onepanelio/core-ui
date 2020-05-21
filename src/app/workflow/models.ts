@@ -1,4 +1,5 @@
 import { WorkflowExecution } from "../../api";
+import { ConfirmationDialogData } from "../confirmation-dialog/confirmation-dialog.component";
 
 export class WorkflowExecutionExtensions {
     public static activePhases = {
@@ -8,5 +9,19 @@ export class WorkflowExecutionExtensions {
 
     public static isActive(workflow: WorkflowExecution): boolean {
         return this.activePhases[workflow.phase];
+    }
+}
+
+
+export class WorkflowExecutionConstants {
+    /**
+     * Helper method so all terminate dialogs have the same message.
+     */
+    public static getConfirmTerminateDialogData(): ConfirmationDialogData {
+        return {
+            title: 'Are you sure you want to terminate the workflow?',
+            confirmText: 'TERMINATE',
+            type: 'delete',
+        };
     }
 }
