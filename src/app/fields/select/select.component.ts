@@ -11,6 +11,7 @@ export class SelectComponent implements OnInit {
   private _data: Parameter;
   options = new Array<ParameterOption>();
 
+  @Input() disabled = false;
   @Input() form: FormGroup;
   @Input() set data(value: Parameter) {
     this._data = value;

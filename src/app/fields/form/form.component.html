@@ -2,7 +2,7 @@
     <ng-container *ngFor="let fieldDataum of fieldData">
         <ng-container [ngSwitch]="fieldDataum.type">
             <app-textarea class="form-item fix-mat-overflow" *ngSwitchCase="'textarea.textarea'" [data]="fieldDataum" [form]="form"></app-textarea>
-            <app-select class="form-item fix-mat-overflow" *ngSwitchCase="'select.select'" [data]="fieldDataum" [form]="form"></app-select>
+            <app-select class="form-item fix-mat-overflow" *ngSwitchCase="'select.select'" [data]="fieldDataum" [form]="form" [disabled]="disabled"></app-select>
             <app-radio class="form-item fix-mat-overflow" *ngSwitchCase="'input.radio'" [data]="fieldDataum" [form]="form"></app-radio>
             <ng-container *ngSwitchDefault>
                 <app-input class="form-item fix-mat-overflow" *ngIf="isFieldInput(fieldDataum)" [data]="fieldDataum" [inputType]="getInputType(fieldDataum.type)" [form]="form"></app-input>
