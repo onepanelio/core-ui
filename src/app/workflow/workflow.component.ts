@@ -13,6 +13,10 @@ import { MatDialog } from "@angular/material/dialog";
 import { LabelEditDialogComponent } from "../labels/label-edit-dialog/label-edit-dialog.component";
 import { AppRouter } from "../router/app-router.service";
 import { ClockComponent } from "../clock/clock.component";
+import {
+  ConfirmationDialogComponent,
+  ConfirmationDialogData
+} from "../confirmation-dialog/confirmation-dialog.component";
 const aceRange = ace.acequire('ace/range').Range;
 
 @Component({
@@ -376,18 +380,33 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   }
 
   onTerminate() {
-    this.workflowServiceService.terminateWorkflowExecution(this.namespace, this.workflow.uid)
-        .subscribe(res => {
-          if (this.socket) {
-            this.socket.close();
-          }
+    const confirmData: ConfirmationDialogData = {
+      title: 'Are you sure you want to terminate the workflow?',
+      confirmText: 'TERMINATE',
+      type: 'delete',
+    };
+    const dialog = this.dialog.open(ConfirmationDialogComponent, {
+      data: confirmData,
+    })
 
-          this.finishedAt = new Date();
-          this.workflow.phase = 'Terminated';
-          this.snackbarRef = this.snackbar.open('Workflow terminated', 'OK');
-        }, err => {
-          this.snackbarRef = this.snackbar.open('Unable to terminate workflow', 'OK');
-        })
+    dialog.afterClosed().subscribe(res => {
+      if(!res) {
+        return;
+      }
+
+      this.workflowServiceService.terminateWorkflowExecution(this.namespace, this.workflow.uid)
+          .subscribe(res => {
+            if (this.socket) {
+              this.socket.close();
+            }
+
+            this.finishedAt = new Date();
+            this.workflow.phase = 'Terminated';
+            this.snackbarRef = this.snackbar.open('Workflow terminated', 'OK');
+          }, err => {
+            this.snackbarRef = this.snackbar.open('Unable to terminate workflow', 'OK');
+          })
+    });
   }
 
   onYamlClose() {
