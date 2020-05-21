@@ -17,9 +17,9 @@ export class WorkflowExecutionConstants {
     /**
      * Helper method so all terminate dialogs have the same message.
      */
-    public static getConfirmTerminateDialogData(): ConfirmationDialogData {
+    public static getConfirmTerminateDialogData(workflowName: string): ConfirmationDialogData {
         return {
-            title: 'Are you sure you want to terminate the workflow?',
+            title: `Are you sure you want to terminate the workflow "${workflowName}"?`,
             confirmText: 'TERMINATE',
             type: 'delete',
         };
