@@ -71,8 +71,7 @@
       <ng-container *ngFor="let parameter of this.parameters; let index = index">
         <app-workflow-parameter
                 *ngIf="index == 0 || showAllParameters"
-                [key]="parameter.name"
-                [value]="parameter.value"
+                [parameter]="parameter"
                 class="d-block">
         </app-workflow-parameter>
       </ng-container>
@@ -88,6 +87,7 @@
         <app-dag
           class="mt-4 h-100"
           [style.height]="height"
+          [style.minHeight]="'500px'"
           (nodeClicked)="handleNodeClicked($event)"
           [identifier]="dagIdentifier">
         </app-dag>

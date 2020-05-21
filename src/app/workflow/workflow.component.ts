@@ -8,7 +8,7 @@ import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from "@angular/material/s
 import { AceEditorComponent } from "ng2-ace-editor";
 import * as yaml from 'js-yaml';
 import * as ace from 'brace';
-import { KeyValue, LabelServiceService, WorkflowExecution, WorkflowServiceService } from "../../api";
+import { KeyValue, LabelServiceService, Parameter, WorkflowExecution, WorkflowServiceService } from "../../api";
 import { MatDialog } from "@angular/material/dialog";
 import { LabelEditDialogComponent } from "../labels/label-edit-dialog/label-edit-dialog.component";
 import { AppRouter } from "../router/app-router.service";
@@ -18,6 +18,7 @@ import {
   ConfirmationDialogData
 } from "../confirmation-dialog/confirmation-dialog.component";
 import { WorkflowExecutionConstants } from "./models";
+import { ParameterUtils } from "../parameters/models";
 const aceRange = ace.acequire('ace/range').Range;
 
 @Component({
@@ -72,7 +73,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   showYaml = false;
 
   labels = new Array<KeyValue>();
-  parameters = new Array<{name: string, value: string}>();
+  parameters = new Array<Parameter>();
 
   showAllParameters = false;
 
@@ -120,17 +121,24 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   ngOnInit() {
   }
 
+  private getWorkflowTemplateParametersFromWorkflow(workflow: WorkflowExecution): Array<Parameter> {
+    try {
+      const workflowTemplateManifest = yaml.safeLoad(workflow.workflowTemplate.manifest);
+      return workflowTemplateManifest.arguments.parameters;
+    } catch (e) {
+      console.error(e);
+      return [];
+    }
+  }
+
   startCheckingWorkflow() {
     this.workflowServiceService.getWorkflowExecution(this.namespace, this.uid)
         .subscribe(res => {
           this.workflow = new SimpleWorkflowDetail(res);
           this.labels = res.labels;
 
-          let parsedManifest = JSON.parse(res.manifest);
-
-          if(parsedManifest.spec && parsedManifest.spec.arguments && parsedManifest.spec.arguments.parameters) {
-            this.parameters = parsedManifest.spec.arguments.parameters;
-          }
+          const templateParameters = this.getWorkflowTemplateParametersFromWorkflow(res);
+          this.parameters = ParameterUtils.combineValueAndTemplate(res.parameters, templateParameters);
 
           if(res.phase === 'Terminated') {
             this.workflow.phase = 'Terminated';
