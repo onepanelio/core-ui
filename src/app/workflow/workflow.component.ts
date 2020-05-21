@@ -382,7 +382,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
 
   onTerminate() {
     const dialog = this.dialog.open(ConfirmationDialogComponent, {
-      data: WorkflowExecutionConstants.getConfirmTerminateDialogData(),
+      data: WorkflowExecutionConstants.getConfirmTerminateDialogData(this.workflow.name),
     })
 
     dialog.afterClosed().subscribe(res => {
