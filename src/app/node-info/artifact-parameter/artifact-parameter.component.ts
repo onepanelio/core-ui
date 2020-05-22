@@ -6,14 +6,7 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./artifact-parameter.component.scss']
 })
 export class ArtifactParameterComponent implements OnInit {
-  _parameter: any;
-  @Input() set parameter(value: any) {
-    this._parameter = value;
-    console.log(value);
-  }
-  get parameter() {
-    return this._parameter;
-  }
+  @Input() parameter;
 
   constructor() { }
 
