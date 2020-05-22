@@ -115,6 +115,7 @@ import { ButtonComponent } from './ui-tools/button/button.component';
 import { LoadingContentComponent } from './ui-tools/loading-content/loading-content.component';
 import { LabelsViewerComponent } from './labels/labels-viewer/labels-viewer.component';
 import { WorkflowIsActivePipe } from './workflow/pipes/workflow-is-active/workflow-is-active.pipe';
+import { ArtifactParameterComponent } from './node-info/artifact-parameter/artifact-parameter.component';
 
 @NgModule({
     declarations: [
@@ -201,6 +202,7 @@ import { WorkflowIsActivePipe } from './workflow/pipes/workflow-is-active/workfl
         LoadingContentComponent,
         LabelsViewerComponent,
         WorkflowIsActivePipe,
+        ArtifactParameterComponent,
     ],
     entryComponents: [
         WorkflowExecuteDialogComponent,

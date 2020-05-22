@@ -66,16 +66,45 @@
         </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <div class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold">INPUTS</div>
-      <div>
-        <app-parameter *ngFor="let parameter of inputParameters" [parameter]="parameter">
-        </app-parameter>
+      <div *ngIf="inputArtifacts?.length || inputParameters?.length">
+        <div class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold">INPUTS</div>
+
+        <div *ngIf="inputArtifacts?.length">
+          <div class="font-roboto-bold font-size-small font-medium-gray font-weight-bold mt-5 ml-2">ARTIFACTS</div>
+          <app-artifact-parameter
+                  *ngFor="let parameter of inputArtifacts"
+                  [parameter]="parameter"
+                  class="d-block mt-2 ml-4">
+          </app-artifact-parameter>
+        </div>
+
+        <div *ngIf="inputParameters?.length">
+          <div class="font-roboto-bold font-size-small font-medium-gray font-weight-bold mt-5 ml-2">PARAMETERS</div>
+          <app-parameter
+                  *ngFor="let parameter of inputParameters"
+                  [parameter]="parameter"
+                  class="ml-4">
+          </app-parameter>
+        </div>
       </div>
 
-      <div class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold mt-5" *ngIf="node.type === 'Pod'">OUTPUTS</div>
-      <div>
-        <app-parameter *ngFor="let parameter of outputParameters" [parameter]="parameter">
-        </app-parameter>
+      <div *ngIf="outputArtifacts?.length || outputParameters?.length">
+        <div class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold mt-5" *ngIf="node.type === 'Pod'">OUTPUTS</div>
+
+        <div *ngIf="outputArtifacts?.length">
+          <div class="font-roboto-bold font-size-small font-medium-gray font-weight-bold mt-5 ml-2">ARTIFACTS</div>
+          <app-artifact-parameter *ngFor="let parameter of outputArtifacts" [parameter]="parameter" class="d-block mt-2 ml-4">
+          </app-artifact-parameter>
+        </div>
+
+        <div *ngIf="outputParameters?.length">
+          <div class="font-roboto-bold font-size-small font-medium-gray font-weight-bold mt-5 ml-2">PARAMETERS</div>
+          <app-parameter
+                  *ngFor="let parameter of outputParameters"
+                  [parameter]="parameter"
+                  class="ml-4">
+          </app-parameter>
+        </div>
       </div>
     </mat-expansion-panel>
     <mat-expansion-panel class="op-expansion-panel" hideToggle="true" *ngIf="node.type === 'Pod'" (expandedChange)="onContainersExpandChange($event)">
