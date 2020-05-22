@@ -13,16 +13,8 @@
     </button>
 </div>
 
-<ng-container *ngFor="let param of formattedParameters">
-    <div class="font-roboto font-weight-bold mt-3">
-        <ng-container *ngIf="param.displayName">
-            {{param.displayName}}
-        </ng-container>
-        <ng-container *ngIf="!param.displayName">
-            {{param.name}}
-        </ng-container>
-    </div>
-    <div class="font-roboto">
-        {{param.value}}
-    </div>
-</ng-container>
+<app-workflow-parameter
+        *ngFor="let param of formattedParameters" [parameter]="param"
+        class="d-block mt-2">
+</app-workflow-parameter>
+
