@@ -21,7 +21,7 @@ export class ValuePipe implements PipeTransform {
   private transformSelect(value: Parameter): string {
     for(const option of value.options) {
       if(option.value === value.value) {
-        return option.name;
+        return option.name  + ` (${value.value})`;
       }
     }
 

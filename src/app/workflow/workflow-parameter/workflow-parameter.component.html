@@ -1,6 +1,6 @@
 <div class="key font-weight-bold font-roboto">
     <ng-container *ngIf="parameter.displayName">
-        {{parameter.displayName}}
+        {{parameter.displayName}} ({{parameter.name}})
     </ng-container>
     <ng-container *ngIf="!parameter.displayName">
         {{parameter.name}}
