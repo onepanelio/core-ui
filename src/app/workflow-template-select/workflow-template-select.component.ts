@@ -24,86 +24,50 @@ export class WorkflowTemplateSelectComponent implements OnInit {
   @Output() templateSelected = new EventEmitter<WorkflowTemplateSelected>();
   private static workflowTemplateSamples: WorkflowTemplateSelected[] = [
     {
-      name: 'Hello world',
-      manifest: `entrypoint: whalesay
+      name: "DAG",
+      manifest: `# The template to use as entrypoint
+entrypoint: main
 templates:
-- name: whalesay
-  container:
-    image: docker/whalesay:latest
-    command: [cowsay]
-    args: ["hello world"]`
-    },
-    {
-      name: 'Coin flip',
-      manifest: `# The coinflip example combines the use of a script result,
-# along with conditionals, to take a dynamic path in the
-# workflow. In this example, depending on the result of the
-# first step, 'flip-coin', the template will either run the
-# 'heads' step or the 'tails' step.
-entrypoint: coinflip
-templates:
-- name: coinflip
-  steps:
-  - - name: flip-coin
-      template: flip-coin
-  - - name: heads
-      template: heads
-      when: "{{steps.flip-coin.outputs.result}} == heads"
-    - name: tails
-      template: tails
-      when: "{{steps.flip-coin.outputs.result}} == tails"
-- name: flip-coin
-  script:
-    image: python:alpine3.6
-    command: [python]
-    source: |
-      import random
-      result = "heads" if random.randint(0,1) == 0 else "tails"
-      print(result)
-- name: heads
-  container:
-    image: alpine:3.6
-    command: [sh, -c]
-    args: ["echo \\"it was heads\\""]
-- name: tails
-  container:
-    image: alpine:3.6
-    command: [sh, -c]
-    args: ["echo \\"it was tails\\""]`,
-    },
-    {
-      name: 'Loops map',
-      manifest: `entrypoint: loop-map-example
-templates:
-- name: loop-map-example
-  steps:
-  - - name: test-linux
-      template: cat-os-release
+- name: main            # Name of template
+  dag:                  # Indicates that this is a DAG template
+    tasks:
+    - name: A           # First task to execute
+      template: echo    # The template to use for first task in DAG
       arguments:
         parameters:
-        - name: image
-          value: "{{item.image}}"
-        - name: tag
-          value: "{{item.tag}}"
-      withItems:
-      - { image: 'debian', tag: '9.1' }
-      - { image: 'debian', tag: '8.9' }
-      - { image: 'alpine', tag: '3.6' }
-      - { image: 'ubuntu', tag: '17.10' }
-
-- name: cat-os-release
+        - name: message
+          value: A
+    - name: B
+      dependencies: [A]
+      template: echo
+      arguments:
+        parameters:
+        - name: message
+          value: B
+    - name: C
+      dependencies: [A]
+      template: echo
+      arguments:
+        parameters:
+        - name: message
+          value: C
+    - name: D
+      dependencies: [B, C]
+      template: echo
+      arguments:
+        parameters:
+        - name: message
+          value: D
+- name: echo
   inputs:
     parameters:
-    - name: image
-    - name: tag
+    - name: message
   container:
-    image: "{{inputs.parameters.image}}:{{inputs.parameters.tag}}"
-    command: [cat]
-    args: [/etc/os-release]
-      `,
+    image: alpine:3.7
+    command: [echo, "{{inputs.parameters.message}}"]`
     },
     {
-      name: "Sample DAG",
+      name: "Nested DAG",
       manifest: "entrypoint: diamond\r\ntemplates:\r\n- name: echo\r\n  inputs:\r\n    parameters:\r\n    - name: message\r\n  container:\r\n    image: alpine:3.7\r\n    command: [echo, \"{{inputs.parameters.message}}\"]\r\n- name: diamond\r\n  dag:\r\n    tasks:\r\n    - name: A\r\n      template: nested-diamond\r\n      arguments:\r\n        parameters: [{name: message, value: A}]\r\n    - name: B\r\n      dependencies: [A]\r\n      template: nested-diamond\r\n      arguments:\r\n        parameters: [{name: message, value: B}]\r\n    - name: C\r\n      dependencies: [A]\r\n      template: nested-diamond\r\n      arguments:\r\n        parameters: [{name: message, value: C}]\r\n    - name: D\r\n      dependencies: [B, C]\r\n      template: nested-diamond\r\n      arguments:\r\n        parameters: [{name: message, value: D}]\r\n- name: nested-diamond\r\n  inputs:\r\n    parameters:\r\n    - name: message\r\n  dag:\r\n    tasks:\r\n    - name: A\r\n      template: echo\r\n      arguments:\r\n        parameters: [{name: message, value: \"{{inputs.parameters.message}}A\"}]\r\n    - name: B\r\n      dependencies: [A]\r\n      template: echo\r\n      arguments:\r\n        parameters: [{name: message, value: \"{{inputs.parameters.message}}B\"}]\r\n    - name: C\r\n      dependencies: [A]\r\n      template: echo\r\n      arguments:\r\n        parameters: [{name: message, value: \"{{inputs.parameters.message}}C\"}]\r\n    - name: D\r\n      dependencies: [B, C]\r\n      template: echo\r\n      arguments:\r\n          parameters: [{name: message, value: \"{{inputs.parameters.message}}D\"}]"
     }
   ];
