@@ -1,9 +1,9 @@
-<div class="key font-weight-bold font-roboto">
+<div class="key font-roboto">
     <ng-container *ngIf="parameter.displayName">
-        {{parameter.displayName}}
+        <span class="font-weight-bold">{{parameter.displayName}}</span> ({{parameter.name}})
     </ng-container>
     <ng-container *ngIf="!parameter.displayName">
-        {{parameter.name}}
+        <span class="font-weight-bold">{{parameter.name}}</span>
     </ng-container>
 </div>
 <div class="value font-roboto">{{parameter | appParameterValue}}</div>
