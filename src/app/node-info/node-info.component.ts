@@ -123,7 +123,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
       this.inputParameters = loaded.spec.arguments.parameters;
     } else if (node.type == 'Pod' && node.inputs) {
       this.inputParameters = node.inputs.parameters;
-      this.outputArtifacts = node.inputs.artifacts;
+      this.inputArtifacts = node.inputs.artifacts;
     }
 
 
