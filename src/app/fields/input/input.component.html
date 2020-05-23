@@ -7,13 +7,16 @@
             {{data.name}}
         </ng-container>
     </mat-label>
-    <input #inputElement matInput [type]="inputType" [ngModel]="data.value" (ngModelChange)="setDataValue(inputElement.value)" [formControl]="inputControl"/>
+    <input #inputElement matInput [type]="inputType" [(ngModel)]="data.value" [formControl]="inputControl"/>
     <mat-hint *ngIf="data.hint">{{data.hint}}</mat-hint>
-    <mat-error>
+    <mat-error *ngIf="!this.inputControl.hasError('conflict')">
         Must not be blank
         <span *ngIf="inputType === 'number'">
             and must be a number
         </span>
+    </mat-error>
+    <mat-error *ngIf="this.inputControl.hasError('conflict')">
+        This name is already taken
     </mat-error>
 </mat-form-field>
 <ng-container *ngIf="inputType === 'hidden'">

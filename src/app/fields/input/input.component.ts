@@ -10,6 +10,21 @@ import { Parameter } from "../../../api";
 export class InputComponent implements OnInit {
   private _data: Parameter;
 
+  @Input() set errors(errors: any) {
+    if(!this._data || !this.inputControl) {
+      return;
+    }
+
+    const hasError = errors[this.data.name] && errors[this.data.name] === 'conflict';
+    if(hasError) {
+      this.inputControl.setErrors({
+        conflict: true,
+      });
+
+      this.inputControl.markAllAsTouched();
+    }
+  }
+
   @Input() inputType: string = 'text';
 
   @Input() set data(value: Parameter) {
