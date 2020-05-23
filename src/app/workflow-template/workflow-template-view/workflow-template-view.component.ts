@@ -287,7 +287,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
       width: '500px',
       data: {
         title: 'Are you sure you want to delete this template?',
-        message: 'Once deleted, this template can not be brought back',
+        message: 'All related Workflow Executions and Scheduled Workflows will also be deleted.',
         confirmText: 'YES, DELETE TEMPLATE',
         type: 'delete'
       }
