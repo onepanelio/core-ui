@@ -15,8 +15,10 @@ import { WorkflowExecution } from './workflowExecution';
 
 export interface CronWorkflow { 
     name?: string;
+    uid?: string;
     manifest?: string;
     workflowExecution?: WorkflowExecution;
     labels?: Array<KeyValue>;
+    namespace?: string;
 }
 

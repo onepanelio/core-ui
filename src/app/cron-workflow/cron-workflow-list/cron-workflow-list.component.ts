@@ -132,7 +132,7 @@ export class CronWorkflowListComponent implements OnInit {
 
 
   onDelete(workflow: CronWorkflow) {
-    this.cronWorkflowServiceService.terminateCronWorkflow(this.namespace, workflow.name)
+    this.cronWorkflowServiceService.deleteCronWorkflow(this.namespace, workflow.uid)
         .subscribe(res => {
           this.listRowsModified.emit();
           this.snackbarRef = this.snackbar.open('Scheduled workflow deleted', 'OK');
