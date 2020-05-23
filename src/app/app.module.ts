@@ -89,7 +89,6 @@ import { WorkflowTemplateCloneComponent } from './workflow-template/workflow-tem
 import { ManifestDagEditorComponent } from './manifest-dag-editor/manifest-dag-editor.component';
 import { WorkflowTemplateStatusComponent } from './workflow-template/workflow-template-status/workflow-template-status.component';
 import { WorkspaceComponent } from "./workspace/workspace.component";
-import { WorkspaceTemplateViewComponent } from './workspace/workspace-template/workspace-template-view/workspace-template-view.component';
 import { WorkspaceTemplateListComponent } from './workspace/workspace-template/workspace-template-list/workspace-template-list.component';
 import { WorkspaceTemplateCreateComponent } from './workspace/workspace-template/workspace-template-create/workspace-template-create.component';
 import { WorkspaceViewComponent } from "./workspace/workspace-view/workspace-view.component";
@@ -179,7 +178,6 @@ import { ArtifactParameterComponent } from './node-info/artifact-parameter/artif
         WorkflowTemplateStatusComponent,
         WorkspaceComponent,
         WorkspaceViewComponent,
-        WorkspaceTemplateViewComponent,
         WorkspaceTemplateListComponent,
         WorkspaceTemplateCreateComponent,
         WorkspaceTemplateSummaryViewComponent,
