@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from "@angular/material/snack-bar";
 import { ActivatedRoute, Router } from "@angular/router";
 import {
+  CreateWorkflowExecutionBody,
   CronWorkflow,
   CronWorkflowServiceService,
   WorkflowExecution,
@@ -107,8 +108,9 @@ export class CronWorkflowListComponent implements OnInit {
   }
 
   onExecute(workflow: CronWorkflow) {
-    let data: WorkflowExecution = {
-      workflowTemplate: this.template,
+    let data: CreateWorkflowExecutionBody = {
+      workflowTemplateUid: this.template.uid,
+      workflowTemplateVersion: this.template.version,
     };
 
     if (workflow.workflowExecution) {
