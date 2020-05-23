@@ -13,6 +13,7 @@ export class FormComponent implements OnInit {
   form: FormGroup;
 
   @Input() disabled = false;
+  @Input() errors = {};
 
   @Input() set fieldData(value: Array<Parameter>) {
     this._fieldData = value;

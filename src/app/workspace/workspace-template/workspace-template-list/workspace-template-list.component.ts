@@ -128,20 +128,11 @@ export class WorkspaceTemplateListComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (!result) {
+      if (!result || result === 'close') {
         return;
       }
 
-      const workspace: CreateWorkspaceBody = {
-        workspaceTemplateUid: result.template.uid,
-        parameters: result.parameters,
-        labels: result.labels
-      };
-
-      this.workspaceService.createWorkspace(this.namespace, workspace)
-          .subscribe(res => {
-            this.appRouter.navigateToWorkspaces(this.namespace);
-          })
+      this.appRouter.navigateToWorkspaces(this.namespace);
     });
   }
 
@@ -154,6 +145,7 @@ export class WorkspaceTemplateListComponent implements OnInit {
           }
 
           this.getWorkspaceTemplates();
+          this.selectedTemplate = null;
         }, (err: HttpErrorResponse) => {
           if(err.status === 400 && err.error.code  === 9) {
             this.alertService.storeAlert(new Alert({

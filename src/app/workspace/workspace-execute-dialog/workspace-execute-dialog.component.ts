@@ -1,8 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import {
+  CreateWorkspaceBody,
   KeyValue,
   NamespaceServiceService,
-  Parameter,
+  Parameter, WorkspaceServiceService,
   WorkspaceTemplate,
   WorkspaceTemplateServiceService
 } from "../../../api";
@@ -13,13 +14,16 @@ import {
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { NamespaceTracker } from "../../namespace/namespace-tracker.service";
 import { AppRouter } from "../../router/app-router.service";
+import { HttpErrorResponse } from "@angular/common/http";
 
 export interface WorkspaceExecuteDialogData {
   namespace: string;
   template?: WorkspaceTemplate;
 }
 
-type WorkspaceExecutionState = 'loading' | 'ready' | 'no-templates';
+export type WorkspaceExecuteDialogResult = 'cancel' | 'created';
+
+type WorkspaceExecutionState = 'loading' | 'ready' | 'creating' | 'no-templates';
 
 @Component({
   selector: 'app-workspace-execute-dialog',
@@ -27,11 +31,13 @@ type WorkspaceExecutionState = 'loading' | 'ready' | 'no-templates';
   styleUrls: ['./workspace-execute-dialog.component.scss']
 })
 export class WorkspaceExecuteDialogComponent implements OnInit {
+  namespace: string;
   workspaceTemplates: WorkspaceTemplate[] = [];
   workspaceTemplate: WorkspaceTemplate;
   workspaceTemplateUid: string = '';
   labels = new Array<KeyValue>();
   parameters: Array<Parameter>;
+  errors = {};
 
   state: WorkspaceExecutionState = 'loading';
 
@@ -42,6 +48,7 @@ export class WorkspaceExecuteDialogComponent implements OnInit {
       public namespaceTracker: NamespaceTracker,
       private appRouter: AppRouter,
       private formBuilder: FormBuilder,
+      private workspaceService: WorkspaceServiceService,
       private workspaceTemplateService: WorkspaceTemplateServiceService,
       @Inject(MAT_DIALOG_DATA) public data: WorkspaceExecuteDialogData
   ) {
@@ -51,6 +58,7 @@ export class WorkspaceExecuteDialogComponent implements OnInit {
       this.workspaceTemplates = [data.template];
       this.workspaceTemplate = data.template;
       this.workspaceTemplateUid = data.template.uid;
+      this.namespace = data.namespace;
       this.getWorkspaceTemplate(data.namespace, data.template.uid);
     } else {
       this.workspaceTemplateService.listWorkspaceTemplates(data.namespace)
@@ -69,15 +77,31 @@ export class WorkspaceExecuteDialogComponent implements OnInit {
   }
 
   cancel() {
-    this.dialogRef.close();
+    this.dialogRef.close('cancel');
   }
 
   createAndRun() {
-    this.dialogRef.close({
-      template: this.workspaceTemplate,
+    const createWorkspace: CreateWorkspaceBody = {
+      workspaceTemplateUid: this.workspaceTemplate.uid,
       parameters: this.parameters,
-      labels: this.labels,
-    });
+      labels: this.labels
+    };
+
+    this.state = 'creating';
+    this.errors = {};
+
+    this.workspaceService.createWorkspace(this.namespace, createWorkspace)
+        .subscribe(res => {
+          this.state = 'ready';
+          this.dialogRef.close('created');
+        }, (err: HttpErrorResponse) => {
+          if(err.status === 409) {
+            this.errors = {
+              'sys-name': 'conflict'
+            };
+          }
+          this.state = 'ready';
+        })
   }
 
   private getWorkspaceTemplate(namespace: string, templateUid: string) {
