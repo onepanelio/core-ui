@@ -54,11 +54,12 @@ export class WorkspaceExecuteDialogComponent implements OnInit {
   ) {
     this.form = this.formBuilder.group({});
 
+    this.namespace = data.namespace;
+    
     if(data.template) {
       this.workspaceTemplates = [data.template];
       this.workspaceTemplate = data.template;
       this.workspaceTemplateUid = data.template.uid;
-      this.namespace = data.namespace;
       this.getWorkspaceTemplate(data.namespace, data.template.uid);
     } else {
       this.workspaceTemplateService.listWorkspaceTemplates(data.namespace)
