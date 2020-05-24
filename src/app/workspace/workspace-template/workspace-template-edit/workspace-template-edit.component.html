@@ -1,0 +1,33 @@
+<form [formGroup]="form" class="page-body workspace-template-edit">
+    <div class="op-info-box mt-8">
+        <div class="header no-justify fix-mat-overflow">
+            <mat-form-field appearance="outline" class="wp-400">
+                <mat-label>Template name</mat-label>
+                <input matInput disabled value="{{workspaceTemplate?.name}}"/>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="wp-400 ml-5 fix-mat-overflow">
+                <mat-label>Version</mat-label>
+                <mat-select [(value)]="selectedWorkspaceTemplateVersion" (valueChange)="onVersionSelected($event)">
+                    <mat-option *ngFor="let version of workspaceTemplateVersions" [value]="version.version">
+                        <app-date [dateTime]="version.createdAt"></app-date>
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <app-manifest-dag-editor
+                [manifestText]="manifest"
+                [manifestInterceptor]="apiManifestInterceptor">
+        </app-manifest-dag-editor>
+        <div class="mt-5">
+            <div class="op-h2">Labels</div>
+            <app-labels-edit class="d-inline-block mt-3" [labels]="labels" ></app-labels-edit>
+        </div>
+        <div class="mt-5 d-flex justify-content-between">
+            <button mat-button class="font-medium-gray cancel-button" (click)="cancel()">CANCEL</button>
+            <app-button (click)="save()" [loading]="loading">
+                <span>Save</span>
+                <span class="loading">Saving</span>
+            </app-button>
+        </div>
+    </div>
+</form>

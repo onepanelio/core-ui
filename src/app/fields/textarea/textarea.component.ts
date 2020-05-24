@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { Parameter } from "../../../api";
 
 @Component({
   selector: 'app-textarea',
@@ -7,7 +8,7 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
   styleUrls: ['./textarea.component.scss']
 })
 export class TextareaComponent implements OnInit {
-  @Input() data: FieldData;
+  @Input() data: Parameter;
   @Input() form: FormGroup;
 
   textAreaControl: FormControl;

@@ -8,7 +8,6 @@ import { NodeComponent } from './node/node.component';
 import { WorkflowComponent } from './workflow/workflow.component';
 import { NodeInfoComponent } from './node-info/node-info.component';
 import { WorkflowTemplateComponent } from './workflow-template/workflow-template.component';
-import { WorkflowTemplateListComponent } from './workflow-template/workflow-template-list/workflow-template-list.component';
 import { HttpClientModule } from '@angular/common/http';
 import { WorkflowTemplateViewComponent } from './workflow-template/workflow-template-view/workflow-template-view.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -23,8 +22,6 @@ import {
 import { WorkflowTemplateCreateComponent } from './workflow-template/workflow-template-create/workflow-template-create.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AceEditorModule } from 'ng2-ace-editor';
-import { WorkflowNodeInfoComponent } from './workflow/workflow-node-info/workflow-node-info.component';
-import { WorkflowListComponent } from './workflow/workflow-list/workflow-list.component';
 import { MomentModule } from 'ngx-moment';
 import { WorkflowTemplateEditComponent } from './workflow-template/workflow-template-edit/workflow-template-edit.component';
 import { NamespaceSelectComponent } from "./namespace-select/namespace-select.component";
@@ -89,69 +86,122 @@ import { WorkflowParameterComponent } from './workflow/workflow-parameter/workfl
 import { NamespaceManagerComponent } from './namespace/namespace-manager/namespace-manager.component';
 import { CreateNamespaceDialogComponent } from './namespace/create-namespace-dialog/create-namespace-dialog.component';
 import { WorkflowTemplateCloneComponent } from './workflow-template/workflow-template-clone/workflow-template-clone.component';
+import { ManifestDagEditorComponent } from './manifest-dag-editor/manifest-dag-editor.component';
+import { WorkflowTemplateStatusComponent } from './workflow-template/workflow-template-status/workflow-template-status.component';
+import { WorkspaceComponent } from "./workspace/workspace.component";
+import { WorkspaceTemplateListComponent } from './workspace/workspace-template/workspace-template-list/workspace-template-list.component';
+import { WorkspaceTemplateCreateComponent } from './workspace/workspace-template/workspace-template-create/workspace-template-create.component';
+import { WorkspaceViewComponent } from "./workspace/workspace-view/workspace-view.component";
+import { WorkspaceTemplateSummaryViewComponent } from './workspace/workspace-template/workspace-template-summary-view/workspace-template-summary-view.component';
+import { WorkspaceTemplateEditComponent } from './workspace/workspace-template/workspace-template-edit/workspace-template-edit.component';
+import { MatMenuModule } from "@angular/material/menu";
+import { WorkspaceExecuteDialogComponent } from './workspace/workspace-execute-dialog/workspace-execute-dialog.component';
+import { WorkspaceStatusComponent } from './workspace/workspace-status/workspace-status.component';
+import { WorkspacePhaseImagePipe } from "./pipes/workspace-phase-image/workspace-phase-image.pipe";
+import { LaunchingTimerComponent } from './workspace/workspace-status/launching-timer/launching-timer.component';
+import { WorkspaceTemplateSummaryComponent } from './workspace/workspace-template-summary/workspace-template-summary.component';
+import { WorkspaceLaunchingComponent } from './workspace/workspace-status/workspace-launching/workspace-launching.component';
+import { MatProgressBarModule } from "@angular/material/progress-bar";
+import { WorkspacePausedComponent } from './workspace/workspace-status/workspace-paused/workspace-paused.component';
+import { WorkspaceStatusBarComponent } from './workspace/workspace-status/workspace-status-bar/workspace-status-bar.component';
+import { WorkspacePhaseIconComponent } from './workspace/workspace-status/workspace-phase-icon/workspace-phase-icon.component';
+import { WorkspacePhaseStatusPipe } from './workspace/workspace-phase-status/workspace-phase-status.pipe';
+import { WorkspaceIdentifierComponent } from './workspace/workspace-info/workspace-identifier/workspace-identifier.component';
+import { ValuePipe } from "./parameters/pipes/value.pipe";
+import { WorkspaceViewParametersComponent } from './workspace/workspace-view/workspace-view-parameters/workspace-view-parameters.component';
+import { WorkspaceUpdatingComponent } from './workspace/workspace-status/workspace-updating/workspace-updating.component';
+import { ButtonComponent } from './ui-tools/button/button.component';
+import { LoadingContentComponent } from './ui-tools/loading-content/loading-content.component';
+import { LabelsViewerComponent } from './labels/labels-viewer/labels-viewer.component';
+import { WorkflowIsActivePipe } from './workflow/pipes/workflow-is-active/workflow-is-active.pipe';
+import { ArtifactParameterComponent } from './node-info/artifact-parameter/artifact-parameter.component';
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    NamespaceSelectComponent,
-    DagComponent,
-    NodeComponent,
-    WorkflowComponent,
-    NodeInfoComponent,
-    WorkflowTemplateComponent,
-    WorkflowTemplateListComponent,
-    WorkflowTemplateViewComponent,
-    WorkflowTemplateEditComponent,
-    WorkflowTemplateCreateComponent,
-    WorkflowNodeInfoComponent,
-    WorkflowListComponent,
-    WorkflowExecutionsListComponent,
-    StatusComponent,
-    WorkflowTemplateSelectComponent,
-    ClockComponent,
-    ActivityBarComponent,
-    WorkflowExecuteDialogComponent,
-    LogsComponent,
-    AlertComponent,
-    ParameterComponent,
-    DateComponent,
-    ClosableSnackComponent,
-    PhaseImagePipe,
-    PhaseTranslatePipe,
-    MetricsComponent,
-    SecretsComponent,
-    SecretListComponent,
-    CreateSecretComponent,
-    EditSecretComponent,
-    Base64DecodePipe,
-    ConfirmationDialogComponent,
-    AlertPanelComponent,
-    LoginComponent,
-    FileNavigatorComponent,
-    FileSizePipe,
-    ToolbarComponent,
-    FileBrowserComponent,
-    BreadcrumbsComponent,
-    ImageFileViewComponent,
-    GenericFileViewComponent,
-    TextFileViewComponent,
-    BigFileViewComponent,
-    CallToActionComponent,
-    InputComponent,
-    FormComponent,
-    TextareaComponent,
-    SelectComponent,
-    RadioComponent,
-    LabelsListViewComponent,
-    LabelsEditComponent,
-    LabelEditDialogComponent,
-    CronWorkflowListComponent,
-    CronWorkflowEditDialogComponent,
-    WorkflowParameterComponent,
-    NamespaceManagerComponent,
-    CreateNamespaceDialogComponent,
-    WorkflowTemplateCloneComponent
-  ],
+    declarations: [
+        AppComponent,
+        NamespaceSelectComponent,
+        DagComponent,
+        NodeComponent,
+        WorkflowComponent,
+        NodeInfoComponent,
+        WorkflowTemplateComponent,
+        WorkflowTemplateViewComponent,
+        WorkflowTemplateEditComponent,
+        WorkflowTemplateCreateComponent,
+        WorkflowExecutionsListComponent,
+        StatusComponent,
+        WorkflowTemplateSelectComponent,
+        ClockComponent,
+        ActivityBarComponent,
+        WorkflowExecuteDialogComponent,
+        LogsComponent,
+        AlertComponent,
+        ParameterComponent,
+        DateComponent,
+        ClosableSnackComponent,
+        PhaseImagePipe,
+        PhaseTranslatePipe,
+        MetricsComponent,
+        SecretsComponent,
+        SecretListComponent,
+        CreateSecretComponent,
+        EditSecretComponent,
+        Base64DecodePipe,
+        ConfirmationDialogComponent,
+        AlertPanelComponent,
+        LoginComponent,
+        FileNavigatorComponent,
+        FileSizePipe,
+        ToolbarComponent,
+        FileBrowserComponent,
+        BreadcrumbsComponent,
+        ImageFileViewComponent,
+        GenericFileViewComponent,
+        TextFileViewComponent,
+        BigFileViewComponent,
+        CallToActionComponent,
+        InputComponent,
+        FormComponent,
+        TextareaComponent,
+        SelectComponent,
+        RadioComponent,
+        LabelsListViewComponent,
+        LabelsEditComponent,
+        LabelEditDialogComponent,
+        CronWorkflowListComponent,
+        CronWorkflowEditDialogComponent,
+        WorkflowParameterComponent,
+        NamespaceManagerComponent,
+        CreateNamespaceDialogComponent,
+        WorkflowTemplateCloneComponent,
+        ManifestDagEditorComponent,
+        WorkflowTemplateStatusComponent,
+        WorkspaceComponent,
+        WorkspaceViewComponent,
+        WorkspaceTemplateListComponent,
+        WorkspaceTemplateCreateComponent,
+        WorkspaceTemplateSummaryViewComponent,
+        WorkspaceTemplateEditComponent,
+        WorkspaceExecuteDialogComponent,
+        WorkspaceStatusComponent,
+        WorkspacePhaseImagePipe,
+        LaunchingTimerComponent,
+        WorkspaceTemplateSummaryComponent,
+        WorkspaceLaunchingComponent,
+        WorkspacePausedComponent,
+        WorkspaceStatusBarComponent,
+        WorkspacePhaseIconComponent,
+        WorkspacePhaseStatusPipe,
+        WorkspaceIdentifierComponent,
+        ValuePipe,
+        WorkspaceViewParametersComponent,
+        WorkspaceUpdatingComponent,
+        ButtonComponent,
+        LoadingContentComponent,
+        LabelsViewerComponent,
+        WorkflowIsActivePipe,
+        ArtifactParameterComponent,
+    ],
     entryComponents: [
         WorkflowExecuteDialogComponent,
         CronWorkflowEditDialogComponent,
@@ -159,6 +209,7 @@ import { WorkflowTemplateCloneComponent } from './workflow-template/workflow-tem
         ClosableSnackComponent,
         LabelEditDialogComponent,
         CreateNamespaceDialogComponent,
+        WorkspaceExecuteDialogComponent
     ],
     imports: [
         BrowserModule,
@@ -187,7 +238,9 @@ import { WorkflowTemplateCloneComponent } from './workflow-template/workflow-tem
         ApiModule,
         MatProgressSpinnerModule,
         MatTooltipModule,
-        MatChipsModule
+        MatChipsModule,
+        MatMenuModule,
+        MatProgressBarModule
     ],
   providers: [
       NamespaceTracker,

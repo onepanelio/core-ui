@@ -1,0 +1,28 @@
+<div class="workspace-status-bar font-roboto d-flex align-items-center justify-content-between">
+    <div>
+        <app-workspace-phase-icon [phase]="workspace.status.phase" class="ml-5">
+        </app-workspace-phase-icon>
+        <div class="d-inline-block ml-2 font-size-regular color-black">
+            {{workspace.status.phase | workspacePhaseStatus}}
+        </div>
+        <app-clock
+                class="ml-2"
+                [startedAt]="workspace.status.startedAt"
+                [durationFormatter]="daysDurationFormatter">
+        </app-clock>
+    </div>
+
+    <div class="mr-5">
+        <button mat-button
+                class="font-weight-bold font-size-regular" color="primary"
+                (click)="onPause(workspace)"
+                [disabled]="workspace.status.phase !== 'Running'">
+            <mat-icon class="vertical-baseline" [fontSet]="'fas'" [fontIcon]="'fa-pause-circle'"></mat-icon>
+            PAUSE
+        </button>
+        <button mat-button class="font-weight-bold font-size-regular color-danger" (click)="onDelete(workspace)">
+            <mat-icon class="vertical-baseline" [fontSet]="'far'" [fontIcon]="'fa-trash-alt'"></mat-icon>
+            DELETE WORKSPACE
+        </button>
+    </div>
+</div>

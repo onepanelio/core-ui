@@ -1,0 +1,12 @@
+@import "../../../styles/font-variables";
+@import "../../../styles/colors";
+
+:host ::ng-deep .loading-content {
+  padding: 42px;
+  text-align: center;
+  color: $medium-gray;
+  font-size: $fontLarge;
+  font-family: $fontRobotoBold;
+  font-weight: bold;
+  margin-bottom: 6px;
+}

@@ -1,0 +1,10 @@
+<div class="font-roboto font-size-small color-medium-gray d-inline-flex"
+    [ngClass]="{'align-items-baseline': !loading, 'align-items-center': loading}">
+    <div *ngIf="labels?.length > 0 || loading" class="header">Labels</div>
+    <mat-spinner *ngIf="loading"
+                 class="ml-2 color-medium-gray"
+                 [diameter]="15"
+                 [mode]="'indeterminate'">
+    </mat-spinner>
+    <app-labels-list-view *ngIf="!loading && labels?.length > 0" [labels]="labels" class="d-inline-block ml-2"></app-labels-list-view>
+</div>

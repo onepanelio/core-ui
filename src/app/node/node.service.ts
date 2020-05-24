@@ -63,7 +63,6 @@ export class NodeRenderer {
   static summaryNodeHeight = 50;
   static nodeWidth = 200;
 
-
   static populateNodeInfoFromTemplate(info: NodeInfo, template?: any): NodeInfo {
     if (!template || (!template.container && !template.resource && !template.script)) {
       return info;
@@ -115,7 +114,7 @@ export class NodeRenderer {
     return info;
   }
 
-  static nodeTemplate(node: any, root = false) {
+  static nodeTemplate(node: any) {
     let nodeRootClasses = 'node-root ';
     if (node.type === 'StepGroup' || node.type === 'DAG') {
       nodeRootClasses += ' dashed-circle';
@@ -123,7 +122,11 @@ export class NodeRenderer {
       nodeRootClasses += ' rect';
     }
 
-    let html = `<div id="${node.id}" class="${nodeRootClasses}">`;
+    let html = `<div class="${nodeRootClasses}"`;
+    if(node.id) {
+      html += ` id="${node.id}"`
+    }
+    html += '>';
 
     const showInfo = !(node.type === 'StepGroup' || node.type === 'DAG');
 
@@ -132,6 +135,8 @@ export class NodeRenderer {
         html += '<img class="status-icon" src="/assets/images/status-icons/completed.svg"/>';
       } else if (node.phase === 'Running') {
         html += '<img class="status-icon" src="/assets/images/status-icons/running-blue.svg"/>';
+      } else if (node.phase === 'Terminated') {
+        html += '<img class="status-icon" src="/assets/images/status-icons/stopped.svg"/>';
       } else if (node.phase === 'Failed' || node.phase === 'Error') {
         html += '<img class="status-icon" src="/assets/images/status-icons/failed.svg"/>';
       } else {
@@ -182,14 +187,6 @@ export class NodeRenderer {
 
       (template.dag.tasks || []).forEach(task => {
         const nodeId = parentFullPath + '/' + task.name;
-
-        // If the user specifies an exit handler, then the compiler will wrap the entire Pipeline
-        // within an additional DAG template prefixed with 'exit-handler'.
-        // If this is the case, we simply treat it as the root of the graph and work from there
-        if (task.name.startsWith('exit-handler')) {
-          this.buildDag(graph, task.template, templates, alreadyVisited, '');
-          return;
-        }
 
         // If this task has already been visited, retrieve the qualified path name that was assigned
         // to it, add an edge, and move on to the next task
@@ -248,7 +245,8 @@ export class NodeRenderer {
         }
 
         info.nodeType = child.nodeType;
-
+        task.type = child.nodeType;
+        task.displayName = task.name;
         graph.setNode(nodeId, {
           labelType: 'html',
           label: NodeRenderer.nodeTemplate(task),
@@ -339,7 +337,7 @@ export class NodeRenderer {
       graph.setNode(nodeStatus.id, {
         id: nodeStatus.id,
         labelType: 'html',
-        label: NodeRenderer.nodeTemplate(nodeStatus, root),
+        label: NodeRenderer.nodeTemplate(nodeStatus),
         padding: 0,
         class: nodeClasses,
         ...NodeRenderer.getNodeDisplayProperties(nodeStatus, root),
@@ -364,31 +362,21 @@ export class NodeRenderer {
     const graph = new dagre.graphlib.Graph();
     graph.setGraph({});
     graph.setDefaultEdgeLabel(() => ({}));
-    const manifest = yaml.safeLoad(manifestRaw);
+    const spec = yaml.safeLoad(manifestRaw);
 
-    if (!manifest.spec || !manifest.spec.templates) {
+    if (!spec.templates) {
       throw new Error(
         'Could not generate graph. Provided Pipeline had no components.'
       );
     }
 
-    const workflowTemplates = manifest.spec.templates;
+    const workflowTemplates = spec.templates;
 
     const templates = new Map<string, { nodeType: NodeType; template: any }>();
 
     // Iterate through the workflow's templates to construct a map which will be used to traverse and
     // construct the graph
     for (const template of workflowTemplates.filter(t => !!t && !!t.name)) {
-      // Argo allows specifying a single global exit handler. We also highlight that node
-      if (template.name === manifest.spec.onExit) {
-        const info = new NodeInfo();
-        NodeRenderer.populateNodeInfoFromTemplate(info, template);
-        graph.setNode(template.name, {
-          info,
-          label: 'onExit - ' + template.name
-        });
-      }
-
       if (template.container || template.script) {
         templates.set(template.name, { nodeType: 'Pod', template });
       } else if (template.resource) {
@@ -402,12 +390,16 @@ export class NodeRenderer {
       }
     }
 
-    NodeRenderer.buildDag(graph, manifest.spec.entrypoint, templates, new Map(), '');
+    // Build DAG for entrypoint
+    NodeRenderer.buildDag(graph, spec.entrypoint, templates, new Map(), '');
+
+    // Build DAG for onExit
+    NodeRenderer.buildDag(graph, spec.onExit, templates, new Map(), '');
 
     // If template is not a DAG
     if (graph.nodeCount() === 0) {
       const entryPointTemplate = workflowTemplates.find(
-        t => t.name === manifest.spec.entrypoint
+        t => t.name === spec.entrypoint
       );
       if (entryPointTemplate) {
         graph.setNode(entryPointTemplate.name, {

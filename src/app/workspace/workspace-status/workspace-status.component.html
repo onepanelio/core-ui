@@ -1,0 +1,27 @@
+<div class="font-roboto">
+    <app-workspace-phase-icon [phase]="workspace.status.phase">
+    </app-workspace-phase-icon>
+    <div class="d-inline-block ml-2 font-size-regular color-black">
+        {{workspace.status.phase | workspacePhaseStatus}}
+    </div>
+</div>
+<div class="offset-by-spinner font-roboto font-size-small color-medium-gray" [ngSwitch]="workspace.status.phase">
+    <ng-container *ngSwitchCase="'Running'">
+        <app-clock
+                [startedAt]="workspace.status.startedAt"
+                [durationFormatter]="daysDurationFormatter">
+        </app-clock>
+    </ng-container>
+    <ng-container *ngSwitchCase="'Pausing'">
+    </ng-container>
+    <ng-container *ngSwitchCase="'Paused'">
+        <app-clock
+                [startedAt]="workspace.status.pausedAt"
+                [durationFormatter]="daysDurationFormatter">
+        </app-clock>
+    </ng-container>
+    <ng-container *ngSwitchCase="'Terminating'">
+    </ng-container>
+    <ng-container *ngSwitchCase="'Terminated'">
+    </ng-container>
+</div>

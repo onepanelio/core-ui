@@ -9,15 +9,22 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { CronWorkflowStatisticsReport } from './cronWorkflowStatisticsReport';
+import { KeyValue } from './keyValue';
+import { WorkflowExecutionStatisticReport } from './workflowExecutionStatisticReport';
 
 
 export interface WorkflowTemplate { 
     createdAt?: string;
     uid?: string;
     name?: string;
-    version?: number;
+    version?: string;
+    versions?: string;
     manifest?: string;
     isLatest?: boolean;
     isArchived?: boolean;
+    labels?: Array<KeyValue>;
+    stats?: WorkflowExecutionStatisticReport;
+    cronStats?: CronWorkflowStatisticsReport;
 }
 

@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { Parameter, ParameterOption } from "../../../api";
 
 @Component({
   selector: 'app-radio',
@@ -7,15 +8,15 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
   styleUrls: ['./radio.component.scss']
 })
 export class RadioComponent implements OnInit {
-  private _data: FieldData;
+  private _data: Parameter;
 
   @Input() form: FormGroup;
 
-  options = new Array<{name: string, value: string}>();
+  options = new Array<ParameterOption>();
 
   labelId = '';
 
-  @Input() set data(value: FieldData) {
+  @Input() set data(value: Parameter) {
     this._data = value;
 
     this.labelId = 'radio-group-' + value.name;
@@ -32,7 +33,7 @@ export class RadioComponent implements OnInit {
     }
   }
 
-  get data(): FieldData {
+  get data(): Parameter {
     return this._data;
   }
 

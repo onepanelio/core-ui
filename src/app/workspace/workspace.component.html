@@ -1,0 +1,107 @@
+<div class="page">
+    <div class="page-alerts mb-5">
+        <app-alert-panel></app-alert-panel>
+    </div>
+    <div class="page-header">
+        <div class="page-title">
+            <div class="page-title-text">Workspaces</div>
+            <div class="page-action-bar d-flex">
+                <button mat-stroked-button color="primary" class="op-rounded op-button vertical-align-icon vertical-baseline-mat-icon-fa" [routerLink]="['/', this.namespace, 'workspace-templates']">
+                    <mat-icon [fontSet]="'fas'" [fontIcon]="'fa-desktop'"></mat-icon>
+                    <span class="ml-1">TEMPLATE BUILDER</span>
+                </button>
+                <button mat-flat-button color="accent" class="op-rounded op-button ml-3" (click)="createWorkspace()">
+                    <mat-icon class="icon">add_circle</mat-icon>
+                    <span class="ml-1">Create Workspace</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="page-body mt-3 workflow-list">
+        <cdk-table [dataSource]="workspaces">
+            <ng-container cdkColumnDef="name">
+                <cdk-header-cell *cdkHeaderCellDef>Name</cdk-header-cell>
+                <cdk-cell *cdkCellDef="let workspace">
+                    <a class="name-link font-roboto-bold font-weight-bold" target="_blank" [routerLink]="['/', this.namespace, 'workspaces', workspace.uid]">{{workspace.name}}</a>
+                    <app-labels-list-view
+                            *ngIf="workspace.labels"
+                            class="mt-2 d-block"
+                            [labels]="workspace.labels"></app-labels-list-view>
+                </cdk-cell>
+            </ng-container>
+
+            <ng-container cdkColumnDef="status">
+                <cdk-header-cell *cdkHeaderCellDef>Status</cdk-header-cell>
+                <cdk-cell *cdkCellDef="let workspace">
+                    <app-workspace-status [workspace]="workspace"></app-workspace-status>
+                </cdk-cell>
+            </ng-container>
+
+            <ng-container cdkColumnDef="template">
+                <cdk-header-cell *cdkHeaderCellDef>Template</cdk-header-cell>
+                <cdk-cell *cdkCellDef="let workspace">
+                    <app-workspace-template-summary
+                            [workspaceTemplate]="workspace.workspaceTemplate">
+                    </app-workspace-template-summary>
+                </cdk-cell>
+            </ng-container>
+
+            <ng-container cdkColumnDef="spacer">
+                <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+                <cdk-cell *cdkCellDef="let workflow" class="flex-grow-1"></cdk-cell>
+            </ng-container>
+
+            <ng-container cdkColumnDef="actions">
+                <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+                <cdk-cell *cdkCellDef="let workspace" class="flex align-items-center">
+                    <a class="link-button" target="_blank" [routerLink]="['/', this.namespace, 'workspaces', workspace.uid]">Open</a>
+                    <button mat-icon-button color="primary" class="ml-3" [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{'workspace' :workspace}">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                </cdk-cell>
+            </ng-container>
+
+            <!-- Header and Row Declarations -->
+            <cdk-header-row *cdkHeaderRowDef="displayedColumns" class="d-flex align-items-baseline op-table-header"></cdk-header-row>
+            <cdk-row *cdkRowDef="let workflowTemplate; columns: displayedColumns"
+                     class="d-flex align-items-baseline op-table-row">
+            </cdk-row>
+        </cdk-table>
+        <app-call-to-action *ngIf="workspaces.length === 0 && state === 'new'">
+            <img class="icon" width="37" src="../../assets/images/workflows-icon.svg"/>
+            <div class="header">Get started with workspaces</div>
+            <div class="body">This is where all your workspaces live.</div>
+            <a class="action underline pointer-hover" (click)="createWorkspace()">Create a new workspace</a>
+        </app-call-to-action>
+
+        <app-loading-content *ngIf="state === 'loading-initial-data'">
+            Loading Workspaces
+        </app-loading-content>
+    </div>
+</div>
+<mat-paginator class="no-background font-size-small"
+               *ngIf="workspaceResponse"
+               (page)="onPageChange($event)"
+               [pageIndex]="this.pagination.page"
+               [length]="this.workspaceResponse.totalCount"
+               [pageSize]="this.pagination.pageSize"
+               [pageSizeOptions]="[5, 10, 25, 100]">
+</mat-paginator>
+
+<mat-menu #appMenu="matMenu">
+    <ng-template matMenuContent let-workspace="workspace">
+        <button *ngIf="workspace.status.phase === 'Running'" mat-menu-item (click)="onPause(workspace)">
+            <i class="far fa-pause-circle mr-1 workspace-menu-icon"></i>
+            Pause
+        </button>
+        <button *ngIf="workspace.status.phase === 'Paused'" mat-menu-item (click)="onResume(workspace)">
+            <i class="far fa-play-circle mr-1 workspace-menu-icon"></i>
+            Resume
+        </button>
+        <button mat-menu-item (click)="onDelete(workspace)">
+            <i class="fas fa-trash mr-1 workspace-menu-icon"></i>
+            Delete
+        </button>
+    </ng-template>
+</mat-menu>

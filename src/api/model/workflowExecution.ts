@@ -9,8 +9,9 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { WorkflowExecutionParameter } from './workflowExecutionParameter';
+import { KeyValue } from './keyValue';
 import { WorkflowTemplate } from './workflowTemplate';
+import { Parameter } from './parameter';
 
 
 export interface WorkflowExecution { 
@@ -21,7 +22,8 @@ export interface WorkflowExecution {
     startedAt?: string;
     finishedAt?: string;
     manifest?: string;
-    parameters?: Array<WorkflowExecutionParameter>;
+    parameters?: Array<Parameter>;
     workflowTemplate?: WorkflowTemplate;
+    labels?: Array<KeyValue>;
 }
 

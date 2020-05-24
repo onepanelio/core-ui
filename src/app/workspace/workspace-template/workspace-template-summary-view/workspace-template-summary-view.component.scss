@@ -1,0 +1,23 @@
+.workspace-template-summary-view {
+  width: 290px;
+  height: 190px;
+  box-sizing: border-box;
+  background-color: white;
+
+  .content {
+    padding: 0 27px 27px 27px;
+  }
+
+  i {
+    font-size: 60px;
+    color: #9B9B9B;
+  }
+
+  .title {
+    font-weight: 900;
+  }
+}
+
+.workspace-template-menu-icon {
+  width: 14px;
+}

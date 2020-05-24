@@ -11,8 +11,8 @@ import { Namespace, NamespaceServiceService } from "../api";
 import { AuthService } from "./auth/auth.service";
 import { environment } from "../environments/environment";
 import { MatDialog } from "@angular/material/dialog";
-import { WorkflowExecuteDialogComponent } from "./workflow/workflow-execute-dialog/workflow-execute-dialog.component";
 import { CreateNamespaceDialogComponent } from "./namespace/create-namespace-dialog/create-namespace-dialog.component";
+import 'hammerjs';
 
 @Component({
   selector: 'app-root',
@@ -27,6 +27,7 @@ export class AppComponent implements OnInit {
   loggingIn = false;
   version: string = '1.0.0';
   showNamespaceManager = false;
+  showNavigationBar = true;
 
   constructor(public namespaceTracker: NamespaceTracker,
               private authService: AuthService,
@@ -51,12 +52,32 @@ export class AppComponent implements OnInit {
     this.router.events
         .pipe(filter((e) => e instanceof NavigationEnd))
         .subscribe((e: NavigationEnd) => {
-          if(e.urlAfterRedirects.indexOf('templates') >= 0) {
-            this.activeRoute = 'templates';
+          const url = e.urlAfterRedirects;
+
+          this.showNamespaceManager = false;
+
+          const urlParts = url.split('/');
+
+          for(const urlPart of urlParts) {
+            if(urlPart === 'workspace-templates') {
+                this.activeRoute = 'workspaces';
+                break;
+            }
+            if(urlPart.indexOf('templates') >= 0 || urlPart.indexOf('workflows') >= 0) {
+                this.activeRoute = 'templates';
+                break;
+            }
+            if(urlPart.indexOf('secrets') >= 0) {
+                this.activeRoute = 'secrets';
+                break;
+            }
+            if(urlPart.indexOf('workspace') >= 0) {
+                this.activeRoute = 'workspaces';
+                break;
+            }
           }
-          if(e.urlAfterRedirects.indexOf('secrets') >= 0) {
-            this.activeRoute = 'secrets';
-          }
+
+
 
           this.loggingIn = e.urlAfterRedirects.indexOf('login') >= 0;
 
@@ -105,7 +126,16 @@ export class AppComponent implements OnInit {
   }
 
   logout() {
+      this.showNamespaceManager = false;
       this.authService.clearTokens();
       this.router.navigate(['/', 'login']);
+  }
+
+  onRouterOutletActivate(data) {
+    if(data.hideNavigationBar) {
+        this.showNavigationBar = false;
+    } else {
+        this.showNavigationBar = true;
+    }
   }
 }

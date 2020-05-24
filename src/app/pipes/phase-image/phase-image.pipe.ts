@@ -12,6 +12,7 @@ export class PhaseImagePipe implements PipeTransform {
   static runningBlueImageSource = '/assets/images/status-icons/running-blue.svg';
   static stoppedImageSource = '/assets/images/status-icons/stopped.svg';
   static notRunImageSource = '/assets/images/status-icons/notrun.svg';
+  static skippedImageSource = '/assets/images/status-icons/notrun.svg';
 
   static statusMap = new Map<WorkflowPhase, string>([
     ['Succeeded', PhaseImagePipe.completeImageSource],
@@ -19,6 +20,8 @@ export class PhaseImagePipe implements PipeTransform {
     ['Running', PhaseImagePipe.runningBlueImageSource],
     ['Failed', PhaseImagePipe.failedImageSource],
     ['Error', PhaseImagePipe.failedImageSource],
+    ['Terminated', PhaseImagePipe.stoppedImageSource],
+    ['Skipped', PhaseImagePipe.skippedImageSource]
   ]);
 
   transform(phase: WorkflowPhase, ...args: any[]): any {

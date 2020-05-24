@@ -1,0 +1,27 @@
+<div class="workspace-template-summary-view op-border op-rounded-regular d-inline-flex flex-column align-items-center">
+    <button [class.hidden]="!showMenu" mat-icon-button [matMenuTriggerFor]="appMenu" style="align-self: flex-end">
+        <mat-icon>more_vert</mat-icon>
+    </button>
+    <div class="content text-center">
+        <i [class]="iconClass"></i>
+        <div class="title font-proxima-bold font-size-regular mt-3">{{template.name}}</div>
+        <div class="title font-proxima font-size-regular color-dark-gray mt-3">
+            <ng-container>No description</ng-container>
+        </div>
+    </div>
+</div>
+
+<mat-menu #appMenu="matMenu">
+    <button mat-menu-item (click)="createWorkspace()">
+        <i class="far fa-play-circle mr-1 workspace-template-menu-icon"></i>
+        Create workspace
+    </button>
+<!--    <button mat-menu-item (click)="deleteWorkspaceTemplate(template)">-->
+<!--        <i class="far fa-clone mr-1 workspace-template-menu-icon"></i>-->
+<!--        Clone-->
+<!--    </button>-->
+    <button mat-menu-item (click)="deleteWorkspaceTemplate(template)">
+        <i class="fas fa-trash mr-1 workspace-template-menu-icon"></i>
+        Delete
+    </button>
+</mat-menu>

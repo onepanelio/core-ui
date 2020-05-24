@@ -6,11 +6,6 @@
                 <input [formControl]="queryInput" matInput />
             </mat-form-field>
         </form>
-
-        <button mat-flat-button color="accent" class="op-rounded op-button ml-p40" (click)="onNewNamespaceClick()">
-            <mat-icon id="create-button" class="icon">add_circle</mat-icon>
-            <span class="ml-1">NEW NAMESPACE</span>
-        </button>
     </div>
 
     <div *ngFor="let namespace of namespaces" (click)="onNamespaceClick(namespace.name)" class="font-size-regular font-roboto namespace">

@@ -23,6 +23,11 @@ export class LabelsEditComponent implements OnInit {
   items = new Array<LabelItem>();
 
   @Input() set labels(value: Array<KeyValue>) {
+    if(!value) {
+      this.items = [];
+      return;
+    }
+
     this._labels = value;
     let newItems = new Array<LabelItem>();
 
@@ -96,7 +101,34 @@ export class LabelsEditComponent implements OnInit {
       }
     }
 
+    let duplicate = false;
+    for(const duplicateKey of this.findDuplicateKeys()) {
+      duplicateKey.controlKey.setErrors({'duplicate': true});
+      duplicate = true;
+    }
+
+    if(duplicate) {
+      return false;
+    }
+
     return true;
+  }
+
+  private findDuplicateKeys(): LabelItem[] {
+    let keyMap = new Map<string, LabelItem>();
+
+    let duplicates = [];
+
+    for(const item of this.items) {
+      const key = item.controlKey.value;
+      if(keyMap.has(key)) {
+        duplicates.push(item);
+      } else {
+        keyMap.set(key, item);
+      }
+    }
+
+    return duplicates;
   }
 
   markAllAsDirty() {

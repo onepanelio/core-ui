@@ -1,5 +1,5 @@
 <div class="workflow-executions-list">
-    <cdk-table [dataSource]="executionWorkflows">
+    <cdk-table [dataSource]="workflowExecutions">
         <ng-container cdkColumnDef="name">
             <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
             <cdk-cell *cdkCellDef="let workflow">
@@ -27,9 +27,8 @@
                 <img *ngIf="workflow.phase" class="phase-image" [src]="workflow.phase | phaseImage"/>
                 <div class="ml-2 font-roboto-bold font-weight-bold">{{workflow.phase | phaseTranslate}}</div>
                 <span *ngIf="workflow && workflow.succeeded" class="ml-1"> in </span>
-                <app-clock
-                           class="ml-2"
-                           [startedAt]="workflow.startedAt"
+                <app-clock class="ml-2"
+                           [startedAt]="workflow.createdAt"
                            [finishedAt]="workflow.finishedAt">
                 </app-clock>
             </cdk-cell>
@@ -40,7 +39,7 @@
             <cdk-cell *cdkCellDef="let workflow">
                 <div>
                     <a [routerLink]="['/', this.namespace, 'workflows', workflow.name]" class="link-button">View</a>
-                    <button [class.hidden]="!workflow?.active" mat-button color="primary" class="font-proxima-bold font-size-regular" (click)="onTerminate(workflow)">TERMINATE</button>
+                    <button [class.hidden]="!(workflow | workflowIsActive)" mat-button color="primary" class="font-proxima-bold font-size-regular" (click)="onTerminate(workflow)">TERMINATE</button>
                 </div>
             </cdk-cell>
         </ng-container>

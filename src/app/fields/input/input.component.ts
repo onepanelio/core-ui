@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from "@angular/forms";
+import { Parameter } from "../../../api";
 
 @Component({
   selector: 'app-input',
@@ -7,14 +8,29 @@ import { AbstractControl, FormControl, FormGroup, Validators } from "@angular/fo
   styleUrls: ['./input.component.scss']
 })
 export class InputComponent implements OnInit {
-  private _data: FieldData;
+  private _data: Parameter;
+
+  @Input() set errors(errors: any) {
+    if(!this._data || !this.inputControl) {
+      return;
+    }
+
+    const hasError = errors[this.data.name] && errors[this.data.name] === 'conflict';
+    if(hasError) {
+      this.inputControl.setErrors({
+        conflict: true,
+      });
+
+      this.inputControl.markAllAsTouched();
+    }
+  }
 
   @Input() inputType: string = 'text';
 
-  @Input() set data(value: FieldData) {
+  @Input() set data(value: Parameter) {
     this._data = value;
   }
-  get data(): FieldData {
+  get data(): Parameter {
     return this._data;
   }
 

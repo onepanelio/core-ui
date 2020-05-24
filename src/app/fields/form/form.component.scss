@@ -9,3 +9,12 @@
 /deep/ .onepanel-dynamic-select {
   width: 100%;
 }
+
+.form-item {
+  display: block;
+  margin-top: 10px;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}

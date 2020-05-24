@@ -1,22 +1,10 @@
-<div>
+<div *ngFor="let item of items">
     <div class="font-size-regular font-proxima-bold d-flex align-items-center">
-        <img src="/assets/images/workflows-blank-icon.svg"/>
-        <span class="template-header">Blank template</span>
+        <img [src]="item.header.image"/>
+        <span class="template-header">{{item.header.title}}</span>
     </div>
     <ul>
-        <li class="font-size-regular font-proxima template-name"
-            [ngClass]="{'selected': 'new' === this.selectedTemplate}"
-            (click)="selectTemplate('new')">
-            New
-        </li>
-    </ul>
-
-    <div class="font-size-regular font-proxima-bold d-flex align-items-center">
-        <img src="/assets/images/workflows-templates-icon.svg"/>
-        <span class="template-header">Templates</span>
-    </div>
-    <ul>
-        <li *ngFor="let template of workflowTemplateSamples"
+        <li *ngFor="let template of item.children"
             class="font-size-regular font-proxima template-name"
             [ngClass]="{'selected': template.name === this.selectedTemplate}"
             (click)="selectTemplate(template.name)">

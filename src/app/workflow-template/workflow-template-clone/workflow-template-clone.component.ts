@@ -14,7 +14,7 @@ import { AceEditorComponent } from "ng2-ace-editor";
 import * as yaml from 'js-yaml';
 import * as ace from 'brace';
 import { Alert } from "../../alert/alert";
-import { KeyValue, WorkflowServiceService } from "../../../api";
+import { KeyValue, LabelServiceService, WorkflowServiceService, WorkflowTemplateServiceService } from "../../../api";
 import { LabelsEditComponent } from "../../labels/labels-edit/labels-edit.component";
 import { AppRouter } from "../../router/app-router.service";
 const aceRange = ace.acequire('ace/range').Range;
@@ -73,6 +73,8 @@ export class WorkflowTemplateCloneComponent implements OnInit {
       private workflowService: WorkflowService,
       private workflowTemplateService: WorkflowTemplateService,
       private workflowServiceService: WorkflowServiceService,
+      private workflowTemplateServiceService: WorkflowTemplateServiceService,
+      private labelService: LabelServiceService,
       private snackBar: MatSnackBar) { }
 
   ngOnInit() {
@@ -91,7 +93,6 @@ export class WorkflowTemplateCloneComponent implements OnInit {
       this.sourceWorkflowTemplateUid = next.get('uid');
 
       this.getSourceWorkflowTemplate(this.sourceWorkflowTemplateUid);
-      this.getSourceWorkflowLabels(this.sourceWorkflowTemplateUid);
     });
   }
 
@@ -148,21 +149,13 @@ export class WorkflowTemplateCloneComponent implements OnInit {
       return;
     }
 
-    this.workflowTemplateService
-        .create(this.namespace, {
+    this.workflowTemplateServiceService.createWorkflowTemplate(this.namespace, {
           name: templateName,
           manifest: this.manifestTextCurrent,
+          labels: this.labels,
         })
         .subscribe(res => {
-          this.workflowServiceService.replaceWorkflowTemplateLabels(this.namespace, res.uid, {
-            items: this.labels
-          }).subscribe( labelRes => {
-            // Do nothing
-          }, err => {
-            // Do nothing
-          }, () => {
-            this.router.navigate(['/', this.namespace, 'workflow-templates', res.uid]);
-          })
+          this.appRouter.navigateToWorkflowTemplateView(this.namespace, res.uid);
         }, (err: HttpErrorResponse) => {
           if(err.status === 409) {
             this.templateNameInput.setErrors({
@@ -190,21 +183,11 @@ export class WorkflowTemplateCloneComponent implements OnInit {
   }
 
   getSourceWorkflowTemplate(uid: string) {
-    this.workflowTemplateService.getWorkflowTemplate(this.namespace, uid)
+    this.workflowTemplateServiceService.getWorkflowTemplate(this.namespace, uid)
         .subscribe(res => {
           this.templateNameInput.setValue(res.name + '-clone');
           this.manifestText = res.manifest;
           this.manifestTextCurrent = res.manifest;
-        })
-  }
-
-  getSourceWorkflowLabels(uid: string) {
-    this.workflowServiceService.getWorkflowTemplateLabels(this.namespace, uid)
-        .subscribe(res => {
-          if(!res.labels) {
-            return;
-          }
-
           this.labels = res.labels;
         })
   }

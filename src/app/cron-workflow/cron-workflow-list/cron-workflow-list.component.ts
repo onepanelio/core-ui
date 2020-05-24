@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from "@angular/material/snack-bar";
 import { ActivatedRoute, Router } from "@angular/router";
 import {
+  CreateWorkflowExecutionBody,
   CronWorkflow,
   CronWorkflowServiceService,
   WorkflowExecution,
@@ -13,8 +14,12 @@ import {
   CronWorkflowEditData,
   CronWorkflowEditDialogComponent
 } from "../cron-workflow-edit-dialog/cron-workflow-edit-dialog.component";
-import { WorkflowTemplateDetail } from "../../workflow-template/workflow-template.service";
 import { WorkflowExecuteDialogComponent } from "../../workflow/workflow-execute-dialog/workflow-execute-dialog.component";
+import * as yaml from 'js-yaml';
+import {
+  ConfirmationDialogComponent,
+  ConfirmationDialogData
+} from "../../confirmation-dialog/confirmation-dialog.component";
 
 @Component({
   selector: 'app-cron-workflow-list',
@@ -26,9 +31,23 @@ export class CronWorkflowListComponent implements OnInit {
 
   displayedColumns = ['name','schedule', 'spacer', 'actions'];
 
+  // Maps a CronWorkflow by it's name to it's parsed manifest, providing access to scheduled, etc.
+  parsedCronManifestsMap = new Map<string, object>();
+  _cronWorkflows: CronWorkflow[] = [];
+
   @Input() namespace: string;
-  @Input() cronWorkflows: CronWorkflow[] = [];
-  @Input() template: WorkflowTemplate|WorkflowTemplateDetail;
+  @Input() set cronWorkflows(value: CronWorkflow[]) {
+    this._cronWorkflows = value;
+
+    this.parsedCronManifestsMap.clear();
+    for(const workflow of value) {
+      this.parsedCronManifestsMap[workflow.name] = yaml.safeLoad(workflow.manifest);
+    }
+  }
+  get cronWorkflows(): CronWorkflow[] {
+    return this._cronWorkflows;
+  }
+  @Input() template: WorkflowTemplate;
 
   // This is fired whenever we add or remove a row from the list.
   @Output() listRowsModified = new EventEmitter();
@@ -72,7 +91,8 @@ export class CronWorkflowListComponent implements OnInit {
 
       let updatedData: CronWorkflow = {
         ...res.cron,
-        workflowExecution: res.workflowExecution
+        workflowExecution: res.workflowExecution,
+        labels: res.labels
       };
       updatedData.workflowExecution.workflowTemplate = this.template;
 
@@ -83,6 +103,8 @@ export class CronWorkflowListComponent implements OnInit {
             for(let key in res) {
               workflow[key] = res[key];
             }
+
+            this.listRowsModified.emit();
           }, err => {
             // Do nothing
           })
@@ -90,8 +112,9 @@ export class CronWorkflowListComponent implements OnInit {
   }
 
   onExecute(workflow: CronWorkflow) {
-    let data: WorkflowExecution = {
-      workflowTemplate: this.template,
+    let data: CreateWorkflowExecutionBody = {
+      workflowTemplateUid: this.template.uid,
+      workflowTemplateVersion: this.template.version,
     };
 
     if (workflow.workflowExecution) {
@@ -106,19 +129,35 @@ export class CronWorkflowListComponent implements OnInit {
 
     this.workflowServiceService.createWorkflowExecution(this.namespace, data)
         .subscribe(res => {
+          // @todo appRouter
           this.router.navigate(['/', this.namespace, 'workflows', res.name]);
         });
   }
 
 
   onDelete(workflow: CronWorkflow) {
-    this.cronWorkflowServiceService.terminateCronWorkflow(this.namespace, workflow.name)
-        .subscribe(res => {
-          this.listRowsModified.emit();
-          this.snackbarRef = this.snackbar.open('Scheduled workflow deleted', 'OK');
-        }, err => {
-          this.snackbarRef = this.snackbar.open('Unable to stop workflow', 'OK');
-        })
-    ;
+    const data: ConfirmationDialogData = {
+      title: `Are you sure you want to delete "${workflow.name}"?`,
+      confirmText: 'DELETE',
+      type: 'delete',
+    }
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: data
+    })
+
+    dialogRef.afterClosed().subscribe(res => {
+      if(!res) {
+        return;
+      }
+
+      this.cronWorkflowServiceService.deleteCronWorkflow(this.namespace, workflow.uid)
+          .subscribe(res => {
+            this.listRowsModified.emit();
+            this.snackbarRef = this.snackbar.open('Scheduled workflow deleted', 'OK');
+          }, err => {
+            this.snackbarRef = this.snackbar.open('Unable to stop workflow', 'OK');
+          })
+      ;
+    })
   }
 }

@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SimpleWorkflowDetail, WorkflowService } from './workflow.service';
+import { SimpleWorkflowDetail, Workflow, WorkflowService } from './workflow.service';
 import { NodeRenderer, NodeStatus } from '../node/node.service';
 import { DagClickEvent, DagComponent } from '../dag/dag.component';
 import { NodeInfoComponent } from "../node-info/node-info.component";
@@ -8,10 +8,17 @@ import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from "@angular/material/s
 import { AceEditorComponent } from "ng2-ace-editor";
 import * as yaml from 'js-yaml';
 import * as ace from 'brace';
-import { KeyValue, WorkflowExecution, WorkflowServiceService } from "../../api";
+import { KeyValue, LabelServiceService, Parameter, WorkflowExecution, WorkflowServiceService } from "../../api";
 import { MatDialog } from "@angular/material/dialog";
 import { LabelEditDialogComponent } from "../labels/label-edit-dialog/label-edit-dialog.component";
-import { WorkflowExecuteDialogComponent } from "./workflow-execute-dialog/workflow-execute-dialog.component";
+import { AppRouter } from "../router/app-router.service";
+import { ClockComponent } from "../clock/clock.component";
+import {
+  ConfirmationDialogComponent,
+  ConfirmationDialogData
+} from "../confirmation-dialog/confirmation-dialog.component";
+import { WorkflowExecutionConstants } from "./models";
+import { ParameterUtils } from "../parameters/models";
 const aceRange = ace.acequire('ace/range').Range;
 
 @Component({
@@ -27,6 +34,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   private snackbarRef: MatSnackBarRef<SimpleSnackBar>;
 
   @ViewChild('yamlEditor', {static: true}) yamlEditor: AceEditorComponent;
+  @ViewChild(ClockComponent, {static: false}) clock: ClockComponent;
   @ViewChild(DagComponent, {static: false}) dag: DagComponent;
   @ViewChild('pageContent', {static: false}) set pageContent(value: ElementRef) {
     setTimeout( () => {
@@ -49,7 +57,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   }
 
   namespace: string;
-  name: string;
+  uid: string;
   workflow: SimpleWorkflowDetail;
 
   socket: WebSocket;
@@ -65,9 +73,15 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   showYaml = false;
 
   labels = new Array<KeyValue>();
-  parameters = new Array<{name: string, value: string}>();
+  parameters = new Array<Parameter>();
 
   showAllParameters = false;
+
+  loadingLabels = false;
+  cloning = false;
+
+  startedAt;
+  finishedAt;
 
   private socketClosedCount = 0;
   private socketErrorCount = 0;
@@ -76,7 +90,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     return {
       type: 'workflow',
       namespace: this.namespace,
-      name: this.name,
+      name: this.uid,
     };
   }
 
@@ -85,39 +99,59 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     private workflowService: WorkflowService,
     private workflowServiceService: WorkflowServiceService,
     private apiWorkflowService: WorkflowServiceService,
+    private labelService: LabelServiceService,
     private dialog: MatDialog,
-    private router: Router,
+    private appRouter: AppRouter,
     private snackbar: MatSnackBar,
   ) {
-  }
-
-  ngOnInit() {
     this.activatedRoute.paramMap.subscribe(next => {
-      this.setNamespaceName(next.get('namespace'), next.get('name'));
-
+      this.setNamespaceUid(next.get('namespace'), next.get('uid'));
+      if(this.clock) {
+        this.clock.reset(true);
+      }
+      
+      this.showNodeInfo = false;
+      this.selectedNodeId = null;
+      this.showLogs = false;
+      this.showYaml = false;
       this.startCheckingWorkflow();
     });
   }
 
+  ngOnInit() {
+  }
+
+  private getWorkflowTemplateParametersFromWorkflow(workflow: WorkflowExecution): Array<Parameter> {
+    try {
+      const workflowTemplateManifest = yaml.safeLoad(workflow.workflowTemplate.manifest);
+      return workflowTemplateManifest.arguments.parameters;
+    } catch (e) {
+      console.error(e);
+      return [];
+    }
+  }
+
   startCheckingWorkflow() {
-    this.workflowService.getWorkflow(this.namespace, this.name)
+    this.workflowServiceService.getWorkflowExecution(this.namespace, this.uid)
         .subscribe(res => {
-          this.workflow = res;
+          this.workflow = new SimpleWorkflowDetail(res);
+          this.labels = res.labels;
 
-          let parsedManifest = JSON.parse(res.manifest);
+          const templateParameters = this.getWorkflowTemplateParametersFromWorkflow(res);
+          this.parameters = ParameterUtils.combineValueAndTemplate(res.parameters, templateParameters);
 
-          if(parsedManifest.spec && parsedManifest.spec.arguments && parsedManifest.spec.arguments.parameters) {
-            this.parameters = parsedManifest.spec.arguments.parameters;
+          if(res.phase === 'Terminated') {
+            this.workflow.phase = 'Terminated';
+            this.startedAt = res.startedAt;
+            this.finishedAt = res.finishedAt;
           }
-
-          this.getLabels();
 
           if(this.socket) {
             this.socket.close();
             this.socket = null;
           }
 
-          this.socket = this.workflowService.watchWorkflow(this.namespace, this.name);
+          this.socket = this.workflowService.watchWorkflow(this.namespace, this.uid);
           this.socket.onmessage = (event) => {
             this.onWorkflowExecutionUpdate(event.data);
           };
@@ -150,9 +184,9 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     }
   }
 
-  setNamespaceName(namespace: string, name: string) {
+  setNamespaceUid(namespace: string, uid: string) {
     this.namespace = namespace;
-    this.name = name;
+    this.uid = uid;
   }
 
   onWorkflowExecutionUpdate(rawData: any) {
@@ -171,7 +205,16 @@ export class WorkflowComponent implements OnInit, OnDestroy {
       return;
     }
 
+
+    const wasTerminated = this.workflow.phase === 'Terminated';
     this.workflow.updateWorkflowManifest(data.result.manifest);
+    this.startedAt = this.workflow.workflowStatus.startedAt;
+    this.finishedAt = this.workflow.workflowStatus.finishedAt;
+
+    if(wasTerminated) {
+      this.workflow.phase = 'Terminated';
+    }
+
     const status = this.workflow.workflowStatus;
 
     // It is possible there is no node data yet. In which case, we can't display a dag.
@@ -180,7 +223,6 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     }
 
     if(this.selectedNodeId && this.selectedNodeId !== this.workflow.name) {
-      // TODO node here.
       this.nodeInfo = status.nodes[this.selectedNodeId];
 
       if(this._nodeInfoElement) {
@@ -250,9 +292,9 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   }
 
   updateYamlSelection() {
-    const manifest = this.workflow.yamlManifest;
-    const parsedYaml = yaml.safeLoad(this.workflow.yamlManifest);
-    const templates = parsedYaml.spec.templates;
+    const spec = this.workflow.yamlManifest;
+    const parsedYaml = yaml.safeLoad(spec);
+    const templates = parsedYaml.templates;
 
     let templateNames = [];
     let selectedTemplate = null;
@@ -263,14 +305,14 @@ export class WorkflowComponent implements OnInit, OnDestroy {
       }
     }
 
-    const manifestLines = manifest.split('\n');
+    const manifestLines = spec.split("\n");
 
     let templatesLineNumber = -1;
     let templatesIndentation = 0;
     for(let i = 0; i < manifestLines.length; i++) {
       const line = manifestLines[i];
       const templateIndex = line.indexOf('templates');
-      if(templateIndex > 0) {
+      if(templateIndex >= 0) {
         templatesLineNumber = i;
         templatesIndentation = templateIndex;
         break;
@@ -283,6 +325,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
 
     for(let i = templatesLineNumber; i < manifestLines.length; i++) {
       const line = manifestLines[i];
+
       const trimmedLine = line.trimLeft();
       if (trimmedLine.length === 0) {
         continue;
@@ -295,12 +338,12 @@ export class WorkflowComponent implements OnInit, OnDestroy {
       }
 
       const nameIndex = line.indexOf('name');
-      if (firstNameIndentation === -1) {
+      if (firstNameIndentation === -1 || (nameIndex < firstNameIndentation)) {
         firstNameIndentation = nameIndex;
       }
 
       if(templateStartLineNumber === -1 && nameIndex > 0 && nameIndex == firstNameIndentation) {
-        if(line.indexOf(this.nodeInfo.templateName) > 0) {
+        if(line.indexOf(this.nodeInfo.templateName) >= 0) {
           templateStartLineNumber = i;
         }
         continue;
@@ -346,12 +389,28 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   }
 
   onTerminate() {
-    this.workflowService.terminateWorkflow(this.namespace, this.workflow.name)
-        .subscribe(res => {
-          this.snackbarRef = this.snackbar.open('Workflow stopped', 'OK');
-        }, err => {
-          this.snackbarRef = this.snackbar.open('Unable to stop workflow', 'OK');
-        })
+    const dialog = this.dialog.open(ConfirmationDialogComponent, {
+      data: WorkflowExecutionConstants.getConfirmTerminateDialogData(this.workflow.name),
+    })
+
+    dialog.afterClosed().subscribe(res => {
+      if(!res) {
+        return;
+      }
+
+      this.workflowServiceService.terminateWorkflowExecution(this.namespace, this.workflow.uid)
+          .subscribe(res => {
+            if (this.socket) {
+              this.socket.close();
+            }
+
+            this.finishedAt = new Date();
+            this.workflow.phase = 'Terminated';
+            this.snackbarRef = this.snackbar.open('Workflow terminated', 'OK');
+          }, err => {
+            this.snackbarRef = this.snackbar.open('Unable to terminate workflow', 'OK');
+          })
+    });
   }
 
   onYamlClose() {
@@ -364,17 +423,6 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     }
 
     this.showYaml = true;
-  }
-
-  getLabels() {
-    this.workflowServiceService.getWorkflowExecutionLabels(this.namespace, this.workflow.name)
-        .subscribe(res => {
-          if(!res.labels) {
-            return;
-          }
-
-          this.labels = res.labels;
-        })
   }
 
   onEdit() {
@@ -396,10 +444,14 @@ export class WorkflowComponent implements OnInit, OnDestroy {
         return;
       }
 
-      this.workflowServiceService.replaceWorkflowExecutionLabels(this.namespace, this.workflow.name, {
+      this.loadingLabels = true;
+      this.labelService.replaceLabels(this.namespace, 'workflow_execution', this.workflow.uid, {
         items: data
       }).subscribe(res => {
         this.labels = res.labels;
+        this.loadingLabels = false;
+      }, err => {
+        this.loadingLabels = false;
       })
     });
   }
@@ -409,13 +461,13 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   }
 
   runAgain() {
-    let data: WorkflowExecution = {
-      workflowTemplate: this.workflow.workflowTemplate,
-    };
-
-    this.workflowServiceService.createWorkflowExecution(this.namespace, data)
+    this.cloning = true;
+    this.workflowServiceService.cloneWorkflowExecution(this.namespace, this.uid)
         .subscribe(res => {
-          this.router.navigate(['/', this.namespace, 'workflows', res.name]);
+          this.appRouter.navigateToWorkflowExecution(this.namespace, res.uid);
+          this.cloning = false;
+        }, err => {
+          this.cloning = false;
         })
   }
 }

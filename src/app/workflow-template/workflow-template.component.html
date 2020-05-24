@@ -6,7 +6,6 @@
     <div class="page-title">
       <div class="page-title-text">Workflows</div>
       <div class="page-action-bar">
-        <a href="#" class="help-link">How to use</a>
         <a mat-flat-button color="accent" class="op-rounded op-button ml-p40" [routerLink]="['/', this.namespace, 'workflow-templates', 'create']">
           <mat-icon id="create-button" class="icon">add_circle</mat-icon>
           <span class="ml-1">Create Template</span>
@@ -19,28 +18,49 @@
     <cdk-table [dataSource]="workflowTemplates">
       <ng-container cdkColumnDef="name">
         <cdk-header-cell *cdkHeaderCellDef>Name</cdk-header-cell>
-        <cdk-cell *cdkCellDef="let workflowTemplate">
-          <a class="name-link" [routerLink]="['/', this.namespace, 'workflow-templates', workflowTemplate.uid]">{{workflowTemplate.name}}</a>
+        <cdk-cell *cdkCellDef="let workflowTemplate" class="flex-grow-1">
+          <a class="name-link d-block" [routerLink]="['/', this.namespace, 'workflow-templates', workflowTemplate.uid]">{{workflowTemplate.name}}</a>
+          <div class="d-inline-flex justify-content-between color-medium-gray font-roboto font-size-small mt-2">
+            <div class="mr-5">{{workflowTemplate.versions}} versions</div>
+            <div class="mr-5" *ngIf="workflowTemplate.stats">{{workflowTemplate.stats?.total}} executions</div>
+            <div class="mr-5" *ngIf="!workflowTemplate.stats">0 executions</div>
+            <div *ngIf="workflowTemplate.cronStats">{{workflowTemplate.cronStats?.total}} crons</div>
+          </div>
+          <app-labels-list-view [labels]="workflowTemplate.labels" class="d-block"></app-labels-list-view>
+        </cdk-cell>
+      </ng-container>
+
+      <ng-container cdkColumnDef="lastExecuted">
+        <cdk-header-cell *cdkHeaderCellDef>Last executed</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let workflowTemplate" class="flex-grow-1">
+          <div *ngIf="workflowTemplate.stats">{{ workflowTemplate.stats.lastExecuted | amTimeAgo }}</div>
+          <div *ngIf="!workflowTemplate.stats">Not run</div>
+        </cdk-cell>
+      </ng-container>
+
+      <ng-container cdkColumnDef="status">
+        <cdk-header-cell *cdkHeaderCellDef>Status</cdk-header-cell>
+        <cdk-cell *cdkCellDef="let workflowTemplate" class="flex-grow-1">
+          <div>
+            <app-workflow-template-status *ngIf="workflowTemplate.stats" [template]="workflowTemplate.stats"></app-workflow-template-status>
+          </div>
         </cdk-cell>
       </ng-container>
 
       <ng-container cdkColumnDef="createdAt">
         <cdk-header-cell *cdkHeaderCellDef>Created</cdk-header-cell>
-        <cdk-cell *cdkCellDef="let workflowTemplate">
+        <cdk-cell *cdkCellDef="let workflowTemplate" class="flex-grow-1">
           <app-date [dateTime]="workflowTemplate.createdAt"></app-date>
         </cdk-cell>
       </ng-container>
 
       <ng-container cdkColumnDef="actions">
         <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
-        <cdk-cell *cdkCellDef="let workflowTemplate">
-          <a class="link-button" [routerLink]="['/', this.namespace, 'workflow-templates', workflowTemplate.uid]">View</a>
+        <cdk-cell *cdkCellDef="let workflowTemplate" class="flex-grow-1">
+          <div class="d-inline-flex flex-row-reverse w-100">
+            <a class="link-button" [routerLink]="['/', this.namespace, 'workflow-templates', workflowTemplate.uid]">Open</a>
+          </div>
         </cdk-cell>
-      </ng-container>
-
-      <ng-container cdkColumnDef="spacer">
-        <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
-        <cdk-cell *cdkCellDef="let workflow" class="flex-grow-1"></cdk-cell>
       </ng-container>
 
       <!-- Header and Row Declarations -->
@@ -49,11 +69,22 @@
                class="d-flex align-items-baseline op-table-row">
       </cdk-row>
     </cdk-table>
-    <app-call-to-action *ngIf="workflowTemplates.length === 0">
-      <img class="icon" width="37" src="../../assets/images/workflows-icon.svg"/>
+    <mat-paginator class="no-background font-size-small"
+                   *ngIf="workflowTemplateResponse?.workflowTemplates"
+                   (page)="onPageChange($event)"
+                   [pageIndex]="this.pagination.page"
+                   [length]="this.workflowTemplateResponse.totalCount"
+                   [pageSize]="this.pagination.pageSize"
+                   [pageSizeOptions]="[5, 10, 25, 100]">
+    </mat-paginator>
+    <app-call-to-action *ngIf="workflowTemplates.length === 0 && state ==='new'">
+      <img class="icon" width="37" src="/assets/images/workflows-icon.svg"/>
       <div class="header">Get started with workflows</div>
       <div class="body">This is where all your workflow templates live.</div>
       <a class="action underline pointer-hover" [routerLink]="['/', this.namespace, 'workflow-templates', 'create']">Creating a new workflow template</a>
     </app-call-to-action>
+    <app-loading-content *ngIf="state === 'initialization'">
+      Loading Workflows
+    </app-loading-content>
   </div>
 </div>

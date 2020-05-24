@@ -1,0 +1,6 @@
+<mat-spinner *ngIf="phase == 'Launching'"
+             color="primary"
+             class="d-inline-block"
+             [diameter]="16">
+</mat-spinner>
+<img class="adjust-top" *ngIf="phase !== 'Launching'" [src]="phase | workspacePhaseImage" />

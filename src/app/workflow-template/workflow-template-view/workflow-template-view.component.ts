@@ -4,10 +4,6 @@ import { WorkflowTemplateBase, WorkflowTemplateDetail, WorkflowTemplateService }
 import { DagComponent } from '../../dag/dag.component';
 import { NodeRenderer } from '../../node/node.service';
 import {
-  CreateWorkflow,
-  ListWorkflowRequest,
-  Workflow,
-  WorkflowResponse,
   WorkflowService
 } from '../../workflow/workflow.service';
 import { MatTabChangeEvent } from '@angular/material';
@@ -19,10 +15,11 @@ import { ConfirmationDialogComponent } from "../../confirmation-dialog/confirmat
 import { AlertService } from "../../alert/alert.service";
 import { Alert } from "../../alert/alert";
 import {
+  CreateWorkflowExecutionBody,
   CronWorkflow,
   CronWorkflowServiceService,
-  KeyValue, ListCronWorkflowsResponse,
-  WorkflowServiceService
+  KeyValue, ListCronWorkflowsResponse, ListWorkflowExecutionsResponse, WorkflowExecution,
+  WorkflowServiceService, WorkflowTemplate, WorkflowTemplateServiceService
 } from "../../../api";
 import { MatTabGroup } from "@angular/material/tabs";
 import { AppRouter } from "../../router/app-router.service";
@@ -31,6 +28,9 @@ export class Pagination {
   page: number = 0;
   pageSize: number = 15;
 }
+
+type WorkflowTemplateViewState = 'initialization' | 'new' | 'executing';
+type WorkflowTemplateViewExecutionsState = 'initialization' | 'new' | 'loading';
 
 @Component({
   selector: 'app-workflow-template-view',
@@ -53,11 +53,13 @@ export class WorkflowTemplateViewComponent implements OnInit {
   manifestText: string;
   namespace: string;
   uid: string;
+  state: WorkflowTemplateViewState = 'initialization';
+  workflowExecutionsState: WorkflowTemplateViewExecutionsState = 'initialization';
 
-  workflows: Workflow[] = [];
+  workflows: WorkflowExecution[] = [];
   cronWorkflowResponse: ListCronWorkflowsResponse;
   cronWorkflows: CronWorkflow[] = [];
-  workflowResponse: WorkflowResponse;
+  workflowResponse: ListWorkflowExecutionsResponse;
   workflowPagination = new Pagination();
   cronWorkflowPagination = new Pagination();
 
@@ -85,39 +87,23 @@ export class WorkflowTemplateViewComponent implements OnInit {
   showWorkflowExecutionsCallToAction = false;
   showCronWorkflowsCallToAction = false;
 
-  private workflowTemplateDetail: WorkflowTemplateDetail;
+  // @todo rename
+  private workflowTemplateDetail: WorkflowTemplate;
 
-  get workflowTemplate(): WorkflowTemplateDetail {
+  get workflowTemplate(): WorkflowTemplate {
     return this.workflowTemplateDetail;
   }
 
-  set workflowTemplate(value: WorkflowTemplateDetail) {
+  set workflowTemplate(value: WorkflowTemplate) {
     this.workflowTemplateDetail = value;
     this.manifestText = value.manifest;
     this.showDag();
   }
 
-  workflowTemplateVersions: WorkflowTemplateBase[] = [];
-  workflowTemplateVersionsMap = new Map<number, WorkflowTemplateBase>();
-
-  private _selectedWorkflowTemplateVersionValue: number;
-  set selectedWorkflowTemplateVersionValue(value: number) {
-    this._selectedWorkflowTemplateVersionValue = value;
-    const selectedVersion = this.workflowTemplateVersionsMap.get(value);
-
-    this.workflowTemplateService.getWorkflowTemplateForVersion(this.namespace, selectedVersion.uid, selectedVersion.version)
-      .subscribe(res => {
-        this.workflowTemplate = res;
-      });
-
-    this.getWorkflows();
-  }
-
-  get selectedWorkflowTemplateVersionValue(): number {
-    return this._selectedWorkflowTemplateVersionValue;
-  }
-
-  workflowsInterval;
+  /**
+   * refers to a setInterval. Used to make requests to update the workflows.
+   */
+  workflowsInterval: number;
 
   constructor(
     private snackBar: MatSnackBar,
@@ -128,80 +114,57 @@ export class WorkflowTemplateViewComponent implements OnInit {
     private cronWorkflowService: CronWorkflowServiceService,
     private workflowServiceService: WorkflowServiceService,
     private workflowTemplateService: WorkflowTemplateService,
+    private workflowTemplateServiceService: WorkflowTemplateServiceService,
     private dialog: MatDialog,
     private alertService: AlertService
   ) { }
 
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(next => {
+      this.state = 'initialization';
       this.namespace = next.get('namespace');
       this.uid = next.get('uid');
 
       this.getWorkflowTemplate();
-      this.getWorkflowTemplateVersions();
 
+      this.getWorkflows();
       this.workflowsInterval = setInterval(() => {
         this.getWorkflows();
       }, 5000);
 
       this.getCronWorkflows();
-      this.getLabels();
     });
   }
 
   ngOnDestroy() {
     if(this.workflowsInterval) {
       clearInterval(this.workflowsInterval);
+      this.workflowsInterval = null;
     }
   }
 
   getWorkflowTemplate() {
-    this.workflowTemplateService.getWorkflowTemplate(this.namespace, this.uid)
+    this.workflowTemplateServiceService.getWorkflowTemplate(this.namespace, this.uid)
       .subscribe(res => {
         this.workflowTemplate = res;
-      });
-  }
-
-  getWorkflowTemplateVersions() {
-    this.workflowTemplateService.listWorkflowTemplateVersions(this.namespace, this.uid)
-      .subscribe(res => {
-        if(!res.workflowTemplates) {
-          return;
-        }
-
-        this.workflowTemplateVersions = res.workflowTemplates;
-
-        if (this.workflowTemplateVersions.length === 0) {
-          return;
-        }
-
-        // Set the latest version
-        let newestVersion = this.workflowTemplateVersions[0];
-        for (const version of this.workflowTemplateVersions) {
-          this.workflowTemplateVersionsMap.set(version.version, version);
-          if (version.version > newestVersion.version) {
-            newestVersion = version;
-          }
-        }
-
-        this.selectedWorkflowTemplateVersionValue = newestVersion.version;
+        this.labels = res.labels;
+        this.state = 'new';
       });
   }
 
   getWorkflows() {
-    const request: ListWorkflowRequest = {
-      namespace: this.namespace,
-      workflowTemplateUid: this.uid,
-      pageSize: this.workflowPagination.pageSize,
-      page: this.workflowPagination.page + 1, // Tab is 0 based, so we add 1, since API is 1 based.
-    };
+    if(this.workflowExecutionsState !== 'initialization') {
+      this.workflowExecutionsState = 'loading';
+    }
 
-    this.workflowService.listWorkflows(request)
+    const page = this.workflowPagination.page + 1;
+    this.workflowServiceService.listWorkflowExecutions(this.namespace, this.uid, null, this.workflowPagination.pageSize, page)
       .subscribe(res => {
         this.workflowResponse = res;
         this.workflows = res.workflowExecutions;
 
-        this.hasWorkflowExecutions = !(request.page === 1 && !res.workflowExecutions);
+        this.workflowExecutionsState = 'new';
+        this.hasWorkflowExecutions = !(page === 1 && !res.workflowExecutions);
       });
   }
 
@@ -228,61 +191,54 @@ export class WorkflowTemplateViewComponent implements OnInit {
         result.workflowExecution.workflowTemplate = this.workflowTemplate;
 
         const request: CronWorkflow = {
-          schedule: result.cron.schedule,
-          timezone: result.cron.timezone,
-          suspend: result.cron.suspend,
-          concurrencyPolicy: result.cron.concurrencyPolicy,
-          startingDeadlineSeconds: result.cron.startingDeadlineSeconds,
-          successfulJobsHistoryLimit: result.cron.successfulJobsHistoryLimit,
-          failedJobsHistoryLimit: result.cron.failedJobsHistoryLimit,
-          workflowExecution: result.workflowExecution
+          manifest: result.cron.manifest,
+          workflowExecution: result.workflowExecution,
+          labels: result.workflowExecution.labels,
         };
 
-        this.executeCronWorkflowRequest(request, result.labels);
+        this.executeCronWorkflowRequest(request);
 
       } else {
-        const request: CreateWorkflow = {
-          namespace: this.namespace,
-          workflowTemplate: this.workflowTemplate,
+        const request: CreateWorkflowExecutionBody = {
+          workflowTemplateUid: this.workflowTemplate.uid,
           parameters: result.workflowExecution.parameters,
+          labels: result.workflowExecution.labels,
         };
 
-        this.executeWorkflowRequest(request, result.labels);
+        this.executeWorkflowRequest(request);
       }
     });
   }
 
-  protected executeWorkflowRequest(request: CreateWorkflow, labels: any) {
-    this.workflowService.executeWorkflow(this.namespace, request)
+  protected executeWorkflowRequest(request: CreateWorkflowExecutionBody) {
+    this.state = 'executing';
+    this.workflowServiceService.createWorkflowExecution(this.namespace, request)
         .subscribe(res => {
-          this.workflowServiceService.addWorkflowExecutionLabels(this.namespace, res.name, {
-            items: labels
-          })
-              .subscribe(res => {
-                // Do nothing
-              }, err => {
-                // Do nothing
-              }, () => {
-                this.router.navigate(['/', this.namespace, 'workflows', res.name]);
-              });
-
+          this.appRouter.navigateToWorkflowExecution(this.namespace, res.name);
         }, err => {
-
+          this.state = 'new';
+          this.alertService.storeAlert(new Alert({
+            message: 'Unable to execute workflow',
+            type: 'danger'
+          }));
         });
   }
 
-  protected executeCronWorkflowRequest(data: CronWorkflow, labels: any) {
-      this.cronWorkflowService.createCronWorkflow(this.namespace, data)
-          .subscribe(res => {
-            this.getCronWorkflows();
-            this.matTabGroup.selectedIndex = 1;
-            this.alertService.storeAlert(new Alert({
-              message: `You have scheduled "${res.name}"`,
-              type: "success"
-            }))
-          }, err => {
+  protected executeCronWorkflowRequest(data: CronWorkflow) {
+    this.state = 'executing';
 
-          });
+    this.cronWorkflowService.createCronWorkflow(this.namespace, data)
+        .subscribe(res => {
+          this.getCronWorkflows();
+          this.matTabGroup.selectedIndex = 1;
+          this.alertService.storeAlert(new Alert({
+            message: `You have scheduled "${res.name}"`,
+            type: "success"
+          }))
+          this.state = 'new';
+        }, err => {
+          this.state = 'new';
+        });
   }
 
   showDag() {
@@ -304,6 +260,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
   }
 
   editSelectedWorkflowTemplateVersion() {
+    // @todo use appRouter
     this.router.navigate(['/', this.namespace, 'workflow-templates', this.workflowTemplateDetail.uid, 'edit']);
   }
 
@@ -330,7 +287,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
       width: '500px',
       data: {
         title: 'Are you sure you want to delete this template?',
-        message: 'Once deleted, this template can not be brought back',
+        message: 'All related Workflow Executions and Scheduled Workflows will also be deleted.',
         confirmText: 'YES, DELETE TEMPLATE',
         type: 'delete'
       }
@@ -351,17 +308,6 @@ export class WorkflowTemplateViewComponent implements OnInit {
             }));
           })
     });
-  }
-
-  getLabels() {
-    this.workflowServiceService.getWorkflowTemplateLabels(this.namespace, this.uid)
-        .subscribe(res => {
-          if(!res.labels) {
-            return;
-          }
-
-          this.labels = res.labels;
-        })
   }
 
   getCronWorkflows() {
@@ -392,5 +338,9 @@ export class WorkflowTemplateViewComponent implements OnInit {
     }
 
     this.showCronWorkflowsCallToAction = !this.hasCronWorkflows && this.matTabGroup.selectedIndex === 1;
+  }
+
+  onWorkflowExecutionTerminated() {
+    this.getWorkflows();
   }
 }

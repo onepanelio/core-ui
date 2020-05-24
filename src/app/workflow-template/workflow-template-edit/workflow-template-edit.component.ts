@@ -1,83 +1,61 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { WorkflowTemplateBase, WorkflowTemplateDetail, WorkflowTemplateService } from '../workflow-template.service';
-import { DagComponent } from '../../dag/dag.component';
-import { NodeRenderer } from '../../node/node.service';
-import { WorkflowService } from '../../workflow/workflow.service';
 import { HttpErrorResponse } from "@angular/common/http";
-import { AceEditorComponent } from "ng2-ace-editor";
-import * as yaml from 'js-yaml';
-import * as ace from 'brace';
-import { Alert } from "../../alert/alert";
-import { KeyValue, WorkflowServiceService } from "../../../api";
 import { LabelsEditComponent } from "../../labels/labels-edit/labels-edit.component";
-const aceRange = ace.acequire('ace/range').Range;
+import {
+    WorkflowTemplateSelected,
+    WorkflowTemplateSelectHeader,
+    WorkflowTemplateSelectItem
+} from "../../workflow-template-select/workflow-template-select.component";
+import { AppRouter } from "../../router/app-router.service";
+import {
+    KeyValue,
+    LabelServiceService,
+    WorkflowTemplate,
+    WorkflowTemplateServiceService
+} from "../../../api";
+import { ManifestDagEditorComponent } from "../../manifest-dag-editor/manifest-dag-editor.component";
+import { DatePipe } from "@angular/common";
 
 @Component({
   selector: 'app-workflow-template-edit',
   templateUrl: './workflow-template-edit.component.html',
   styleUrls: ['./workflow-template-edit.component.scss'],
-  providers: [WorkflowService, WorkflowTemplateService]
+  providers: [DatePipe]
 })
 export class WorkflowTemplateEditComponent implements OnInit {
-  @ViewChild(DagComponent, {static: false}) dag: DagComponent;
-  @ViewChild(AceEditorComponent, {static: false}) aceEditor: AceEditorComponent;
+  @ViewChild(ManifestDagEditorComponent, {static: false}) manifestDagEditor: ManifestDagEditorComponent;
   @ViewChild(LabelsEditComponent, {static: false}) labelEditor: LabelsEditComponent;
 
   manifestText: string;
-  manifestTextCurrent: string;
-  serverError: Alert;
-
   namespace: string;
   uid: string;
 
-  workflowTemplateDetail: WorkflowTemplateDetail;
-  errorMarkerId;
-
+  _workflowTemplate: WorkflowTemplate;
   labels = new Array<KeyValue>();
+  workflowTemplateVersions: WorkflowTemplate[] = [];
+  selectedWorkflowTemplateVersion: string;
 
-  get workflowTemplate(): WorkflowTemplateDetail {
-    return this.workflowTemplateDetail;
+  // This is what we display in the side menu
+  workflowTemplateListItems = new Array<WorkflowTemplateSelectItem>();
+
+  get workflowTemplate(): WorkflowTemplate {
+    return this._workflowTemplate;
   }
 
-  set workflowTemplate(value: WorkflowTemplateDetail) {
-    if (!this.dag) {
-      setTimeout( () => this.workflowTemplate = value, 500);
-      return;
-    }
-
-    this.workflowTemplateDetail = value;
-    const g = NodeRenderer.createGraphFromManifest(value.manifest);
-    this.dag.display(g);
-
+  set workflowTemplate(value: WorkflowTemplate) {
+    this._workflowTemplate = value;
     this.manifestText = value.manifest;
-    this.manifestTextCurrent = value.manifest;
-  }
-
-  workflowTemplateVersions: WorkflowTemplateBase[] = [];
-  workflowTemplateVersionsMap = new Map<number, WorkflowTemplateBase>();
-
-  private _selectedWorkflowTemplateVersionValue: number;
-  set selectedWorkflowTemplateVersionValue(value: number) {
-    this._selectedWorkflowTemplateVersionValue = value;
-    const selectedVersion = this.workflowTemplateVersionsMap.get(value);
-
-    this.workflowTemplateService.getWorkflowTemplateForVersion(this.namespace, selectedVersion.uid, selectedVersion.version)
-      .subscribe(res => {
-        this.workflowTemplate = res;
-
-        if (!res.isLatest) {
-          // this.router.navigate(['/', this.namespace, 'workflow-templates', res.uid]);
-        }
-      });
   }
 
   constructor(
-    private router: Router,
+    private appRouter: AppRouter,
     private activatedRoute: ActivatedRoute,
-    private workflowService: WorkflowService,
-    private workflowTemplateService: WorkflowTemplateService,
-    private workflowServiceService: WorkflowServiceService) { }
+    private workflowTemplateService: WorkflowTemplateServiceService,
+    private labelService: LabelServiceService,
+    private datePipe: DatePipe) {
+
+  }
 
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(next => {
@@ -86,7 +64,6 @@ export class WorkflowTemplateEditComponent implements OnInit {
 
       this.getWorkflowTemplate();
       this.getWorkflowTemplateVersions();
-      this.getLabels();
     });
   }
 
@@ -94,112 +71,100 @@ export class WorkflowTemplateEditComponent implements OnInit {
     this.workflowTemplateService.getWorkflowTemplate(this.namespace, this.uid)
       .subscribe(res => {
         this.workflowTemplate = res;
+        this.selectedWorkflowTemplateVersion = res.version;
+        this.labels = res.labels || [];
       });
-  }
-
-  onManifestChange(newManifest: string) {
-    this.manifestTextCurrent = newManifest;
-
-    if(newManifest === '') {
-      this.dag.clear();
-      return;
-    }
-
-    if(this.errorMarkerId) {
-      this.aceEditor.getEditor().session.removeMarker(this.errorMarkerId)
-    }
-
-    try {
-      const g = NodeRenderer.createGraphFromManifest(newManifest);
-      this.dag.display(g);
-      setTimeout( () => {
-         this.serverError = null;
-      });
-    }
-    catch (e) {
-      if(e instanceof yaml.YAMLException) {
-          const line = e.mark.line + 1;
-          const column = e.mark.column + 1;
-
-          const codeErrorRange = new aceRange(line - 1, 0, line - 1, column);
-          this.errorMarkerId = this.aceEditor.getEditor().session.addMarker(codeErrorRange, "highlight-error", "fullLine");
-
-          this.serverError = {
-              message: e.reason + " at line: " + line + " column: " + column,
-              type: 'danger'
-          };
-      }
-    }
   }
 
   getWorkflowTemplateVersions() {
     this.workflowTemplateService.listWorkflowTemplateVersions(this.namespace, this.uid)
       .subscribe(res => {
         this.workflowTemplateVersions = res.workflowTemplates;
-
         if (this.workflowTemplateVersions.length === 0) {
           return;
         }
 
-        // Set the latest version
-        let newestVersion = this.workflowTemplateVersions[0];
-        for (const version of this.workflowTemplateVersions) {
-          this.workflowTemplateVersionsMap.set(version.version, version);
-
-          if (version.isLatest) {
-            newestVersion = version;
-          }
+        let header: WorkflowTemplateSelectHeader = {
+            title: 'Versions',
+            image: '/assets/images/workflows-blank-icon.svg'
         }
 
-        this.selectedWorkflowTemplateVersionValue = newestVersion.version;
+        let children = new Array<WorkflowTemplateSelected>();
+
+        for(const version of this.workflowTemplateVersions) {
+            const dateValue = this.datePipe.transform(version.createdAt, 'MMM d, y h:mm:ss a')
+            let newItem: WorkflowTemplateSelected = {
+                name: `${dateValue}`,
+                manifest: version.manifest
+            };
+
+            children.push(newItem);
+        }
+
+        this.workflowTemplateListItems = [{
+            header: header,
+            children: children
+        }];
+
       });
   }
 
   update() {
-    // @todo display error message if duplicates.
+    // @todo display error message if there are duplicates in the labels.
     if(!this.labelEditor.isValid) {
         this.labelEditor.markAllAsDirty();
         return;
     }
 
+    const manifestText = this.manifestDagEditor.manifestTextCurrent;
+
     this.workflowTemplateService
       .createWorkflowTemplateVersion(
         this.namespace,
-        this.workflowTemplateDetail.uid,
+        this.workflowTemplate.uid,
         {
-          name: this.workflowTemplateDetail.name,
-          manifest: this.manifestTextCurrent,
+          name: this.workflowTemplate.name,
+          manifest: manifestText,
+          labels: this.labels,
         })
       .subscribe(res => {
-        this.workflowServiceService.replaceWorkflowTemplateLabels(this.namespace, this.workflowTemplateDetail.uid, {
-            items: this.labels
-        }).subscribe( labelRes => {
-            // Do nothing
-        }, err => {
-            // Do nothing
-        }, () => {
-            this.router.navigate(['/', this.namespace, 'workflow-templates', this.workflowTemplateDetail.uid]);
-        })
+          this.appRouter.navigateToWorkflowTemplateView(this.namespace, this.workflowTemplate.uid);
       }, (err: HttpErrorResponse) => {
-        this.serverError = {
-          message: err.error.message,
-          type: 'danger',
+        this.manifestDagEditor.serverError = {
+            message: err.error.message,
+            type: 'danger',
         };
       });
   }
 
   cancel() {
-    this.router.navigate(['/', this.namespace, 'workflow-templates', this.workflowTemplateDetail.uid]);
+    this.appRouter.navigateToWorkflowTemplateView(this.namespace, this.workflowTemplate.uid);
   }
 
-  getLabels() {
-    this.workflowServiceService.getWorkflowTemplateLabels(this.namespace, this.uid)
+  getLabels(version: string|null = null) {
+      const templateVersion = this.workflowTemplateVersions.find(wft => wft.version === version);
+      if(!templateVersion) {
+          return;
+      }
+
+      this.labelService.getLabels(this.namespace, 'workflow_template_version', templateVersion.uid)
         .subscribe(res => {
             if(!res.labels) {
+                this.labels = [];
                 return;
             }
 
             this.labels = res.labels;
         })
+  }
+
+  onVersionSelected(selected: string) {
+      const version = this.workflowTemplateVersions.find(wft => wft.version === selected);
+      if(!version) {
+          return;
+      }
+
+      this.manifestText = version.manifest;
+      this.getLabels(version.version);
   }
 }

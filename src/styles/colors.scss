@@ -6,10 +6,12 @@ $medium-white: #f7f7f7;
 $dark-white: #c1c1c1;
 $primary-light: #EDF2FD;
 $primary-lighter: #BED2FE;
+$toolbar-white: #F5F5F5;
 $primary: #01579b;
 $primary-dark: rgb(1,87,155);
 $primary-darker: #003D7A;
-$secondary: #ff9100;
+$secondary: #FFC84C;
+$secondary-light: #FFF7E4;
 $danger: #d32345;
 $danger-medium: #E4CACF;
 $danger-light: #FEE9ED;
@@ -26,6 +28,8 @@ $background-color: $light-gray;
 
 $colors: (
   "white": $white,
+  "background-color": $background-color,
+  "toolbar-white": $toolbar-white,
   "lighter-white": $lighter-white,
   "light-white": $light-white,
   "medium-white": $medium-white,
@@ -37,6 +41,7 @@ $colors: (
   "primary-dark": $primary-dark,
   "primary-darker": $primary-darker,
   "secondary": $secondary,
+  "secondary-light": $secondary-light,
   "danger": $danger,
   "danger-medium": $danger-medium,
   "danger-light": $danger-light,
