@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { KeyValue, WorkspaceTemplate, WorkspaceTemplateServiceService } from "../../../../api";
 import { ActivatedRoute } from "@angular/router";
@@ -18,6 +18,8 @@ export class WorkspaceTemplateCreateComponent implements OnInit {
 
   @Output() cancelEmitted = new EventEmitter();
   @Output() saveEmitted = new EventEmitter<WorkspaceTemplate>();
+
+  @Input() loading = false;
 
   namespace: string;
 
