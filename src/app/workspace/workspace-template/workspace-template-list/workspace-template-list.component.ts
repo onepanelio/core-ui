@@ -49,6 +49,7 @@ export class WorkspaceTemplateListComponent implements OnInit {
   selectedTemplate: WorkspaceTemplate|null|undefined = null;
 
   workspaceTemplateEditLoading = false;
+  creatingWorkspaceTemplate = false;
 
   constructor(
       private appRouter: AppRouter,
@@ -67,11 +68,35 @@ export class WorkspaceTemplateListComponent implements OnInit {
     });
   }
 
+  private setWorkspaceTemplateEditorAlert(alert: Alert) {
+    if(!this.workspaceTemplateEditor) {
+      setTimeout(() => {
+        this.setWorkspaceTemplateEditorAlert(alert);
+      }, 250)
+    }
+
+    this.workspaceTemplateEditor.setAlert(alert);
+  }
+
   getWorkspaceTemplates() {
     this.workspaceTemplateService.listWorkspaceTemplates(this.namespace, this.pagination.pageSize, this.pagination.page + 1)
         .subscribe(res => {
           this.workspaceTemplatesResponse = res;
           this.workspaceTemplates = res.workspaceTemplates;
+        })
+  }
+
+  getWorkspaceTemplatesAndSelect(template: WorkspaceTemplate) {
+    this.workspaceTemplateService.listWorkspaceTemplates(this.namespace, this.pagination.pageSize, this.pagination.page + 1)
+        .subscribe(res => {
+          this.workspaceTemplatesResponse = res;
+          this.workspaceTemplates = res.workspaceTemplates;
+
+          this.selectTemplate(template);
+
+          this.setWorkspaceTemplateEditorAlert(new Alert({
+            message: `Created workspace template "${template.name}"`,
+          }));
         })
   }
 
@@ -91,12 +116,14 @@ export class WorkspaceTemplateListComponent implements OnInit {
   }
 
   onCreate(template: WorkspaceTemplate) {
+    this.creatingWorkspaceTemplate = true;
     this.workspaceTemplateService.createWorkspaceTemplate(this.namespace, template)
         .subscribe(res => {
-          this.getWorkspaceTemplates();
-          this.cancelWorkspaceTemplate();
+          this.getWorkspaceTemplatesAndSelect(res);
+          this.creatingWorkspaceTemplate = false;
         }, (err: HttpErrorResponse) => {
           if(err.status === 409) {
+            this.creatingWorkspaceTemplate = false;
             this.workspaceTemplateCreateEditor.setAlert(new Alert({
               message: err.error.message,
               type: 'danger',

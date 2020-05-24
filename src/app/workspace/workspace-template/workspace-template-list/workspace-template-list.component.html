@@ -60,7 +60,8 @@
     <app-workspace-template-create
             *ngIf="showWorkspaceTemplateEditor && selectedTemplate === null"
             (cancelEmitted)="cancelWorkspaceTemplate()"
-            (saveEmitted)="onCreate($event)">
+            (saveEmitted)="onCreate($event)"
+            [loading]="creatingWorkspaceTemplate">
     </app-workspace-template-create>
 
     <app-workspace-template-edit
