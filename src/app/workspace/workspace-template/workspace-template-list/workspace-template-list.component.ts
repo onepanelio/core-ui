@@ -11,7 +11,10 @@ import { Pagination } from "../../../workflow-template/workflow-template-view/wo
 import { WorkspaceTemplateEditComponent } from "../workspace-template-edit/workspace-template-edit.component";
 import { Alert } from "../../../alert/alert";
 import { MatDialog } from "@angular/material/dialog";
-import { WorkspaceExecuteDialogComponent } from "../../workspace-execute-dialog/workspace-execute-dialog.component";
+import {
+  WorkspaceExecuteDialogComponent,
+  WorkspaceExecuteDialogResult
+} from "../../workspace-execute-dialog/workspace-execute-dialog.component";
 import { PageEvent } from "@angular/material/paginator";
 import { AppRouter } from "../../../router/app-router.service";
 import { AlertService } from "../../../alert/alert.service";
@@ -127,8 +130,8 @@ export class WorkspaceTemplateListComponent implements OnInit {
       }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (!result || result === 'close') {
+    dialogRef.afterClosed().subscribe((result: WorkspaceExecuteDialogResult) => {
+      if (!result || result === 'cancel') {
         return;
       }
 
