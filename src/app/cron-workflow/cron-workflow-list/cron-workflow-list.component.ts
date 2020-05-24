@@ -16,6 +16,10 @@ import {
 } from "../cron-workflow-edit-dialog/cron-workflow-edit-dialog.component";
 import { WorkflowExecuteDialogComponent } from "../../workflow/workflow-execute-dialog/workflow-execute-dialog.component";
 import * as yaml from 'js-yaml';
+import {
+  ConfirmationDialogComponent,
+  ConfirmationDialogData
+} from "../../confirmation-dialog/confirmation-dialog.component";
 
 @Component({
   selector: 'app-cron-workflow-list',
@@ -132,13 +136,28 @@ export class CronWorkflowListComponent implements OnInit {
 
 
   onDelete(workflow: CronWorkflow) {
-    this.cronWorkflowServiceService.deleteCronWorkflow(this.namespace, workflow.uid)
-        .subscribe(res => {
-          this.listRowsModified.emit();
-          this.snackbarRef = this.snackbar.open('Scheduled workflow deleted', 'OK');
-        }, err => {
-          this.snackbarRef = this.snackbar.open('Unable to stop workflow', 'OK');
-        })
-    ;
+    const data: ConfirmationDialogData = {
+      title: `Are you sure you want to delete "${workflow.name}"?`,
+      confirmText: 'DELETE',
+      type: 'delete',
+    }
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: data
+    })
+
+    dialogRef.afterClosed().subscribe(res => {
+      if(!res) {
+        return;
+      }
+
+      this.cronWorkflowServiceService.deleteCronWorkflow(this.namespace, workflow.uid)
+          .subscribe(res => {
+            this.listRowsModified.emit();
+            this.snackbarRef = this.snackbar.open('Scheduled workflow deleted', 'OK');
+          }, err => {
+            this.snackbarRef = this.snackbar.open('Unable to stop workflow', 'OK');
+          })
+      ;
+    })
   }
 }
