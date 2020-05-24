@@ -30,6 +30,7 @@ export class AuthService {
     let cookieString = 'auth-token=' + token + ';path=/;expires=' + expires;
     if(domain) {
       cookieString += ';domain=' + domain;
+      localStorage.setItem('auth-domain', domain);
     }
 
     document.cookie = cookieString;
@@ -38,8 +39,16 @@ export class AuthService {
   }
 
   clearTokens() {
+    const domain = localStorage.getItem('auth-domain');
+    let cookieString = 'auth-token=;path=/;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    if(domain) {
+      cookieString += ';domain=' + domain;
+    }
+
     localStorage.removeItem('auth-token');
-    document.cookie = 'auth-token=;path=/;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    localStorage.removeItem('auth-domain');
+
+    document.cookie = cookieString;
     this.authToken = undefined;
   }
 
