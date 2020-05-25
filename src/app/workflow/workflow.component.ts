@@ -124,7 +124,11 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   private getWorkflowTemplateParametersFromWorkflow(workflow: WorkflowExecution): Array<Parameter> {
     try {
       const workflowTemplateManifest = yaml.safeLoad(workflow.workflowTemplate.manifest);
-      return workflowTemplateManifest.arguments.parameters;
+      if(workflowTemplateManifest.arguments && workflowTemplateManifest.arguments.parameters) {
+        return workflowTemplateManifest.arguments.parameters;
+      }
+
+      return [];
     } catch (e) {
       console.error(e);
       return [];
