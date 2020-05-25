@@ -76,7 +76,8 @@ export class WorkspaceViewComponent implements OnInit, OnDestroy {
   getWorkspace() {
     this.workspaceService.getWorkspace(this.namespace, this.workspaceUid).subscribe(res => {
       this.workspace = res;
-      this.workspaceUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(res.url);
+      // t query parameter is so we avoid caching the response.
+      this.workspaceUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(res.url + "?t=" + Date.now());
 
       this.parameters = res.parameters;
       
