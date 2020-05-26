@@ -126,10 +126,16 @@ export class WorkspaceTemplateListComponent implements OnInit {
           this.getWorkspaceTemplatesAndSelect(res);
           this.creatingWorkspaceTemplate = false;
         }, (err: HttpErrorResponse) => {
+          this.creatingWorkspaceTemplate = false;
+
           if(err.status === 409) {
-            this.creatingWorkspaceTemplate = false;
             this.workspaceTemplateCreateEditor.setAlert(new Alert({
               message: err.error.message,
+              type: 'danger',
+            }));
+          } else {
+            this.workspaceTemplateCreateEditor.setAlert(new Alert({
+              message: 'Unable to create workspace template',
               type: 'danger',
             }));
           }
