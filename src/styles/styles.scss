@@ -466,3 +466,13 @@ mat-spinner.color-medium-gray {
       }
     }
 }
+
+mat-spinner.color-danger {
+  &.mat-progress-spinner {
+    svg {
+      circle {
+        stroke: $danger;
+      }
+    }
+  }
+}
