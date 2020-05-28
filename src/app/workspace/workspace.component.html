@@ -99,7 +99,7 @@
             <i class="far fa-play-circle mr-1 workspace-menu-icon"></i>
             Resume
         </button>
-        <button mat-menu-item (click)="onDelete(workspace)">
+        <button mat-menu-item (click)="onDelete(workspace)" [disabled]="workspace.status.phase === 'Terminating'">
             <i class="fas fa-trash mr-1 workspace-menu-icon"></i>
             Delete
         </button>
