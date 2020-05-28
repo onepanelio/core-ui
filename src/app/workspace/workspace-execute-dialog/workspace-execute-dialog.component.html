@@ -3,6 +3,9 @@
 
 <form [formGroup]="form">
     <div class="mr-12">
+
+        <app-alert [alert]="alert" [autoDismiss]="false" class="d-block mt-3"></app-alert>
+
         <mat-form-field *ngIf="state !== 'no-templates'" class="mt-7 fix-mat-overflow w-100" appearance="outline">
             <mat-label>Template</mat-label>
             <mat-select [value]="workspaceTemplateUid" (valueChange)="onSelectWorkspaceTemplate($event)">
