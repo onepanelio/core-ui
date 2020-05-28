@@ -2,7 +2,6 @@ import { Component, Inject, OnInit } from '@angular/core';
 import {
   CreateWorkspaceBody,
   KeyValue,
-  NamespaceServiceService,
   Parameter, WorkspaceServiceService,
   WorkspaceTemplate,
   WorkspaceTemplateServiceService
@@ -15,6 +14,7 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 import { NamespaceTracker } from "../../namespace/namespace-tracker.service";
 import { AppRouter } from "../../router/app-router.service";
 import { HttpErrorResponse } from "@angular/common/http";
+import { Alert } from "../../alert/alert";
 
 export interface WorkspaceExecuteDialogData {
   namespace: string;
@@ -42,6 +42,8 @@ export class WorkspaceExecuteDialogComponent implements OnInit {
   state: WorkspaceExecutionState = 'loading';
 
   form: FormGroup;
+
+  alert?: Alert = null;
 
   constructor(
       public dialogRef: MatDialogRef<WorkspaceExecuteDialogComponent>,
@@ -91,17 +93,24 @@ export class WorkspaceExecuteDialogComponent implements OnInit {
     this.state = 'creating';
     this.errors = {};
 
+    this.alert = null;
+
     this.workspaceService.createWorkspace(this.namespace, createWorkspace)
         .subscribe(res => {
           this.state = 'ready';
           this.dialogRef.close('created');
         }, (err: HttpErrorResponse) => {
+          this.state = 'ready';
           if(err.status === 409) {
             this.errors = {
               'sys-name': 'conflict'
             };
+          } else {
+            this.alert = new Alert({
+              message: 'Unable to create workspace',
+              type: 'danger'
+            });
           }
-          this.state = 'ready';
         })
   }
 
