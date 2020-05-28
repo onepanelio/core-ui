@@ -77,6 +77,8 @@ export class WorkspaceTemplateListComponent implements OnInit {
       setTimeout(() => {
         this.setWorkspaceTemplateEditorAlert(alert);
       }, 250)
+
+      return;
     }
 
     this.workspaceTemplateEditor.setAlert(alert);
