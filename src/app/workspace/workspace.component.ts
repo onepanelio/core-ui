@@ -55,7 +55,25 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
         .subscribe(res => {
           this.workspaceResponse = res;
           if(res.workspaces) {
-            this.workspaces = res.workspaces;
+            if(this.workspaces.length !== res.workspaces.length) {
+              this.workspaces = res.workspaces;
+            } else {
+              let map = new Map<string, Workspace>();
+              for(let workspace of this.workspaces) {
+                map.set(workspace.uid, workspace);
+              }
+
+              for(let workspace of res.workspaces) {
+                let existingWorkspace = map.get(workspace.uid);
+                if(existingWorkspace) {
+                  existingWorkspace.status = workspace.status;
+                  existingWorkspace.labels = workspace.labels;
+                } else {
+                  this.workspaces = res.workspaces;
+                  break;
+                }
+              }
+            }
           }
 
           this.state = 'new';
@@ -90,6 +108,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
   }
 
   onPause(workspace: Workspace) {
+    workspace.status.phase = 'Pausing';
     this.workspaceService.pauseWorkspace(this.namespace, workspace.uid)
         .subscribe(res => {
           // Do nothing
@@ -97,6 +116,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
   }
 
   onResume(workspace: Workspace) {
+    workspace.status.phase = 'Launching';
     this.workspaceService.resumeWorkspace(this.namespace, workspace.uid)
         .subscribe(res => {
           // Do nothing
@@ -104,6 +124,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
   }
 
   onDelete(workspace: Workspace) {
+    workspace.status.phase = 'Terminating';
     this.workspaceService.deleteWorkspace(this.namespace, workspace.uid)
         .subscribe(res => {
           // Do nothing
