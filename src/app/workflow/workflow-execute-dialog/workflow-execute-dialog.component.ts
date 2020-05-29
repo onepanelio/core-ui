@@ -60,9 +60,16 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
   }
 
   getData() {
+    let formattedParameters = [];
+    for(let parameter of this.parameters) {
+      // convert all the parameters to string
+      parameter.value = parameter.value.toString();
+      formattedParameters.push(parameter);
+    }
+
     let data = {
       workflowExecution: {
-        parameters: this.parameters,
+        parameters: formattedParameters,
         labels: this.labels,
       }
     };

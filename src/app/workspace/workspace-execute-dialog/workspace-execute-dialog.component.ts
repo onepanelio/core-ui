@@ -84,9 +84,16 @@ export class WorkspaceExecuteDialogComponent implements OnInit {
   }
 
   createAndRun() {
+    let formattedParameters = [];
+    for(let parameter of this.parameters) {
+      // convert all the parameters to string
+      parameter.value = parameter.value.toString();
+      formattedParameters.push(parameter);
+    }
+
     const createWorkspace: CreateWorkspaceBody = {
       workspaceTemplateUid: this.workspaceTemplate.uid,
-      parameters: this.parameters,
+      parameters: formattedParameters,
       labels: this.labels
     };
 
