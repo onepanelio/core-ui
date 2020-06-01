@@ -23,6 +23,10 @@
   }
 }
 
+/deep/ app-labels-list-view .labels-list-item {
+  margin-top: 10px;
+}
+
 /deep/ mat-paginator .mat-icon-button {
   line-height: 27px !important;
 }
