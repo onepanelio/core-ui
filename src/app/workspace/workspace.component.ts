@@ -171,13 +171,10 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
     workspace.status.phase = 'Pausing';
     this.workspaceService.pauseWorkspace(this.namespace, workspace.uid)
         .subscribe(res => {
-          // Do nothing
-        }, err => {
-          // Do nothing
-        },
-        () => {
           this.markWorkspaceDoneUpdating(workspace);
-        })
+        }, err => {
+          this.markWorkspaceDoneUpdating(workspace);
+        });
   }
 
   onResume(workspace: Workspace) {
@@ -185,12 +182,10 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
     workspace.status.phase = 'Launching';
     this.workspaceService.resumeWorkspace(this.namespace, workspace.uid)
         .subscribe(res => {
-          // Do nothing
-        }, err => {
-          // Do nothing
-        }, () => {
           this.markWorkspaceDoneUpdating(workspace);
-        })
+        }, err => {
+          this.markWorkspaceDoneUpdating(workspace);
+        });
   }
 
   onDelete(workspace: Workspace) {
@@ -198,11 +193,9 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
     workspace.status.phase = 'Terminating';
     this.workspaceService.deleteWorkspace(this.namespace, workspace.uid)
         .subscribe(res => {
-          // Do nothing
-        }, err => {
-          // Do nothing
-        }, () => {
           this.markWorkspaceDoneUpdating(workspace);
-        })
+        }, err => {
+          this.markWorkspaceDoneUpdating(workspace);
+        });
   }
 }
