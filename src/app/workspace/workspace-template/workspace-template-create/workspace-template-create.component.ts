@@ -23,6 +23,12 @@ export class WorkspaceTemplateCreateComponent implements OnInit {
 
   namespace: string;
 
+  /**
+   * manifestChangedSinceSave keeps track if any changes have been made since save was emitted.
+   * It starts as false since the default template is not important and does not contain any custom user changes.
+   */
+  manifestChangedSinceSave = false;
+
   private defaultManifest = `# Docker containers that are part of the Workspace
 containers:
 - name: http
@@ -50,7 +56,7 @@ routes:
   - destination:
       port:
         number: 80
-# DAG Workflow to be executed once a Workspace action completes
+# DAG Workflow to be executed once a Workspace action completes (optional)
 postExecutionWorkflow:
   entrypoint: main
   templates:
@@ -99,10 +105,12 @@ postExecutionWorkflow:
       setTimeout(() => {
         this.setDefaultManifest();
       }, 100)
-    } else {
-      this.manifest = this.defaultManifest;
-      this.manifestDagEditor.onManifestChange(this.defaultManifest);
+
+      return;
     }
+
+    this.manifest = this.defaultManifest;
+    this.manifestDagEditor.onManifestChange(this.defaultManifest, false);
   }
 
   ngOnInit() {
@@ -142,9 +150,24 @@ postExecutionWorkflow:
     };
 
     this.saveEmitted.emit(body);
+
+    this.manifestChangedSinceSave = false;
   }
 
   setAlert(alert: Alert) {
     this.manifestDagEditor.notification = alert;
+  }
+
+  onManifestTextModified(manifest: string) {
+    // No need to set it again
+    if(this.manifestChangedSinceSave) {
+      return;
+    }
+
+    if(manifest === this.defaultManifest) {
+      return;
+    }
+
+    this.manifestChangedSinceSave = true;
   }
 }

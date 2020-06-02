@@ -16,6 +16,7 @@ import { WorkspaceComponent } from "./workspace/workspace.component";
 import { WorkspaceTemplateListComponent } from "./workspace/workspace-template/workspace-template-list/workspace-template-list.component";
 import { WorkspaceTemplateCreateComponent } from "./workspace/workspace-template/workspace-template-create/workspace-template-create.component";
 import { WorkspaceViewComponent } from "./workspace/workspace-view/workspace-view.component";
+import { CanDeactivateGuard } from "./guards/can-deactivate.guard";
 
 const routes: Routes = [
   {
@@ -66,6 +67,7 @@ const routes: Routes = [
     path: ':namespace/workspace-templates',
     component: WorkspaceTemplateListComponent,
     canActivate: [AuthGuard],
+    canDeactivate: [CanDeactivateGuard]
   },
   {
     path: ':namespace/workspace-templates/create',

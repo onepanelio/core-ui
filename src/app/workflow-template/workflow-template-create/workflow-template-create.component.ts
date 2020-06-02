@@ -3,7 +3,7 @@ import {
   WorkflowTemplateDetail,
   WorkflowTemplateService
 } from '../workflow-template.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { WorkflowService } from "../../workflow/workflow.service";
 import {
   WorkflowTemplateSelectComponent,
@@ -14,7 +14,6 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/fo
 import { HttpErrorResponse } from "@angular/common/http";
 import * as ace from 'brace';
 import { ClosableSnackComponent } from "../../closable-snack/closable-snack.component";
-import { Alert } from "../../alert/alert";
 import { KeyValue, WorkflowServiceService, WorkflowTemplateServiceService } from "../../../api";
 import { LabelsEditComponent } from "../../labels/labels-edit/labels-edit.component";
 import { ManifestDagEditorComponent } from "../../manifest-dag-editor/manifest-dag-editor.component";
@@ -126,7 +125,7 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy {
             return;
           }
 
-          this.manifestDagEditor.serverError = {
+          this.manifestDagEditor.error = {
             message: err.error.message,
             type: 'danger',
           };
