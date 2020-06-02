@@ -94,6 +94,7 @@ export class WorkspaceTemplateEditComponent implements OnInit {
               this.labels = [];
             }
 
+            this.manifestChangedSinceSave = false;
             this.workspaceTemplateVersions = res.workspaceTemplates;
             this.manifest = res.workspaceTemplates[0].manifest;
             this.manifestDagEditor.onManifestChange(this.manifest);
@@ -147,6 +148,7 @@ export class WorkspaceTemplateEditComponent implements OnInit {
     }
 
     if(manifest === this.manifest) {
+      this.manifestChangedSinceSave = false;
       return;
     }
 
