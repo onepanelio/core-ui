@@ -20,7 +20,6 @@ export class ClockComponent implements OnInit, OnDestroy {
       return;
     }
 
-
     if(typeof(value) === 'string') {
       this._startedAt = new Date(value);
     } else {

@@ -6,8 +6,15 @@
             {{workspace.status.phase | workspacePhaseStatus}}
         </div>
         <app-clock
+                *ngIf="workspace.status.phase == 'Running'"
                 class="ml-2"
                 [startedAt]="workspace.status.startedAt"
+                [durationFormatter]="daysDurationFormatter">
+        </app-clock>
+        <app-clock
+                *ngIf="workspace.status.phase == 'Paused'"
+                class="ml-2"
+                [startedAt]="workspace.status.pausedAt"
                 [durationFormatter]="daysDurationFormatter">
         </app-clock>
     </div>
