@@ -54,7 +54,6 @@ export class WorkflowTemplateEditComponent implements OnInit {
     private workflowTemplateService: WorkflowTemplateServiceService,
     private labelService: LabelServiceService,
     private datePipe: DatePipe) {
-
   }
 
   ngOnInit() {
@@ -110,7 +109,6 @@ export class WorkflowTemplateEditComponent implements OnInit {
   }
 
   update() {
-    // @todo display error message if there are duplicates in the labels.
     if(!this.labelEditor.isValid) {
         this.labelEditor.markAllAsDirty();
         return;
@@ -130,7 +128,7 @@ export class WorkflowTemplateEditComponent implements OnInit {
       .subscribe(res => {
           this.appRouter.navigateToWorkflowTemplateView(this.namespace, this.workflowTemplate.uid);
       }, (err: HttpErrorResponse) => {
-        this.manifestDagEditor.serverError = {
+        this.manifestDagEditor.error = {
             message: err.error.message,
             type: 'danger',
         };
