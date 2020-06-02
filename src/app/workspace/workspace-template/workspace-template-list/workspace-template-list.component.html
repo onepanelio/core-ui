@@ -58,14 +58,14 @@
     </mat-paginator>
 
     <app-workspace-template-create
-            *ngIf="showWorkspaceTemplateEditor && selectedTemplate === null"
+            *ngIf="state == 'create'"
             (cancelEmitted)="cancelWorkspaceTemplate()"
             (saveEmitted)="onCreate($event)"
             [loading]="creatingWorkspaceTemplate">
     </app-workspace-template-create>
 
     <app-workspace-template-edit
-        *ngIf="showWorkspaceTemplateEditor && selectedTemplate"
+        *ngIf="state == 'edit'"
         [loading]="workspaceTemplateEditLoading"
         [namespace]="namespace"
         [workspaceTemplate]="selectedTemplate"
