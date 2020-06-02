@@ -1,4 +1,4 @@
-name: Publish Docker Master
+name: Publish master docker image
 on:
   push:
     branches:

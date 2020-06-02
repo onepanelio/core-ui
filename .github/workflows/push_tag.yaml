@@ -1,4 +1,4 @@
-name: Publish Docker with build args
+name: Publish docker image on tag push
 on:
   push:
     tags:
