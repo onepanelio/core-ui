@@ -49,6 +49,12 @@ export class WorkspaceTemplateEditComponent implements OnInit {
 
   @Input() loading = false;
 
+  /**
+   * manifestChangedSinceSave keeps track if any changes have been made since save was emitted.
+   * It starts as false since the default template is not important and does not contain any custom user changes.
+   */
+  manifestChangedSinceSave = false;
+
   constructor(
       private formBuilder: FormBuilder,
       private activatedRoute: ActivatedRoute,
@@ -113,6 +119,7 @@ export class WorkspaceTemplateEditComponent implements OnInit {
     };
     
     this.saveEmitted.emit(body);
+    this.manifestChangedSinceSave = false;
   }
 
   onVersionSelected(version: string) {
@@ -131,5 +138,18 @@ export class WorkspaceTemplateEditComponent implements OnInit {
 
   setAlert(alert: Alert) {
     this.manifestDagEditor.notification = alert;
+  }
+
+  onManifestTextModified(manifest: string) {
+    // No need to update it again.
+    if(this.manifestChangedSinceSave) {
+      return;
+    }
+
+    if(manifest === this.manifest) {
+      return;
+    }
+
+    this.manifestChangedSinceSave = true;
   }
 }
