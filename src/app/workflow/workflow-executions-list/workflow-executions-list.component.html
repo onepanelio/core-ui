@@ -21,6 +21,14 @@
             </cdk-cell>
         </ng-container>
 
+        <ng-container cdkColumnDef="version">
+            <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+            <cdk-cell *cdkCellDef="let workflow" class="font-size-small font-roboto font-medium-gray ml-5">
+                <span>Version: </span>
+                <app-date class="timestamp d-inline-block" [dateTime]="workflow.workflowTemplate.createdAt"></app-date>
+            </cdk-cell>
+        </ng-container>
+
         <ng-container cdkColumnDef="status">
             <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
             <cdk-cell *cdkCellDef="let workflow" class="d-inline-flex align-items-center">
@@ -31,15 +39,6 @@
                            [startedAt]="workflow.createdAt"
                            [finishedAt]="workflow.finishedAt">
                 </app-clock>
-            </cdk-cell>
-        </ng-container>
-
-        <ng-container cdkColumnDef="version">
-            <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
-            <cdk-cell *cdkCellDef="let workflow" class="d-inline-flex align-items-center">
-                <i class="fas fa-code-branch mr-2"></i>
-                <span>Version</span>
-                <app-date class="d-block ml-2" [dateTime]="workflow.workflowTemplate.createdAt"></app-date>
             </cdk-cell>
         </ng-container>
 
