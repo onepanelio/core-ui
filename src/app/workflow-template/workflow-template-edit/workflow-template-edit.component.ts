@@ -146,6 +146,8 @@ export class WorkflowTemplateEditComponent implements OnInit, CanComponentDeacti
   }
 
   update() {
+    this.manifestChanged = false;
+
     if(!this.labelEditor.isValid) {
         this.labelEditor.markAllAsDirty();
         return;
