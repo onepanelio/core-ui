@@ -32,6 +32,7 @@ const routes: Routes = [
     path: ':namespace/workflow-templates/create',
     component: WorkflowTemplateCreateComponent,
     canActivate: [AuthGuard],
+    canDeactivate: [CanDeactivateGuard]
   },
   {
     path: ':namespace/workflow-templates/:uid/clone',
