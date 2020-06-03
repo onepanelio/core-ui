@@ -109,6 +109,8 @@ export class WorkflowTemplateEditComponent implements OnInit {
   }
 
   update() {
+    this.manifestChanged = false;
+
     if(!this.labelEditor.isValid) {
         this.labelEditor.markAllAsDirty();
         return;
