@@ -1,3 +1,5 @@
+@import "../../styles/styles";
+
 .toolbar {
   height: 40px;
 }
@@ -10,4 +12,56 @@
 .bottom-adjust {
   position: relative;
   bottom: 1px;
+}
+
+.editor-and-dag {
+  ace-editor {
+    width: 50% !important;
+  }
+
+  app-dag {
+    visibility: visible !important;
+    width: 50% !important;
+    padding-left: $spacer * 4;
+    padding-right: $spacer * 4;
+  }
+
+  app-form {
+    visibility: hidden !important;
+    width: 0 !important;
+  }
+}
+
+.editor-and-parameters {
+  ace-editor {
+    width: 50% !important;
+  }
+
+  app-dag {
+    visibility: hidden !important;
+    width: 0 !important;
+  }
+
+  app-form {
+    visibility: visible !important;
+    width: 50% !important;
+    padding: $spacer * 4;
+
+  }
+}
+
+.editor {
+  ace-editor {
+    width: 100% !important;
+  }
+
+  app-dag {
+    visibility: hidden !important;
+    width: 0 !important;
+  }
+
+  app-form {
+    visibility: hidden !important;
+    width: 0 !important;
+  }
 }

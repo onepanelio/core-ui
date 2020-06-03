@@ -1,20 +1,26 @@
 <app-alert [autoDismiss]="false" [alert]="error"></app-alert>
 <app-alert *ngIf="notification" [autoDismiss]="false" [alert]="notification"></app-alert>
 <div class="op-border hide-overflow mt-3">
-    <div class="toolbar bg-toolbar-white w-100 op-border-bottom d-flex flex-row-reverse">
-        <button mat-button color="primary" class="link-button font-size-regular" (click)="toggleFormRender()">
+    <div class="toolbar bg-toolbar-white w-100 op-border-bottom d-flex justify-content-between">
+        <div class="d-flex flex-row-reverse" [ngClass]="{'w-50': state !== 'editor', 'w-100': state === 'editor'}">
+            <button mat-button color="primary" class="link-button font-size-regular" (click)="toggleFullWidthEditor()">
+                <i *ngIf="state !== 'editor'" class="fas fa-chevron-right"></i>
+                <i *ngIf="state === 'editor'" class="fas fa-chevron-left"></i>
+            </button>
+        </div>
+        <button *ngIf="state !== 'editor'" mat-button color="primary" class="link-button font-size-regular" (click)="toggleFormRender()">
             <img src="/assets/images/render-icon.svg" class="mr-2 bottom-adjust">
-            <ng-container *ngIf="showingRender">
+            <ng-container *ngIf="state === 'editor-and-dag'">
                 Show parameters form preview
             </ng-container>
-            <ng-container *ngIf="!showingRender">
+            <ng-container *ngIf="state === 'editor-and-parameters'">
                 Show graph preview
             </ng-container>
         </button>
     </div>
-    <div class="two-panels">
+    <div class="two-panels {{state}}">
         <ace-editor
-                class="panel w-50"
+                class="panel"
                 [mode]="'yaml'"
                 [text]="manifestText"
                 (textChanged)="onManifestChange($event)"
@@ -27,19 +33,12 @@
                             tabSize: 2
                           }">
         </ace-editor>
-        <app-dag class="panel"
-                 [class.hidden]="!showingRender"
-                 [class.w-0]="!showingRender"
-                 [class.w-50]="showingRender"
-                 [class.pl-4]="showingRender"
-                 [class.pr-4]="showingRender">
+        <app-dag class="panel">
         </app-dag>
+
+
         <app-form class="panel scroll-overflow"
-                  [fieldData]="parameters"
-                  [class.hidden]="showingRender"
-                  [class.w-0]="showingRender"
-                  [class.w-50]="!showingRender"
-                  [class.p-4]="!showingRender">
+                  [fieldData]="parameters">
         </app-form>
     </div>
 </div>
