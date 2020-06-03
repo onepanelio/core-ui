@@ -51,6 +51,11 @@ export class WorkflowTemplateEditComponent implements OnInit, CanComponentDeacti
    */
   manifestChanged = false;
 
+  /**
+   * saving is true if the editor is currently saving the data and false otherwise.
+   */
+  saving = false;
+
   get workflowTemplate(): WorkflowTemplate {
     return this._workflowTemplate;
   }
@@ -148,6 +153,8 @@ export class WorkflowTemplateEditComponent implements OnInit, CanComponentDeacti
 
     const manifestText = this.manifestDagEditor.manifestTextCurrent;
 
+    this.saving = true;
+
     this.workflowTemplateService
       .createWorkflowTemplateVersion(
         this.namespace,
@@ -159,11 +166,14 @@ export class WorkflowTemplateEditComponent implements OnInit, CanComponentDeacti
         })
       .subscribe(res => {
           this.appRouter.navigateToWorkflowTemplateView(this.namespace, this.workflowTemplate.uid);
+          this.saving = false;
       }, (err: HttpErrorResponse) => {
         this.manifestDagEditor.error = {
             message: err.error.message,
             type: 'danger',
         };
+
+        this.saving = false;
       });
   }
 

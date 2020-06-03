@@ -34,9 +34,10 @@
       </div>
       <div class="mt-5 d-flex justify-content-between">
         <button mat-button class="font-medium-gray cancel-button" (click)="cancel()">CANCEL</button>
-        <div>
-          <button mat-flat-button color="accent" class="op-rounded op-button border-secondary" (click)="update()">Save</button>
-        </div>
+        <app-button [loading]="saving" (click)="update()">
+          Save
+          <span class="loading">Saving</span>
+        </app-button>
       </div>
     </div>
   </div>
