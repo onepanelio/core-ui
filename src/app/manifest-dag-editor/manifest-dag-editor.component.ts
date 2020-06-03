@@ -11,6 +11,9 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { Parameter } from "../../api";
 const aceRange = ace.acequire('ace/range').Range;
 
+type ManifestDagEditorState = 'editor-and-dag' | 'editor-and-parameters' | 'editor' | 'transitioning';
+type ManifestDagRenderState = 'dag' | 'parameters';
+
 @Component({
   selector: 'app-manifest-dag-editor',
   templateUrl: './manifest-dag-editor.component.html',
@@ -68,11 +71,11 @@ export class ManifestDagEditorComponent implements OnInit {
   @Output() manifestTextModified = new EventEmitter<string>();
 
   /**
-   * showingRender determines if we are showing the graph preview or the parameters preview.
-   * If true, we are showing the graph preview.
-   * If false, we are showing the parameters preview.
+   * renderState determines if we are showing the graph preview or the parameters preview.
+   * If 'dag', we are showing the graph preview.
+   * If 'paramters', we are showing the parameters preview.
    */
-  showingRender = true;
+  renderState: ManifestDagRenderState = 'dag';
 
   /**
    * errorMarkerId is a reference to an error marked in the text editor (AceEditor), used to clear the error.
@@ -84,6 +87,15 @@ export class ManifestDagEditorComponent implements OnInit {
    * parameters are the input parameters parsed from the manifest.
    */
   parameters = new Array<Parameter>();
+
+  /**
+   * state is the current state. It determines what to show.
+   * * editor-and-dag: show the editor and dag graph
+   * * editor-and-parameters: show the editor and the rendered parameters
+   * * editor: show just the editor, full width.
+   * * transitioning: helper state to indicate that the UI is changing.
+   */
+  state: ManifestDagEditorState = 'editor-and-dag';
 
   constructor() { }
 
@@ -161,7 +173,37 @@ export class ManifestDagEditorComponent implements OnInit {
     }
   }
 
+  private updateState() {
+    if(this.state === 'editor') {
+      return;
+    }
+
+    if(this.renderState === 'dag') {
+      this.state = 'editor-and-dag';
+      return;
+    }
+
+    this.state = 'editor-and-parameters';
+  }
+
   toggleFormRender() {
-    this.showingRender = !this.showingRender;
+    if(this.renderState === 'dag') {
+      this.renderState = 'parameters';
+    } else {
+      this.renderState = 'dag';
+    }
+
+    this.updateState();
+  }
+
+  toggleFullWidthEditor() {
+    if(this.state !== 'editor') {
+      this.state = 'editor';
+      return;
+    }
+
+    this.state = 'transitioning';
+
+    this.updateState();
   }
 }
