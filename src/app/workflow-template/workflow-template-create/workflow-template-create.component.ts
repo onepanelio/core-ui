@@ -18,6 +18,13 @@ import { KeyValue, WorkflowServiceService, WorkflowTemplateServiceService } from
 import { LabelsEditComponent } from "../../labels/labels-edit/labels-edit.component";
 import { ManifestDagEditorComponent } from "../../manifest-dag-editor/manifest-dag-editor.component";
 import { AppRouter } from "../../router/app-router.service";
+import { CanComponentDeactivate } from "../../guards/can-deactivate.guard";
+import { Observable } from "rxjs";
+import {
+  ConfirmationDialogComponent,
+  ConfirmationDialogData
+} from "../../confirmation-dialog/confirmation-dialog.component";
+import { MatDialog } from "@angular/material/dialog";
 const aceRange = ace.acequire('ace/range').Range;
 
 type WorkflowTemplateCreateState = 'new' | 'creating';
@@ -28,7 +35,7 @@ type WorkflowTemplateCreateState = 'new' | 'creating';
   styleUrls: ['./workflow-template-create.component.scss'],
   providers: [WorkflowService, WorkflowTemplateService]
 })
-export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy {
+export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy, CanComponentDeactivate {
   private snackbarRefs: Array<MatSnackBarRef<any>> = [];
 
   @ViewChild(WorkflowTemplateSelectComponent, {static: false}) workflowTemplateSelect: WorkflowTemplateSelectComponent;
@@ -45,6 +52,11 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy {
   templateNameInput: AbstractControl;
   form: FormGroup;
   labels = new Array<KeyValue>();
+
+  /**
+   * manifestChanged keeps track if any changes have been made since the editor was opened.
+   */
+  manifestChanged = false;
 
   private workflowTemplateDetail: WorkflowTemplateDetail;
 
@@ -64,7 +76,8 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy {
       private workflowTemplateService: WorkflowTemplateService,
       private workflowTemplateServiceService: WorkflowTemplateServiceService,
       private workflowServiceService: WorkflowServiceService,
-      private snackBar: MatSnackBar) { }
+      private snackBar: MatSnackBar,
+      private dialogRef: MatDialog) { }
 
   ngOnInit() {
     this.form = this.formBuilder.group({
@@ -86,6 +99,25 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy {
     for(const snackbarRef of this.snackbarRefs) {
       snackbarRef.dismiss();
     }
+  }
+
+  canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
+    if(!this.manifestChanged) {
+      return true;
+    }
+
+    const confirmData: ConfirmationDialogData = {
+      title: 'You have unsaved changes',
+      message: 'You have unsaved changes in your template, leaving will discard them.',
+      confirmText: 'DISCARD CHANGES',
+      type: 'confirm'
+    }
+
+    const confirmDialog = this.dialogRef.open(ConfirmationDialogComponent, {
+      data: confirmData
+    })
+
+    return confirmDialog.afterClosed();
   }
 
   save() {
@@ -153,5 +185,19 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy {
     });
 
     this.snackbarRefs.push(snackUndo);
+  }
+
+  onManifestTextModified(manifest: string) {
+    // No need to update the change status again
+    if(this.manifestChanged) {
+      return;
+    }
+
+    if(manifest === this.manifestText) {
+      this.manifestChanged = false;
+      return;
+    }
+
+    this.manifestChanged = true;
   }
 }
