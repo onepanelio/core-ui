@@ -24,7 +24,8 @@
       <div class="d-flex">
         <app-manifest-dag-editor
                 class="flex-grow-1"
-                [manifestText]="manifestText">
+                [manifestText]="manifestText"
+                (manifestTextModified)="onManifestTextModified($event)">
         </app-manifest-dag-editor>
       </div>
       <div class="mt-5">

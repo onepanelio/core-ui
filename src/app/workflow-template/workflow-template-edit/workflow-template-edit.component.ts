@@ -16,6 +16,13 @@ import {
 } from "../../../api";
 import { ManifestDagEditorComponent } from "../../manifest-dag-editor/manifest-dag-editor.component";
 import { DatePipe } from "@angular/common";
+import { CanComponentDeactivate } from "../../guards/can-deactivate.guard";
+import { Observable } from "rxjs";
+import {
+    ConfirmationDialogComponent,
+    ConfirmationDialogData
+} from "../../confirmation-dialog/confirmation-dialog.component";
+import { MatDialog, MatDialogRef } from "@angular/material/dialog";
 
 @Component({
   selector: 'app-workflow-template-edit',
@@ -23,7 +30,7 @@ import { DatePipe } from "@angular/common";
   styleUrls: ['./workflow-template-edit.component.scss'],
   providers: [DatePipe]
 })
-export class WorkflowTemplateEditComponent implements OnInit {
+export class WorkflowTemplateEditComponent implements OnInit, CanComponentDeactivate {
   @ViewChild(ManifestDagEditorComponent, {static: false}) manifestDagEditor: ManifestDagEditorComponent;
   @ViewChild(LabelsEditComponent, {static: false}) labelEditor: LabelsEditComponent;
 
@@ -39,6 +46,11 @@ export class WorkflowTemplateEditComponent implements OnInit {
   // This is what we display in the side menu
   workflowTemplateListItems = new Array<WorkflowTemplateSelectItem>();
 
+  /**
+   * manifestChanged keeps track if any changes have been made since the editor was opened.
+   */
+  manifestChanged = false;
+
   get workflowTemplate(): WorkflowTemplate {
     return this._workflowTemplate;
   }
@@ -53,7 +65,8 @@ export class WorkflowTemplateEditComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private workflowTemplateService: WorkflowTemplateServiceService,
     private labelService: LabelServiceService,
-    private datePipe: DatePipe) {
+    private datePipe: DatePipe,
+    private dialogRef: MatDialog) {
   }
 
   ngOnInit() {
@@ -64,6 +77,25 @@ export class WorkflowTemplateEditComponent implements OnInit {
       this.getWorkflowTemplate();
       this.getWorkflowTemplateVersions();
     });
+  }
+
+  canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
+      if(!this.manifestChanged) {
+          return true;
+      }
+      
+      const confirmData: ConfirmationDialogData = {
+          title: 'You have unsaved changes',
+          message: 'You have unsaved changes in your template, leaving will discard them.',
+          confirmText: 'DISCARD CHANGES',
+          type: 'confirm'
+      }
+
+      const confirmDialog = this.dialogRef.open(ConfirmationDialogComponent, {
+          data: confirmData
+      })
+
+      return confirmDialog.afterClosed();
   }
 
   getWorkflowTemplate() {
@@ -164,5 +196,19 @@ export class WorkflowTemplateEditComponent implements OnInit {
 
       this.manifestText = version.manifest;
       this.getLabels(version.version);
+  }
+
+  onManifestTextModified(manifest: string) {
+      // No need to update the change status again
+      if(this.manifestChanged) {
+          return;
+      }
+
+      if(manifest === this.manifestText) {
+          this.manifestChanged = false;
+          return;
+      }
+
+      this.manifestChanged = true;
   }
 }
