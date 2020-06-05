@@ -24,13 +24,8 @@ export class PermissionInterceptor implements HttpInterceptor {
         return next.handle(req).pipe(
             catchError((error: HttpErrorResponse) => {
                 const currentUrl = req.url;
-                console.log(currentUrl);
                 const isOnPermittedUrl = currentUrl === '/login' || currentUrl.indexOf('/apis/v1beta1/auth') > -1;
 
-                console.log(isOnPermittedUrl);
-                console.log({
-                    index: currentUrl.indexOf('/apis/v1beta1/auth')
-                })
                 const errorStatus = error.status === 401 || error.status === 403;
                 // Display a login alert on a permissions related (401/403) error.
                 // If we're already displaying such an alert, don't display it again.
