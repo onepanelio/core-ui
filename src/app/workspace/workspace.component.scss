@@ -1,6 +1,18 @@
 .cdk-column-name {
-  min-width: 300px;
-  max-width: 300px;
+  min-width: 200px;
+  max-width: 200px;
+}
+
+.cdk-column-template {
+  width: 150px;
+}
+
+.cdk-column-createdAt {
+  width: 250px;
+}
+
+.cdk-column-timestamp-status {
+  width: 250px;
 }
 
 .cdk-column-status {

@@ -16,7 +16,7 @@ type WorkspaceState = 'loading-initial-data' | 'loading' | 'new';
 })
 export class WorkspaceComponent implements OnInit, OnDestroy {
   namespace: string;
-  displayedColumns = ['name', 'status', 'template', 'spacer', 'actions', 'labels'];
+  displayedColumns = ['name', 'status', 'template', 'createdAt', 'timestamp-status', 'spacer', 'actions', 'labels'];
   workspaceResponse: ListWorkspaceResponse;
   workspaces: Workspace[] = [];
   pagination = new Pagination();

@@ -43,6 +43,27 @@
                 </cdk-cell>
             </ng-container>
 
+            <ng-container cdkColumnDef="createdAt">
+                <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+                <cdk-cell *cdkCellDef="let workspace" class="font-size-small font-roboto font-medium-gray">
+                    Created: <app-date class="d-inline-block ml-2" [dateTime]="workspace.createdAt"></app-date>
+                </cdk-cell>
+            </ng-container>
+
+            <ng-container cdkColumnDef="timestamp-status">
+                <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+                <cdk-cell *cdkCellDef="let workspace" class="font-size-small font-roboto font-medium-gray">
+                    <span *ngIf="workspace.status?.startedAt && workspace.status.phase !== 'Paused'">
+                        Started:
+                        <app-date class="d-inline-block ml-2" [dateTime]="workspace.status.startedAt"></app-date>
+                    </span>
+                    <span *ngIf="workspace.status?.pausedAt && workspace.status.phase === 'Paused'">
+                        Paused:
+                        <app-date class="d-inline-block ml-2" [dateTime]="workspace.status.pausedAt"></app-date>
+                    </span>
+                </cdk-cell>
+            </ng-container>
+
             <ng-container cdkColumnDef="spacer">
                 <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
                 <cdk-cell *cdkCellDef="let workflow" class="flex-grow-1"></cdk-cell>
