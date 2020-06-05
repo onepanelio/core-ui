@@ -16,6 +16,7 @@ import { WorkspaceComponent } from "./workspace/workspace.component";
 import { WorkspaceTemplateListComponent } from "./workspace/workspace-template/workspace-template-list/workspace-template-list.component";
 import { WorkspaceTemplateCreateComponent } from "./workspace/workspace-template/workspace-template-create/workspace-template-create.component";
 import { WorkspaceViewComponent } from "./workspace/workspace-view/workspace-view.component";
+import { CanDeactivateGuard } from "./guards/can-deactivate.guard";
 
 const routes: Routes = [
   {
@@ -31,6 +32,7 @@ const routes: Routes = [
     path: ':namespace/workflow-templates/create',
     component: WorkflowTemplateCreateComponent,
     canActivate: [AuthGuard],
+    canDeactivate: [CanDeactivateGuard]
   },
   {
     path: ':namespace/workflow-templates/:uid/clone',
@@ -41,6 +43,7 @@ const routes: Routes = [
     path: ':namespace/workflow-templates/:uid/edit',
     component: WorkflowTemplateEditComponent,
     canActivate: [AuthGuard],
+    canDeactivate: [CanDeactivateGuard]
   },
   {
     path: ':namespace/workflow-templates/:uid',
@@ -66,6 +69,7 @@ const routes: Routes = [
     path: ':namespace/workspace-templates',
     component: WorkspaceTemplateListComponent,
     canActivate: [AuthGuard],
+    canDeactivate: [CanDeactivateGuard]
   },
   {
     path: ':namespace/workspace-templates/create',

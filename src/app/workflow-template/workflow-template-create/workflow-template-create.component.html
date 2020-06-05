@@ -19,7 +19,8 @@
         </app-workflow-template-select>
         <app-manifest-dag-editor
                 class="ml-8 flex-grow-1"
-                [manifestText]="manifestText">
+                [manifestText]="manifestText"
+                (manifestTextModified)="onManifestTextModified($event)">
         </app-manifest-dag-editor>
       </div>
       <div class="mt-5">

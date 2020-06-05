@@ -16,7 +16,8 @@
         </div>
         <app-manifest-dag-editor
                 [manifestText]="manifest"
-                [manifestInterceptor]="apiManifestInterceptor">
+                [manifestInterceptor]="apiManifestInterceptor"
+                (manifestTextModified)="onManifestTextModified($event)">
         </app-manifest-dag-editor>
         <div class="mt-5">
             <div class="op-h2">Labels</div>

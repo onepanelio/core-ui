@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {
-  CreateWorkspaceBody,
   ListWorkspaceTemplatesResponse,
   WorkspaceServiceService,
   WorkspaceTemplate,
@@ -24,13 +23,23 @@ import {
   ConfirmationDialogComponent,
   ConfirmationDialogData
 } from "../../../confirmation-dialog/confirmation-dialog.component";
+import { CanComponentDeactivate } from "../../../guards/can-deactivate.guard";
+import { Observable } from "rxjs";
+
+/**
+ * WorkspaceTemplateState is a way to keep track of the current state of the component.
+ * * create: we are creating a new workspace template
+ * * edit: we are editing an existing workspace template
+ * * view: we are viewing the workspace templates, but not creating or editing.
+ */
+type WorkspaceTemplateState = 'create' | 'edit' | 'view';
 
 @Component({
   selector: 'app-workspace-template-list',
   templateUrl: './workspace-template-list.component.html',
   styleUrls: ['./workspace-template-list.component.scss']
 })
-export class WorkspaceTemplateListComponent implements OnInit {
+export class WorkspaceTemplateListComponent implements OnInit, CanComponentDeactivate {
   @ViewChild(WorkspaceTemplateCreateComponent, {static: false}) workspaceTemplateCreateEditor: WorkspaceTemplateCreateComponent;
   @ViewChild(WorkspaceTemplateEditComponent, {static: false}) workspaceTemplateEditor: WorkspaceTemplateEditComponent;
 
@@ -55,6 +64,8 @@ export class WorkspaceTemplateListComponent implements OnInit {
   workspaceTemplateEditLoading = false;
   creatingWorkspaceTemplate = false;
 
+  state: WorkspaceTemplateState = 'create';
+
   constructor(
       private appRouter: AppRouter,
       private workspaceTemplateService: WorkspaceTemplateServiceService,
@@ -72,11 +83,54 @@ export class WorkspaceTemplateListComponent implements OnInit {
     });
   }
 
+  canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
+    const confirmData: ConfirmationDialogData = {
+      title: 'You have unsaved changes',
+      message: 'You have unsaved changes in your template, leaving will discard them.',
+      confirmText: 'DISCARD CHANGES',
+      type: 'confirm'
+    }
+
+    if(this.state === 'create' && this.workspaceTemplateCreateEditor.manifestChangedSinceSave) {
+      const confirmDialog = this.dialog.open(ConfirmationDialogComponent, {
+        data: confirmData
+      })
+
+      return confirmDialog.afterClosed();
+    } else if(this.state === 'edit' && this.workspaceTemplateEditor.manifestChangedSinceSave) {
+
+
+      const confirmDialog = this.dialog.open(ConfirmationDialogComponent, {
+        data: confirmData
+      })
+
+      return confirmDialog.afterClosed();
+    }
+
+    return true;
+  }
+
+  private updateWorkspaceTemplateState() {
+    if(this.showWorkspaceTemplateEditor && this.selectedTemplate === null) {
+      this.state = 'create';
+      return;
+    }
+
+    if(this.showWorkspaceTemplateEditor && this.selectedTemplate) {
+      this.state = 'edit';
+      return;
+    }
+
+    this.state = 'view';
+  }
+
   private setWorkspaceTemplateEditorAlert(alert: Alert) {
     if(!this.workspaceTemplateEditor) {
       setTimeout(() => {
         this.setWorkspaceTemplateEditorAlert(alert);
       }, 250)
+
+      return;
     }
 
     this.workspaceTemplateEditor.setAlert(alert);
@@ -107,16 +161,22 @@ export class WorkspaceTemplateListComponent implements OnInit {
   newWorkspaceTemplate() {
     this.showWorkspaceTemplateEditor = true;
     this.selectedTemplate = null;
+
+    this.updateWorkspaceTemplateState();
   }
 
   selectTemplate(template: WorkspaceTemplate) {
     this.showWorkspaceTemplateEditor = true;
     this.selectedTemplate = template;
+
+    this.updateWorkspaceTemplateState();
   }
 
   cancelWorkspaceTemplate() {
     this.showWorkspaceTemplateEditor = false;
     this.selectedTemplate = null;
+
+    this.updateWorkspaceTemplateState();
   }
 
   onCreate(template: WorkspaceTemplate) {
@@ -126,10 +186,16 @@ export class WorkspaceTemplateListComponent implements OnInit {
           this.getWorkspaceTemplatesAndSelect(res);
           this.creatingWorkspaceTemplate = false;
         }, (err: HttpErrorResponse) => {
+          this.creatingWorkspaceTemplate = false;
+
           if(err.status === 409) {
-            this.creatingWorkspaceTemplate = false;
             this.workspaceTemplateCreateEditor.setAlert(new Alert({
               message: err.error.message,
+              type: 'danger',
+            }));
+          } else {
+            this.workspaceTemplateCreateEditor.setAlert(new Alert({
+              message: 'Unable to create workspace template',
               type: 'danger',
             }));
           }
@@ -219,6 +285,7 @@ export class WorkspaceTemplateListComponent implements OnInit {
     this.showWorkspaceTemplateEditor = false;
     this.selectedTemplate = undefined;
 
+    this.updateWorkspaceTemplateState();
     this.getWorkspaceTemplates();
   }
 }

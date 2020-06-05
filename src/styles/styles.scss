@@ -423,10 +423,15 @@ button.vertical-align-icon {
 button.logout {
   font-size: $fontSmall;
   font-family: $fontRobotoBold;
+  opacity: 0.8;
 
   &.mat-stroked-button:not([disabled]) {
     border-color: $white;
-    border-width: 2px;
+    border-width: 1px;
+  }
+
+  &:hover {
+    opacity: 1.0;
   }
 }
 
@@ -465,4 +470,14 @@ mat-spinner.color-medium-gray {
         }
       }
     }
+}
+
+mat-spinner.color-danger {
+  &.mat-progress-spinner {
+    svg {
+      circle {
+        stroke: $danger;
+      }
+    }
+  }
 }

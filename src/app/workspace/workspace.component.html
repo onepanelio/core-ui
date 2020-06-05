@@ -24,10 +24,6 @@
                 <cdk-header-cell *cdkHeaderCellDef>Name</cdk-header-cell>
                 <cdk-cell *cdkCellDef="let workspace">
                     <a class="name-link font-roboto-bold font-weight-bold" target="_blank" [routerLink]="['/', this.namespace, 'workspaces', workspace.uid]">{{workspace.name}}</a>
-                    <app-labels-list-view
-                            *ngIf="workspace.labels"
-                            class="mt-2 d-block"
-                            [labels]="workspace.labels"></app-labels-list-view>
                 </cdk-cell>
             </ng-container>
 
@@ -47,6 +43,27 @@
                 </cdk-cell>
             </ng-container>
 
+            <ng-container cdkColumnDef="createdAt">
+                <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+                <cdk-cell *cdkCellDef="let workspace" class="font-size-small font-roboto font-medium-gray">
+                    Created: <app-date class="d-inline-block ml-2" [dateTime]="workspace.createdAt"></app-date>
+                </cdk-cell>
+            </ng-container>
+
+            <ng-container cdkColumnDef="timestamp-status">
+                <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+                <cdk-cell *cdkCellDef="let workspace" class="font-size-small font-roboto font-medium-gray">
+                    <span *ngIf="workspace.status?.startedAt && workspace.status.phase !== 'Paused'">
+                        Started:
+                        <app-date class="d-inline-block ml-2" [dateTime]="workspace.status.startedAt"></app-date>
+                    </span>
+                    <span *ngIf="workspace.status?.pausedAt && workspace.status.phase === 'Paused'">
+                        Paused:
+                        <app-date class="d-inline-block ml-2" [dateTime]="workspace.status.pausedAt"></app-date>
+                    </span>
+                </cdk-cell>
+            </ng-container>
+
             <ng-container cdkColumnDef="spacer">
                 <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
                 <cdk-cell *cdkCellDef="let workflow" class="flex-grow-1"></cdk-cell>
@@ -62,10 +79,21 @@
                 </cdk-cell>
             </ng-container>
 
+            <ng-container cdkColumnDef="labels">
+                <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+                <cdk-cell *cdkCellDef="let workspace" class="flex-grow-1 w-100">
+                    <app-labels-list-view
+                            *ngIf="workspace.labels"
+                            class="d-block"
+                            [labels]="workspace.labels">
+                    </app-labels-list-view>
+                </cdk-cell>
+            </ng-container>
+
             <!-- Header and Row Declarations -->
             <cdk-header-row *cdkHeaderRowDef="displayedColumns" class="d-flex align-items-baseline op-table-header"></cdk-header-row>
             <cdk-row *cdkRowDef="let workflowTemplate; columns: displayedColumns"
-                     class="d-flex align-items-baseline op-table-row">
+                     class="d-flex flex-wrap align-items-baseline op-table-row">
             </cdk-row>
         </cdk-table>
         <app-call-to-action *ngIf="workspaces.length === 0 && state === 'new'">
@@ -99,7 +127,7 @@
             <i class="far fa-play-circle mr-1 workspace-menu-icon"></i>
             Resume
         </button>
-        <button mat-menu-item (click)="onDelete(workspace)">
+        <button mat-menu-item (click)="onDelete(workspace)" [disabled]="workspace.status.phase === 'Terminating'">
             <i class="fas fa-trash mr-1 workspace-menu-icon"></i>
             Delete
         </button>

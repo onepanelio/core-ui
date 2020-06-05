@@ -11,6 +11,9 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { Parameter } from "../../api";
 const aceRange = ace.acequire('ace/range').Range;
 
+type ManifestDagEditorState = 'editor-and-dag' | 'editor-and-parameters' | 'editor' | 'transitioning';
+type ManifestDagRenderState = 'dag' | 'parameters';
+
 @Component({
   selector: 'app-manifest-dag-editor',
   templateUrl: './manifest-dag-editor.component.html',
@@ -20,28 +23,93 @@ export class ManifestDagEditorComponent implements OnInit {
   @ViewChild(AceEditorComponent, {static: false}) aceEditor: AceEditorComponent;
   @ViewChild(DagComponent, {static: false}) dag: DagComponent;
 
+  /**
+   * manifestText is the input, starting text, to put into the editor.
+   */
   @Input() manifestText: string;
-  @Input() serverError: Alert;
-  @Input() notification: Alert;
 
-  showingRender: boolean = true;
+  /**
+   * error is any error that should be displayed in the UI.
+   * If not set, nothing is shown.
+   */
+  @Input() error?: Alert;
+
+  /**
+   * notification is any notification that should be displayed in the UI.
+   * If not set, nothing is shown.
+   */
+  @Input() notification?: Alert;
+
+  /**
+   * rawManifest is the current text in the editor after any change has been made to it.
+   * It is raw in the sense that no modification has been made to it - it's exactly what the user has typed in.
+   */
+  rawManifest: string;
+
+  /**
+   * manifestTextCurrent is the current text after it has been modified by the manifestInterceptor.
+   * This is not displayed in the text editor, but it is used to display in displaying the graph.
+   */
   manifestTextCurrent: string;
-  errorMarkerId;
 
+  /**
+   * manifestInterceptor is an observable that can be used to modify the manifest. It receives the
+   * text that is currently in the editor and it is expected to return new text. This new text
+   * will be used to display the graph.
+   *
+   * Default behavior is to return the input text.
+   */
+  @Input() manifestInterceptor: (manifest: string) => Observable<string> = (manifest => of(manifest));
+
+  /**
+   * manifestTextModified is emitted whenever the manifest text is modified in the text editor.
+   * It sends the raw text that is currently in the editor.
+   *
+   * Note that this will fire before the manifestInterceptor is called and even if the manfiest interceptor
+   * generates an error.
+   */
+  @Output() manifestTextModified = new EventEmitter<string>();
+
+  /**
+   * renderState determines if we are showing the graph preview or the parameters preview.
+   * If 'dag', we are showing the graph preview.
+   * If 'paramters', we are showing the parameters preview.
+   */
+  renderState: ManifestDagRenderState = 'dag';
+
+  /**
+   * errorMarkerId is a reference to an error marked in the text editor (AceEditor), used to clear the error.
+   * It set, we are displaying an error in the editor.
+   */
+  errorMarkerId?: any;
+
+  /**
+   * parameters are the input parameters parsed from the manifest.
+   */
   parameters = new Array<Parameter>();
 
-
-  rawManifest: string;
-  // Default behavior is to just return itself
-  @Input() manifestInterceptor: (manifest: string) => Observable<string> = (manifest => of(manifest));
+  /**
+   * state is the current state. It determines what to show.
+   * * editor-and-dag: show the editor and dag graph
+   * * editor-and-parameters: show the editor and the rendered parameters
+   * * editor: show just the editor, full width.
+   * * transitioning: helper state to indicate that the UI is changing.
+   */
+  state: ManifestDagEditorState = 'editor-and-dag';
 
   constructor() { }
 
   ngOnInit() {
+    this.rawManifest = this.manifestText;
   }
 
-  onManifestChange(newManifest: string) {
+  onManifestChange(newManifest: string, emitModified = true) {
     this.rawManifest = newManifest;
+
+    if(emitModified) {
+      this.manifestTextModified.emit(newManifest);
+    }
+
     if(!this.manifestInterceptor) {
       this.onManifestChangeFinalized(newManifest);
     } else {
@@ -50,7 +118,7 @@ export class ManifestDagEditorComponent implements OnInit {
             this.onManifestChangeFinalized(res);
           }, (e: HttpErrorResponse) => {
             setTimeout(() => {
-              this.serverError = {
+              this.error = {
                 message: e.error.error,
                 type: 'danger'
               };
@@ -75,7 +143,7 @@ export class ManifestDagEditorComponent implements OnInit {
       this.dag.display(g);
       this.updateParameters(newManifest);
       setTimeout( () => {
-        this.serverError = null;
+        this.error = null;
       });
     }
     catch (e) {
@@ -87,7 +155,7 @@ export class ManifestDagEditorComponent implements OnInit {
         this.errorMarkerId = this.aceEditor.getEditor().session.addMarker(codeErrorRange, "highlight-error", "fullLine");
 
         setTimeout(() => {
-          this.serverError = {
+          this.error = {
             message: e.reason + " at line: " + line + " column: " + column,
             type: 'danger'
           };
@@ -105,7 +173,37 @@ export class ManifestDagEditorComponent implements OnInit {
     }
   }
 
+  private updateState() {
+    if(this.state === 'editor') {
+      return;
+    }
+
+    if(this.renderState === 'dag') {
+      this.state = 'editor-and-dag';
+      return;
+    }
+
+    this.state = 'editor-and-parameters';
+  }
+
   toggleFormRender() {
-    this.showingRender = !this.showingRender;
+    if(this.renderState === 'dag') {
+      this.renderState = 'parameters';
+    } else {
+      this.renderState = 'dag';
+    }
+
+    this.updateState();
+  }
+
+  toggleFullWidthEditor() {
+    if(this.state !== 'editor') {
+      this.state = 'editor';
+      return;
+    }
+
+    this.state = 'transitioning';
+
+    this.updateState();
   }
 }

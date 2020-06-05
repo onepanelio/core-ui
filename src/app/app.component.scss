@@ -6,7 +6,7 @@
 
   .link-wrapper {
     height: 100%;
-    min-width: 200px;
+    min-width: 140px;
     text-align: center;
 
     a {
@@ -14,6 +14,10 @@
       text-decoration: none;
       color: inherit;
       opacity: 0.8;
+
+      &:hover {
+        opacity: 0.9;
+      }
     }
 
 
@@ -54,6 +58,16 @@
     top: 50px;
     position: relative;
     left: 35px;
+  }
+
+  .image-link {
+    height: 32px;
+    border: 1px solid white;
+    border-radius: 50%;
+
+    img {
+      height: 32px;
+    }
   }
 }
 
