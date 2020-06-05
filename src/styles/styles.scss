@@ -422,11 +422,16 @@ button.vertical-align-icon {
 
 button.logout {
   font-size: $fontSmall;
-  font-family: $fontRobotoBold;
+  font-family: $fontRoboto;
+  opacity: 0.8;
 
   &.mat-stroked-button:not([disabled]) {
     border-color: $white;
-    border-width: 2px;
+    border-width: 1px;
+  }
+
+  &:hover {
+    opacity: 1.0;
   }
 }
 
