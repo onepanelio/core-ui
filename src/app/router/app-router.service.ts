@@ -8,6 +8,14 @@ export class AppRouter {
 
   constructor(private router: Router) { }
 
+  public navigate(commands: any[], extras: NavigationExtras ) {
+    return this.router.navigate(commands, extras);
+  }
+
+  public navigateByUrl(url: string|UrlTree, extras?: NavigationExtras) {
+    return this.router.navigateByUrl(url, extras);
+  }
+
   public navigateToRoot() {
     return this.router.navigate(['/']);
   }
@@ -42,9 +50,5 @@ export class AppRouter {
 
   public navigateToWorkspace(namespace: string, name: string) {
     return this.router.navigate(['/', namespace, 'workspaces', name]);
-  }
-
-  public navigateByUrl(url: string|UrlTree, extras?: NavigationExtras) {
-    return this.router.navigateByUrl(url, extras);
   }
 }
