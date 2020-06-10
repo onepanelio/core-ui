@@ -1,11 +1,19 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from "@angular/router";
-import { CreateWorkspaceBody, ListWorkspaceResponse, Workspace, WorkspaceServiceService } from "../../api";
-import { Pagination } from "../workflow-template/workflow-template-view/workflow-template-view.component";
-import { PageEvent } from "@angular/material/paginator";
-import { WorkspaceExecuteDialogComponent } from "./workspace-execute-dialog/workspace-execute-dialog.component";
-import { MatDialog } from "@angular/material/dialog";
-import { AppRouter } from "../router/app-router.service";
+import { ActivatedRoute } from '@angular/router';
+import {
+  AuthServiceService,
+  ListWorkspaceResponse,
+  Workspace,
+  WorkspaceServiceService
+} from '../../api';
+import { Pagination } from '../workflow-template/workflow-template-view/workflow-template-view.component';
+import { PageEvent } from '@angular/material/paginator';
+import { WorkspaceExecuteDialogComponent } from './workspace-execute-dialog/workspace-execute-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { AppRouter } from '../router/app-router.service';
+import { combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Permissions } from "../auth/models";
 
 type WorkspaceState = 'loading-initial-data' | 'loading' | 'new';
 
@@ -24,7 +32,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
   state: WorkspaceState = 'loading-initial-data';
 
   /**
-   * Keeps track of which workspaces are being updated, these should not be updated
+   * workspaceUpdatingMap keeps track of which workspaces are being updated, these should not be updated
    * by the regular interval get request.
    *
    * When we perform an action on a workspace like pause, resume, terminate, etc,
@@ -34,9 +42,19 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
    */
   private workspaceUpdatingMap = new Map<string, Workspace>();
 
+  /**
+   * workspacePermissions keeps track of which permissions the currently logged in user has for each
+   * workspace.
+   *
+   * Right now, when the menu is opened, a network request is made (if we don't already have data),
+   * to get these permissions.
+   */
+  workspacePermissions = new Map<string, Permissions>();
+
   constructor(
       private appRouter: AppRouter,
       private activatedRoute: ActivatedRoute,
+      private authService: AuthServiceService,
       private workspaceService: WorkspaceServiceService,
       private dialog: MatDialog
   ) {
@@ -197,5 +215,58 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
         }, err => {
           this.markWorkspaceDoneUpdating(workspace);
         });
+  }
+
+  /**
+   * onMatMenuOpen happens when the menu is opened for a workspace list item.
+   * We get the permissions for the workspace for the current logged in user, if no
+   * permissions have been loaded yet.
+   *
+   * @param workspace
+   */
+  onMatMenuOpen(workspace: Workspace) {
+    if(this.workspacePermissions.has(workspace.uid)) {
+      return;
+    }
+
+    const canUpdate$ = this.authService.isAuthorized({
+      namespace: this.namespace,
+      verb: 'update',
+      resource: 'statefulsets',
+      resourceName: workspace.name,
+      group: 'apps',
+    });
+
+    const canDelete$ = this.authService.isAuthorized({
+      namespace: this.namespace,
+      verb: 'delete',
+      resource: 'statefulsets',
+      resourceName: workspace.name,
+      group: 'apps',
+    });
+
+
+    this.workspacePermissions.set(
+        workspace.uid,
+        new Permissions({
+          delete: true,
+          update: true,
+        })
+    );
+    combineLatest([canUpdate$, canDelete$])
+        .pipe(
+            map(([canUpdate$, canDelete$]) => ({
+              canUpdate: canUpdate$,
+              canDelete: canDelete$
+            }))
+        ).subscribe(res => {
+          this.workspacePermissions.set(
+              workspace.uid,
+              new Permissions({
+                delete: res.canDelete.authorized,
+                update: res.canUpdate.authorized,
+              })
+          );
+        })
   }
 }

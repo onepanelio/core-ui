@@ -12,6 +12,7 @@ export * from './getWorkflowExecutionMetricsResponse';
 export * from './googleProtobufAny';
 export * from './grpcGatewayRuntimeError';
 export * from './grpcGatewayRuntimeStreamError';
+export * from './isAuthorized';
 export * from './isAuthorizedResponse';
 export * from './isValidTokenResponse';
 export * from './keyValue';

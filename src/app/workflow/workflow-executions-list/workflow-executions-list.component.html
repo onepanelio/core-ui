@@ -47,7 +47,9 @@
             <cdk-cell *cdkCellDef="let workflow">
                 <div>
                     <a [routerLink]="['/', this.namespace, 'workflows', workflow.name]" class="link-button">View</a>
-                    <button [class.hidden]="!(workflow | workflowIsActive)" mat-button color="primary" class="font-proxima-bold font-size-regular" (click)="onTerminate(workflow)">TERMINATE</button>
+                    <button mat-icon-button color="primary" class="ml-3" [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{'workflow': workflow}" (click)="onMatMenuOpen(workflow)">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
                 </div>
             </cdk-cell>
         </ng-container>
@@ -64,3 +66,29 @@
         </cdk-row>
     </cdk-table>
 </div>
+
+<mat-menu #appMenu="matMenu" class="font-roboto">
+    <ng-template matMenuContent let-workflow="workflow">
+        <div mat-menu-item *ngIf="!workflowExecutionPermissions.has(workflow.uid)" class="d-flex align-items-center">
+            <mat-spinner
+                    class="mr-2 color-medium-gray"
+                    [diameter]="15"
+                    [mode]="'indeterminate'">
+            </mat-spinner>
+            Loading
+        </div>
+        <div *ngIf="workflowExecutionPermissions.has(workflow.uid) && !workflowExecutionPermissions.get(workflow.uid).hasAnyActionPermissions()">
+            No Permissions
+        </div>
+        <div *ngIf="workflowExecutionPermissions.has(workflow.uid)">
+            <button *ngIf="workflowExecutionPermissions.get(workflow.uid).create" mat-menu-item (click)="onRerun(workflow)">
+                <i class="far fa-play-circle mr-1 workflow-menu-icon"></i>
+                Rerun
+            </button>
+            <button *ngIf="workflowExecutionPermissions.get(workflow.uid).delete" mat-menu-item (click)="onDelete(workflow)" [disabled]="!(workflow | workflowIsActive)">
+                <i class="fas fa-trash mr-1 workflow-menu-icon"></i>
+                Terminate
+            </button>
+        </div>
+    </ng-template>
+</mat-menu>
