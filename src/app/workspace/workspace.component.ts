@@ -11,9 +11,9 @@ import { PageEvent } from '@angular/material/paginator';
 import { WorkspaceExecuteDialogComponent } from './workspace-execute-dialog/workspace-execute-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { AppRouter } from '../router/app-router.service';
-import { WorkspacePermissions } from './models';
 import { combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { Permissions } from "../auth/models";
 
 type WorkspaceState = 'loading-initial-data' | 'loading' | 'new';
 
@@ -49,7 +49,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
    * Right now, when the menu is opened, a network request is made (if we don't already have data),
    * to get these permissions.
    */
-  workspacePermissions = new Map<string, WorkspacePermissions>();
+  workspacePermissions = new Map<string, Permissions>();
 
   constructor(
       private appRouter: AppRouter,
@@ -245,6 +245,14 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
       group: 'apps',
     });
 
+
+    this.workspacePermissions.set(
+        workspace.uid,
+        new Permissions({
+          delete: true,
+          update: true,
+        })
+    );
     combineLatest([canUpdate$, canDelete$])
         .pipe(
             map(([canUpdate$, canDelete$]) => ({
@@ -254,7 +262,10 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
         ).subscribe(res => {
           this.workspacePermissions.set(
               workspace.uid,
-              new WorkspacePermissions(res.canDelete.authorized, res.canUpdate.authorized)
+              new Permissions({
+                delete: res.canDelete.authorized,
+                update: res.canUpdate.authorized,
+              })
           );
         })
   }
