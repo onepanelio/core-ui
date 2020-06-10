@@ -15,7 +15,7 @@ export class Permissions {
     delete?: boolean;
     update?: boolean;
 
-    public constructor(permissions: AvailablePermissions) {
+    public constructor(permissions: AvailablePermissions = {}) {
         this.create = permissions.create;
         this.get = permissions.get;
         this.watch = permissions.watch;

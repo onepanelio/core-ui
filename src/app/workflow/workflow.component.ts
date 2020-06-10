@@ -8,17 +8,27 @@ import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from "@angular/material/s
 import { AceEditorComponent } from "ng2-ace-editor";
 import * as yaml from 'js-yaml';
 import * as ace from 'brace';
-import { KeyValue, LabelServiceService, Parameter, WorkflowExecution, WorkflowServiceService } from "../../api";
+import {
+  AuthServiceService,
+  KeyValue,
+  LabelServiceService,
+  Parameter,
+  WorkflowExecution,
+  WorkflowServiceService
+} from "../../api";
 import { MatDialog } from "@angular/material/dialog";
 import { LabelEditDialogComponent } from "../labels/label-edit-dialog/label-edit-dialog.component";
 import { AppRouter } from "../router/app-router.service";
 import { ClockComponent } from "../clock/clock.component";
 import {
   ConfirmationDialogComponent,
-  ConfirmationDialogData
 } from "../confirmation-dialog/confirmation-dialog.component";
 import { WorkflowExecutionConstants } from "./models";
 import { ParameterUtils } from "../parameters/models";
+import { Permissions } from "../auth/models";
+import { combineLatest } from "rxjs";
+import { map } from "rxjs/operators";
+
 const aceRange = ace.acequire('ace/range').Range;
 
 @Component({
@@ -82,6 +92,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
 
   startedAt;
   finishedAt;
+  permissions = new Permissions();
 
   private socketClosedCount = 0;
   private socketErrorCount = 0;
@@ -96,6 +107,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
 
   constructor(
     private activatedRoute: ActivatedRoute,
+    private authService: AuthServiceService,
     private workflowService: WorkflowService,
     private workflowServiceService: WorkflowServiceService,
     private apiWorkflowService: WorkflowServiceService,
@@ -139,6 +151,9 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     this.workflowServiceService.getWorkflowExecution(this.namespace, this.uid)
         .subscribe(res => {
           this.workflow = new SimpleWorkflowDetail(res);
+
+          this.getPermissions(res);
+
           this.labels = res.labels;
 
           const templateParameters = this.getWorkflowTemplateParametersFromWorkflow(res);
@@ -178,6 +193,35 @@ export class WorkflowComponent implements OnInit, OnDestroy {
         });
   }
 
+  private getPermissions(workflowExecution: WorkflowExecution) {
+    const canCreate$ = this.authService.isAuthorized({
+      namespace: this.namespace,
+      verb: 'create',
+      resource: 'statefulsets',
+      resourceName: workflowExecution.name,
+      group: 'apps',
+    });
+
+    const canDelete$ = this.authService.isAuthorized({
+      namespace: this.namespace,
+      verb: 'delete',
+      resource: 'statefulsets',
+      resourceName: workflowExecution.name,
+      group: 'apps',
+    });
+
+    combineLatest([canCreate$, canDelete$])
+        .pipe(
+            map(([canCreate$, canDelete$]) => ({
+              canCreate: canCreate$,
+              canDelete: canDelete$
+            }))
+        ).subscribe(res => {
+          this.permissions.delete = res.canDelete.authorized;
+            this.permissions.create = res.canCreate.authorized;
+        })
+  }
+
   ngOnDestroy() {
     if (this.socket) {
       this.socket.close();
@@ -208,7 +252,6 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     if(!data.result) {
       return;
     }
-
 
     const wasTerminated = this.workflow.phase === 'Terminated';
     this.workflow.updateWorkflowManifest(data.result.manifest);
