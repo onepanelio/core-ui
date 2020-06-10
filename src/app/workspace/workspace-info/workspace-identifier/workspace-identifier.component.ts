@@ -1,7 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { LabelServiceService, Workspace } from "../../../../api";
+import { AuthServiceService, LabelServiceService, Workspace } from "../../../../api";
 import { LabelEditDialogComponent } from "../../../labels/label-edit-dialog/label-edit-dialog.component";
 import { MatDialog } from "@angular/material/dialog";
+import { Permissions } from "../../../auth/models";
+import { NamespaceTracker } from "../../../namespace/namespace-tracker.service";
+import { combineLatest } from "rxjs";
+import { map } from "rxjs/operators";
 
 @Component({
   selector: 'app-workspace-identifier',
@@ -13,11 +17,24 @@ export class WorkspaceIdentifierComponent implements OnInit {
   @Input() workspace: Workspace;
   loadingLabels = false;
 
+  permission: Permissions = new Permissions();
+
   constructor(
+      private namespaceTracker: NamespaceTracker,
+      private authService: AuthServiceService,
       private labelService: LabelServiceService,
       private dialog: MatDialog) { }
 
   ngOnInit() {
+    this.authService.isAuthorized({
+      namespace: this.namespace,
+      verb: 'update',
+      resource: 'statefulsets',
+      resourceName: this.workspace.name,
+      group: 'apps',
+    }).subscribe(res => {
+      this.permission.update = res.authorized;
+    })
   }
 
   onEditLabels() {

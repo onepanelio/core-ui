@@ -8,7 +8,8 @@
             [loading]="loadingLabels"
             class="d-inline-block mr-2">
     </app-labels-viewer>
-    <button mat-button color="primary"
+    <button *ngIf="permission.update"
+            mat-button color="primary"
             class="font-proxima-bold font-size-regular"
             (click)="onEditLabels()">
         <i class="fas fa-pencil-alt mr-2"></i> EDIT LABELS
