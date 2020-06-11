@@ -9,14 +9,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { WorkspaceTemplate } from './workspaceTemplate';
 
 
-export interface ListWorkspaceTemplatesResponse { 
-    count?: number;
-    workspaceTemplates?: Array<WorkspaceTemplate>;
-    page?: number;
-    pages?: number;
-    totalCount?: number;
+export interface IsAuthorized { 
+    namespace?: string;
+    verb?: string;
+    group?: string;
+    resource?: string;
+    resourceName?: string;
 }
 

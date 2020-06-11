@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { WorkflowTemplateBase, WorkflowTemplateDetail, WorkflowTemplateService } from '../workflow-template.service';
+import { WorkflowTemplateService } from '../workflow-template.service';
 import { DagComponent } from '../../dag/dag.component';
 import { NodeRenderer } from '../../node/node.service';
 import {
@@ -19,7 +19,7 @@ import {
   CronWorkflow,
   CronWorkflowServiceService,
   KeyValue, ListCronWorkflowsResponse, ListWorkflowExecutionsResponse, WorkflowExecution,
-  WorkflowServiceService, WorkflowTemplate, WorkflowTemplateServiceService
+  WorkflowServiceService, WorkflowTemplate, WorkflowTemplateServiceService, Workspace
 } from "../../../api";
 import { MatTabGroup } from "@angular/material/tabs";
 import { AppRouter } from "../../router/app-router.service";
@@ -105,6 +105,17 @@ export class WorkflowTemplateViewComponent implements OnInit {
    */
   workflowsInterval: number;
 
+  /**
+   * workflowExecutionUpdatingMap keeps track of which workflows are being updated, these should not be updated
+   * by the regular interval get request.
+   *
+   * When we perform an action on a workflow like terminate, etc,
+   * it takes a second for API to update and respond. It is possible that the request does not finish
+   * but we do another Get request in that time. So our status change may be terminate => running => terminate.
+   * To prevent this, we mark the workflow as updating, so the Get request should ignore it.
+   */
+  private workflowExecutionUpdatingMap = new Map<string, Workspace>();
+
   constructor(
     private snackBar: MatSnackBar,
     private router: Router,
@@ -152,6 +163,75 @@ export class WorkflowTemplateViewComponent implements OnInit {
       });
   }
 
+  /**
+   * Marks the workflow as updating.
+   * @param workflowExecution
+   */
+  private markWorkflowUpdating(workflowExecution: WorkflowExecution) {
+    this.workflowExecutionUpdatingMap.set(workflowExecution.uid, workflowExecution);
+  }
+
+  /**
+   * Marks the workflow as done updating.
+   * @param workflowExecution
+   */
+  private markWorkflowDoneUpdating(workflowExecution: WorkflowExecution) {
+    this.workflowExecutionUpdatingMap.delete(workflowExecution.uid);
+  }
+
+  /**
+   * @param workflowExecution
+   * @return true if the workflow is updating, false otherwise.
+   */
+  private isWorkflowUpdating(workflowExecution: WorkflowExecution): boolean {
+    return this.workflowExecutionUpdatingMap.has(workflowExecution.uid);
+  }
+
+  /**
+   * Update the current workflows list with a new one.
+   *
+   * This will replace the workflows if they are completely different, or
+   * it will update the worfklow objects data if they are only different by data.
+   *
+   * This prevents UI issues where the entire list refreshes, which can remove any open menus
+   * like the workflow action menu.
+   *
+   * @param workflowExecutions
+   */
+  private updateWorkflowExecutionList(workflowExecutions: WorkflowExecution[]) {
+    // If the lengths are different, we have new workflows or deleted workflows,
+    // so just update the entire list.
+    if(this.workflows.length !== workflowExecutions.length) {
+      this.workflows = workflowExecutions
+      return;
+    }
+
+    let map = new Map<string, WorkflowExecution>();
+    for(let workflow of this.workflows) {
+      map.set(workflow.uid, workflow);
+    }
+
+    for(let workflowExecution of workflowExecutions) {
+      const existingWorkflow = map.get(workflowExecution.uid);
+
+      // If the workflow isn't in our existing ones, we need to update the entire list.
+      // There are missing or deleted workflows.
+      if(!existingWorkflow) {
+        this.workflows = workflowExecutions;
+        break;
+      }
+
+      // Only update the workflow if it isn't already in an updating state.
+      if(!this.isWorkflowUpdating(existingWorkflow)) {
+        existingWorkflow.phase = workflowExecution.phase;
+        existingWorkflow.startedAt = workflowExecution.startedAt;
+        existingWorkflow.finishedAt = workflowExecution.finishedAt;
+        existingWorkflow.workflowTemplate = workflowExecution.workflowTemplate;
+        existingWorkflow.labels = workflowExecution.labels;
+      }
+    }
+  }
+
   getWorkflows() {
     if(this.workflowExecutionsState !== 'initialization') {
       this.workflowExecutionsState = 'loading';
@@ -161,7 +241,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
     this.workflowServiceService.listWorkflowExecutions(this.namespace, this.uid, null, this.workflowPagination.pageSize, page)
       .subscribe(res => {
         this.workflowResponse = res;
-        this.workflows = res.workflowExecutions;
+        this.updateWorkflowExecutionList(res.workflowExecutions);
 
         this.workflowExecutionsState = 'new';
         this.hasWorkflowExecutions = !(page === 1 && !res.workflowExecutions);
