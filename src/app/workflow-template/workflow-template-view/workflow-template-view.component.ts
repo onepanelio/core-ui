@@ -241,7 +241,9 @@ export class WorkflowTemplateViewComponent implements OnInit {
     this.workflowServiceService.listWorkflowExecutions(this.namespace, this.uid, null, this.workflowPagination.pageSize, page)
       .subscribe(res => {
         this.workflowResponse = res;
-        this.updateWorkflowExecutionList(res.workflowExecutions);
+        if(res.workflowExecutions) {
+          this.updateWorkflowExecutionList(res.workflowExecutions);
+        }
 
         this.workflowExecutionsState = 'new';
         this.hasWorkflowExecutions = !(page === 1 && !res.workflowExecutions);
