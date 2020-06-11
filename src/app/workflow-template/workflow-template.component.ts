@@ -14,7 +14,7 @@ type WorkflowTemplateState = 'initialization' | 'loading' | 'new';
 export class WorkflowTemplateComponent implements OnInit {
   namespace: string;
 
-  displayedColumns = ['name', 'lastExecuted','status', 'createdAt', 'actions', 'labels'];
+  displayedColumns = ['name', 'lastExecuted', 'status', 'createdAt', 'spacer', 'actions', 'labels'];
 
   workflowTemplateResponse: ListWorkflowTemplatesResponse;
   workflowTemplates: WorkflowTemplate[] = [];
