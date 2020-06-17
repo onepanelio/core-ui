@@ -114,7 +114,7 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
             namespace: this.namespace,
             verb: 'create',
             resource: 'workspaces',
-            resourceName: workflowExecution.name,
+            resourceName: workflowExecution.uid,
             group: 'onepanel.io',
         });
 
@@ -122,7 +122,7 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
             namespace: this.namespace,
             verb: 'delete',
             resource: 'workspaces',
-            resourceName: workflowExecution.name,
+            resourceName: workflowExecution.uid,
             group: 'onepanel.io',
         });
 

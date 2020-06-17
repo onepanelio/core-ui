@@ -67,7 +67,7 @@ export class WorkspaceViewParametersComponent implements OnInit {
       namespace: this.namespaceTracker.activeNamespace,
       verb: 'update',
       resource: 'workspaces',
-      resourceName: this._workspace.name,
+      resourceName: this._workspace.uid,
       group: 'onepanel.io',
     }).subscribe(res => {
       this.canUpdate = !!res.authorized;

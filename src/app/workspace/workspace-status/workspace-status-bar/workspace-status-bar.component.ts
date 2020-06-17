@@ -28,7 +28,7 @@ export class WorkspaceStatusBarComponent implements OnInit {
       namespace: this.namespaceTracker.activeNamespace,
       verb: 'update',
       resource: 'workspaces',
-      resourceName: this.workspace.name,
+      resourceName: this.workspace.uid,
       group: 'onepanel.io',
     }).subscribe(res => {
       this.canPause = !!res.authorized;
@@ -40,7 +40,7 @@ export class WorkspaceStatusBarComponent implements OnInit {
       namespace: this.namespaceTracker.activeNamespace,
       verb: 'delete',
       resource: 'workspaces',
-      resourceName: this.workspace.name,
+      resourceName: this.workspace.uid,
       group: 'onepanel.io',
     }).subscribe(res => {
       this.canDelete = !!res.authorized;

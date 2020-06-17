@@ -30,7 +30,7 @@ export class WorkspaceIdentifierComponent implements OnInit {
       namespace: this.namespace,
       verb: 'update',
       resource: 'workspaces',
-      resourceName: this.workspace.name,
+      resourceName: this.workspace.uid,
       group: 'onepanel.io',
     }).subscribe(res => {
       this.permission.update = res.authorized;

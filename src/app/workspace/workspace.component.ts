@@ -233,7 +233,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
       namespace: this.namespace,
       verb: 'update',
       resource: 'workspaces',
-      resourceName: workspace.name,
+      resourceName: workspace.uid,
       group: 'onepanel.io',
     });
 
@@ -241,7 +241,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
       namespace: this.namespace,
       verb: 'delete',
       resource: 'workspaces',
-      resourceName: workspace.name,
+      resourceName: workspace.uid,
       group: 'onepanel.io',
     });
 
