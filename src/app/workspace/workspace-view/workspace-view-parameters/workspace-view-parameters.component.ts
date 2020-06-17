@@ -65,10 +65,10 @@ export class WorkspaceViewParametersComponent implements OnInit {
   ngOnInit() {
     this.authService.isAuthorized({
       namespace: this.namespaceTracker.activeNamespace,
-      verb: "update",
-      resource: "statefulsets",
+      verb: 'update',
+      resource: 'workspaces',
       resourceName: this._workspace.name,
-      group: "apps",
+      group: 'onepanel.io',
     }).subscribe(res => {
       this.canUpdate = !!res.authorized;
     }, err => {

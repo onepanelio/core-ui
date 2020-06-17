@@ -113,17 +113,17 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
         const canCreate$ = this.authService.isAuthorized({
             namespace: this.namespace,
             verb: 'create',
-            resource: 'statefulsets',
+            resource: 'workspaces',
             resourceName: workflowExecution.name,
-            group: 'apps',
+            group: 'onepanel.io',
         });
 
         const canDelete$ = this.authService.isAuthorized({
             namespace: this.namespace,
             verb: 'delete',
-            resource: 'statefulsets',
+            resource: 'workspaces',
             resourceName: workflowExecution.name,
-            group: 'apps',
+            group: 'onepanel.io',
         });
 
         combineLatest([canCreate$, canDelete$])

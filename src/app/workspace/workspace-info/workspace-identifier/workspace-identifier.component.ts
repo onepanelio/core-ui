@@ -29,9 +29,9 @@ export class WorkspaceIdentifierComponent implements OnInit {
     this.authService.isAuthorized({
       namespace: this.namespace,
       verb: 'update',
-      resource: 'statefulsets',
+      resource: 'workspaces',
       resourceName: this.workspace.name,
-      group: 'apps',
+      group: 'onepanel.io',
     }).subscribe(res => {
       this.permission.update = res.authorized;
     })
