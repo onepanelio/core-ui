@@ -26,10 +26,10 @@ export class WorkspaceStatusBarComponent implements OnInit {
   ngOnInit() {
     this.authService.isAuthorized({
       namespace: this.namespaceTracker.activeNamespace,
-      verb: "update",
-      resource: "statefulsets",
-      resourceName: this.workspace.name,
-      group: "apps",
+      verb: 'update',
+      resource: 'workspaces',
+      resourceName: this.workspace.uid,
+      group: 'onepanel.io',
     }).subscribe(res => {
       this.canPause = !!res.authorized;
     }, err => {
@@ -38,10 +38,10 @@ export class WorkspaceStatusBarComponent implements OnInit {
 
     this.authService.isAuthorized({
       namespace: this.namespaceTracker.activeNamespace,
-      verb: "delete",
-      resource: "statefulsets",
-      resourceName: this.workspace.name,
-      group: "apps",
+      verb: 'delete',
+      resource: 'workspaces',
+      resourceName: this.workspace.uid,
+      group: 'onepanel.io',
     }).subscribe(res => {
       this.canDelete = !!res.authorized;
     }, err => {

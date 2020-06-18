@@ -38,37 +38,37 @@ export class WorkspaceViewParametersComponent implements OnInit {
 
   private populateParameters() {
     let parameters = [];
-      let parametersMap = new Map<string, Parameter>();
+    let parametersMap = new Map<string, Parameter>();
 
-      for(let param of this._workspace.templateParameters) {
-        parametersMap[param.name] = param;
+    for(let param of this._workspace.templateParameters) {
+      parametersMap[param.name] = param;
+    }
+
+    for(let param of this._workspace.parameters) {
+      // Skip name as we already display it elsewhere
+      if(param.name === 'sys-name') {
+        continue;
       }
 
-      for(let param of this._workspace.parameters) {
-        // Skip name as we already display it elsewhere
-        if(param.name === 'sys-name') {
-          continue;
-        }
-
-        let p = parametersMap[param.name];
-        p.value = param.value;
-        if(!this.canUpdate || param.name !== 'sys-node-pool') {
-          parameters.push(p);
-        } else {
-          this.machineType = p;
-        }
+      let p = parametersMap[param.name];
+      p.value = param.value;
+      if(!this.canUpdate || param.name !== 'sys-node-pool') {
+        parameters.push(p);
+      } else {
+        this.machineType = p;
       }
+    }
 
-      this.formattedParameters = parameters;
+    this.formattedParameters = parameters;
   }
 
   ngOnInit() {
     this.authService.isAuthorized({
       namespace: this.namespaceTracker.activeNamespace,
-      verb: "update",
-      resource: "statefulsets",
-      resourceName: this._workspace.name,
-      group: "apps",
+      verb: 'update',
+      resource: 'workspaces',
+      resourceName: this._workspace.uid,
+      group: 'onepanel.io',
     }).subscribe(res => {
       this.canUpdate = !!res.authorized;
     }, err => {

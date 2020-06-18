@@ -232,17 +232,17 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
     const canUpdate$ = this.authService.isAuthorized({
       namespace: this.namespace,
       verb: 'update',
-      resource: 'statefulsets',
-      resourceName: workspace.name,
-      group: 'apps',
+      resource: 'workspaces',
+      resourceName: workspace.uid,
+      group: 'onepanel.io',
     });
 
     const canDelete$ = this.authService.isAuthorized({
       namespace: this.namespace,
       verb: 'delete',
-      resource: 'statefulsets',
-      resourceName: workspace.name,
-      group: 'apps',
+      resource: 'workspaces',
+      resourceName: workspace.uid,
+      group: 'onepanel.io',
     });
 
 
