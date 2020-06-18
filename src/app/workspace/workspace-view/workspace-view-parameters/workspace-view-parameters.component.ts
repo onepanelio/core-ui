@@ -38,28 +38,28 @@ export class WorkspaceViewParametersComponent implements OnInit {
 
   private populateParameters() {
     let parameters = [];
-      let parametersMap = new Map<string, Parameter>();
+    let parametersMap = new Map<string, Parameter>();
 
-      for(let param of this._workspace.templateParameters) {
-        parametersMap[param.name] = param;
+    for(let param of this._workspace.templateParameters) {
+      parametersMap[param.name] = param;
+    }
+
+    for(let param of this._workspace.parameters) {
+      // Skip name as we already display it elsewhere
+      if(param.name === 'sys-name') {
+        continue;
       }
 
-      for(let param of this._workspace.parameters) {
-        // Skip name as we already display it elsewhere
-        if(param.name === 'sys-name') {
-          continue;
-        }
-
-        let p = parametersMap[param.name];
-        p.value = param.value;
-        if(!this.canUpdate || param.name !== 'sys-node-pool') {
-          parameters.push(p);
-        } else {
-          this.machineType = p;
-        }
+      let p = parametersMap[param.name];
+      p.value = param.value;
+      if(!this.canUpdate || param.name !== 'sys-node-pool') {
+        parameters.push(p);
+      } else {
+        this.machineType = p;
       }
+    }
 
-      this.formattedParameters = parameters;
+    this.formattedParameters = parameters;
   }
 
   ngOnInit() {
