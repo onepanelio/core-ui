@@ -18,7 +18,7 @@ export type WorkspaceState = 'Launching' | 'Updating' | 'Pausing' | 'Paused' | '
   styleUrls: ['./workspace-view.component.scss']
 })
 export class WorkspaceViewComponent implements OnInit, OnDestroy {
-  buttonBottom = '20px';
+  position = 'fixed';
 
   hideNavigationBar = true;
 
@@ -142,10 +142,11 @@ export class WorkspaceViewComponent implements OnInit, OnDestroy {
   onToggleWorkspaceDetails() {
     this.showWorkspaceDetails = !this.showWorkspaceDetails;
 
-    setTimeout(() => {
-      const top = document.getElementById("bottom-panel").offsetHeight;
-      this.buttonBottom = (top + 20) + 'px';
-    }, 1);
+    if (this.showWorkspaceDetails) {
+      this.position = 'relative';
+    } else {
+      this.position = 'fixed';
+    }
   }
 
   onUpdateWorkspace(parameters: Array<Parameter>) {

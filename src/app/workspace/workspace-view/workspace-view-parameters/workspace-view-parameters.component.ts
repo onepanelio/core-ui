@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Parameter, Workspace } from "../../../../api";
+import { AuthServiceService, Parameter, Workspace } from "../../../../api";
 import { WorkspaceState } from "../workspace-view.component";
+import { NamespaceTracker } from "../../../namespace/namespace-tracker.service";
 
 @Component({
   selector: 'app-workspace-view-parameters',
@@ -14,6 +15,8 @@ export class WorkspaceViewParametersComponent implements OnInit {
 
   @Input() state: WorkspaceState;
 
+  canUpdate = false;
+
   @Input() set workspace(value: Workspace) {
     if(!value.parameters) {
       this.formattedParameters = [];
@@ -22,39 +25,57 @@ export class WorkspaceViewParametersComponent implements OnInit {
     }
 
     this._workspace = value;
-
-    let parameters = [];
-    let parametersMap = new Map<string, Parameter>();
-
-    for(let param of value.templateParameters) {
-      parametersMap[param.name] = param;
-    }
-
-    for(let param of value.parameters) {
-      // Skip name as we already display it elsewhere
-      if(param.name === 'sys-name') {
-        continue;
-      }
-
-      let p = parametersMap[param.name];
-      p.value = param.value;
-      if(param.name !== 'sys-node-pool') {
-        parameters.push(p);
-      } else {
-        this.machineType = p;
-      }
-    }
-
-    this.formattedParameters = parameters;
   }
 
   formattedParameters: Parameter[] = [];
 
   @Output() updateWorkspace = new EventEmitter<Array<Parameter>>();
 
-  constructor() { }
+  constructor(
+    private authService: AuthServiceService,
+    private namespaceTracker: NamespaceTracker) { }
+  
+
+  private populateParameters() {
+    let parameters = [];
+      let parametersMap = new Map<string, Parameter>();
+
+      for(let param of this._workspace.templateParameters) {
+        parametersMap[param.name] = param;
+      }
+
+      for(let param of this._workspace.parameters) {
+        // Skip name as we already display it elsewhere
+        if(param.name === 'sys-name') {
+          continue;
+        }
+
+        let p = parametersMap[param.name];
+        p.value = param.value;
+        if(!this.canUpdate || param.name !== 'sys-node-pool') {
+          parameters.push(p);
+        } else {
+          this.machineType = p;
+        }
+      }
+
+      this.formattedParameters = parameters;
+  }
 
   ngOnInit() {
+    this.authService.isAuthorized({
+      namespace: this.namespaceTracker.activeNamespace,
+      verb: "update",
+      resource: "statefulsets",
+      resourceName: this._workspace.name,
+      group: "apps",
+    }).subscribe(res => {
+      this.canUpdate = !!res.authorized;
+    }, err => {
+      this.canUpdate = false;
+    }).add(() => {
+      this.populateParameters();
+    });
   }
 
   update() {
