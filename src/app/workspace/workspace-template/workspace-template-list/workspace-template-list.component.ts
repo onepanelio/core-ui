@@ -260,6 +260,7 @@ export class WorkspaceTemplateListComponent implements OnInit, CanComponentDeact
 
             this.getWorkspaceTemplates();
             this.selectedTemplate = null;
+            this.state = 'create';
           }, (err: HttpErrorResponse) => {
             if(err.status === 400 && err.error.code  === 9) {
               this.alertService.storeAlert(new Alert({
