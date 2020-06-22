@@ -44,7 +44,8 @@
                     (deleteWorkspaceTemplateClicked)="deleteWorkspaceTemplate($event)"
                     class="mr-3 pointer-hover"
                     [ngClass]="{selected: selectedTemplate?.name === template.name}"
-                    [template]="template">
+                    [template]="template"
+                    [deleting]="deletingTemplates.has(template.uid)">
             </app-workspace-template-summary-view>
         </div>
     </div>

@@ -1,7 +1,13 @@
 <div class="workspace-template-summary-view op-border op-rounded-regular d-inline-flex flex-column align-items-center">
-    <button [class.hidden]="!showMenu" mat-icon-button [matMenuTriggerFor]="appMenu" style="align-self: flex-end">
-        <mat-icon>more_vert</mat-icon>
-    </button>
+    <div class="d-inline-flex justify-content-between w-100 align-items-center">
+        <div class="ml-3 font-roboto" [class.visible]="deleting" [class.hidden]="!deleting">
+            <img class="terminating-icon" src="/assets/images/status-icons/failed.svg"/>
+            <span class="ml-2">Deleting</span>
+        </div>
+        <button [class.hidden]="!showMenu" mat-icon-button [matMenuTriggerFor]="appMenu">
+            <mat-icon>more_vert</mat-icon>
+        </button>
+    </div>
     <div class="content text-center">
         <i [class]="iconClass"></i>
         <div class="title font-proxima-bold font-size-regular mt-3">{{template.name}}</div>

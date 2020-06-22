@@ -10,6 +10,7 @@ export class WorkspaceTemplateSummaryViewComponent implements OnInit {
   @Input() iconClass = 'fas fa-desktop';
   @Input() template: WorkspaceTemplate;
   @Input() showMenu = true;
+  @Input() deleting = false;
 
   @Output() createWorkspaceClicked = new EventEmitter<WorkspaceTemplate>();
   @Output() cloneWorkspaceTemplateClicked = new EventEmitter<WorkspaceTemplate>();

@@ -66,6 +66,12 @@ export class WorkspaceTemplateListComponent implements OnInit, CanComponentDeact
 
   state: WorkspaceTemplateState = 'create';
 
+  /**
+   * terminatingTemplates keeps track of all of the workspace templates that are currently being
+   * deleted.
+   */
+  deletingTemplates = new Map<string, WorkspaceTemplate>();
+
   constructor(
       private appRouter: AppRouter,
       private workspaceTemplateService: WorkspaceTemplateServiceService,
@@ -251,8 +257,11 @@ export class WorkspaceTemplateListComponent implements OnInit, CanComponentDeact
         return;
       }
 
+      this.deletingTemplates.set(template.uid, template);
+
       this.workspaceTemplateService.archiveWorkspaceTemplate(this.namespace, template.uid)
           .subscribe(res => {
+            this.deletingTemplates.delete(template.uid);
             const templateIndex = this.workspaceTemplates.indexOf(template);
             if(templateIndex > -1) {
               this.workspaceTemplates.splice(templateIndex, 1);
@@ -262,6 +271,7 @@ export class WorkspaceTemplateListComponent implements OnInit, CanComponentDeact
             this.selectedTemplate = null;
             this.state = 'create';
           }, (err: HttpErrorResponse) => {
+            this.deletingTemplates.delete(template.uid);
             if(err.status === 400 && err.error.code  === 9) {
               this.alertService.storeAlert(new Alert({
                 message: 'Error deleting template ' + template.uid + ', it has running workspaces',
@@ -274,7 +284,6 @@ export class WorkspaceTemplateListComponent implements OnInit, CanComponentDeact
               message: 'Error deleting template ' + template.uid,
               type: 'danger',
             }));
-
           })
     });
   }

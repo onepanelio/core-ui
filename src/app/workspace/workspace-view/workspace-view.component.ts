@@ -1,5 +1,5 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from "@angular/router";
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ActivatedRoute } from "@angular/router";
 import { Parameter, UpdateWorkspaceBody, Workspace, WorkspaceServiceService } from "../../../api";
 import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
 import { MatDialog } from "@angular/material/dialog";
@@ -8,7 +8,6 @@ import {
   ConfirmationDialogData
 } from "../../confirmation-dialog/confirmation-dialog.component";
 import { AppRouter } from "../../router/app-router.service";
-import { WorkflowExecuteDialogComponent } from "../../workflow/workflow-execute-dialog/workflow-execute-dialog.component";
 
 export type WorkspaceState = 'Launching' | 'Updating' | 'Pausing' | 'Paused' | 'Resuming' | 'Running' | 'Deleting';
 
@@ -76,7 +75,7 @@ export class WorkspaceViewComponent implements OnInit, OnDestroy {
   getWorkspace() {
     this.workspaceService.getWorkspace(this.namespace, this.workspaceUid).subscribe(res => {
       this.workspace = res;
-      // t query parameter is so we avoid caching the response.
+      // We add a 't' query parameter is so we avoid caching the response.
       this.workspaceUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(res.url + "?t=" + Date.now());
 
       this.parameters = res.parameters;
