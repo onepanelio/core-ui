@@ -201,7 +201,8 @@ export class WorkspaceTemplateListComponent implements OnInit, CanComponentDeact
             }));
           } else {
             this.workspaceTemplateCreateEditor.setAlert(new Alert({
-              message: 'Unable to create workspace template',
+              title: 'Unable to create workspace template',
+              message: err.error.error,
               type: 'danger',
             }));
           }
@@ -218,8 +219,13 @@ export class WorkspaceTemplateListComponent implements OnInit, CanComponentDeact
             message: 'Template has been updated'
           }))
           this.workspaceTemplateEditLoading = false;
-        }, err => {
+        }, (err: HttpErrorResponse) => {
           this.workspaceTemplateEditLoading = false;
+          this.workspaceTemplateEditor.setAlert(new Alert({
+            type: 'danger',
+            title: 'Unable to update workspace template',
+            message: err.error.error
+          }))
         })
   }
 
