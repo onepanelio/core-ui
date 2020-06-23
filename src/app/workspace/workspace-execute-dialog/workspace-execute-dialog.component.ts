@@ -114,7 +114,8 @@ export class WorkspaceExecuteDialogComponent implements OnInit {
             };
           } else {
             this.alert = new Alert({
-              message: 'Unable to create workspace',
+              title: 'Unable to create workspace',
+              message: err.error.error,
               type: 'danger'
             });
           }
