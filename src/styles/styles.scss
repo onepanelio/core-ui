@@ -481,3 +481,9 @@ mat-spinner.color-danger {
     }
   }
 }
+
+button {
+  &.color-danger[disabled=true]  {
+    color: rgba(0, 0, 0, 0.26) !important;
+  }
+}
