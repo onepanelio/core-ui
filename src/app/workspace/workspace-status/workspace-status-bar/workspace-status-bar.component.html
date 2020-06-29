@@ -29,8 +29,7 @@
         </button>
         <button *ngIf="canDelete" mat-button
                 class="font-weight-bold font-size-regular color-danger"
-                (click)="onDelete(workspace)"
-                [disabled]="workspace.status.phase === 'Launching' || workspace.status.phase === 'Pausing'">
+                (click)="onDelete(workspace)">
             <mat-icon class="vertical-baseline" [fontSet]="'far'" [fontIcon]="'fa-trash-alt'"></mat-icon>
             DELETE WORKSPACE
         </button>
