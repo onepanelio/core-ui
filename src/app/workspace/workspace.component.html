@@ -139,7 +139,7 @@
                 <i class="far fa-play-circle mr-1 workspace-menu-icon"></i>
                 Resume
             </button>
-            <button *ngIf="workspacePermissions.get(workspace.uid).delete" mat-menu-item (click)="onDelete(workspace)" [disabled]="workspace.status.phase === 'Terminating'">
+            <button *ngIf="workspacePermissions.get(workspace.uid).delete" mat-menu-item (click)="onDelete(workspace)" [disabled]="workspace.status.phase === 'Terminating' || workspace.status.phase === 'Launching' || workspace.status.phase === 'Pausing'">
                 <i class="fas fa-trash mr-1 workspace-menu-icon"></i>
                 Terminate
             </button>
