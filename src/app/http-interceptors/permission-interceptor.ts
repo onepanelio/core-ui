@@ -23,17 +23,14 @@ export class PermissionInterceptor implements HttpInterceptor {
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(req).pipe(
             catchError((error: HttpErrorResponse) => {
-                const currentUrl = this.router.url;
-                const isOnLogin =  currentUrl === '/login';
-                const errorStatus = error.status === 401 || error.status === 403;
-                // Display a login alert on a permissions related (401/403) error.
-                // If we're already displaying such an alert, don't display it again.
-                if(errorStatus && !this.snackbarRef && !isOnLogin) {
-                    let message = 'Not logged in';
-                    if(error.status === 403) {
-                        message = 'Unauthorized'
-                    }
+                const pageUrl = this.router.url;
+                const currentUrl = req.url;
+                const isOnPermittedUrl = pageUrl === '/login' || currentUrl === '/login' || currentUrl.indexOf('/apis/v1beta1/auth') > -1;
 
+                // Display a login alerts on a permissions related (401/403) error.
+                // If we're already displaying such an alert, don't display it again.
+                if(error.status === 401 && !this.snackbarRef && !isOnPermittedUrl) {
+                    let message = 'You are not logged in';
                     this.snackbarRef = this.snackbar.open(message, 'Login');
                     this.snackbarRef.afterDismissed()
                         .subscribe(res => {
@@ -43,6 +40,14 @@ export class PermissionInterceptor implements HttpInterceptor {
                                     'referer': this.router.url
                                     }});
                             }
+                        })
+                }
+                if(error.status === 403 && !this.snackbarRef && !isOnPermittedUrl) {
+                    let message = 'Unauthorized';
+                    this.snackbarRef = this.snackbar.open(message, 'Close');
+                    this.snackbarRef.afterDismissed()
+                        .subscribe(() => {
+                            this.snackbarRef = null;
                         })
                 }
 

@@ -24,7 +24,7 @@
         </div>
 
         <app-button
-                *ngIf="!workflow?.active"
+                *ngIf="!workflow?.active && permissions.create"
                 color="primary"
                 (click)="runAgain()"
                 [loading]="cloning">
@@ -34,7 +34,7 @@
       </div>
 
       <div>
-        <button *ngIf="workflow?.active" mat-button color="primary" class="font-size-regular" (click)="onTerminate()">Terminate</button>
+        <button *ngIf="workflow?.active && permissions.delete" mat-button color="primary" class="font-size-regular" (click)="onTerminate()">Terminate</button>
       </div>
     </app-activity-bar>
 
@@ -44,7 +44,7 @@
           <ng-container *ngIf="workflow">{{workflow.name}}</ng-container>
         </div>
         <div class="actions">
-          <button mat-button color="primary" class="font-proxima-bold font-size-regular ml-2" (click)="onEdit()"><i class="fas fa-pencil-alt mr-2"></i> EDIT LABELS</button>
+          <button *ngIf="permissions.update" mat-button color="primary" class="font-proxima-bold font-size-regular ml-2" (click)="onEdit()"><i class="fas fa-pencil-alt mr-2"></i> EDIT LABELS</button>
           <button mat-button color="primary" class="font-proxima-bold font-size-regular ml-2" (click)="onShowTotalYaml()"><i class="fas fa-terminal mr-2"></i>VIEW YAML</button>
         </div>
       </div>

@@ -14,8 +14,7 @@ import { MatSnackBar } from "@angular/material/snack-bar";
 export class LoginComponent implements OnInit {
   form: FormGroup;
   tokenInput: AbstractControl;
-
-  redirectUrl = null;
+  loggingIn = false;
 
   constructor(
       private snackBar: MatSnackBar,
@@ -38,8 +37,8 @@ export class LoginComponent implements OnInit {
     this.snackBar.dismiss();
 
     const state = history.state;
-    if(state.referer) {
-      this.redirectUrl = state.referer;
+    if(state.referer && !this.authService.redirectUrl) {
+      this.authService.redirectUrl = state.referer;
     }
   }
 
@@ -49,6 +48,7 @@ export class LoginComponent implements OnInit {
       return;
     }
 
+    this.loggingIn = true;
     const tokenValue = this.tokenInput.value;
     const token = `Bearer ${tokenValue}`;
 
@@ -58,14 +58,18 @@ export class LoginComponent implements OnInit {
 
             this.namespaceTracker.getNamespaces();
 
-            if(this.redirectUrl) {
-              this.appRouter.navigateByUrl(this.redirectUrl);
+            if(this.authService.redirectUrl) {
+              this.appRouter.navigateByUrl(this.authService.redirectUrl);
+              this.authService.redirectUrl = null;
+              this.loggingIn = false;
               return;
             }
 
             this.appRouter.navigateToHomePage();
+            this.loggingIn = false;
         }, err => {
           this.tokenInput.setErrors({error: 'Invalid token'})
+          this.loggingIn = false;
         })
   }
 }

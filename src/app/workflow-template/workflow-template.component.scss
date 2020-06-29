@@ -1,10 +1,6 @@
 .workflow-list {
 }
 
-.cdk-header-cell {
-  flex-grow: 1;
-}
-
 .cdk-column-name {
   flex-basis: 300px;
 
@@ -15,6 +11,7 @@
 
 .cdk-column-status {
   min-width: 400px;
+  margin-right: 40px;
 
   app-workflow-template-status {
     display: block;
@@ -52,7 +49,7 @@
 }
 
 .cdk-column-lastExecuted {
-  flex-basis: 150px;
+  flex-basis: 200px;
 }
 
 .cdk-column-labels {

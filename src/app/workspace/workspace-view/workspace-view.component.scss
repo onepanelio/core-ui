@@ -21,14 +21,17 @@ iframe {
   z-index: 1000;
 
   position: fixed;
-  right: 20px;
+  left: 96vw;
+  bottom: 20px;
 
   img {
     position: relative;
-    top: 10px;
-    left: 9.5px;
-    width: 20px;
-    height: 20px;
+    top: 1px;
+    left: 1px;
+    width: 36px;
+    height: 36px;
+    border: 1px solid white;
+    border-radius: 50%;
   }
 }
 

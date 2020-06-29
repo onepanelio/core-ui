@@ -72,8 +72,8 @@
             <ng-container cdkColumnDef="actions">
                 <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
                 <cdk-cell *cdkCellDef="let workspace" class="flex align-items-center">
-                    <a class="link-button" target="_blank" [routerLink]="['/', this.namespace, 'workspaces', workspace.uid]">Open</a>
-                    <button mat-icon-button color="primary" class="ml-3" [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{'workspace' :workspace}">
+                    <a class="link-button" target="_blank" [routerLink]="['/', this.namespace, 'workspaces', workspace.uid]">View</a>
+                    <button mat-icon-button color="primary" class="ml-3" [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{'workspace' :workspace}" (click)="onMatMenuOpen(workspace)">
                         <mat-icon>more_vert</mat-icon>
                     </button>
                 </cdk-cell>
@@ -117,19 +117,32 @@
                [pageSizeOptions]="[5, 10, 25, 100]">
 </mat-paginator>
 
-<mat-menu #appMenu="matMenu">
+<mat-menu #appMenu="matMenu" class="font-roboto">
     <ng-template matMenuContent let-workspace="workspace">
-        <button *ngIf="workspace.status.phase === 'Running'" mat-menu-item (click)="onPause(workspace)">
-            <i class="far fa-pause-circle mr-1 workspace-menu-icon"></i>
-            Pause
-        </button>
-        <button *ngIf="workspace.status.phase === 'Paused'" mat-menu-item (click)="onResume(workspace)">
-            <i class="far fa-play-circle mr-1 workspace-menu-icon"></i>
-            Resume
-        </button>
-        <button mat-menu-item (click)="onDelete(workspace)" [disabled]="workspace.status.phase === 'Terminating'">
-            <i class="fas fa-trash mr-1 workspace-menu-icon"></i>
-            Delete
-        </button>
+        <div mat-menu-item *ngIf="!workspacePermissions.has(workspace.uid)" class="d-flex align-items-center">
+            <mat-spinner
+                     class="mr-2 color-medium-gray"
+                     [diameter]="15"
+                     [mode]="'indeterminate'">
+            </mat-spinner>
+            Loading
+        </div>
+        <div *ngIf="workspacePermissions.has(workspace.uid) && !workspacePermissions.get(workspace.uid).hasAnyActionPermissions()">
+            No Permissions
+        </div>
+        <div *ngIf="workspacePermissions.has(workspace.uid)">
+            <button *ngIf="workspace.status.phase === 'Running' && workspacePermissions.get(workspace.uid).update" mat-menu-item (click)="onPause(workspace)">
+                <i class="far fa-pause-circle mr-1 workspace-menu-icon"></i>
+                Pause
+            </button>
+            <button *ngIf="workspace.status.phase === 'Paused' && workspacePermissions.get(workspace.uid).update" mat-menu-item (click)="onResume(workspace)">
+                <i class="far fa-play-circle mr-1 workspace-menu-icon"></i>
+                Resume
+            </button>
+            <button *ngIf="workspacePermissions.get(workspace.uid).delete" mat-menu-item (click)="onDelete(workspace)" [disabled]="workspace.status.phase === 'Terminating' || workspace.status.phase === 'Launching' || workspace.status.phase === 'Pausing'">
+                <i class="fas fa-trash mr-1 workspace-menu-icon"></i>
+                Terminate
+            </button>
+        </div>
     </ng-template>
 </mat-menu>

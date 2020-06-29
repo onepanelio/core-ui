@@ -18,7 +18,7 @@
     <cdk-table [dataSource]="workflowTemplates">
       <ng-container cdkColumnDef="name">
         <cdk-header-cell *cdkHeaderCellDef>Name</cdk-header-cell>
-        <cdk-cell *cdkCellDef="let workflowTemplate" class="flex-grow-1">
+        <cdk-cell *cdkCellDef="let workflowTemplate">
           <a class="name-link d-block" [routerLink]="['/', this.namespace, 'workflow-templates', workflowTemplate.uid]">{{workflowTemplate.name}}</a>
           <div class="d-inline-flex justify-content-between color-medium-gray font-roboto font-size-small mt-2">
             <div class="mr-5">{{workflowTemplate.versions}} versions</div>
@@ -31,7 +31,7 @@
 
       <ng-container cdkColumnDef="lastExecuted">
         <cdk-header-cell *cdkHeaderCellDef>Last executed</cdk-header-cell>
-        <cdk-cell *cdkCellDef="let workflowTemplate" class="flex-grow-1">
+        <cdk-cell *cdkCellDef="let workflowTemplate">
           <div *ngIf="workflowTemplate.stats">{{ workflowTemplate.stats.lastExecuted | amTimeAgo }}</div>
           <div *ngIf="!workflowTemplate.stats">Not run</div>
         </cdk-cell>
@@ -39,7 +39,7 @@
 
       <ng-container cdkColumnDef="status">
         <cdk-header-cell *cdkHeaderCellDef>Status</cdk-header-cell>
-        <cdk-cell *cdkCellDef="let workflowTemplate" class="flex-grow-1">
+        <cdk-cell *cdkCellDef="let workflowTemplate">
           <div>
             <app-workflow-template-status *ngIf="workflowTemplate.stats" [template]="workflowTemplate.stats"></app-workflow-template-status>
           </div>
@@ -48,23 +48,29 @@
 
       <ng-container cdkColumnDef="createdAt">
         <cdk-header-cell *cdkHeaderCellDef>Created</cdk-header-cell>
-        <cdk-cell *cdkCellDef="let workflowTemplate" class="flex-grow-1">
+        <cdk-cell *cdkCellDef="let workflowTemplate">
           <app-date [dateTime]="workflowTemplate.createdAt"></app-date>
         </cdk-cell>
       </ng-container>
 
       <ng-container cdkColumnDef="actions">
         <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
-        <cdk-cell *cdkCellDef="let workflowTemplate" class="flex-grow-1">
+        <cdk-cell *cdkCellDef="let workflowTemplate">
           <div class="d-inline-flex flex-row-reverse w-100">
-            <a class="link-button" [routerLink]="['/', this.namespace, 'workflow-templates', workflowTemplate.uid]">Open</a>
+            <a class="link-button" [routerLink]="['/', this.namespace, 'workflow-templates', workflowTemplate.uid]">View</a>
           </div>
+        </cdk-cell>
+      </ng-container>
+
+      <ng-container cdkColumnDef="spacer">
+        <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+        <cdk-cell *cdkCellDef="let workflowTemplate" class="flex-grow-1">
         </cdk-cell>
       </ng-container>
 
       <ng-container cdkColumnDef="labels">
         <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
-        <cdk-cell *cdkCellDef="let workflowTemplate" class="flex-grow-1 w-100">
+        <cdk-cell *cdkCellDef="let workflowTemplate" class="w-100">
           <app-labels-list-view [labels]="workflowTemplate.labels" class="d-block"></app-labels-list-view>
         </cdk-cell>
       </ng-container>

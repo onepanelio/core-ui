@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
   providedIn: 'root'
 })
 export class AuthService {
-  public redirectUrl: string;
+  public redirectUrl?: string;
   private authToken?: string;
 
   get isLoggedIn(): boolean {
