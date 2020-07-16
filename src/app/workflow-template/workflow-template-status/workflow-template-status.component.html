@@ -6,11 +6,11 @@
         <div *ngIf="values.length > 1">
             <span class="font-weight-bold">{{values[1]}}</span> completed
         </div>
-        <div *ngIf="values.length > 3" class="ml-3">
-            <span class="font-weight-bold">{{values[3]}}</span> terminated
-        </div>
         <div *ngIf="values.length > 2" class="ml-3">
             <span class="font-weight-bold">{{values[2]}}</span> failed
+        </div>
+        <div *ngIf="values.length > 3" class="ml-3">
+            <span class="font-weight-bold">{{values[3]}}</span> terminated
         </div>
     </div>
     <div>
