@@ -75,6 +75,11 @@ export class AppComponent implements OnInit {
                 this.activeRoute = 'workspaces';
                 break;
             }
+
+            if(urlPart.indexOf('models') >= 0) {
+                this.activeRoute = 'models';
+                break;
+            }
           }
 
 

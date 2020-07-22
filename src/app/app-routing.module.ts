@@ -93,7 +93,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: ':namespace/components/:uid',
+    path: ':namespace/models/:uid',
     component: ModeldbComponent,
     canActivate: [AuthGuard],
   },

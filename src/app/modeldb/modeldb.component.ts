@@ -7,7 +7,7 @@ import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
   styleUrls: ['./modeldb.component.scss']
 })
 export class ModeldbComponent implements OnInit {
-  hideNavigationBar = true;
+  hideNavigationBar = false;
   url: SafeResourceUrl;
 
   constructor(private domSanitizer: DomSanitizer,) { }
