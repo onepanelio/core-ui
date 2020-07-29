@@ -597,13 +597,14 @@ export class WorkflowTemplateServiceService {
      * @param namespace 
      * @param pageSize 
      * @param page 
+     * @param labels 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listWorkflowTemplates(namespace: string, pageSize?: number, page?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ListWorkflowTemplatesResponse>;
-    public listWorkflowTemplates(namespace: string, pageSize?: number, page?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ListWorkflowTemplatesResponse>>;
-    public listWorkflowTemplates(namespace: string, pageSize?: number, page?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ListWorkflowTemplatesResponse>>;
-    public listWorkflowTemplates(namespace: string, pageSize?: number, page?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+    public listWorkflowTemplates(namespace: string, pageSize?: number, page?: number, labels?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ListWorkflowTemplatesResponse>;
+    public listWorkflowTemplates(namespace: string, pageSize?: number, page?: number, labels?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ListWorkflowTemplatesResponse>>;
+    public listWorkflowTemplates(namespace: string, pageSize?: number, page?: number, labels?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ListWorkflowTemplatesResponse>>;
+    public listWorkflowTemplates(namespace: string, pageSize?: number, page?: number, labels?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
             throw new Error('Required parameter namespace was null or undefined when calling listWorkflowTemplates.');
         }
@@ -616,6 +617,10 @@ export class WorkflowTemplateServiceService {
         if (page !== undefined && page !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>page, 'page');
+        }
+        if (labels !== undefined && labels !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>labels, 'labels');
         }
 
         let headers = this.defaultHeaders;

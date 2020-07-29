@@ -47,6 +47,7 @@ export * from './tokenWrapper';
 export * from './updateSecretKeyValueResponse';
 export * from './updateWorkspaceBody';
 export * from './workflowExecution';
+export * from './workflowExecutionMetadata';
 export * from './workflowExecutionStatisticReport';
 export * from './workflowExecutionStatus';
 export * from './workflowTemplate';
