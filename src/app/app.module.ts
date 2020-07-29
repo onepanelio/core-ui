@@ -115,6 +115,8 @@ import { LoadingContentComponent } from './ui-tools/loading-content/loading-cont
 import { LabelsViewerComponent } from './labels/labels-viewer/labels-viewer.component';
 import { WorkflowIsActivePipe } from './workflow/pipes/workflow-is-active/workflow-is-active.pipe';
 import { ArtifactParameterComponent } from './node-info/artifact-parameter/artifact-parameter.component';
+import { ServiceListComponent } from "./services/service-list/service-list.component";
+import { ServiceViewComponent } from "./services/service-view/service-view.component";
 
 @NgModule({
     declarations: [
@@ -201,6 +203,8 @@ import { ArtifactParameterComponent } from './node-info/artifact-parameter/artif
         LabelsViewerComponent,
         WorkflowIsActivePipe,
         ArtifactParameterComponent,
+        ServiceListComponent,
+        ServiceViewComponent,
     ],
     entryComponents: [
         WorkflowExecuteDialogComponent,

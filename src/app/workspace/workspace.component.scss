@@ -4,7 +4,9 @@
 }
 
 .cdk-column-template {
-  width: 150px;
+  width: 140px;
+  margin-right: 10px;
+  word-break: break-all;
 }
 
 .cdk-column-createdAt {
