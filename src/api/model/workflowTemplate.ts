@@ -12,6 +12,7 @@
 import { CronWorkflowStatisticsReport } from './cronWorkflowStatisticsReport';
 import { KeyValue } from './keyValue';
 import { WorkflowExecutionStatisticReport } from './workflowExecutionStatisticReport';
+import { Parameter } from './parameter';
 
 
 export interface WorkflowTemplate { 
@@ -27,5 +28,6 @@ export interface WorkflowTemplate {
     labels?: Array<KeyValue>;
     stats?: WorkflowExecutionStatisticReport;
     cronStats?: CronWorkflowStatisticsReport;
+    parameters?: Array<Parameter>;
 }
 

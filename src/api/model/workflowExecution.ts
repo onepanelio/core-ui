@@ -11,6 +11,7 @@
  */
 import { KeyValue } from './keyValue';
 import { WorkflowTemplate } from './workflowTemplate';
+import { WorkflowExecutionMetadata } from './workflowExecutionMetadata';
 import { Parameter } from './parameter';
 
 
@@ -25,5 +26,6 @@ export interface WorkflowExecution {
     parameters?: Array<Parameter>;
     workflowTemplate?: WorkflowTemplate;
     labels?: Array<KeyValue>;
+    metadata?: WorkflowExecutionMetadata;
 }
 
