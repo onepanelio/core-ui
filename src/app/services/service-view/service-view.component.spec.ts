@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ModeldbComponent } from './modeldb.component';
+import { ServiceViewComponent } from './service-view.component';
 
 describe('ModeldbComponent', () => {
-  let component: ModeldbComponent;
-  let fixture: ComponentFixture<ModeldbComponent>;
+  let component: ServiceViewComponent;
+  let fixture: ComponentFixture<ServiceViewComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ModeldbComponent ]
+      declarations: [ ServiceViewComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ModeldbComponent);
+    fixture = TestBed.createComponent(ServiceViewComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
