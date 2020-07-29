@@ -183,23 +183,6 @@ export class WorkflowTemplateEditComponent implements OnInit, CanComponentDeacti
     this.appRouter.navigateToWorkflowTemplateView(this.namespace, this.workflowTemplate.uid);
   }
 
-  getLabels(version: string|null = null) {
-      const templateVersion = this.workflowTemplateVersions.find(wft => wft.version === version);
-      if(!templateVersion) {
-          return;
-      }
-
-      this.labelService.getLabels(this.namespace, 'workflow_template_version', templateVersion.uid)
-        .subscribe(res => {
-            if(!res.labels) {
-                this.labels = [];
-                return;
-            }
-
-            this.labels = res.labels;
-        })
-  }
-
   onVersionSelected(selected: string) {
       const version = this.workflowTemplateVersions.find(wft => wft.version === selected);
       if(!version) {
@@ -207,7 +190,11 @@ export class WorkflowTemplateEditComponent implements OnInit, CanComponentDeacti
       }
 
       this.manifestText = version.manifest;
-      this.getLabels(version.version);
+      if(version.labels) {
+          this.labels = version.labels;
+      } else {
+          this.labels = [];
+      }
   }
 
   onManifestTextModified(manifest: string) {
