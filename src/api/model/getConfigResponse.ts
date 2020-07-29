@@ -9,10 +9,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { NodePool } from './nodePool';
 
 
-export interface Secret { 
-    name?: string;
-    data?: { [key: string]: string; };
+export interface GetConfigResponse { 
+    apiUrl?: string;
+    domain?: string;
+    fqdn?: string;
+    nodePool?: NodePool;
 }
 

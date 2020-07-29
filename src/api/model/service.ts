@@ -11,8 +11,8 @@
  */
 
 
-export interface Secret { 
+export interface Service { 
     name?: string;
-    data?: { [key: string]: string; };
+    url?: string;
 }
 

@@ -9,10 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { NodePoolOption } from './nodePoolOption';
 
 
-export interface Secret { 
-    name?: string;
-    data?: { [key: string]: string; };
+export interface NodePool { 
+    label?: string;
+    options?: Array<NodePoolOption>;
 }
 

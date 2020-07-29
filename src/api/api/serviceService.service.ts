@@ -18,10 +18,8 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { GrpcGatewayRuntimeError } from '../model/models';
-import { IsAuthorized } from '../model/models';
-import { IsAuthorizedResponse } from '../model/models';
-import { IsValidTokenResponse } from '../model/models';
-import { TokenWrapper } from '../model/models';
+import { ListServicesResponse } from '../model/models';
+import { Service } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -31,7 +29,7 @@ import { Configuration }                                     from '../configurat
 @Injectable({
   providedIn: 'root'
 })
-export class AuthServiceService {
+export class ServiceServiceService {
 
     protected basePath = 'http://localhost:8888';
     public defaultHeaders = new HttpHeaders();
@@ -89,16 +87,20 @@ export class AuthServiceService {
     }
 
     /**
-     * @param body 
+     * @param namespace 
+     * @param name 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public isAuthorized(body: IsAuthorized, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<IsAuthorizedResponse>;
-    public isAuthorized(body: IsAuthorized, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<IsAuthorizedResponse>>;
-    public isAuthorized(body: IsAuthorized, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<IsAuthorizedResponse>>;
-    public isAuthorized(body: IsAuthorized, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        if (body === null || body === undefined) {
-            throw new Error('Required parameter body was null or undefined when calling isAuthorized.');
+    public getService(namespace: string, name: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<Service>;
+    public getService(namespace: string, name: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<Service>>;
+    public getService(namespace: string, name: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<Service>>;
+    public getService(namespace: string, name: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        if (namespace === null || namespace === undefined) {
+            throw new Error('Required parameter namespace was null or undefined when calling getService.');
+        }
+        if (name === null || name === undefined) {
+            throw new Error('Required parameter name was null or undefined when calling getService.');
         }
 
         let headers = this.defaultHeaders;
@@ -124,22 +126,12 @@ export class AuthServiceService {
         }
 
 
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
-
         let responseType: 'text' | 'json' = 'json';
         if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
             responseType = 'text';
         }
 
-        return this.httpClient.post<IsAuthorizedResponse>(`${this.configuration.basePath}/apis/v1beta1/auth`,
-            body,
+        return this.httpClient.get<Service>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/service/${encodeURIComponent(String(name))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -151,16 +143,28 @@ export class AuthServiceService {
     }
 
     /**
-     * @param body 
+     * @param namespace 
+     * @param pageSize 
+     * @param page 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public isValidToken(body: TokenWrapper, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<IsValidTokenResponse>;
-    public isValidToken(body: TokenWrapper, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<IsValidTokenResponse>>;
-    public isValidToken(body: TokenWrapper, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<IsValidTokenResponse>>;
-    public isValidToken(body: TokenWrapper, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
-        if (body === null || body === undefined) {
-            throw new Error('Required parameter body was null or undefined when calling isValidToken.');
+    public listServices(namespace: string, pageSize?: number, page?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<ListServicesResponse>;
+    public listServices(namespace: string, pageSize?: number, page?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpResponse<ListServicesResponse>>;
+    public listServices(namespace: string, pageSize?: number, page?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json'}): Observable<HttpEvent<ListServicesResponse>>;
+    public listServices(namespace: string, pageSize?: number, page?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json'}): Observable<any> {
+        if (namespace === null || namespace === undefined) {
+            throw new Error('Required parameter namespace was null or undefined when calling listServices.');
+        }
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (pageSize !== undefined && pageSize !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>pageSize, 'pageSize');
+        }
+        if (page !== undefined && page !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>page, 'page');
         }
 
         let headers = this.defaultHeaders;
@@ -186,23 +190,14 @@ export class AuthServiceService {
         }
 
 
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
-
         let responseType: 'text' | 'json' = 'json';
         if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
             responseType = 'text';
         }
 
-        return this.httpClient.post<IsValidTokenResponse>(`${this.configuration.basePath}/apis/v1beta1/auth/token`,
-            body,
+        return this.httpClient.get<ListServicesResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/service`,
             {
+                params: queryParameters,
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

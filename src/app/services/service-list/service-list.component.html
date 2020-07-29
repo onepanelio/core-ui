@@ -1,0 +1,60 @@
+<div class="page">
+    <div class="page-alerts mb-5">
+        <app-alert-panel></app-alert-panel>
+    </div>
+    <div class="page-header">
+        <div class="page-title">
+            <div class="page-title-text">Services</div>
+        </div>
+    </div>
+
+    <div class="page-body mt-3 workflow-list">
+        <cdk-table *ngIf="!loading" [dataSource]="services">
+            <ng-container cdkColumnDef="name">
+                <cdk-header-cell *cdkHeaderCellDef>Name</cdk-header-cell>
+                <cdk-cell *cdkCellDef="let service">
+                    <a class="name-link d-block" [routerLink]="['/', this.namespace, 'services', service.name]">{{service.name}}</a>
+                </cdk-cell>
+            </ng-container>
+
+
+            <ng-container cdkColumnDef="actions">
+                <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+                <cdk-cell *cdkCellDef="let service">
+                    <div class="d-inline-flex flex-row-reverse w-100">
+                        <a class="link-button" [routerLink]="['/', this.namespace, 'services', service.name]">View</a>
+                    </div>
+                </cdk-cell>
+            </ng-container>
+
+            <ng-container cdkColumnDef="spacer">
+                <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+                <cdk-cell *cdkCellDef="let service" class="flex-grow-1">
+                </cdk-cell>
+            </ng-container>
+
+            <!-- Header and Row Declarations -->
+            <cdk-header-row *cdkHeaderRowDef="displayedColumns" class="d-flex align-items-baseline op-table-header"></cdk-header-row>
+            <cdk-row *cdkRowDef="let service; columns: displayedColumns"
+                     class="d-flex flex-wrap align-items-baseline op-table-row">
+            </cdk-row>
+        </cdk-table>
+        <mat-paginator class="no-background font-size-small"
+                       *ngIf="listServicesResponse?.services && listServicesResponse?.services.length > this.pagination.pageSize"
+                       (page)="onPageChange($event)"
+                       [pageIndex]="this.pagination.page"
+                       [length]="this.listServicesResponse.totalCount"
+                       [pageSize]="this.pagination.pageSize"
+                       [pageSizeOptions]="[5, 10, 25, 100]">
+        </mat-paginator>
+        <app-call-to-action *ngIf="!loading && services?.length === 0">
+            <img class="icon" width="37" src="/assets/images/workflows-icon.svg"/>
+            <div class="header">Get started with services</div>
+            <div class="body">This is where all your services live.</div>
+            <a class="action underline pointer-hover" href="https://docs.onepanel.ai/docs/reference/services">Add services</a>
+        </app-call-to-action>
+        <app-loading-content *ngIf="loading">
+            Loading services
+        </app-loading-content>
+    </div>
+</div>

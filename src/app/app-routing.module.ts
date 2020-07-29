@@ -17,7 +17,8 @@ import { WorkspaceTemplateListComponent } from "./workspace/workspace-template/w
 import { WorkspaceTemplateCreateComponent } from "./workspace/workspace-template/workspace-template-create/workspace-template-create.component";
 import { WorkspaceViewComponent } from "./workspace/workspace-view/workspace-view.component";
 import { CanDeactivateGuard } from "./guards/can-deactivate.guard";
-import { ModeldbComponent } from "./modeldb/modeldb.component";
+import { ServiceListComponent } from "./services/service-list/service-list.component";
+import { ModeldbComponent } from "./services/modeldb/modeldb.component";
 
 const routes: Routes = [
   {
@@ -93,7 +94,12 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: ':namespace/models/:uid',
+    path: ':namespace/services',
+    component: ServiceListComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: ':namespace/services/:uid',
     component: ModeldbComponent,
     canActivate: [AuthGuard],
   },

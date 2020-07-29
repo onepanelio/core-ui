@@ -76,8 +76,8 @@ export class AppComponent implements OnInit {
                 break;
             }
 
-            if(urlPart.indexOf('models') >= 0) {
-                this.activeRoute = 'models';
+            if(urlPart.indexOf('services') >= 0) {
+                this.activeRoute = 'services';
                 break;
             }
           }

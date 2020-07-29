@@ -9,10 +9,14 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Service } from './service';
 
 
-export interface Secret { 
-    name?: string;
-    data?: { [key: string]: string; };
+export interface ListServicesResponse { 
+    count?: number;
+    services?: Array<Service>;
+    page?: number;
+    pages?: number;
+    totalCount?: number;
 }
 

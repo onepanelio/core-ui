@@ -11,8 +11,8 @@
  */
 
 
-export interface Secret { 
+export interface NodePoolOption { 
     name?: string;
-    data?: { [key: string]: string; };
+    value?: string;
 }
 
