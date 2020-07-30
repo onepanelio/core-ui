@@ -29,7 +29,7 @@ export class Pagination {
   pageSize: number = 15;
 }
 
-type WorkflowTemplateViewState = 'initialization' | 'new' | 'executing';
+type WorkflowTemplateViewState = 'initialization' | 'new' | 'executing' | 'failed-to-load';
 type WorkflowTemplateViewExecutionsState = 'initialization' | 'new' | 'loading';
 
 @Component({
@@ -160,6 +160,8 @@ export class WorkflowTemplateViewComponent implements OnInit {
         this.workflowTemplate = res;
         this.labels = res.labels;
         this.state = 'new';
+      }, err => {
+        this.state = 'failed-to-load';
       });
   }
 
