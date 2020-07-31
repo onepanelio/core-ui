@@ -1,6 +1,14 @@
 <div class="page">
   <div class="page-header">
-    <div class="page-title-text text-center">Edit workflow template</div>
+    <div class="page-title-text text-center d-flex align-items-center justify-content-center">
+      <mat-spinner
+              *ngIf="loading.workflowTemplateVersions || loading.workflowTemplate"
+              class="primary mr-2"
+              [diameter]="20"
+              [mode]="'indeterminate'">
+      </mat-spinner>
+      Edit workflow template
+    </div>
   </div>
 
   <div class="page-body">
