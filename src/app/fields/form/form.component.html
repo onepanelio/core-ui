@@ -1,6 +1,6 @@
 <form [formGroup]="form">
     <ng-container *ngFor="let fieldDataum of fieldData">
-        <ng-container [ngSwitch]="fieldDataum.type">
+        <ng-container *ngIf="!(fieldDataum.visibility == 'private')" [ngSwitch]="fieldDataum.type">
             <app-textarea class="form-item fix-mat-overflow" *ngSwitchCase="'textarea.textarea'" [data]="fieldDataum" [form]="form"></app-textarea>
             <app-select class="form-item fix-mat-overflow" *ngSwitchCase="'select.select'" [data]="fieldDataum" [form]="form" [disabled]="disabled"></app-select>
             <app-radio class="form-item fix-mat-overflow" *ngSwitchCase="'input.radio'" [data]="fieldDataum" [form]="form"></app-radio>
