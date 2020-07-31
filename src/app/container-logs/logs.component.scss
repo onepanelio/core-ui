@@ -27,3 +27,10 @@
 [ace-editor] {
   height: 100%;
 }
+
+/deep/ .ace-monokai {
+   // remove the error background color as we want to display the log as plain text, no special colors.
+   .ace_invalid {
+      background-color: unset;
+  }
+}
