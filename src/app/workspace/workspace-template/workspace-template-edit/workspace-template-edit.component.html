@@ -19,7 +19,11 @@
                 [manifestInterceptor]="apiManifestInterceptor"
                 (manifestTextModified)="onManifestTextModified($event)">
         </app-manifest-dag-editor>
-        <div class="mt-5">
+        <mat-form-field appearance="outline" class="template-description fix-mat-overflow mt-4">
+            <mat-label>Template description</mat-label>
+            <textarea matInput value="{{workspaceTemplate?.description}}" formControlName="templateDescriptionInput"></textarea>
+        </mat-form-field>
+        <div>
             <div class="op-h2">Labels</div>
             <app-labels-edit class="d-inline-block mt-3" [labels]="labels" ></app-labels-edit>
         </div>

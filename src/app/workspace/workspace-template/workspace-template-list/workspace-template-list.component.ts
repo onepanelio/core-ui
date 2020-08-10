@@ -213,6 +213,7 @@ export class WorkspaceTemplateListComponent implements OnInit, CanComponentDeact
     this.workspaceTemplateEditLoading = true;
     this.workspaceTemplateService.updateWorkspaceTemplate(this.namespace, template.uid, template)
         .subscribe(res => {
+          this.selectedTemplate.description = template.description;
           this.workspaceTemplateEditor.getWorkspaceTemplateVersions();
           this.workspaceTemplateEditor.setAlert(new Alert({
             type: 'success',
