@@ -76,6 +76,7 @@ postExecutionWorkflow:
 
   manifest = "";
   templateNameInput: AbstractControl;
+  templateDescriptionInput: AbstractControl;
   form: FormGroup;
   labels = new Array<KeyValue>();
   apiManifestInterceptor = undefined;
@@ -91,9 +92,10 @@ postExecutionWorkflow:
         Validators.compose([
           Validators.required,
         ]),
-      ]});
+      ], templateDescriptionInput: []});
 
     this.templateNameInput = this.form.get('templateNameInput');
+    this.templateDescriptionInput = this.form.get('templateDescriptionInput');
 
     this.activatedRoute.paramMap.subscribe(next => {
       this.namespace = next.get('namespace');
@@ -133,10 +135,11 @@ postExecutionWorkflow:
 
   save() {
     const templateName = this.templateNameInput.value;
-
     if(!templateName) {
       return;
     }
+
+    const templateDescription = this.templateDescriptionInput.value;
 
     if(!this.labelEditor.isValid) {
       this.labelEditor.markAllAsDirty();
@@ -145,6 +148,7 @@ postExecutionWorkflow:
 
     const body: WorkspaceTemplate = {
       name: templateName,
+      description: templateDescription,
       manifest: this.manifestDagEditor.rawManifest,
       labels: this.labels,
     };

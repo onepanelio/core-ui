@@ -10,7 +10,7 @@ npm run build
 
 ### publishing
 
-First build the package then run ```npm publish dist``` (don't forget to specify the `dist` folder!)
+First build the package then run ```npm publish```
 
 ### consuming
 
@@ -25,14 +25,14 @@ npm install @ --save
 _without publishing (not recommended):_
 
 ```
-npm install PATH_TO_GENERATED_PACKAGE/dist.tgz --save
+npm install PATH_TO_GENERATED_PACKAGE/-.tgz --save
 ```
 
 _It's important to take the tgz file, otherwise you'll get trouble with links on windows_
 
 _using `npm link`:_
 
-In PATH_TO_GENERATED_PACKAGE/dist:
+In PATH_TO_GENERATED_PACKAGE:
 ```
 npm link
 ```
@@ -56,6 +56,7 @@ In your Angular project:
 // without configuring providers
 import { ApiModule } from '';
 import { HttpClientModule } from '@angular/common/http';
+
 
 @NgModule({
     imports: [
@@ -135,6 +136,7 @@ in order to avoid naming conflicts:
 import { ApiModule } from 'my-api-path';
 import { ApiModule as OtherApiModule } from 'my-other-api-path';
 import { HttpClientModule } from '@angular/common/http';
+
 
 @NgModule({
   imports: [
