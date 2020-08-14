@@ -4,6 +4,7 @@
             <mat-form-field appearance="outline" class="wp-400">
                 <mat-label>Template name</mat-label>
                 <input matInput disabled value="{{workspaceTemplate?.name}}"/>
+                <mat-hint>uid: {{workspaceTemplate?.uid}}</mat-hint>
             </mat-form-field>
             <mat-form-field appearance="outline" class="wp-400 ml-5 fix-mat-overflow">
                 <mat-label>Version</mat-label>
@@ -12,9 +13,10 @@
                         <app-date [dateTime]="version.createdAt"></app-date>
                     </mat-option>
                 </mat-select>
+                <mat-hint></mat-hint>
             </mat-form-field>
         </div>
-        <mat-form-field appearance="outline" class="template-description fix-mat-overflow">
+        <mat-form-field appearance="outline" class="template-description fix-mat-overflow mt-3">
             <mat-label>Template description</mat-label>
             <textarea matInput value="{{workspaceTemplate?.description}}" formControlName="templateDescriptionInput"></textarea>
         </mat-form-field>

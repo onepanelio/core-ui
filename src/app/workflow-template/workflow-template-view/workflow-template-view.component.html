@@ -27,7 +27,14 @@
       </div>
       <div *ngIf="workflowTemplate">
         <div class="header">
-          <div class="title">{{workflowTemplate.name}}</div>
+          <div class="title">
+            <div>
+              {{workflowTemplate.name}}
+            </div>
+            <div class="font-size-small color-medium-gray">
+              uid: {{workflowTemplate.uid}}
+            </div>
+          </div>
           <div class="actions font-roboto">
             <button mat-button color="primary" class="link-button font-size-regular" (click)="editSelectedWorkflowTemplateVersion()">
               <mat-icon [fontSet]="'fas'" [fontIcon]="'fa-pencil-alt'"></mat-icon>
