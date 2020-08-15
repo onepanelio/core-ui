@@ -16,7 +16,6 @@ export class WorkspaceTemplateSummaryViewComponent implements OnInit {
   @Output() cloneWorkspaceTemplateClicked = new EventEmitter<WorkspaceTemplate>();
   @Output() deleteWorkspaceTemplateClicked = new EventEmitter<WorkspaceTemplate>();
 
-
   constructor() { }
 
   ngOnInit() {
