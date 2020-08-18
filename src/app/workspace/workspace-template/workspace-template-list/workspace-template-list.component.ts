@@ -44,7 +44,8 @@ export class WorkspaceTemplateListComponent implements OnInit, CanComponentDeact
   @ViewChild(WorkspaceTemplateEditComponent, {static: false}) workspaceTemplateEditor: WorkspaceTemplateEditComponent;
 
   blankTemplate: WorkspaceTemplate = {
-    name: 'Blank template'
+    name: 'Blank template',
+    description: 'Start from a basic template that runs NGINX'
   }
 
   showWorkspaceTemplateEditor = true;
