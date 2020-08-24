@@ -23,6 +23,17 @@
                 [errors]="errors"
                 class="parameters mb-3 d-block">
         </app-form>
+        <div class="environment bg-primary-light op-rounded-regular mt-5">
+            <div class="font-roboto-bold font-weight-bold font-size-regular">Environment variables</div>
+            <div class="mt-1 font-roboto font-size-regular color-black">
+                <div>
+                    Any environment variables you have created will be automatically mounted to this Workspace.
+                </div>
+                <div class="color-primary underline pointer-hover mt-1" (click)="goToEnvironmentVariables()">
+                    Add or manage environment variables
+                </div>
+            </div>
+        </div>
     </div>
 
 
