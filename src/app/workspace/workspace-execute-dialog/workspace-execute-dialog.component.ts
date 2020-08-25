@@ -1,4 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
+import { Router } from "@angular/router";
 import {
   CreateWorkspaceBody,
   KeyValue,
@@ -49,6 +50,7 @@ export class WorkspaceExecuteDialogComponent implements OnInit {
       public dialogRef: MatDialogRef<WorkspaceExecuteDialogComponent>,
       public namespaceTracker: NamespaceTracker,
       private appRouter: AppRouter,
+      private router: Router,
       private formBuilder: FormBuilder,
       private workspaceService: WorkspaceServiceService,
       private workspaceTemplateService: WorkspaceTemplateServiceService,
@@ -142,5 +144,13 @@ export class WorkspaceExecuteDialogComponent implements OnInit {
   goToWorkspaceTemplates() {
     this.dialogRef.close();
     this.appRouter.navigateToWorkspaceTemplates(this.namespaceTracker.activeNamespace);
+  }
+
+  goToEnvironmentVariables() {
+    this.dialogRef.afterClosed().subscribe(res => {
+      this.router.navigate(['/', this.namespaceTracker.activeNamespace, 'secrets']);
+    });
+
+    this.dialogRef.close();
   }
 }

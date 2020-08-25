@@ -8,6 +8,10 @@
                 <mat-error *ngIf="templateNameInput.hasError('conflict')">That name is already taken</mat-error>
             </mat-form-field>
         </div>
+        <mat-form-field appearance="outline" class="template-description fix-mat-overflow">
+            <mat-label>Template description</mat-label>
+            <textarea matInput formControlName="templateDescriptionInput"></textarea>
+        </mat-form-field>
         <app-manifest-dag-editor
                 [manifestText]="manifest"
                 [manifestInterceptor]="apiManifestInterceptor"

@@ -8,7 +8,8 @@
         </ng-container>
     </mat-label>
     <input #inputElement matInput [type]="inputType" [(ngModel)]="data.value" [formControl]="inputControl"/>
-    <mat-hint *ngIf="data.hint">{{data.hint}}</mat-hint>
+    <mat-hint *ngIf="data.hint" [innerHtml]="data.hint"></mat-hint>
+    <mat-hint *ngIf="!data.hint"></mat-hint>
     <mat-error *ngIf="!this.inputControl.hasError('conflict')">
         Must not be blank
         <span *ngIf="inputType === 'number'">

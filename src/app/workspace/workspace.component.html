@@ -23,7 +23,12 @@
             <ng-container cdkColumnDef="name">
                 <cdk-header-cell *cdkHeaderCellDef>Name</cdk-header-cell>
                 <cdk-cell *cdkCellDef="let workspace">
-                    <a class="name-link font-roboto-bold font-weight-bold" target="_blank" [routerLink]="['/', this.namespace, 'workspaces', workspace.uid]">{{workspace.name}}</a>
+                    <div>
+                        <div>
+                            <a class="name-link font-roboto-bold font-weight-bold" target="_blank" [routerLink]="['/', this.namespace, 'workspaces', workspace.uid]">{{workspace.name}}</a>
+                        </div>
+                        <span class="color-medium-gray font-size-small">uid: {{workspace.uid}}</span>
+                    </div>
                 </cdk-cell>
             </ng-container>
 

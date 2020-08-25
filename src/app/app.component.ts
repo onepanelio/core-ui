@@ -7,7 +7,7 @@ import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { filter } from "rxjs/operators";
 import { MatSelect } from "@angular/material/select";
-import { Namespace, NamespaceServiceService } from "../api";
+import { Namespace, NamespaceServiceService, ServiceServiceService } from "../api";
 import { AuthService } from "./auth/auth.service";
 import { environment } from "../environments/environment";
 import { MatDialog } from "@angular/material/dialog";
@@ -28,6 +28,7 @@ export class AppComponent implements OnInit {
   version: string = '1.0.0';
   showNamespaceManager = false;
   showNavigationBar = true;
+  servicesVisible?: boolean = undefined;
 
   constructor(public namespaceTracker: NamespaceTracker,
               private authService: AuthService,
@@ -35,8 +36,8 @@ export class AppComponent implements OnInit {
               private activatedRoute: ActivatedRoute,
               private router: Router,
               private dialog: MatDialog,
-              private snackbar: MatSnackBar) {
-
+              private snackbar: MatSnackBar,
+              private servicesService: ServiceServiceService) {
       this.version = environment.version;
 
       this.namespaceTracker.namespacesChanged.subscribe(() => {
@@ -44,6 +45,7 @@ export class AppComponent implements OnInit {
 
           if(namespace) {
               this.namespaceTracker.activeNamespace = namespace;
+              this.getServicesVisible(namespace);
           }
       });
 
@@ -75,9 +77,12 @@ export class AppComponent implements OnInit {
                 this.activeRoute = 'workspaces';
                 break;
             }
+
+            if(urlPart.indexOf('services') >= 0) {
+                this.activeRoute = 'services';
+                break;
+            }
           }
-
-
 
           this.loggingIn = e.urlAfterRedirects.indexOf('login') >= 0;
 
@@ -128,6 +133,7 @@ export class AppComponent implements OnInit {
   logout() {
       this.showNamespaceManager = false;
       this.authService.clearTokens();
+      localStorage.removeItem('services-visible');
       this.router.navigate(['/', 'login']);
   }
 
@@ -137,5 +143,43 @@ export class AppComponent implements OnInit {
     } else {
         this.showNavigationBar = true;
     }
+  }
+
+    /**
+     * Sets the servicesVisible variable to the input value.
+     * Further stores it in local storage.
+     *
+     * @param visible
+     * @private
+     */
+  private setServicesVisible(visible: boolean) {
+      this.servicesVisible = visible;
+      localStorage.setItem("services-visible", JSON.stringify(visible));
+  }
+
+    /**
+     * Sets the servicesVisible variable.
+     *
+     * If it is already set, use that.
+     * If we have it stored in local storage, use that.
+     * Otherwise, make a network request to check.
+     *
+     * @param namespace
+     * @private
+     */
+  private getServicesVisible(namespace: string) {
+      if(this.servicesVisible !== undefined) {
+          return;
+      }
+
+      const localStorageValue = localStorage.getItem('services-visible');
+      if(localStorageValue !== null) {
+          this.servicesVisible = JSON.parse(localStorageValue);
+          return;
+      }
+
+      this.servicesService.listServices(namespace).subscribe(res => {
+        this.setServicesVisible(res.count !== undefined);
+      });
   }
 }

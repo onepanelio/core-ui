@@ -197,7 +197,15 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     const canCreate$ = this.authService.isAuthorized({
       namespace: this.namespace,
       verb: 'create',
-      resource: 'workspaces',
+      resource: 'workflows',
+      resourceName: workflowExecution.uid,
+      group: 'onepanel.io',
+    });
+
+    const canUpdate$ = this.authService.isAuthorized({
+      namespace: this.namespace,
+      verb: 'update',
+      resource: 'workflows',
       resourceName: workflowExecution.uid,
       group: 'onepanel.io',
     });
@@ -205,20 +213,22 @@ export class WorkflowComponent implements OnInit, OnDestroy {
     const canDelete$ = this.authService.isAuthorized({
       namespace: this.namespace,
       verb: 'delete',
-      resource: 'workspaces',
+      resource: 'workflows',
       resourceName: workflowExecution.uid,
       group: 'onepanel.io',
     });
 
-    combineLatest([canCreate$, canDelete$])
+    combineLatest([canCreate$, canUpdate$, canDelete$])
         .pipe(
-            map(([canCreate$, canDelete$]) => ({
+            map(([canCreate$, canUpdate$, canDelete$]) => ({
               canCreate: canCreate$,
+              canUpdate: canUpdate$,
               canDelete: canDelete$
             }))
         ).subscribe(res => {
+          this.permissions.create = res.canCreate.authorized;
+          this.permissions.update = res.canUpdate.authorized;
           this.permissions.delete = res.canDelete.authorized;
-            this.permissions.create = res.canCreate.authorized;
         })
   }
 

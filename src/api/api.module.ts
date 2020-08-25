@@ -4,10 +4,12 @@ import { HttpClient } from '@angular/common/http';
 
 
 import { AuthServiceService } from './api/authService.service';
+import { ConfigServiceService } from './api/configService.service';
 import { CronWorkflowServiceService } from './api/cronWorkflowService.service';
 import { LabelServiceService } from './api/labelService.service';
 import { NamespaceServiceService } from './api/namespaceService.service';
 import { SecretServiceService } from './api/secretService.service';
+import { ServiceServiceService } from './api/serviceService.service';
 import { WorkflowServiceService } from './api/workflowService.service';
 import { WorkflowTemplateServiceService } from './api/workflowTemplateService.service';
 import { WorkspaceServiceService } from './api/workspaceService.service';

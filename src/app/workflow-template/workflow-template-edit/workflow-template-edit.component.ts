@@ -1,5 +1,5 @@
-import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { HttpErrorResponse } from "@angular/common/http";
 import { LabelsEditComponent } from "../../labels/labels-edit/labels-edit.component";
 import {
@@ -22,7 +22,7 @@ import {
     ConfirmationDialogComponent,
     ConfirmationDialogData
 } from "../../confirmation-dialog/confirmation-dialog.component";
-import { MatDialog, MatDialogRef } from "@angular/material/dialog";
+import { MatDialog } from "@angular/material/dialog";
 
 @Component({
   selector: 'app-workflow-template-edit',
@@ -55,6 +55,14 @@ export class WorkflowTemplateEditComponent implements OnInit, CanComponentDeacti
    * saving is true if the editor is currently saving the data and false otherwise.
    */
   saving = false;
+
+  /**
+   * loading keeps track of all of the components that are currently loading
+   */
+  loading = {
+      workflowTemplate: true,
+      workflowTemplateVersions: true
+  }
 
   get workflowTemplate(): WorkflowTemplate {
     return this._workflowTemplate;
@@ -104,15 +112,21 @@ export class WorkflowTemplateEditComponent implements OnInit, CanComponentDeacti
   }
 
   getWorkflowTemplate() {
+    this.loading.workflowTemplate = true;
+
     this.workflowTemplateService.getWorkflowTemplate(this.namespace, this.uid)
       .subscribe(res => {
         this.workflowTemplate = res;
         this.selectedWorkflowTemplateVersion = res.version;
         this.labels = res.labels || [];
-      });
+        this.loading.workflowTemplate = false;
+      }, err => {
+        this.loading.workflowTemplate = false;
+    });
   }
 
   getWorkflowTemplateVersions() {
+    this.loading.workflowTemplateVersions = true;
     this.workflowTemplateService.listWorkflowTemplateVersions(this.namespace, this.uid)
       .subscribe(res => {
         this.workflowTemplateVersions = res.workflowTemplates;
@@ -142,6 +156,9 @@ export class WorkflowTemplateEditComponent implements OnInit, CanComponentDeacti
             children: children
         }];
 
+        this.loading.workflowTemplateVersions = false;
+      }, err => {
+          this.loading.workflowTemplateVersions = false;
       });
   }
 
@@ -183,23 +200,6 @@ export class WorkflowTemplateEditComponent implements OnInit, CanComponentDeacti
     this.appRouter.navigateToWorkflowTemplateView(this.namespace, this.workflowTemplate.uid);
   }
 
-  getLabels(version: string|null = null) {
-      const templateVersion = this.workflowTemplateVersions.find(wft => wft.version === version);
-      if(!templateVersion) {
-          return;
-      }
-
-      this.labelService.getLabels(this.namespace, 'workflow_template_version', templateVersion.uid)
-        .subscribe(res => {
-            if(!res.labels) {
-                this.labels = [];
-                return;
-            }
-
-            this.labels = res.labels;
-        })
-  }
-
   onVersionSelected(selected: string) {
       const version = this.workflowTemplateVersions.find(wft => wft.version === selected);
       if(!version) {
@@ -207,7 +207,11 @@ export class WorkflowTemplateEditComponent implements OnInit, CanComponentDeacti
       }
 
       this.manifestText = version.manifest;
-      this.getLabels(version.version);
+      if(version.labels) {
+          this.labels = version.labels;
+      } else {
+          this.labels = [];
+      }
   }
 
   onManifestTextModified(manifest: string) {

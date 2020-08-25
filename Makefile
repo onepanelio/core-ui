@@ -12,7 +12,7 @@ endif
 	rm -rf ./src/api
 	mkdir -p ./src/api
 	cp $(path) ./src/api/
-	docker run --rm -v ${PWD}:/local openapitools/openapi-generator-cli \
+	docker run --rm -v ${PWD}:/local openapitools/openapi-generator-cli:v4.3.1 \
 	    generate -p packageName=onepanel.core.api,projectName=onepanel.core.api,packageVersion=$(version) \
 		-i /local/src/api/api.swagger.json \
 		-g typescript-angular \

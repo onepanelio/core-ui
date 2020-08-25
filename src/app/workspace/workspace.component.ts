@@ -14,6 +14,10 @@ import { AppRouter } from '../router/app-router.service';
 import { combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Permissions } from "../auth/models";
+import {
+  ConfirmationDialogComponent,
+  ConfirmationDialogData
+} from "../confirmation-dialog/confirmation-dialog.component";
 
 type WorkspaceState = 'loading-initial-data' | 'loading' | 'new';
 
@@ -207,14 +211,29 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
   }
 
   onDelete(workspace: Workspace) {
-    this.markWorkspaceUpdating(workspace);
-    workspace.status.phase = 'Terminating';
-    this.workspaceService.deleteWorkspace(this.namespace, workspace.uid)
-        .subscribe(res => {
-          this.markWorkspaceDoneUpdating(workspace);
-        }, err => {
-          this.markWorkspaceDoneUpdating(workspace);
-        });
+    const data: ConfirmationDialogData = {
+      title: `Are you sure you want to terminate workspace "${workspace.name}"?`,
+      confirmText: 'DELETE',
+      type: 'delete',
+    }
+    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+      data: data
+    })
+
+    dialogRef.afterClosed().subscribe(res => {
+      if (!res) {
+        return;
+      }
+
+      this.markWorkspaceUpdating(workspace);
+      workspace.status.phase = 'Terminating';
+      this.workspaceService.deleteWorkspace(this.namespace, workspace.uid)
+          .subscribe(res => {
+            this.markWorkspaceDoneUpdating(workspace);
+          }, err => {
+            this.markWorkspaceDoneUpdating(workspace);
+          });
+    });
   }
 
   /**

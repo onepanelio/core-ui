@@ -43,6 +43,7 @@ export class WorkspaceTemplateEditComponent implements OnInit {
   form: FormGroup;
   labels = new Array<KeyValue>();
   apiManifestInterceptor = undefined;
+  templateDescriptionInput: AbstractControl;
 
   selectedWorkspaceTemplateVersion: string = "";
   workspaceTemplateVersions: WorkflowTemplate[] = [];
@@ -66,7 +67,10 @@ export class WorkspaceTemplateEditComponent implements OnInit {
         Validators.compose([
           Validators.required,
         ]),
-      ]});
+      ],
+    templateDescriptionInput: ['']});
+
+    this.templateDescriptionInput = this.form.get('templateDescriptionInput');
   }
 
   ngOnInit() {
@@ -115,6 +119,7 @@ export class WorkspaceTemplateEditComponent implements OnInit {
     const body: WorkspaceTemplate = {
       uid: this.workspaceTemplate.uid,
       name: this.workspaceTemplate.name,
+      description: this.templateDescriptionInput.value,
       manifest: this.manifestDagEditor.rawManifest,
       labels: this.labels,
     };

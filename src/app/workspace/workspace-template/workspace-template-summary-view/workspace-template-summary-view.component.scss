@@ -1,11 +1,13 @@
 .workspace-template-summary-view {
   width: 290px;
-  height: 190px;
+  height: 200px;
+  padding-bottom: 10px;
   box-sizing: border-box;
   background-color: white;
 
   .content {
     padding: 0 27px 27px 27px;
+    overflow: hidden;
   }
 
   i {

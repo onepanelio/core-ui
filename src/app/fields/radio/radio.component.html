@@ -12,6 +12,6 @@
             {{option.name}}
         </mat-radio-button>
     </mat-radio-group>
-    <mat-hint *ngIf="data.hint">{{data.hint}}</mat-hint>
+    <mat-hint *ngIf="data.hint" [innerHtml]="data.hint"></mat-hint>
     <mat-error *ngIf="radioControl.invalid && radioControl.touched">Must select a value</mat-error>
 </div>

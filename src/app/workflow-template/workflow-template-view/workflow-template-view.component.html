@@ -22,9 +22,19 @@
         </mat-spinner>
         <span class="font-roboto-bold font-weight-bold font-size-large color-medium-gray ml-3">Loading Workflow template</span>
       </div>
+      <div *ngIf="state === 'failed-to-load'" class="d-flex align-items-center justify-content-center">
+        <span class="font-roboto-bold font-weight-bold font-size-large color-medium-gray ml-3">Failed to load Workflow template</span>
+      </div>
       <div *ngIf="workflowTemplate">
         <div class="header">
-          <div class="title">{{workflowTemplate.name}}</div>
+          <div class="title">
+            <div>
+              {{workflowTemplate.name}}
+            </div>
+            <div class="font-size-small color-medium-gray">
+              uid: {{workflowTemplate.uid}}
+            </div>
+          </div>
           <div class="actions font-roboto">
             <button mat-button color="primary" class="link-button font-size-regular" (click)="editSelectedWorkflowTemplateVersion()">
               <mat-icon [fontSet]="'fas'" [fontIcon]="'fa-pencil-alt'"></mat-icon>
