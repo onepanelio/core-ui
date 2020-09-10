@@ -236,6 +236,17 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
     });
   }
 
+  onRetryLastAction(workspace: Workspace) {
+    this.markWorkspaceUpdating(workspace);
+    workspace.status.phase = 'Launching';
+    this.workspaceService.retryLastWorkspaceAction(this.namespace, workspace.uid)
+        .subscribe(res => {
+          this.markWorkspaceDoneUpdating(workspace);
+        }, err => {
+          this.markWorkspaceDoneUpdating(workspace);
+        });
+  }
+
   /**
    * onMatMenuOpen happens when the menu is opened for a workspace list item.
    * We get the permissions for the workspace for the current logged in user, if no

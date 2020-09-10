@@ -144,7 +144,11 @@
                 <i class="far fa-play-circle mr-1 workspace-menu-icon"></i>
                 Resume
             </button>
-            <button *ngIf="workspacePermissions.get(workspace.uid).delete" mat-menu-item (click)="onDelete(workspace)" [disabled]="workspace.status.phase === 'Terminating'">
+            <button *ngIf="workspace.status.phase.toLowerCase().indexOf('fail') > -1" mat-menu-item (click)="onRetryLastAction(workspace)">
+                <i class="fas fa-redo mr-1 workspace-menu-icon"></i>
+                Retry
+            </button>
+            <button *ngIf="workspacePermissions.get(workspace.uid).delete && workspace.status.phase.toLowerCase() != 'failed to terminate'" mat-menu-item (click)="onDelete(workspace)" [disabled]="workspace.status.phase === 'Terminating'">
                 <i class="fas fa-trash mr-1 workspace-menu-icon"></i>
                 Terminate
             </button>
