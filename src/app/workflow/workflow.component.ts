@@ -9,7 +9,7 @@ import { AceEditorComponent } from "ng2-ace-editor";
 import * as yaml from 'js-yaml';
 import * as ace from 'brace';
 import {
-  AuthServiceService,
+  AuthServiceService, CreateWorkflowExecutionBody, CronWorkflow,
   KeyValue,
   LabelServiceService,
   Parameter,
@@ -28,6 +28,9 @@ import { ParameterUtils } from "../parameters/models";
 import { Permissions } from "../auth/models";
 import { combineLatest } from "rxjs";
 import { map } from "rxjs/operators";
+import { WorkflowExecuteDialogComponent } from "./workflow-execute-dialog/workflow-execute-dialog.component";
+import { Alert } from "../alert/alert";
+import { AlertService } from "../alert/alert.service";
 
 const aceRange = ace.acequire('ace/range').Range;
 
@@ -107,6 +110,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
 
   constructor(
     private activatedRoute: ActivatedRoute,
+    private alertService: AlertService,
     private authService: AuthServiceService,
     private workflowService: WorkflowService,
     private workflowServiceService: WorkflowServiceService,
@@ -518,13 +522,38 @@ export class WorkflowComponent implements OnInit, OnDestroy {
   }
 
   runAgain() {
-    this.cloning = true;
-    this.workflowServiceService.cloneWorkflowExecution(this.namespace, this.uid)
-        .subscribe(res => {
-          this.appRouter.navigateToWorkflowExecution(this.namespace, res.uid);
-          this.cloning = false;
-        }, err => {
-          this.cloning = false;
-        })
+    const dialogRef = this.dialog.open(WorkflowExecuteDialogComponent, {
+      width: '60vw',
+      maxHeight: '100vh',
+      data: {
+        parameters: this.parameters,
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) {
+        return;
+      }
+      this.cloning = true;
+
+      const request: CreateWorkflowExecutionBody = {
+        workflowTemplateUid: this.workflow.workflowTemplate.uid,
+        workflowTemplateVersion: this.workflow.workflowTemplate.version,
+        parameters: result.workflowExecution.parameters,
+        labels: result.workflowExecution.labels,
+      };
+
+      this.workflowServiceService.createWorkflowExecution(this.namespace, request)
+          .subscribe(res => {
+            this.appRouter.navigateToWorkflowExecution(this.namespace, res.name);
+            this.cloning = false;
+          }, err => {
+            this.cloning = false;
+            this.alertService.storeAlert(new Alert({
+              message: 'Unable to clone workflow',
+              type: 'danger'
+            }));
+          });
+    });
   }
 }
