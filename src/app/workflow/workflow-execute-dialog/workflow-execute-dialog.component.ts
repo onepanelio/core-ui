@@ -11,6 +11,7 @@ import { CronWorkflowFormatter } from "../../cron-workflow/models";
 export interface WorkflowExecuteDialogData {
   manifest: string;
   cron: boolean;
+  parameters: Parameter[];
 }
 
 @Component({
@@ -46,7 +47,12 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
       private router: Router,
       public dialogRef: MatDialogRef<WorkflowExecuteDialogComponent>,
       @Inject(MAT_DIALOG_DATA) public data: WorkflowExecuteDialogData) {
-    this.setManifest(data.manifest);
+    if(data.parameters) {
+      this.parameters = data.parameters;
+    } else {
+      this.setManifest(data.manifest);
+    }
+
     if(data.cron) {
       this.showCron = true;
     }
@@ -63,7 +69,12 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
     let formattedParameters = [];
     for(let parameter of this.parameters) {
       // convert all the parameters to string
-      parameter.value = parameter.value.toString();
+      if(!parameter.value) {
+        parameter.value = '';
+      } else {
+        parameter.value = parameter.value.toString();
+      }
+
       formattedParameters.push(parameter);
     }
 
