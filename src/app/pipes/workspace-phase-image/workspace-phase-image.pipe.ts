@@ -18,7 +18,12 @@ export class WorkspacePhaseImagePipe implements PipeTransform {
     ['Pausing', WorkspacePhaseImagePipe.pausingImageSource],
     ['Paused', WorkspacePhaseImagePipe.pausedImageSource],
     ['Terminating', WorkspacePhaseImagePipe.terminatingImageSource],
-    ['Terminated', WorkspacePhaseImagePipe.terminatedSource]
+    ['Terminated', WorkspacePhaseImagePipe.terminatedSource],
+    ['Failed to pause', WorkspacePhaseImagePipe.terminatedSource],
+    ['Failed to resume', WorkspacePhaseImagePipe.terminatedSource],
+    ['Failed to terminate', WorkspacePhaseImagePipe.terminatedSource],
+    ['Failed to launch', WorkspacePhaseImagePipe.terminatedSource],
+    ['Failed to upgrade', WorkspacePhaseImagePipe.terminatedSource]
   ]);
 
   transform(phase: string, ...args: any[]): any {
