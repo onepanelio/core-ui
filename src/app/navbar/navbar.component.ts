@@ -13,7 +13,7 @@ export class NavbarComponent implements OnInit {
 
   @Input() set activeUrl(value: string) {
     if (value === '') {
-      this.activeRoute = 'templates';
+      this.activeRoute = 'dashboard';
       return;
     }
 
@@ -36,9 +36,12 @@ export class NavbarComponent implements OnInit {
         this.activeRoute = 'workspaces';
         return;
       }
-
       if (urlPart.indexOf('services') >= 0) {
         this.activeRoute = 'services';
+        return;
+      }
+      if (urlPart.indexOf('dashboard') >= 0) {
+        this.activeRoute = 'dashboard';
         return;
       }
     }

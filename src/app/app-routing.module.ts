@@ -5,25 +5,31 @@ import { WorkflowTemplateComponent } from './workflow-template/workflow-template
 import { WorkflowTemplateViewComponent } from './workflow-template/workflow-template-view/workflow-template-view.component';
 import { WorkflowTemplateCreateComponent } from './workflow-template/workflow-template-create/workflow-template-create.component';
 import { WorkflowTemplateEditComponent } from './workflow-template/workflow-template-edit/workflow-template-edit.component';
-import { NamespaceSelectComponent } from "./namespace-select/namespace-select.component";
-import { SecretsComponent } from "./secrets/secrets.component";
-import { CreateSecretComponent } from "./secrets/create-secret/create-secret.component";
-import { EditSecretComponent } from "./secrets/edit-secret/edit-secret.component";
-import { LoginComponent } from "./auth/login/login.component";
-import { AuthGuard } from "./auth/auth.guard";
-import { WorkflowTemplateCloneComponent } from "./workflow-template/workflow-template-clone/workflow-template-clone.component";
-import { WorkspaceComponent } from "./workspace/workspace.component";
-import { WorkspaceTemplateListComponent } from "./workspace/workspace-template/workspace-template-list/workspace-template-list.component";
-import { WorkspaceTemplateCreateComponent } from "./workspace/workspace-template/workspace-template-create/workspace-template-create.component";
-import { WorkspaceViewComponent } from "./workspace/workspace-view/workspace-view.component";
-import { CanDeactivateGuard } from "./guards/can-deactivate.guard";
-import { ServiceListComponent } from "./services/service-list/service-list.component";
-import { ServiceViewComponent } from "./services/service-view/service-view.component";
+import { NamespaceSelectComponent } from './namespace-select/namespace-select.component';
+import { SecretsComponent } from './secrets/secrets.component';
+import { CreateSecretComponent } from './secrets/create-secret/create-secret.component';
+import { EditSecretComponent } from './secrets/edit-secret/edit-secret.component';
+import { LoginComponent } from './auth/login/login.component';
+import { AuthGuard } from './auth/auth.guard';
+import { WorkflowTemplateCloneComponent } from './workflow-template/workflow-template-clone/workflow-template-clone.component';
+import { WorkspaceComponent } from './workspace/workspace.component';
+import { WorkspaceTemplateListComponent } from './workspace/workspace-template/workspace-template-list/workspace-template-list.component';
+import { WorkspaceTemplateCreateComponent } from './workspace/workspace-template/workspace-template-create/workspace-template-create.component';
+import { WorkspaceViewComponent } from './workspace/workspace-view/workspace-view.component';
+import { CanDeactivateGuard } from './guards/can-deactivate.guard';
+import { ServiceListComponent } from './services/service-list/service-list.component';
+import { ServiceViewComponent } from './services/service-view/service-view.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
+  },
+  {
+    path: ':namespace/dashboard',
+    component: DashboardComponent,
+    canActivate: [AuthGuard],
   },
   {
     path: ':namespace/workflow-templates',

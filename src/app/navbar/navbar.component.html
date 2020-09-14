@@ -7,6 +7,9 @@
         </div>
         <mat-icon class="ml-5 color-medium-gray">arrow_drop_down</mat-icon>
     </div>
+    <div class="ml-5 font-size-small font-roboto-bold font-white link-wrapper" [class.active]="activeRoute === 'dashboard'">
+        <a [routerLink]="['/', namespaceTracker.activeNamespace, 'dashboard']">DASHBOARD</a>
+    </div>
     <div class="ml-5 font-size-small font-roboto-bold font-white link-wrapper" [class.active]="activeRoute === 'templates'">
         <a [routerLink]="['/', namespaceTracker.activeNamespace, 'workflow-templates']">WORKFLOWS</a>
     </div>
