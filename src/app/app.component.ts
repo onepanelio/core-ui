@@ -2,16 +2,16 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import 'brace';
 import 'brace/mode/yaml';
 import 'brace/ext/searchbox';
-import { NamespaceTracker } from "./namespace/namespace-tracker.service";
-import { ActivatedRoute, NavigationEnd, Router } from "@angular/router";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { filter } from "rxjs/operators";
-import { MatSelect } from "@angular/material/select";
-import { Namespace, NamespaceServiceService, ServiceServiceService } from "../api";
-import { AuthService } from "./auth/auth.service";
-import { environment } from "../environments/environment";
-import { MatDialog } from "@angular/material/dialog";
-import { CreateNamespaceDialogComponent } from "./namespace/create-namespace-dialog/create-namespace-dialog.component";
+import { NamespaceTracker } from './namespace/namespace-tracker.service';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { filter } from 'rxjs/operators';
+import { MatSelect } from '@angular/material/select';
+import { Namespace, NamespaceServiceService, ServiceServiceService } from '../api';
+import { AuthService } from './auth/auth.service';
+import { environment } from '../environments/environment';
+import { MatDialog } from '@angular/material/dialog';
+import { CreateNamespaceDialogComponent } from './namespace/create-namespace-dialog/create-namespace-dialog.component';
 import 'hammerjs';
 
 @Component({
@@ -20,12 +20,13 @@ import 'hammerjs';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  @ViewChild(MatSelect, {static:false}) matSelect: MatSelect;
+  @ViewChild(MatSelect, {static: false}) matSelect: MatSelect;
 
+  activeUrl = '';
   title = 'onepanel-core-ui';
   activeRoute = 'templates';
   loggingIn = false;
-  version: string = '1.0.0';
+  version = '1.0.0';
   showNamespaceManager = false;
   showNavigationBar = true;
   servicesVisible?: boolean = undefined;
@@ -43,7 +44,7 @@ export class AppComponent implements OnInit {
       this.namespaceTracker.namespacesChanged.subscribe(() => {
           const namespace = this.activatedRoute.snapshot.firstChild.paramMap.get('namespace');
 
-          if(namespace) {
+          if (namespace) {
               this.namespaceTracker.activeNamespace = namespace;
               this.getServicesVisible(namespace);
           }
@@ -51,42 +52,16 @@ export class AppComponent implements OnInit {
 
     // Keep track of the current url so we know what part of the app we are in and highlight it in the
     // nav bar accordingly.
-    this.router.events
+      this.router.events
         .pipe(filter((e) => e instanceof NavigationEnd))
         .subscribe((e: NavigationEnd) => {
-          const url = e.urlAfterRedirects;
+          this.activeUrl = e.urlAfterRedirects;
 
           this.showNamespaceManager = false;
 
-          const urlParts = url.split('/');
-
-          for(const urlPart of urlParts) {
-            if(urlPart === 'workspace-templates') {
-                this.activeRoute = 'workspaces';
-                break;
-            }
-            if(urlPart.indexOf('templates') >= 0 || urlPart.indexOf('workflows') >= 0) {
-                this.activeRoute = 'templates';
-                break;
-            }
-            if(urlPart.indexOf('secrets') >= 0) {
-                this.activeRoute = 'secrets';
-                break;
-            }
-            if(urlPart.indexOf('workspace') >= 0) {
-                this.activeRoute = 'workspaces';
-                break;
-            }
-
-            if(urlPart.indexOf('services') >= 0) {
-                this.activeRoute = 'services';
-                break;
-            }
-          }
-
           this.loggingIn = e.urlAfterRedirects.indexOf('login') >= 0;
 
-          if(!this.loggingIn && !this.namespaceTracker.hasNamespaces()) {
+          if (!this.loggingIn && !this.namespaceTracker.hasNamespaces()) {
               this.namespaceTracker.getNamespaces();
           }
         });
@@ -102,11 +77,11 @@ export class AppComponent implements OnInit {
       });
 
       dialogRef.afterClosed().subscribe(namespaceName => {
-          if(!namespaceName) {
+          if (!namespaceName) {
               return;
           }
 
-          let namespaceData: Namespace = {
+          const namespaceData: Namespace = {
             name: namespaceName
           };
 
@@ -115,7 +90,7 @@ export class AppComponent implements OnInit {
                 this.onNamespaceChange(namespaceName);
                 return;
               });
-      })
+      });
   }
 
   onNamespaceChange(newNamespace: string) {
@@ -123,7 +98,7 @@ export class AppComponent implements OnInit {
     this.namespaceTracker.activeNamespace = newNamespace;
 
     this.snackbar.open(`Switched to namespace '${this.namespaceTracker.activeNamespace}'`, 'OK');
-    this.router.navigate(['/', this.namespaceTracker.activeNamespace, 'workflow-templates'])
+    this.router.navigate(['/', this.namespaceTracker.activeNamespace, 'workflow-templates']);
   }
 
   onFormFieldClick() {
@@ -138,23 +113,16 @@ export class AppComponent implements OnInit {
   }
 
   onRouterOutletActivate(data) {
-    if(data.hideNavigationBar) {
-        this.showNavigationBar = false;
-    } else {
-        this.showNavigationBar = true;
-    }
+      this.showNavigationBar = !data.hideNavigationBar;
   }
 
     /**
      * Sets the servicesVisible variable to the input value.
      * Further stores it in local storage.
-     *
-     * @param visible
-     * @private
      */
   private setServicesVisible(visible: boolean) {
       this.servicesVisible = visible;
-      localStorage.setItem("services-visible", JSON.stringify(visible));
+      localStorage.setItem('services-visible', JSON.stringify(visible));
   }
 
     /**
@@ -164,16 +132,14 @@ export class AppComponent implements OnInit {
      * If we have it stored in local storage, use that.
      * Otherwise, make a network request to check.
      *
-     * @param namespace
-     * @private
      */
   private getServicesVisible(namespace: string) {
-      if(this.servicesVisible !== undefined) {
+      if (this.servicesVisible !== undefined) {
           return;
       }
 
       const localStorageValue = localStorage.getItem('services-visible');
-      if(localStorageValue !== null) {
+      if (localStorageValue !== null) {
           this.servicesVisible = JSON.parse(localStorageValue);
           return;
       }

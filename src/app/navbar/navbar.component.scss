@@ -1,0 +1,72 @@
+@import "../../styles/colors";
+
+.app-toolbar {
+  padding-right: 0 !important;
+  height: 50px !important;
+
+  .link-wrapper {
+    height: 100%;
+    min-width: 140px;
+    text-align: center;
+
+    a {
+      line-height: 50px;
+      text-decoration: none;
+      color: inherit;
+      opacity: 0.8;
+
+      &:hover {
+        opacity: 0.9;
+      }
+    }
+
+
+    &.active {
+      border-bottom: 4px solid white;
+
+      a {
+        position: relative;
+        top: 2px;
+        opacity: 1.0;
+      }
+    }
+  }
+
+  .dropdown {
+    padding: 0 20px;
+
+    height: 43px;
+    position: relative;
+    bottom: -3px;
+
+
+    &:hover {
+      cursor: pointer;
+    }
+
+    .namespace {
+      line-height: 100%;
+    }
+
+    .name {
+      line-height: 100%;
+    }
+  }
+
+  mat-form-field.hidden {
+    width: 0;
+    top: 50px;
+    position: relative;
+    left: 35px;
+  }
+
+  .image-link {
+    height: 32px;
+    border: 1px solid white;
+    border-radius: 50%;
+
+    img {
+      height: 32px;
+    }
+  }
+}
