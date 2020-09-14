@@ -117,6 +117,7 @@ import { WorkflowIsActivePipe } from './workflow/pipes/workflow-is-active/workfl
 import { ArtifactParameterComponent } from './node-info/artifact-parameter/artifact-parameter.component';
 import { ServiceListComponent } from "./services/service-list/service-list.component";
 import { ServiceViewComponent } from "./services/service-view/service-view.component";
+import { NavbarComponent } from './navbar/navbar.component';
 
 @NgModule({
     declarations: [
@@ -205,6 +206,7 @@ import { ServiceViewComponent } from "./services/service-view/service-view.compo
         ArtifactParameterComponent,
         ServiceListComponent,
         ServiceViewComponent,
+        NavbarComponent,
     ],
     entryComponents: [
         WorkflowExecuteDialogComponent,
