@@ -3,17 +3,17 @@ import {
     WorkflowService
 } from '../workflow.service';
 import { ActivatedRoute } from '@angular/router';
-import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from "@angular/material/snack-bar";
-import { AuthServiceService, WorkflowExecution, WorkflowServiceService, Workspace } from "../../../api";
-import { ConfirmationDialogComponent } from "../../confirmation-dialog/confirmation-dialog.component";
-import { WorkflowExecutionConstants } from "../models";
-import { MatDialog } from "@angular/material/dialog";
-import { Permissions } from "../../auth/models";
-import { combineLatest } from "rxjs";
-import { map } from "rxjs/operators";
-import { AppRouter } from "../../router/app-router.service";
-import { AlertService } from "../../alert/alert.service";
-import { Alert } from "../../alert/alert";
+import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material/snack-bar';
+import { AuthServiceService, WorkflowExecution, WorkflowServiceService, Workspace } from '../../../api';
+import { ConfirmationDialogComponent } from '../../confirmation-dialog/confirmation-dialog.component';
+import { WorkflowExecutionConstants } from '../models';
+import { MatDialog } from '@angular/material/dialog';
+import { Permissions } from '../../auth/models';
+import { combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { AppRouter } from '../../router/app-router.service';
+import { AlertService } from '../../alert/alert.service';
+import { Alert } from '../../alert/alert';
 
 @Component({
     selector: 'app-workflow-executions-list',
@@ -24,7 +24,7 @@ import { Alert } from "../../alert/alert";
 export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
     private snackbarRef: MatSnackBarRef<SimpleSnackBar>;
 
-    displayedColumns = ['name','status', 'start', 'end', 'version', 'spacer', 'actions'];
+    displayedColumns = ['name', 'status', 'start', 'end', 'version', 'spacer', 'actions'];
 
     @Input() namespace: string;
     @Input() workflowExecutions: WorkflowExecution[] = [];
@@ -63,23 +63,23 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
     onDelete(workflow: WorkflowExecution) {
         const dialog = this.dialog.open(ConfirmationDialogComponent, {
             data: WorkflowExecutionConstants.getConfirmTerminateDialogData(workflow.name),
-        })
+        });
 
         dialog.afterClosed().subscribe(res => {
-            if(!res) {
+            if (!res) {
                 return;
             }
 
             this.workflowServiceService.terminateWorkflowExecution(this.namespace, workflow.uid)
-                .subscribe(res => {
+                .subscribe( () => {
                     workflow.phase = 'Terminated';
                     workflow.finishedAt = (new Date()).toLocaleDateString();
                     this.snackbarRef = this.snackbar.open('Workflow terminated', 'OK');
                     this.executionTerminated.emit();
-                }, err => {
+                }, () => {
                     this.snackbarRef = this.snackbar.open('Unable to terminate workflow', 'OK');
-                })
-        })
+                });
+        });
     }
 
     onRerun(workflowExecution: WorkflowExecution) {
@@ -96,7 +96,7 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
                     message: `Unable to run ${workflowExecution.name} again`,
                     type: 'danger'
                 }));
-            })
+            });
     }
 
     /**
@@ -106,7 +106,7 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
      *
      */
     onMatMenuOpen(workflowExecution: WorkflowExecution) {
-        if(this.workflowExecutionPermissions.has(workflowExecution.uid)) {
+        if (this.workflowExecutionPermissions.has(workflowExecution.uid)) {
             return;
         }
 
@@ -140,6 +140,6 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
                     create: res.canCreate.authorized
                 })
             );
-        })
+        });
     }
 }

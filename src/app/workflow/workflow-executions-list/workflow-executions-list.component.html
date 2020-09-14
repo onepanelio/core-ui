@@ -17,7 +17,7 @@
         <ng-container cdkColumnDef="end">
             <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
             <cdk-cell *cdkCellDef="let workflow" class="font-size-small font-roboto font-medium-gray ml-5">
-                <div *ngIf="workflow.finishedAt" class=""><span class="timestamp d-inline-block">Finished:</span><app-date class="" [dateTime]="workflow.finishedAt"></app-date></div>
+                <div *ngIf="workflow.finishedAt" ><span class="timestamp d-inline-block">Finished:</span><app-date class="" [dateTime]="workflow.finishedAt"></app-date></div>
             </cdk-cell>
         </ng-container>
 
