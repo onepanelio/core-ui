@@ -527,6 +527,7 @@ export class WorkflowComponent implements OnInit, OnDestroy {
       maxHeight: '100vh',
       data: {
         parameters: this.parameters,
+        labels: this.labels
       }
     });
 

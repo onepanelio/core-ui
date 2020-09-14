@@ -12,6 +12,7 @@ export interface WorkflowExecuteDialogData {
   manifest: string;
   cron: boolean;
   parameters: Parameter[];
+  labels: KeyValue[];
 }
 
 @Component({
@@ -51,6 +52,10 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
       this.parameters = data.parameters;
     } else {
       this.setManifest(data.manifest);
+    }
+
+    if(data.labels) {
+      this.labels = data.labels;
     }
 
     if(data.cron) {
