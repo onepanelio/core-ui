@@ -9,11 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { WorkspaceTemplate } from './workspaceTemplate';
+import { WorkflowExecutionStatisticReport } from './workflowExecutionStatisticReport';
 
 
-export interface ListWorkspaceTemplateVersionsResponse { 
-    count?: number;
-    workspaceTemplates?: Array<WorkspaceTemplate>;
+export interface GetWorkflowExecutionStatisticsForNamespaceResponse { 
+    stats?: WorkflowExecutionStatisticReport;
 }
 

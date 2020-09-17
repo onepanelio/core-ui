@@ -10,6 +10,7 @@ export * from './deleteSecretResponse';
 export * from './getConfigResponse';
 export * from './getLabelsResponse';
 export * from './getWorkflowExecutionMetricsResponse';
+export * from './getWorkflowExecutionStatisticsForNamespaceResponse';
 export * from './googleProtobufAny';
 export * from './grpcGatewayRuntimeError';
 export * from './grpcGatewayRuntimeStreamError';

@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from "@angular/router";
-import { NamespaceTracker } from "../namespace/namespace-tracker.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
-import { HttpErrorResponse } from "@angular/common/http";
-import { NamespaceServiceService } from "../../api";
+import { Router } from '@angular/router';
+import { NamespaceTracker } from '../namespace/namespace-tracker.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { HttpErrorResponse } from '@angular/common/http';
+import { NamespaceServiceService } from '../../api';
+import { AppRouter } from '../router/app-router.service';
 
 @Component({
     selector: 'app-namespace-select',
@@ -12,6 +13,7 @@ import { NamespaceServiceService } from "../../api";
 })
 export class NamespaceSelectComponent implements OnInit {
     constructor(
+        private appRouter: AppRouter,
         private namespaceService: NamespaceTracker,
         private namespaceApiService: NamespaceServiceService,
         private router: Router,
@@ -34,7 +36,7 @@ export class NamespaceSelectComponent implements OnInit {
             }, (err: HttpErrorResponse) => {
                 let errorMessage = 'Unable to get active namespace from API.';
                 if (err.status === 0) {
-                    errorMessage = 'Unable to connect to API. Is it running?'
+                    errorMessage = 'Unable to connect to API. Is it running?';
                 }
 
                 this.snackbar.open(`${errorMessage} Resorting to namespace '${newNamespace}'.`, 'OK');
@@ -44,6 +46,6 @@ export class NamespaceSelectComponent implements OnInit {
     }
 
     onNamespaceSelected(namespace: string) {
-        this.router.navigate(['/', namespace, 'workflow-templates']);
+        return this.appRouter.navigateToNamespaceHomepage(namespace);
     }
 }

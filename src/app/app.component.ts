@@ -13,6 +13,7 @@ import { environment } from '../environments/environment';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateNamespaceDialogComponent } from './namespace/create-namespace-dialog/create-namespace-dialog.component';
 import 'hammerjs';
+import { AppRouter } from './router/app-router.service';
 
 @Component({
   selector: 'app-root',
@@ -32,6 +33,7 @@ export class AppComponent implements OnInit {
   servicesVisible?: boolean = undefined;
 
   constructor(public namespaceTracker: NamespaceTracker,
+              private appRouter: AppRouter,
               private authService: AuthService,
               private namespaceService: NamespaceServiceService,
               private activatedRoute: ActivatedRoute,
@@ -98,7 +100,7 @@ export class AppComponent implements OnInit {
     this.namespaceTracker.activeNamespace = newNamespace;
 
     this.snackbar.open(`Switched to namespace '${this.namespaceTracker.activeNamespace}'`, 'OK');
-    this.router.navigate(['/', this.namespaceTracker.activeNamespace, 'workflow-templates']);
+    this.appRouter.navigateToNamespaceHomepage(this.namespaceTracker.activeNamespace);
   }
 
   onFormFieldClick() {
@@ -109,7 +111,7 @@ export class AppComponent implements OnInit {
       this.showNamespaceManager = false;
       this.authService.clearTokens();
       localStorage.removeItem('services-visible');
-      this.router.navigate(['/', 'login']);
+      this.appRouter.navigateToLogin();
   }
 
   onRouterOutletActivate(data) {

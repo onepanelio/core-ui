@@ -24,12 +24,20 @@ export class AppRouter {
     return this.router.navigate(['/']);
   }
 
+  public navigateToNamespaceHomepage(namespace: string) {
+    return this.router.navigate(['/', namespace, 'dashboard']);
+  }
+
   public navigateToWorkflowTemplates(namespace: string) {
     return this.router.navigate(['/', namespace, 'workflow-templates']);
   }
 
   public navigateToWorkflowTemplateView(namespace: string, workflowTemplateUid: string) {
     return this.router.navigate(['/', namespace, 'workflow-templates', workflowTemplateUid]);
+  }
+
+  public navigateToWorkflowTemplateEdit(namespace: string, workflowTemplateUid: string) {
+    return this.router.navigate(['/', namespace, 'workflow-templates', workflowTemplateUid, 'edit']);
   }
 
   public navigateToWorkflowTemplateClone(namespace: string, workflowTemplateUid: string) {
@@ -50,5 +58,13 @@ export class AppRouter {
 
   public navigateToWorkspace(namespace: string, name: string) {
     return this.router.navigate(['/', namespace, 'workspaces', name]);
+  }
+
+  public navigateToDashboard(namespace: string) {
+    return this.router.navigate(['/', namespace, 'dashboard']);
+  }
+
+  public navigateToLogin() {
+    return this.router.navigate(['/', 'login']);
   }
 }
