@@ -12,7 +12,7 @@ export class WorkspacePhaseStatusPipe implements PipeTransform {
       ['Paused', 'Paused'],
       ['Terminating', 'Terminating'],
       ['Terminated', 'Terminated'],
-  ])
+  ]);
 
   transform(value: any, ...args: any[]): any {
     return WorkspacePhaseStatusPipe.mapping.get(value);

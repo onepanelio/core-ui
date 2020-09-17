@@ -24,7 +24,7 @@ import { Alert } from '../../alert/alert';
 export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
     private snackbarRef: MatSnackBarRef<SimpleSnackBar>;
 
-    displayedColumns = ['name', 'status', 'start', 'end', 'version', 'spacer', 'actions'];
+    @Input() displayedColumns = ['name', 'status', 'start', 'end', 'version', 'spacer', 'actions'];
 
     @Input() namespace: string;
     @Input() workflowExecutions: WorkflowExecution[] = [];

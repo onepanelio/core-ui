@@ -20,6 +20,7 @@ import { Observable }                                        from 'rxjs';
 import { ArtifactResponse } from '../model/models';
 import { CreateWorkflowExecutionBody } from '../model/models';
 import { GetWorkflowExecutionMetricsResponse } from '../model/models';
+import { GetWorkflowExecutionStatisticsForNamespaceResponse } from '../model/models';
 import { GrpcGatewayRuntimeError } from '../model/models';
 import { ListFilesResponse } from '../model/models';
 import { ListWorkflowExecutionsResponse } from '../model/models';
@@ -608,6 +609,59 @@ export class WorkflowServiceService {
 
     /**
      * @param namespace 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getWorkflowExecutionStatisticsForNamespace(namespace: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<GetWorkflowExecutionStatisticsForNamespaceResponse>;
+    public getWorkflowExecutionStatisticsForNamespace(namespace: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpResponse<GetWorkflowExecutionStatisticsForNamespaceResponse>>;
+    public getWorkflowExecutionStatisticsForNamespace(namespace: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpEvent<GetWorkflowExecutionStatisticsForNamespaceResponse>>;
+    public getWorkflowExecutionStatisticsForNamespace(namespace: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<any> {
+        if (namespace === null || namespace === undefined) {
+            throw new Error('Required parameter namespace was null or undefined when calling getWorkflowExecutionStatisticsForNamespace.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // authentication (Bearer) required
+        if (this.configuration.apiKeys) {
+            const key: string | undefined = this.configuration.apiKeys["Bearer"] || this.configuration.apiKeys["authorization"];
+            if (key) {
+                headers = headers.set('authorization', key);
+            }
+        }
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json',
+                'application/octet-stream'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<GetWorkflowExecutionStatisticsForNamespaceResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflow_executions/statistics`,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * @param namespace 
      * @param uid 
      * @param path 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
@@ -675,13 +729,14 @@ export class WorkflowServiceService {
      * @param page 
      * @param order 
      * @param labels 
+     * @param phase 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listWorkflowExecutions(namespace: string, workflowTemplateUid?: string, workflowTemplateVersion?: string, pageSize?: number, page?: number, order?: string, labels?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<ListWorkflowExecutionsResponse>;
-    public listWorkflowExecutions(namespace: string, workflowTemplateUid?: string, workflowTemplateVersion?: string, pageSize?: number, page?: number, order?: string, labels?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpResponse<ListWorkflowExecutionsResponse>>;
-    public listWorkflowExecutions(namespace: string, workflowTemplateUid?: string, workflowTemplateVersion?: string, pageSize?: number, page?: number, order?: string, labels?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpEvent<ListWorkflowExecutionsResponse>>;
-    public listWorkflowExecutions(namespace: string, workflowTemplateUid?: string, workflowTemplateVersion?: string, pageSize?: number, page?: number, order?: string, labels?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<any> {
+    public listWorkflowExecutions(namespace: string, workflowTemplateUid?: string, workflowTemplateVersion?: string, pageSize?: number, page?: number, order?: string, labels?: string, phase?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<ListWorkflowExecutionsResponse>;
+    public listWorkflowExecutions(namespace: string, workflowTemplateUid?: string, workflowTemplateVersion?: string, pageSize?: number, page?: number, order?: string, labels?: string, phase?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpResponse<ListWorkflowExecutionsResponse>>;
+    public listWorkflowExecutions(namespace: string, workflowTemplateUid?: string, workflowTemplateVersion?: string, pageSize?: number, page?: number, order?: string, labels?: string, phase?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpEvent<ListWorkflowExecutionsResponse>>;
+    public listWorkflowExecutions(namespace: string, workflowTemplateUid?: string, workflowTemplateVersion?: string, pageSize?: number, page?: number, order?: string, labels?: string, phase?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
             throw new Error('Required parameter namespace was null or undefined when calling listWorkflowExecutions.');
         }
@@ -710,6 +765,10 @@ export class WorkflowServiceService {
         if (labels !== undefined && labels !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>labels, 'labels');
+        }
+        if (phase !== undefined && phase !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>phase, 'phase');
         }
 
         let headers = this.defaultHeaders;

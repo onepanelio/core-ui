@@ -119,6 +119,10 @@ import { ServiceListComponent } from "./services/service-list/service-list.compo
 import { ServiceViewComponent } from "./services/service-view/service-view.component";
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { NavbarComponent } from './navbar/navbar.component';
+import { DashboardWorkflowComponent } from './dashboard/dashboard-workflow/dashboard-workflow.component';
+import { DashboardWorkspaceComponent } from './dashboard/dashboard-workspace/dashboard-workspace.component';
+import { WorkflowExecutionsComponent } from './workflow/workflow-executions/workflow-executions.component';
+import { StatBarComponent } from './ui-tools/stat-bar/stat-bar.component';
 
 @NgModule({
     declarations: [
@@ -209,6 +213,10 @@ import { NavbarComponent } from './navbar/navbar.component';
         ServiceViewComponent,
         DashboardComponent,
         NavbarComponent,
+        DashboardWorkflowComponent,
+        DashboardWorkspaceComponent,
+        WorkflowExecutionsComponent,
+        StatBarComponent,
     ],
     entryComponents: [
         WorkflowExecuteDialogComponent,

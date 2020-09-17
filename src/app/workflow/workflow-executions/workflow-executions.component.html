@@ -1,0 +1,17 @@
+<app-loading-content *ngIf="workflowExecutionsState === 'initialization'">
+    Loading Workflows
+</app-loading-content>
+<app-workflow-executions-list
+    [namespace]="namespace"
+    [displayedColumns]="displayedColumns"
+    [workflowExecutions]="workflows"
+    (executionTerminated)="onWorkflowExecutionTerminated()">
+</app-workflow-executions-list>
+<mat-paginator class="no-background font-size-small"
+               *ngIf="workflowResponse"
+               (page)="onPageChange($event)"
+               [pageIndex]="this.pagination.page"
+               [length]="this.workflowResponse.totalCount"
+               [pageSize]="this.pagination.pageSize"
+               [pageSizeOptions]="[5, 10, 25, 100]">
+</mat-paginator>
