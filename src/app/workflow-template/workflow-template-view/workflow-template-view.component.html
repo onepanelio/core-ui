@@ -82,25 +82,10 @@
 
     <mat-tab-group class="no-bottom-border" (selectedTabChange)="onTabChange($event)" [dynamicHeight]="true">
       <mat-tab label="Executions">
-        <app-loading-content *ngIf="workflowExecutionsState === 'initialization'">
-          Loading Workflows
-        </app-loading-content>
-        <div *ngIf="hasWorkflowExecutions">
-          <app-workflow-executions-list
-              *ngIf="workflows"
-              [namespace]="namespace"
-              [workflowExecutions]="workflows"
-              (executionTerminated)="onWorkflowExecutionTerminated()">
-          </app-workflow-executions-list>
-          <mat-paginator class="no-background font-size-small"
-                  *ngIf="workflowResponse"
-                  (page)="onWorkflowPageChange($event)"
-                  [pageIndex]="this.workflowPagination.page"
-                  [length]="this.workflowResponse.totalCount"
-                  [pageSize]="this.workflowPagination.pageSize"
-                  [pageSizeOptions]="[5, 10, 25, 100]">
-          </mat-paginator>
-        </div>
+        <app-workflow-executions
+                [namespace]="namespace"
+                [workflowTemplateUid]="uid">
+        </app-workflow-executions>
           <app-call-to-action *ngIf="showWorkflowExecutionsCallToAction">
             <div class="header">Get started with workflow executions</div>
             <div class="body">This is where all your workflow executions live.</div>

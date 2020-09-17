@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { WorkflowTemplateService } from '../workflow-template.service';
 import { DagComponent } from '../../dag/dag.component';
@@ -18,19 +18,19 @@ import {
   CreateWorkflowExecutionBody,
   CronWorkflow,
   CronWorkflowServiceService,
-  KeyValue, ListCronWorkflowsResponse, ListWorkflowExecutionsResponse, WorkflowExecution,
-  WorkflowServiceService, WorkflowTemplate, WorkflowTemplateServiceService, Workspace
+  KeyValue, ListCronWorkflowsResponse, ListWorkflowExecutionsResponse,
+  WorkflowServiceService, WorkflowTemplate, WorkflowTemplateServiceService
 } from '../../../api';
 import { MatTabGroup } from '@angular/material/tabs';
 import { AppRouter } from '../../router/app-router.service';
 
+// TODO move somewhere else. like utils or requests.
 export class Pagination {
   page = 0;
   pageSize = 15;
 }
 
 type WorkflowTemplateViewState = 'initialization' | 'new' | 'executing' | 'failed-to-load';
-type WorkflowTemplateViewExecutionsState = 'initialization' | 'new' | 'loading';
 
 @Component({
   selector: 'app-workflow-template-view',
@@ -38,7 +38,7 @@ type WorkflowTemplateViewExecutionsState = 'initialization' | 'new' | 'loading';
   styleUrls: ['./workflow-template-view.component.scss'],
   providers: [WorkflowService, WorkflowTemplateService]
 })
-export class WorkflowTemplateViewComponent implements OnInit, OnDestroy {
+export class WorkflowTemplateViewComponent implements OnInit {
   private dagComponent: DagComponent;
   @ViewChild(DagComponent, {static: false}) set dag(value: DagComponent) {
     this.dagComponent = value;
@@ -54,12 +54,9 @@ export class WorkflowTemplateViewComponent implements OnInit, OnDestroy {
   namespace: string;
   uid: string;
   state: WorkflowTemplateViewState = 'initialization';
-  workflowExecutionsState: WorkflowTemplateViewExecutionsState = 'initialization';
 
-  workflows: WorkflowExecution[] = [];
   cronWorkflowResponse: ListCronWorkflowsResponse;
   cronWorkflows: CronWorkflow[] = [];
-  workflowResponse: ListWorkflowExecutionsResponse;
   workflowPagination = new Pagination();
   cronWorkflowPagination = new Pagination();
 
@@ -100,22 +97,6 @@ export class WorkflowTemplateViewComponent implements OnInit, OnDestroy {
     this.showDag();
   }
 
-  /**
-   * refers to a setInterval. Used to make requests to update the workflows.
-   */
-  workflowsInterval: number;
-
-  /**
-   * workflowExecutionUpdatingMap keeps track of which workflows are being updated, these should not be updated
-   * by the regular interval get request.
-   *
-   * When we perform an action on a workflow like terminate, etc,
-   * it takes a second for API to update and respond. It is possible that the request does not finish
-   * but we do another Get request in that time. So our status change may be terminate => running => terminate.
-   * To prevent this, we mark the workflow as updating, so the Get request should ignore it.
-   */
-  private workflowExecutionUpdatingMap = new Map<string, Workspace>();
-
   constructor(
     private snackBar: MatSnackBar,
     private router: Router,
@@ -137,21 +118,8 @@ export class WorkflowTemplateViewComponent implements OnInit, OnDestroy {
       this.uid = next.get('uid');
 
       this.getWorkflowTemplate();
-
-      this.getWorkflows();
-      this.workflowsInterval = setInterval(() => {
-        this.getWorkflows();
-      }, 5000);
-
       this.getCronWorkflows();
     });
-  }
-
-  ngOnDestroy() {
-    if (this.workflowsInterval) {
-      clearInterval(this.workflowsInterval);
-      this.workflowsInterval = null;
-    }
   }
 
   getWorkflowTemplate() {
@@ -165,91 +133,8 @@ export class WorkflowTemplateViewComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * Marks the workflow as updating.
-   * @param workflowExecution
-   */
-  private markWorkflowUpdating(workflowExecution: WorkflowExecution) {
-    this.workflowExecutionUpdatingMap.set(workflowExecution.uid, workflowExecution);
-  }
-
-  /**
-   * Marks the workflow as done updating.
-   * @param workflowExecution
-   */
-  private markWorkflowDoneUpdating(workflowExecution: WorkflowExecution) {
-    this.workflowExecutionUpdatingMap.delete(workflowExecution.uid);
-  }
-
-  /**
-   * @param workflowExecution
-   * @return true if the workflow is updating, false otherwise.
-   */
-  private isWorkflowUpdating(workflowExecution: WorkflowExecution): boolean {
-    return this.workflowExecutionUpdatingMap.has(workflowExecution.uid);
-  }
-
-  /**
-   * Update the current workflows list with a new one.
-   *
-   * This will replace the workflows if they are completely different, or
-   * it will update the worfklow objects data if they are only different by data.
-   *
-   * This prevents UI issues where the entire list refreshes, which can remove any open menus
-   * like the workflow action menu.
-   *
-   * @param workflowExecutions
-   */
-  private updateWorkflowExecutionList(workflowExecutions: WorkflowExecution[]) {
-    // If the lengths are different, we have new workflows or deleted workflows,
-    // so just update the entire list.
-    if (this.workflows.length !== workflowExecutions.length) {
-      this.workflows = workflowExecutions;
-      return;
-    }
-
-    const map = new Map<string, WorkflowExecution>();
-    for (const workflow of this.workflows) {
-      map.set(workflow.uid, workflow);
-    }
-
-    for (const workflowExecution of workflowExecutions) {
-      const existingWorkflow = map.get(workflowExecution.uid);
-
-      // If the workflow isn't in our existing ones, we need to update the entire list.
-      // There are missing or deleted workflows.
-      if (!existingWorkflow) {
-        this.workflows = workflowExecutions;
-        break;
-      }
-
-      // Only update the workflow if it isn't already in an updating state.
-      if (!this.isWorkflowUpdating(existingWorkflow)) {
-        existingWorkflow.phase = workflowExecution.phase;
-        existingWorkflow.startedAt = workflowExecution.startedAt;
-        existingWorkflow.finishedAt = workflowExecution.finishedAt;
-        existingWorkflow.workflowTemplate = workflowExecution.workflowTemplate;
-        existingWorkflow.labels = workflowExecution.labels;
-      }
-    }
-  }
-
-  getWorkflows() {
-    if (this.workflowExecutionsState !== 'initialization') {
-      this.workflowExecutionsState = 'loading';
-    }
-
-    const page = this.workflowPagination.page + 1;
-    this.workflowServiceService.listWorkflowExecutions(this.namespace, this.uid, null, this.workflowPagination.pageSize, page)
-      .subscribe(res => {
-        this.workflowResponse = res;
-        if (res.workflowExecutions) {
-          this.updateWorkflowExecutionList(res.workflowExecutions);
-        }
-
-        this.workflowExecutionsState = 'new';
-        this.hasWorkflowExecutions = !(page === 1 && !res.workflowExecutions);
-      });
+  onWorkflowsChanged(res: ListWorkflowExecutionsResponse) {
+    this.hasWorkflowExecutions = !(res.page === 1 && !res.workflowExecutions);
   }
 
   executeWorkflow(e?: any, cron: boolean = false) {
@@ -344,19 +229,11 @@ export class WorkflowTemplateViewComponent implements OnInit, OnDestroy {
   }
 
   editSelectedWorkflowTemplateVersion() {
-    // @todo use appRouter
-    this.router.navigate(['/', this.namespace, 'workflow-templates', this.workflowTemplateDetail.uid, 'edit']);
+    this.appRouter.navigateToWorkflowTemplateEdit(this.namespace, this.workflowTemplateDetail.uid);
   }
 
   cloneSelectedWorkflowTemplateVersion() {
     this.appRouter.navigateToWorkflowTemplateClone(this.namespace, this.workflowTemplate.uid);
-  }
-
-  onWorkflowPageChange(event: PageEvent) {
-    this.workflowPagination.page = event.pageIndex;
-    this.workflowPagination.pageSize = event.pageSize;
-
-    this.getWorkflows();
   }
 
   onCronWorkflowPageChange(event: PageEvent) {
@@ -383,7 +260,7 @@ export class WorkflowTemplateViewComponent implements OnInit, OnDestroy {
       }
 
       this.workflowTemplateService.archiveWorkflowTemplate(this.namespace, this.uid)
-          .subscribe(res => {
+          .subscribe(() => {
             this.router.navigate(['/', this.namespace, 'workflow-templates']);
 
             this.alertService.storeAlert(new Alert({
@@ -422,9 +299,5 @@ export class WorkflowTemplateViewComponent implements OnInit, OnDestroy {
     }
 
     this.showCronWorkflowsCallToAction = !this.hasCronWorkflows && this.matTabGroup.selectedIndex === 1;
-  }
-
-  onWorkflowExecutionTerminated() {
-    this.getWorkflows();
   }
 }

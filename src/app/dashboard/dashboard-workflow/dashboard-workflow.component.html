@@ -1,0 +1,25 @@
+
+<div class="dashboard-workflow">
+    <h2 class="op-h2">Workflows</h2>
+    <div class="op-border op-info-box d-flex">
+        <div *ngIf="stats" class="stats-container">
+            <app-stat-bar (click)="workflowExecutionPhase = 'running'" class="stat-bar mt-40px" [title]="'Running'" color="rgb(1, 87, 155)" [value]="stats.running" [maxValue]="statsTotal"></app-stat-bar>
+            <app-stat-bar (click)="workflowExecutionPhase = 'completed'" class="stat-bar mt-40px" [title]="'Completed'" color="rgb(55, 173, 88)" [value]="stats.completed" [maxValue]="statsTotal"></app-stat-bar>
+            <app-stat-bar (click)="workflowExecutionPhase = 'failed'" class="stat-bar mt-40px" [title]="'Failed'" color="rgb(211, 35, 69)" [value]="stats.failed" [maxValue]="statsTotal"></app-stat-bar>
+            <app-stat-bar (click)="workflowExecutionPhase = 'stopped'" class="stat-bar mt-40px" [title]="'Stopped'" color="rgb(255, 200, 76)" [value]="stats.terminated" [maxValue]="statsTotal"></app-stat-bar>
+        </div>
+        <mat-tab-group class="flex-grow-1">
+            <mat-tab label="EXECUTIONS">
+                <app-workflow-executions
+                    [namespace]="namespace"
+                    [phase]="workflowExecutionPhase"
+                    [displayedColumns]="displayedColumns"
+                    [pageSize]="5">
+                </app-workflow-executions>
+            </mat-tab>
+            <mat-tab label="SCHEDULED">
+
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+</div>

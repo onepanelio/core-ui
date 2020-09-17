@@ -19,7 +19,12 @@
     position: relative;
     bottom: 1px;
   }
+
+  cdk-header-row {
+    display: none;
+  }
 }
+
 
 .workflow-menu-icon {
   width: 14px;

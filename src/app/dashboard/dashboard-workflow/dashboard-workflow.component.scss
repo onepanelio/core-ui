@@ -1,0 +1,27 @@
+@import "../../../styles/colors";
+
+.dashboard-workflow {
+
+  /deep/ .op-table-row {
+    padding: 10px;
+    border-top: unset;
+    border-left: unset;
+    border-right: unset;
+    border-radius: unset;
+    border-bottom: 1px solid $dark-white;
+  }
+
+  .stats-container {
+    width: 300px;
+    padding-right: 40px;
+
+    .mt-40px {
+      margin-top: 40px;
+    }
+  }
+
+  .stat-bar {
+    width: 100%;
+    display: block;
+  }
+}
