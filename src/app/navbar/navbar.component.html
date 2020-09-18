@@ -1,0 +1,30 @@
+<mat-toolbar color="primary" class="app-toolbar">
+    <a class="image-link" [routerLink]="['/']" matTooltip="Version: {{version}}"><img alt="onepanel logo" src="/assets/images/onepanel-logo-blue-white.png"/></a>
+    <div class="d-flex font-roboto dropdown bg-light-gray align-items-center ml-5" (click)="handleNamespaceClick()">
+        <i class="far fa-sticky-note color-primary"></i>
+        <div class="name font-size-small font-proxima color-black ml-2">
+            {{namespaceTracker.activeNamespace}}
+        </div>
+        <mat-icon class="ml-5 color-medium-gray">arrow_drop_down</mat-icon>
+    </div>
+    <div class="ml-5 font-size-small font-roboto-bold font-white link-wrapper" [class.active]="activeRoute === 'dashboard'">
+        <a [routerLink]="['/', namespaceTracker.activeNamespace, 'dashboard']">DASHBOARD</a>
+    </div>
+    <div class="ml-5 font-size-small font-roboto-bold font-white link-wrapper" [class.active]="activeRoute === 'templates'">
+        <a [routerLink]="['/', namespaceTracker.activeNamespace, 'workflow-templates']">WORKFLOWS</a>
+    </div>
+    <div class="ml-5 font-size-small font-roboto-bold font-white link-wrapper" [class.active]="activeRoute === 'workspaces'">
+        <a [routerLink]="['/', namespaceTracker.activeNamespace, 'workspaces']">WORKSPACES</a>
+    </div>
+    <div *ngIf="!!servicesVisible" class="ml-5 font-size-small font-roboto-bold font-white link-wrapper" [class.active]="activeRoute === 'services'">
+        <a [routerLink]="['/', namespaceTracker.activeNamespace, 'services']">SERVICES</a>
+    </div>
+    <div class="ml-5 font-size-small font-roboto-bold font-white link-wrapper" [class.active]="activeRoute === 'secrets'" >
+        <a [routerLink]="['/', namespaceTracker.activeNamespace, 'secrets']">SETTINGS</a>
+    </div>
+    <div class="flex-grow-1"></div>
+    <div class="ml-5 font-size-small font-roboto-bold font-white link-wrapper" [class.active]="activeRoute === 'docs'" >
+        <a target="_blank" href="https://docs.onepanel.ai">DOCS</a>
+    </div>
+    <button mat-stroked-button class="logout mr-3" (click)="handleLogOut()">LOG OUT</button>
+</mat-toolbar>

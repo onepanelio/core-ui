@@ -5,7 +5,7 @@ import { Namespace, NamespaceServiceService } from "../../api";
 export class NamespaceTracker {
     private gettingNamespaces = false;
 
-    activeNamespace: string = 'default';
+    activeNamespace = 'default';
     namespaces = new Array<Namespace>();
 
     @Output() namespacesChanged = new EventEmitter();

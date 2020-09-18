@@ -1,5 +1,18 @@
 .workflow-executions-list {
+  .op-table-header {
+    margin-bottom: 0;
+    padding: 20px !important;
+  }
+
   .cdk-column-name {
+    flex-basis: 200px;
+  }
+
+  .cdk-column-start {
+    flex-basis: 200px;
+  }
+
+  .cdk-column-end {
     flex-basis: 200px;
   }
 
@@ -11,8 +24,8 @@
     flex-basis: 250px;
   }
 
-  .timestamp {
-    min-width: 60px;
+  .cdk-column-actions {
+    min-width: 80px;
   }
 
   .phase-image {

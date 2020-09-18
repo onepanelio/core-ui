@@ -1,36 +1,35 @@
 <div class="workflow-executions-list">
     <cdk-table [dataSource]="workflowExecutions">
         <ng-container cdkColumnDef="name">
-            <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+            <cdk-header-cell *cdkHeaderCellDef>Name</cdk-header-cell>
             <cdk-cell *cdkCellDef="let workflow">
                 <a class="name-link" [routerLink]="['/', this.namespace, 'workflows', workflow.name]" >{{workflow.name}}</a>
             </cdk-cell>
         </ng-container>
 
         <ng-container cdkColumnDef="start">
-            <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+            <cdk-header-cell *cdkHeaderCellDef>Start</cdk-header-cell>
             <cdk-cell *cdkCellDef="let workflow" class="font-size-small font-roboto font-medium-gray">
-                <div *ngIf="workflow.startedAt"><span class="timestamp d-inline-block">Started:</span><app-date class="" [dateTime]="workflow.startedAt"></app-date></div>
+                <div *ngIf="workflow.startedAt"><app-date class="" [dateTime]="workflow.startedAt"></app-date></div>
             </cdk-cell>
         </ng-container>
 
         <ng-container cdkColumnDef="end">
-            <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+            <cdk-header-cell *cdkHeaderCellDef class="ml-5">End</cdk-header-cell>
             <cdk-cell *cdkCellDef="let workflow" class="font-size-small font-roboto font-medium-gray ml-5">
-                <div *ngIf="workflow.finishedAt" class=""><span class="timestamp d-inline-block">Finished:</span><app-date class="" [dateTime]="workflow.finishedAt"></app-date></div>
+                <div *ngIf="workflow.finishedAt"><app-date class="" [dateTime]="workflow.finishedAt"></app-date></div>
             </cdk-cell>
         </ng-container>
 
         <ng-container cdkColumnDef="version">
-            <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+            <cdk-header-cell *cdkHeaderCellDef class="ml-5">Version</cdk-header-cell>
             <cdk-cell *cdkCellDef="let workflow" class="font-size-small font-roboto font-medium-gray ml-5">
-                <span>Version: </span>
                 <app-date class="timestamp d-inline-block" [dateTime]="workflow.workflowTemplate.createdAt"></app-date>
             </cdk-cell>
         </ng-container>
 
         <ng-container cdkColumnDef="status">
-            <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+            <cdk-header-cell *cdkHeaderCellDef>Status</cdk-header-cell>
             <cdk-cell *cdkCellDef="let workflow" class="d-inline-flex align-items-center">
                 <img *ngIf="workflow.phase" class="phase-image" [src]="workflow.phase | phaseImage"/>
                 <div class="ml-2 font-roboto-bold font-weight-bold">{{workflow.phase | phaseTranslate}}</div>
@@ -47,7 +46,7 @@
             <cdk-cell *cdkCellDef="let workflow">
                 <div>
                     <a [routerLink]="['/', this.namespace, 'workflows', workflow.name]" class="link-button">View</a>
-                    <button mat-icon-button color="primary" class="ml-3" [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{'workflow': workflow}" (click)="onMatMenuOpen(workflow)">
+                    <button mat-icon-button color="primary" [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{'workflow': workflow}" (click)="onMatMenuOpen(workflow)">
                         <mat-icon>more_vert</mat-icon>
                     </button>
                 </div>
@@ -55,12 +54,12 @@
         </ng-container>
 
         <ng-container cdkColumnDef="spacer">
-            <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+            <cdk-header-cell *cdkHeaderCellDef class="font-roboto-bold font-size-regular color-medium-gray"></cdk-header-cell>
             <cdk-cell *cdkCellDef="let workflow" class="flex-grow-1"></cdk-cell>
         </ng-container>
 
         <!-- Header and Row Declarations -->
-        <cdk-header-row *cdkHeaderRowDef="displayedColumns" class="op-table-header"></cdk-header-row>
+        <cdk-header-row *cdkHeaderRowDef="displayedColumns" class="op-table-header d-flex"></cdk-header-row>
         <cdk-row *cdkRowDef="let row; columns: displayedColumns"
                  class="d-flex op-table-row align-items-center">
         </cdk-row>

@@ -117,6 +117,12 @@ import { WorkflowIsActivePipe } from './workflow/pipes/workflow-is-active/workfl
 import { ArtifactParameterComponent } from './node-info/artifact-parameter/artifact-parameter.component';
 import { ServiceListComponent } from "./services/service-list/service-list.component";
 import { ServiceViewComponent } from "./services/service-view/service-view.component";
+import { DashboardComponent } from './dashboard/dashboard.component';
+import { NavbarComponent } from './navbar/navbar.component';
+import { DashboardWorkflowComponent } from './dashboard/dashboard-workflow/dashboard-workflow.component';
+import { DashboardWorkspaceComponent } from './dashboard/dashboard-workspace/dashboard-workspace.component';
+import { WorkflowExecutionsComponent } from './workflow/workflow-executions/workflow-executions.component';
+import { StatBarComponent } from './ui-tools/stat-bar/stat-bar.component';
 
 @NgModule({
     declarations: [
@@ -205,6 +211,12 @@ import { ServiceViewComponent } from "./services/service-view/service-view.compo
         ArtifactParameterComponent,
         ServiceListComponent,
         ServiceViewComponent,
+        DashboardComponent,
+        NavbarComponent,
+        DashboardWorkflowComponent,
+        DashboardWorkspaceComponent,
+        WorkflowExecutionsComponent,
+        StatBarComponent,
     ],
     entryComponents: [
         WorkflowExecuteDialogComponent,
