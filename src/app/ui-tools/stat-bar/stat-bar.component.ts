@@ -14,7 +14,11 @@ export class StatBarComponent implements OnInit {
   barPercentage = '0';
 
   @Input() title: string;
-  @Input() set value(value: number) {
+  @Input() set value(value: number|undefined) {
+    if (value === undefined) {
+      value = 0;
+    }
+
     this._value = value;
 
     this.updateBarPercentage();
@@ -23,7 +27,11 @@ export class StatBarComponent implements OnInit {
     return this._value;
   }
 
-  @Input() set maxValue(maxValue: number) {
+  @Input() set maxValue(maxValue: number|undefined) {
+    if (maxValue === undefined) {
+      maxValue = 0;
+    }
+
     this._maxValue = maxValue;
 
     this.updateBarPercentage();

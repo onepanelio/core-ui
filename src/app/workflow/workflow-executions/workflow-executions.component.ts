@@ -1,11 +1,15 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
-import { Pagination } from '../../workflow-template/workflow-template-view/workflow-template-view.component';
 import { ListWorkflowExecutionsResponse, WorkflowExecution, WorkflowServiceService, Workspace } from '../../../api';
 import { ActivatedRoute } from '@angular/router';
 
 type WorkflowExecutionsState = 'initialization' | 'new' | 'loading';
 export type WorkflowExecutionPhase = 'running' | 'completed' | 'failed' | 'stopped';
+
+export interface WorkflowExecutionsChangedEvent {
+  response: ListWorkflowExecutionsResponse;
+  hasWorkflowExecutions: boolean;
+}
 
 @Component({
   selector: 'app-workflow-executions',
@@ -17,6 +21,7 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
   @Input() namespace: string;
   @Input() workflowTemplateUid?: string;
   @Input() workflowTemplateVersion?: string;
+  @Input() page = 0;
   @Input() pageSize = 15;
   @Input() displayedColumns = ['name', 'status', 'start', 'end', 'version', 'spacer', 'actions'];
 
@@ -24,15 +29,15 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
   private _phase?: WorkflowExecutionPhase;
   @Input() set phase(value: WorkflowExecutionPhase) {
     this._phase = value;
+    this.page = 0;
 
     this.getWorkflows();
   }
 
-  @Output() workflowsChanged = new EventEmitter<ListWorkflowExecutionsResponse>();
+  @Output() workflowsChanged = new EventEmitter<WorkflowExecutionsChangedEvent>();
 
   workflows: WorkflowExecution[] = [];
   workflowResponse: ListWorkflowExecutionsResponse;
-  pagination = new Pagination();
 
   /**
    * refers to a setInterval. Used to make requests to update the workflows.
@@ -59,8 +64,6 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.pagination.pageSize = this.pageSize;
-
     this.activatedRoute.paramMap.subscribe(next => {
       this.getWorkflows();
       this.workflowsInterval = setInterval(() => {
@@ -150,25 +153,29 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
       this.workflowExecutionsState = 'loading';
     }
 
-    const pageSize = this.pagination.pageSize;
-    const page = this.pagination.page + 1;
-    console.log(this._phase);
-    this.workflowService.listWorkflowExecutions(this.namespace, this.workflowTemplateUid, this.workflowTemplateVersion, pageSize, page, 'createdAt,desc', undefined, this._phase)
+    // +1 for API
+    const page = this.page + 1;
+    this.workflowService.listWorkflowExecutions(this.namespace, this.workflowTemplateUid, this.workflowTemplateVersion, this.pageSize, page, 'createdAt,desc', undefined, this._phase)
         .subscribe(res => {
           this.workflowResponse = res;
+          const hasWorkflowExecutions = !(res.page === 1 && !res.workflowExecutions);
+
           if (res.workflowExecutions) {
             this.updateWorkflowExecutionList(res.workflowExecutions);
           }
 
           this.workflowExecutionsState = 'new';
-          this.hasWorkflowExecutions = !(res.page === 1 && !res.workflowExecutions);
-          this.workflowsChanged.emit(res);
+          this.hasWorkflowExecutions = hasWorkflowExecutions;
+          this.workflowsChanged.emit({
+            response: res,
+            hasWorkflowExecutions
+          });
         });
   }
 
   onPageChange(event: PageEvent) {
-    this.pagination.page = event.pageIndex;
-    this.pagination.pageSize = event.pageSize;
+    this.page = event.pageIndex;
+    this.pageSize = event.pageSize;
 
     this.getWorkflows();
   }

@@ -2,6 +2,33 @@
 
 .dashboard-workflow {
 
+  @media screen and (max-width: 1600px) {
+    /deep/ .cdk-column-version {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: 1300px) {
+    /deep/ .cdk-column-end {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: 1100px) {
+    /deep/ .cdk-column-start {
+      display: none;
+    }
+  }
+
+  .clear-phase {
+    margin-left: 10px;
+    color: $medium-gray;
+  }
+
+  .phase-unselected {
+    opacity: 0.5;
+  }
+
   /deep/ .op-table-row {
     padding: 10px;
     border-top: unset;
@@ -9,6 +36,7 @@
     border-right: unset;
     border-radius: unset;
     border-bottom: 1px solid $dark-white;
+    margin-top: 0;
   }
 
   .stats-container {
@@ -23,5 +51,9 @@
   .stat-bar {
     width: 100%;
     display: block;
+    
+    &:hover {
+      cursor: pointer;
+    }
   }
 }

@@ -3,10 +3,46 @@
     <h2 class="op-h2">Workflows</h2>
     <div class="op-border op-info-box d-flex">
         <div *ngIf="stats" class="stats-container">
-            <app-stat-bar (click)="workflowExecutionPhase = 'running'" class="stat-bar mt-40px" [title]="'Running'" color="rgb(1, 87, 155)" [value]="stats.running" [maxValue]="statsTotal"></app-stat-bar>
-            <app-stat-bar (click)="workflowExecutionPhase = 'completed'" class="stat-bar mt-40px" [title]="'Completed'" color="rgb(55, 173, 88)" [value]="stats.completed" [maxValue]="statsTotal"></app-stat-bar>
-            <app-stat-bar (click)="workflowExecutionPhase = 'failed'" class="stat-bar mt-40px" [title]="'Failed'" color="rgb(211, 35, 69)" [value]="stats.failed" [maxValue]="statsTotal"></app-stat-bar>
-            <app-stat-bar (click)="workflowExecutionPhase = 'stopped'" class="stat-bar mt-40px" [title]="'Stopped'" color="rgb(255, 200, 76)" [value]="stats.terminated" [maxValue]="statsTotal"></app-stat-bar>
+            <app-stat-bar
+                    [title]="'Running'"
+                    [value]="stats.running"
+                    [maxValue]="statsTotal"
+                    (click)="setPhase('running')"
+                    [class.phase-unselected]="workflowExecutionPhase && workflowExecutionPhase !== 'running'"
+                    color="rgb(1, 87, 155)"
+                    class="stat-bar mt-40px">
+                <a href="#" *ngIf="workflowExecutionPhase === 'running'" class="clear-phase" (click)="clearPhase($event)">clear</a>
+            </app-stat-bar>
+            <app-stat-bar
+                    [title]="'Completed'"
+                    [value]="stats.completed"
+                    [maxValue]="statsTotal"
+                    (click)="setPhase('completed')"
+                    [class.phase-unselected]="workflowExecutionPhase && workflowExecutionPhase !== 'completed'"
+                    color="rgb(55, 173, 88)"
+                    class="stat-bar mt-40px">
+                <span *ngIf="workflowExecutionPhase === 'completed'" class="clear-phase" (click)="clearPhase($event)">clear</span>
+            </app-stat-bar>
+            <app-stat-bar
+                    [title]="'Failed'"
+                    [value]="stats.failed"
+                    [maxValue]="statsTotal"
+                    (click)="setPhase('failed')"
+                    [class.phase-unselected]="workflowExecutionPhase &&  workflowExecutionPhase !== 'failed'"
+                    color="rgb(211, 35, 69)"
+                    class="stat-bar mt-40px">
+                <span *ngIf="workflowExecutionPhase === 'failed'" class="clear-phase" (click)="clearPhase($event)">clear</span>
+            </app-stat-bar>
+            <app-stat-bar
+                    [title]="'Stopped'"
+                    [value]="stats.terminated"
+                    [maxValue]="statsTotal"
+                    (click)="setPhase('stopped')"
+                    [class.phase-unselected]="workflowExecutionPhase && workflowExecutionPhase !== 'stopped'"
+                    class="stat-bar mt-40px"
+                    color="rgb(255, 200, 76)">
+                <span *ngIf="workflowExecutionPhase === 'stopped'" class="clear-phase" (click)="clearPhase($event)">clear</span>
+            </app-stat-bar>
         </div>
         <mat-tab-group class="flex-grow-1">
             <mat-tab label="EXECUTIONS">
@@ -14,11 +50,12 @@
                     [namespace]="namespace"
                     [phase]="workflowExecutionPhase"
                     [displayedColumns]="displayedColumns"
-                    [pageSize]="5">
+                    [pageSize]="5"
+                    (workflowsChanged)="onWorkflowsChanged($event)">
                 </app-workflow-executions>
-            </mat-tab>
-            <mat-tab label="SCHEDULED">
-
+                <app-call-to-action *ngIf="!hasWorkflowExecutions">
+                    <div class="header text-center d-block">No workflow executions found</div>
+                </app-call-to-action>
             </mat-tab>
         </mat-tab-group>
     </div>

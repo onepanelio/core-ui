@@ -2,16 +2,17 @@
     Loading Workflows
 </app-loading-content>
 <app-workflow-executions-list
+    *ngIf="hasWorkflowExecutions"
     [namespace]="namespace"
     [displayedColumns]="displayedColumns"
     [workflowExecutions]="workflows"
     (executionTerminated)="onWorkflowExecutionTerminated()">
 </app-workflow-executions-list>
 <mat-paginator class="no-background font-size-small"
-               *ngIf="workflowResponse"
+               *ngIf="hasWorkflowExecutions"
                (page)="onPageChange($event)"
-               [pageIndex]="this.pagination.page"
+               [pageIndex]="this.page"
                [length]="this.workflowResponse.totalCount"
-               [pageSize]="this.pagination.pageSize"
+               [pageSize]="this.pageSize"
                [pageSizeOptions]="[5, 10, 25, 100]">
 </mat-paginator>

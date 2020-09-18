@@ -31,8 +31,33 @@
   line-height: 27px !important;
 }
 
-/deep/ app-workflow-executions-list cdk-header-row {
-  display: none;
+/deep/ app-workflow-executions-list {
+  @media screen and (max-width: 1300px) {
+    /deep/ .cdk-column-version {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: 1050px) {
+    /deep/ .cdk-column-end {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: 850px) {
+    /deep/ .cdk-column-start {
+      display: none;
+    }
+  }
+
+  .workflow-executions-list {
+    cdk-header-row {
+      &.op-table-header {
+        margin-top: 0 !important;
+        padding: 15px 20px !important;
+      }
+    }
+  }
 }
 
 /deep/ app-cron-workflow-list cdk-header-row {

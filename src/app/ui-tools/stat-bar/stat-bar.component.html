@@ -1,5 +1,8 @@
 <div>
-    <div class="title font-roboto font-size-regular font-weight-bold">{{title}} - {{value}}</div>
+    <div class="title font-roboto font-size-regular font-weight-bold">
+        {{title}} - {{value}}
+        <ng-content></ng-content>
+    </div>
     <div class="bar mt-1" [style.background]="color" [style.width]="barPercentage"></div>
 </div>
 

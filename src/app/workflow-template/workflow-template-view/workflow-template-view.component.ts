@@ -23,6 +23,7 @@ import {
 } from '../../../api';
 import { MatTabGroup } from '@angular/material/tabs';
 import { AppRouter } from '../../router/app-router.service';
+import { WorkflowExecutionsChangedEvent } from '../../workflow/workflow-executions/workflow-executions.component';
 
 // TODO move somewhere else. like utils or requests.
 export class Pagination {
@@ -133,8 +134,8 @@ export class WorkflowTemplateViewComponent implements OnInit {
       });
   }
 
-  onWorkflowsChanged(res: ListWorkflowExecutionsResponse) {
-    this.hasWorkflowExecutions = !(res.page === 1 && !res.workflowExecutions);
+  onWorkflowsChanged(res: WorkflowExecutionsChangedEvent) {
+    this.hasWorkflowExecutions = res.hasWorkflowExecutions;
   }
 
   executeWorkflow(e?: any, cron: boolean = false) {
