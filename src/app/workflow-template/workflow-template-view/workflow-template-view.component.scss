@@ -1,86 +1,80 @@
 @import "../../../styles/colors";
 @import "../../../styles/font-variables";
 
-.definition-header {
-  background-color: #F5F5F5;
-  height: 40px;
-}
-
-.two-panels {
-  display: flex;
-  height: 500px;
-  overflow: hidden;
-
-  div {
-    flex-grow: 1;
-    resize: none;
-    width: 50%;
+.workflow-template-view {
+  .definition-header {
+    background-color: #F5F5F5;
+    height: 40px;
   }
-  app-dag {
-    background-color: white;
-    flex-grow: 1;
-    width: 50%;
-  }
-}
 
-/deep/ app-labels-list-view .labels-list-item {
-  margin-top: 10px;
-}
+  .two-panels {
+    display: flex;
+    height: 500px;
+    overflow: hidden;
 
-/deep/ mat-paginator .mat-icon-button {
-  line-height: 27px !important;
-}
+    div {
+      flex-grow: 1;
+      resize: none;
+      width: 50%;
+    }
 
-/deep/ app-workflow-executions-list {
-  @media screen and (max-width: 1300px) {
-    /deep/ .cdk-column-version {
-      display: none;
+    app-dag {
+      background-color: white;
+      flex-grow: 1;
+      width: 50%;
     }
   }
 
-  @media screen and (max-width: 1050px) {
-    /deep/ .cdk-column-end {
-      display: none;
-    }
+  /deep/ app-labels-list-view .labels-list-item {
+    margin-top: 10px;
   }
 
-  @media screen and (max-width: 850px) {
-    /deep/ .cdk-column-start {
-      display: none;
-    }
+  /deep/ mat-paginator .mat-icon-button {
+    line-height: 27px !important;
   }
 
-  .workflow-executions-list {
-    cdk-header-row {
-      &.op-table-header {
-        margin-top: 0 !important;
-        padding: 15px 20px !important;
+  /deep/ app-workflow-executions-list {
+    @media screen and (max-width: 1300px) {
+      /deep/ .cdk-column-version {
+        display: none;
+      }
+    }
+
+    @media screen and (max-width: 1050px) {
+      /deep/ .cdk-column-end {
+        display: none;
+      }
+    }
+
+    @media screen and (max-width: 850px) {
+      /deep/ .cdk-column-start {
+        display: none;
       }
     }
   }
-}
 
-/deep/ app-cron-workflow-list cdk-header-row {
-  display: none;
-}
-
-/deep/ .mat-tab-labels {
-  opacity: 1;
-  align-items: baseline;
-
-  .mat-tab-label {
-    .mat-tab-label-content {
-      font-weight: bold;
-      font-size: $fontRegular;
-      text-transform: uppercase;
-    }
+  /deep/ app-cron-workflow-list cdk-header-row {
+    display: none;
   }
 
-  .mat-tab-label-active {
+  /deep/ .mat-tab-labels {
     opacity: 1;
+    align-items: baseline;
 
-    .mat-tab-label-content {
-      color: $primary;
+    .mat-tab-label {
+      .mat-tab-label-content {
+        font-weight: bold;
+        font-size: $fontRegular;
+        text-transform: uppercase;
+      }
+    }
+
+    .mat-tab-label-active {
+      opacity: 1;
+
+      .mat-tab-label-content {
+        color: $primary;
+      }
     }
   }
 }

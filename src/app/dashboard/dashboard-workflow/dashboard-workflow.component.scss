@@ -1,7 +1,6 @@
 @import "../../../styles/colors";
 
 .dashboard-workflow {
-
   @media screen and (max-width: 1600px) {
     /deep/ .cdk-column-version {
       display: none;
@@ -31,11 +30,11 @@
 
   /deep/ .op-table-row {
     padding: 10px;
-    border-top: unset;
-    border-left: unset;
+    border-top: 1px solid $dark-white;
     border-right: unset;
+    border-bottom: unset;
+    border-left: unset;
     border-radius: unset;
-    border-bottom: 1px solid $dark-white;
     margin-top: 0;
   }
 
