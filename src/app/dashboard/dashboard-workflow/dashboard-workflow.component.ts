@@ -34,7 +34,7 @@ export class DashboardWorkflowComponent implements OnInit, OnDestroy {
    * refers to a setInterval. Used to make requests to update the workflow statistics.
    */
   workflowsStatisticsInterval?: number;
-  hasWorkflowExecutions = false;
+  hasWorkflowExecutions?: boolean;
 
   constructor(private workflowService: WorkflowServiceService, private namespaceTracker: NamespaceTracker) { }
 
