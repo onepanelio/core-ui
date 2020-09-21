@@ -4,27 +4,27 @@ import {
   WorkflowTemplateService
 } from '../workflow-template.service';
 import { ActivatedRoute } from '@angular/router';
-import { WorkflowService } from "../../workflow/workflow.service";
+import { WorkflowService } from '../../workflow/workflow.service';
 import {
   WorkflowTemplateSelectComponent,
   WorkflowTemplateSelected
-} from "../../workflow-template-select/workflow-template-select.component";
-import { MatSnackBar, MatSnackBarRef } from "@angular/material/snack-bar";
-import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { HttpErrorResponse } from "@angular/common/http";
+} from '../../workflow-template-select/workflow-template-select.component';
+import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
 import * as ace from 'brace';
-import { ClosableSnackComponent } from "../../closable-snack/closable-snack.component";
-import { KeyValue, WorkflowServiceService, WorkflowTemplateServiceService } from "../../../api";
-import { LabelsEditComponent } from "../../labels/labels-edit/labels-edit.component";
-import { ManifestDagEditorComponent } from "../../manifest-dag-editor/manifest-dag-editor.component";
-import { AppRouter } from "../../router/app-router.service";
-import { CanComponentDeactivate } from "../../guards/can-deactivate.guard";
-import { Observable } from "rxjs";
+import { ClosableSnackComponent } from '../../closable-snack/closable-snack.component';
+import { KeyValue, WorkflowServiceService, WorkflowTemplateServiceService } from '../../../api';
+import { LabelsEditComponent } from '../../labels/labels-edit/labels-edit.component';
+import { ManifestDagEditorComponent } from '../../manifest-dag-editor/manifest-dag-editor.component';
+import { AppRouter } from '../../router/app-router.service';
+import { CanComponentDeactivate } from '../../guards/can-deactivate.guard';
+import { Observable } from 'rxjs';
 import {
   ConfirmationDialogComponent,
   ConfirmationDialogData
-} from "../../confirmation-dialog/confirmation-dialog.component";
-import { MatDialog } from "@angular/material/dialog";
+} from '../../confirmation-dialog/confirmation-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 const aceRange = ace.acequire('ace/range').Range;
 
 type WorkflowTemplateCreateState = 'new' | 'creating';
@@ -96,13 +96,13 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy, CanCo
   }
 
   ngOnDestroy(): void {
-    for(const snackbarRef of this.snackbarRefs) {
+    for (const snackbarRef of this.snackbarRefs) {
       snackbarRef.dismiss();
     }
   }
 
   canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
-    if(!this.manifestChanged) {
+    if (!this.manifestChanged) {
       return true;
     }
 
@@ -111,11 +111,11 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy, CanCo
       message: 'You have unsaved changes in your template, leaving will discard them.',
       confirmText: 'DISCARD CHANGES',
       type: 'confirm'
-    }
+    };
 
     const confirmDialog = this.dialogRef.open(ConfirmationDialogComponent, {
       data: confirmData
-    })
+    });
 
     return confirmDialog.afterClosed();
   }
@@ -123,14 +123,14 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy, CanCo
   save() {
     const templateName = this.templateNameInput.value;
 
-    if(!templateName) {
+    if (!templateName) {
       const snackbarRef = this.snackBar.open('Unable to update - template name is invalid', 'OK');
       this.snackbarRefs.push(snackbarRef);
 
       return;
     }
 
-    if(!this.labelEditor.isValid) {
+    if (!this.labelEditor.isValid) {
       this.labelEditor.markAllAsDirty();
       return;
     }
@@ -151,7 +151,7 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy, CanCo
         }, (err: HttpErrorResponse) => {
           this.state = 'new';
 
-          if(err.status === 409) {
+          if (err.status === 409) {
             this.templateNameInput.setErrors({
               conflict: 'true',
             });
@@ -173,6 +173,7 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy, CanCo
   onTemplateSelected(template: WorkflowTemplateSelected) {
     this.previousManifestText = this.manifestDagEditor.manifestTextCurrent;
     this.manifestText = template.manifest;
+    this.labels = template.labels;
 
     const snackUndo = this.snackBar.openFromComponent(ClosableSnackComponent, {
       data: {
@@ -191,11 +192,11 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy, CanCo
 
   onManifestTextModified(manifest: string) {
     // No need to update the change status again
-    if(this.manifestChanged) {
+    if (this.manifestChanged) {
       return;
     }
 
-    if(manifest === this.manifestText) {
+    if (manifest === this.manifestText) {
       this.manifestChanged = false;
       return;
     }
