@@ -120,7 +120,7 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
     this.dialogRef.afterClosed().subscribe(res => {
       this.router.navigate(['/', this.namespaceTracker.activeNamespace, 'secrets']);
     });
-    
+
     this.dialogRef.close();
   }
 
