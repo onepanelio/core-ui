@@ -1,6 +1,10 @@
 @import "../../../styles/colors";
 
 .dashboard-workflow {
+  /deep/ .mat-tab-header {
+    border-bottom: none;
+  }
+
   @media screen and (max-width: 1600px) {
     /deep/ .cdk-column-version {
       display: none;
