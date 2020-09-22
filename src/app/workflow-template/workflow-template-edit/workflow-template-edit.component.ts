@@ -1,28 +1,28 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { HttpErrorResponse } from "@angular/common/http";
-import { LabelsEditComponent } from "../../labels/labels-edit/labels-edit.component";
+import { HttpErrorResponse } from '@angular/common/http';
+import { LabelsEditComponent } from '../../labels/labels-edit/labels-edit.component';
 import {
     WorkflowTemplateSelected,
     WorkflowTemplateSelectHeader,
     WorkflowTemplateSelectItem
-} from "../../workflow-template-select/workflow-template-select.component";
-import { AppRouter } from "../../router/app-router.service";
+} from '../../workflow-template-select/workflow-template-select.component';
+import { AppRouter } from '../../router/app-router.service';
 import {
     KeyValue,
     LabelServiceService,
     WorkflowTemplate,
     WorkflowTemplateServiceService
-} from "../../../api";
-import { ManifestDagEditorComponent } from "../../manifest-dag-editor/manifest-dag-editor.component";
-import { DatePipe } from "@angular/common";
-import { CanComponentDeactivate } from "../../guards/can-deactivate.guard";
-import { Observable } from "rxjs";
+} from '../../../api';
+import { ManifestDagEditorComponent } from '../../manifest-dag-editor/manifest-dag-editor.component';
+import { DatePipe } from '@angular/common';
+import { CanComponentDeactivate } from '../../guards/can-deactivate.guard';
+import { Observable } from 'rxjs';
 import {
     ConfirmationDialogComponent,
     ConfirmationDialogData
-} from "../../confirmation-dialog/confirmation-dialog.component";
-import { MatDialog } from "@angular/material/dialog";
+} from '../../confirmation-dialog/confirmation-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-workflow-template-edit',
@@ -38,6 +38,7 @@ export class WorkflowTemplateEditComponent implements OnInit, CanComponentDeacti
   namespace: string;
   uid: string;
 
+    // tslint:disable-next-line:variable-name
   _workflowTemplate: WorkflowTemplate;
   labels = new Array<KeyValue>();
   workflowTemplateVersions: WorkflowTemplate[] = [];
@@ -62,7 +63,7 @@ export class WorkflowTemplateEditComponent implements OnInit, CanComponentDeacti
   loading = {
       workflowTemplate: true,
       workflowTemplateVersions: true
-  }
+  };
 
   get workflowTemplate(): WorkflowTemplate {
     return this._workflowTemplate;
@@ -93,20 +94,20 @@ export class WorkflowTemplateEditComponent implements OnInit, CanComponentDeacti
   }
 
   canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
-      if(!this.manifestChanged) {
+      if (!this.manifestChanged) {
           return true;
       }
-      
+
       const confirmData: ConfirmationDialogData = {
           title: 'You have unsaved changes',
           message: 'You have unsaved changes in your template, leaving will discard them.',
           confirmText: 'DISCARD CHANGES',
           type: 'confirm'
-      }
+      };
 
       const confirmDialog = this.dialogRef.open(ConfirmationDialogComponent, {
           data: confirmData
-      })
+      });
 
       return confirmDialog.afterClosed();
   }
@@ -134,26 +135,27 @@ export class WorkflowTemplateEditComponent implements OnInit, CanComponentDeacti
           return;
         }
 
-        let header: WorkflowTemplateSelectHeader = {
+        const header: WorkflowTemplateSelectHeader = {
             title: 'Versions',
             image: '/assets/images/workflows-blank-icon.svg'
-        }
+        };
 
-        let children = new Array<WorkflowTemplateSelected>();
+        const children = new Array<WorkflowTemplateSelected>();
 
-        for(const version of this.workflowTemplateVersions) {
-            const dateValue = this.datePipe.transform(version.createdAt, 'MMM d, y h:mm:ss a')
-            let newItem: WorkflowTemplateSelected = {
+        for (const version of this.workflowTemplateVersions) {
+            const dateValue = this.datePipe.transform(version.createdAt, 'MMM d, y h:mm:ss a');
+            const newItem: WorkflowTemplateSelected = {
                 name: `${dateValue}`,
-                manifest: version.manifest
+                manifest: version.manifest,
+                labels: version.labels,
             };
 
             children.push(newItem);
         }
 
         this.workflowTemplateListItems = [{
-            header: header,
-            children: children
+            header,
+            children
         }];
 
         this.loading.workflowTemplateVersions = false;
@@ -165,7 +167,7 @@ export class WorkflowTemplateEditComponent implements OnInit, CanComponentDeacti
   update() {
     this.manifestChanged = false;
 
-    if(!this.labelEditor.isValid) {
+    if (!this.labelEditor.isValid) {
         this.labelEditor.markAllAsDirty();
         return;
     }
@@ -202,12 +204,12 @@ export class WorkflowTemplateEditComponent implements OnInit, CanComponentDeacti
 
   onVersionSelected(selected: string) {
       const version = this.workflowTemplateVersions.find(wft => wft.version === selected);
-      if(!version) {
+      if (!version) {
           return;
       }
 
       this.manifestText = version.manifest;
-      if(version.labels) {
+      if (version.labels) {
           this.labels = version.labels;
       } else {
           this.labels = [];
@@ -216,11 +218,11 @@ export class WorkflowTemplateEditComponent implements OnInit, CanComponentDeacti
 
   onManifestTextModified(manifest: string) {
       // No need to update the change status again
-      if(this.manifestChanged) {
+      if (this.manifestChanged) {
           return;
       }
 
-      if(manifest === this.manifestText) {
+      if (manifest === this.manifestText) {
           this.manifestChanged = false;
           return;
       }
