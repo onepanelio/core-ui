@@ -33,6 +33,14 @@
     line-height: 27px !important;
   }
 
+  /deep/ .call-to-action {
+    margin-top: 15px;
+  }
+
+  /deep/ .loading-content {
+    margin-top: 15px;
+  }
+
   /deep/ app-workflow-executions-list {
     @media screen and (max-width: 1300px) {
       /deep/ .cdk-column-version {
