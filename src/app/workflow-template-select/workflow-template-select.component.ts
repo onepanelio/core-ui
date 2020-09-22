@@ -39,7 +39,7 @@ export class WorkflowTemplateSelectComponent implements OnInit {
 
   private static workflowTemplateSamples: WorkflowTemplateSelected[] = [
     {
-      name: 'Template',
+      name: 'Model training',
       manifest: `arguments:
   parameters:
 
@@ -230,7 +230,7 @@ volumeClaimTemplates:
       ]
     },
     {
-      name: 'Ensemble Inference',
+      name: 'Ensemble inference',
       manifest: `arguments:
   parameters:
 
