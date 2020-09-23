@@ -12,12 +12,12 @@ import { HttpClientModule } from '@angular/common/http';
 import { WorkflowTemplateViewComponent } from './workflow-template/workflow-template-view/workflow-template-view.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
-  MatButtonModule,
-  MatExpansionModule,
-  MatFormFieldModule,
-  MatRadioModule,
-  MatSelectModule,
-  MatSnackBarModule, MatTabsModule, MatToolbarModule
+    MatButtonModule,
+    MatExpansionModule,
+    MatFormFieldModule,
+    MatRadioModule,
+    MatSelectModule,
+    MatSnackBarModule, MatSortModule, MatTabsModule, MatToolbarModule
 } from '@angular/material';
 import { WorkflowTemplateCreateComponent } from './workflow-template/workflow-template-create/workflow-template-create.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -258,7 +258,8 @@ import { WorkflowComponent } from './workflow/workflow.component';
         MatTooltipModule,
         MatChipsModule,
         MatMenuModule,
-        MatProgressBarModule
+        MatProgressBarModule,
+        MatSortModule
     ],
   providers: [
       NamespaceTracker,

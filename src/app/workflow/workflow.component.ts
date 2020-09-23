@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { WorkflowExecutionPhase, WorkflowExecutionsChangedEvent } from './workflow-executions/workflow-executions.component';
 import { WorkflowExecuteDialogComponent } from './workflow-execute-dialog/workflow-execute-dialog.component';
-import { CreateWorkflowExecutionBody, WorkflowServiceService } from '../../api';
+import { CreateWorkflowExecutionBody, CronWorkflow, CronWorkflowServiceService, WorkflowServiceService } from '../../api';
 import { MatDialog } from '@angular/material/dialog';
 import { Alert } from '../alert/alert';
 import { AppRouter } from '../router/app-router.service';
@@ -25,7 +25,8 @@ export class WorkflowComponent implements OnInit {
       private dialog: MatDialog,
       private appRouter: AppRouter,
       private alertService: AlertService,
-      private workflowServiceService: WorkflowServiceService
+      private workflowServiceService: WorkflowServiceService,
+      private cronWorkflowService: CronWorkflowServiceService
   ) {
     this.activatedRoute.paramMap.subscribe(next => {
       this.namespace = next.get('namespace');
@@ -58,21 +59,51 @@ export class WorkflowComponent implements OnInit {
         return;
       }
 
-      const request: CreateWorkflowExecutionBody = {
-        workflowTemplateUid: result.workflowTemplate.uid,
-        parameters: result.workflowExecution.parameters,
-        labels: result.workflowExecution.labels,
-      };
+      if (result.cron) {
+        const request: CronWorkflow = {
+          manifest: result.cron.manifest,
+          workflowExecution: result.workflowExecution,
+          labels: result.workflowExecution.labels,
+        };
 
-      this.workflowServiceService.createWorkflowExecution(this.namespace, request)
-          .subscribe(res => {
-            this.appRouter.navigateToWorkflowExecution(this.namespace, res.name);
-          }, err => {
-            this.alertService.storeAlert(new Alert({
-              message: 'Unable to execute workflow',
-              type: 'danger'
-            }));
-          });
+        this.executeCronWorkflowRequest(request);
+
+      } else {
+        const request: CreateWorkflowExecutionBody = {
+          workflowTemplateUid: result.workflowTemplate.uid,
+          parameters: result.workflowExecution.parameters,
+          labels: result.workflowExecution.labels,
+        };
+
+        this.executeWorkflowRequest(request);
+      }
     });
+  }
+
+  protected executeWorkflowRequest(request: CreateWorkflowExecutionBody) {
+    this.workflowServiceService.createWorkflowExecution(this.namespace, request)
+        .subscribe(res => {
+          this.appRouter.navigateToWorkflowExecution(this.namespace, res.name);
+        }, err => {
+          this.alertService.storeAlert(new Alert({
+            message: 'Unable to execute workflow',
+            type: 'danger'
+          }));
+        });
+  }
+
+  protected executeCronWorkflowRequest(data: CronWorkflow) {
+    this.cronWorkflowService.createCronWorkflow(this.namespace, data)
+        .subscribe(res => {
+          this.alertService.storeAlert(new Alert({
+            message: `You have scheduled "${res.name}"`,
+            type: 'success'
+          }));
+        }, err => {
+          this.alertService.storeAlert(new Alert({
+            message: 'Unable to schedule workflow',
+            type: 'danger'
+          }));
+        });
   }
 }
