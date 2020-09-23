@@ -14,6 +14,7 @@ import { map } from 'rxjs/operators';
 import { AppRouter } from '../../router/app-router.service';
 import { AlertService } from '../../alert/alert.service';
 import { Alert } from '../../alert/alert';
+import { Sort } from '@angular/material';
 
 @Component({
     selector: 'app-workflow-executions-list',
@@ -30,6 +31,7 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
     @Input() workflowExecutions: WorkflowExecution[] = [];
 
     @Output() executionTerminated = new EventEmitter();
+    @Output() sortChange = new EventEmitter<Sort>();
 
     /**
      * workflowPermissions keeps track of which permissions the currently logged in user has for each
@@ -141,5 +143,9 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
                 })
             );
         });
+    }
+
+    sortData(event: Sort) {
+        this.sortChange.emit(event);
     }
 }

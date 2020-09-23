@@ -6,7 +6,8 @@
     [namespace]="namespace"
     [displayedColumns]="displayedColumns"
     [workflowExecutions]="workflows"
-    (executionTerminated)="onWorkflowExecutionTerminated()">
+    (executionTerminated)="onWorkflowExecutionTerminated()"
+    (sortChange)="sortData($event)">
 </app-workflow-executions-list>
 <mat-paginator class="no-background font-size-small"
                *ngIf="hasWorkflowExecutions"

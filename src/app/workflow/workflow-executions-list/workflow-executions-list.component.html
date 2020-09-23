@@ -1,21 +1,21 @@
 <div class="workflow-executions-list">
-    <cdk-table [dataSource]="workflowExecutions">
+    <cdk-table [dataSource]="workflowExecutions" matSort (matSortChange)="sortData($event)">
         <ng-container cdkColumnDef="name">
-            <cdk-header-cell *cdkHeaderCellDef>Name</cdk-header-cell>
+            <cdk-header-cell *cdkHeaderCellDef mat-sort-header>Name</cdk-header-cell>
             <cdk-cell *cdkCellDef="let workflow">
                 <a class="name-link" [routerLink]="['/', this.namespace, 'workflows', workflow.name]" >{{workflow.name}}</a>
             </cdk-cell>
         </ng-container>
 
         <ng-container cdkColumnDef="start">
-            <cdk-header-cell *cdkHeaderCellDef>Start</cdk-header-cell>
+            <cdk-header-cell *cdkHeaderCellDef mat-sort-header>Start</cdk-header-cell>
             <cdk-cell *cdkCellDef="let workflow" class="font-size-small font-roboto font-medium-gray">
                 <div *ngIf="workflow.startedAt"><app-date class="" [dateTime]="workflow.startedAt"></app-date></div>
             </cdk-cell>
         </ng-container>
 
         <ng-container cdkColumnDef="end">
-            <cdk-header-cell *cdkHeaderCellDef class="ml-5">End</cdk-header-cell>
+            <cdk-header-cell *cdkHeaderCellDef mat-sort-header class="ml-5">End</cdk-header-cell>
             <cdk-cell *cdkCellDef="let workflow" class="font-size-small font-roboto font-medium-gray ml-5">
                 <div *ngIf="workflow.finishedAt"><app-date class="" [dateTime]="workflow.finishedAt"></app-date></div>
             </cdk-cell>
