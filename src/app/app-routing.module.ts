@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { WorkflowComponent } from './workflow/workflow.component';
+import { WorkflowViewComponent } from './workflow/workflow-view/workflow-view.component';
 import { WorkflowTemplateComponent } from './workflow-template/workflow-template.component';
 import { WorkflowTemplateViewComponent } from './workflow-template/workflow-template-view/workflow-template-view.component';
 import { WorkflowTemplateCreateComponent } from './workflow-template/workflow-template-create/workflow-template-create.component';
@@ -20,6 +20,7 @@ import { CanDeactivateGuard } from './guards/can-deactivate.guard';
 import { ServiceListComponent } from './services/service-list/service-list.component';
 import { ServiceViewComponent } from './services/service-view/service-view.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { WorkflowComponent } from './workflow/workflow.component';
 
 const routes: Routes = [
   {
@@ -29,6 +30,11 @@ const routes: Routes = [
   {
     path: ':namespace/dashboard',
     component: DashboardComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: ':namespace/workflows',
+    component: WorkflowComponent,
     canActivate: [AuthGuard],
   },
   {
@@ -60,7 +66,7 @@ const routes: Routes = [
   },
   {
     path: ':namespace/workflows/:uid',
-    component: WorkflowComponent,
+    component: WorkflowViewComponent,
     canActivate: [AuthGuard],
   },
   {

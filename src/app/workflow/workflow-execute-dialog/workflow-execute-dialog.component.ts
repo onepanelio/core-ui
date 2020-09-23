@@ -117,6 +117,7 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
         parameters: formattedParameters,
         labels: this.labels,
       },
+      workflowTemplate: this.selectedTemplate,
       cron: undefined,
     };
 

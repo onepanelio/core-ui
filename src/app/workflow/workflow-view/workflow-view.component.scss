@@ -1,0 +1,72 @@
+app-activity-bar {
+  display: block;
+  line-height: 40px;
+}
+
+app-status {
+  height: 40px;
+  line-height: 40px;
+}
+
+text {
+  font-weight: 300;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+}
+
+app-node-info {
+  width: 420px;
+  position: absolute;
+  right: 0;
+  top: 0;
+
+  /deep/ .root-element {
+    height: 100%;
+    overflow: scroll;
+  }
+}
+
+app-logs {
+  position: fixed;
+  width: 60vw;
+  right: 0;
+  top: 0;
+  height: 100vh;
+}
+
+app-workflow-parameter {
+  margin-top: 15px;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+.yaml-root {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 60vw;
+  height: 100vh;
+
+  background-color: rgb(47, 49, 41);
+
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+
+  .toolbar {
+    padding-left: 27px;
+  }
+
+  .title {
+    strong {
+      font-weight: bold;
+    }
+  }
+
+  /deep/ .highlight {
+    position:absolute;
+    background:rgba(0,87,155,0.5);
+    z-index:20
+  }
+}

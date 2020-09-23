@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { PageEvent } from '@angular/material/paginator';
 import { ListWorkflowExecutionsResponse, WorkflowExecution, WorkflowServiceService, Workspace } from '../../../api';
 import { ActivatedRoute } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 
 type WorkflowExecutionsState = 'initialization' | 'new' | 'loading';
 export type WorkflowExecutionPhase = 'running' | 'completed' | 'failed' | 'stopped';
@@ -60,7 +61,7 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
 
   constructor(
       public activatedRoute: ActivatedRoute,
-      public workflowService: WorkflowServiceService
+      public workflowService: WorkflowServiceService,
   ) { }
 
   ngOnInit() {
