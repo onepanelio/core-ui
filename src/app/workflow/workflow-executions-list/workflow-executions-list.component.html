@@ -24,9 +24,9 @@
         <ng-container cdkColumnDef="template">
             <cdk-header-cell *cdkHeaderCellDef class="ml-5">Template</cdk-header-cell>
             <cdk-cell *cdkCellDef="let workflow" class="font-size-small font-roboto font-medium-gray ml-5">
-                <a [routerLink]="['/', this.namespace, 'workflow-templates', workflow.workflowTemplate.uid]"> {{workflow.workflowTemplate.name}}
-                    (Version: <app-date class="underline timestamp d-inline-block" [dateTime]="workflow.workflowTemplate.createdAt"></app-date>)
-                </a>
+                <a [routerLink]="['/', this.namespace, 'workflow-templates', workflow.workflowTemplate.uid]"> {{workflow.workflowTemplate.name}}</a>
+                <br/>
+                <span class="font-size-smaller font-roboto font-medium-gray">Version: <app-date class="timestamp d-inline-block" [dateTime]="workflow.workflowTemplate.createdAt"></app-date></span>
             </cdk-cell>
         </ng-container>
 
