@@ -24,8 +24,12 @@ export class NavbarComponent implements OnInit {
         this.activeRoute = 'workspaces';
         return;
       }
-      if (urlPart.indexOf('templates') >= 0 || urlPart.indexOf('workflows') >= 0) {
-        this.activeRoute = 'templates';
+      if (urlPart.indexOf('workflows') >= 0) {
+        this.activeRoute = 'workflows';
+        return;
+      }
+      if (urlPart.indexOf('workflow-templates') >= 0) {
+        this.activeRoute = 'workflows';
         return;
       }
       if (urlPart.indexOf('secrets') >= 0) {

@@ -13,11 +13,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { AppRouter } from '../router/app-router.service';
 import { combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Permissions } from "../auth/models";
+import { Permissions } from '../auth/models';
 import {
   ConfirmationDialogComponent,
   ConfirmationDialogData
-} from "../confirmation-dialog/confirmation-dialog.component";
+} from '../confirmation-dialog/confirmation-dialog.component';
 
 type WorkspaceState = 'loading-initial-data' | 'loading' | 'new';
 
