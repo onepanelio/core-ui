@@ -30,7 +30,6 @@ export class WorkflowComponent implements OnInit {
   ) {
     this.activatedRoute.paramMap.subscribe(next => {
       this.namespace = next.get('namespace');
-
     });
   }
 

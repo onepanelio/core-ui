@@ -1,36 +1,38 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { SimpleWorkflowDetail, Workflow, WorkflowService } from '../workflow.service';
+import { ActivatedRoute } from '@angular/router';
+import { SimpleWorkflowDetail, WorkflowService } from '../workflow.service';
 import { NodeRenderer, NodeStatus } from '../../node/node.service';
 import { DagClickEvent, DagComponent } from '../../dag/dag.component';
-import { NodeInfoComponent } from "../../node-info/node-info.component";
-import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from "@angular/material/snack-bar";
-import { AceEditorComponent } from "ng2-ace-editor";
+import { NodeInfoComponent } from '../../node-info/node-info.component';
+import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material/snack-bar';
+import { AceEditorComponent } from 'ng2-ace-editor';
 import * as yaml from 'js-yaml';
 import * as ace from 'brace';
 import {
-  AuthServiceService, CreateWorkflowExecutionBody, CronWorkflow,
+  AuthServiceService, CreateWorkflowExecutionBody,
   KeyValue,
   LabelServiceService,
   Parameter,
   WorkflowExecution,
   WorkflowServiceService
-} from "../../../api";
-import { MatDialog } from "@angular/material/dialog";
-import { LabelEditDialogComponent } from "../../labels/label-edit-dialog/label-edit-dialog.component";
-import { AppRouter } from "../../router/app-router.service";
-import { ClockComponent } from "../../clock/clock.component";
+} from '../../../api';
+import { MatDialog } from '@angular/material/dialog';
+import { LabelEditDialogComponent } from '../../labels/label-edit-dialog/label-edit-dialog.component';
+import { AppRouter } from '../../router/app-router.service';
+import { ClockComponent } from '../../clock/clock.component';
 import {
   ConfirmationDialogComponent,
-} from "../../confirmation-dialog/confirmation-dialog.component";
-import { WorkflowExecutionConstants } from "../models";
-import { ParameterUtils } from "../../parameters/models";
-import { Permissions } from "../../auth/models";
-import { combineLatest } from "rxjs";
-import { map } from "rxjs/operators";
-import { WorkflowExecuteDialogComponent } from "../workflow-execute-dialog/workflow-execute-dialog.component";
-import { Alert } from "../../alert/alert";
-import { AlertService } from "../../alert/alert.service";
+} from '../../confirmation-dialog/confirmation-dialog.component';
+import { WorkflowExecutionConstants } from '../models';
+import { ParameterUtils } from '../../parameters/models';
+import { Permissions } from '../../auth/models';
+import { combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { WorkflowExecuteDialogComponent } from '../workflow-execute-dialog/workflow-execute-dialog.component';
+import { Alert } from '../../alert/alert';
+import { AlertService } from '../../alert/alert.service';
+import { AppComponent } from '../../app.component';
+import { Location } from '@angular/common';
 
 const aceRange = ace.acequire('ace/range').Range;
 
@@ -44,11 +46,6 @@ const aceRange = ace.acequire('ace/range').Range;
   },
 })
 export class WorkflowViewComponent implements OnInit, OnDestroy {
-  private snackbarRef: MatSnackBarRef<SimpleSnackBar>;
-
-  @ViewChild('yamlEditor', {static: true}) yamlEditor: AceEditorComponent;
-  @ViewChild(ClockComponent, {static: false}) clock: ClockComponent;
-  @ViewChild(DagComponent, {static: false}) dag: DagComponent;
   @ViewChild('pageContent', {static: false}) set pageContent(value: ElementRef) {
     setTimeout( () => {
       // We (hackily) add 20px to account for padding/margin of elements, so we don't get a scroll.
@@ -56,10 +53,8 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
       this.height = `calc(100vh - ${value.nativeElement.offsetTop + 20 - 300}px)`;
     }, 0);
   }
-
-  private _nodeInfoElement: NodeInfoComponent;
   @ViewChild(NodeInfoComponent, {static: false}) set nodeInfoElement(value: NodeInfoComponent) {
-    if(!value) {
+    if (!value) {
       return;
     }
 
@@ -68,37 +63,6 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
       this.updateNodeInfoProperties();
     });
   }
-
-  namespace: string;
-  uid: string;
-  workflow: SimpleWorkflowDetail;
-
-  socket: WebSocket;
-
-  nodeInfo?: NodeStatus;
-  height = '1000px'; // Dummy large value.
-  nodeInfoHeight = '1000px'; // Dummy large value.
-  nodeInfoTop = '0'; //Dummy initial value
-
-  showNodeInfo = false;
-  selectedNodeId = null;
-  showLogs = false;
-  showYaml = false;
-
-  labels = new Array<KeyValue>();
-  parameters = new Array<Parameter>();
-
-  showAllParameters = false;
-
-  loadingLabels = false;
-  cloning = false;
-
-  startedAt;
-  finishedAt;
-  permissions = new Permissions();
-
-  private socketClosedCount = 0;
-  private socketErrorCount = 0;
 
   get dagIdentifier() {
     return {
@@ -119,20 +83,69 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
     private dialog: MatDialog,
     private appRouter: AppRouter,
     private snackbar: MatSnackBar,
+    private location: Location
   ) {
     this.activatedRoute.paramMap.subscribe(next => {
-      this.setNamespaceUid(next.get('namespace'), next.get('uid'));
-      if(this.clock) {
+      const namespace = next.get('namespace');
+      this.setNamespaceUid(namespace, next.get('uid'));
+      if (this.clock) {
         this.clock.reset(true);
       }
-      
+
       this.showNodeInfo = false;
       this.selectedNodeId = null;
       this.showLogs = false;
       this.showYaml = false;
       this.startCheckingWorkflow();
+
+      this.updateBackLink(namespace);
     });
   }
+  private snackbarRef: MatSnackBarRef<SimpleSnackBar>;
+
+  @ViewChild('yamlEditor', {static: true}) yamlEditor: AceEditorComponent;
+  @ViewChild(ClockComponent, {static: false}) clock: ClockComponent;
+  @ViewChild(DagComponent, {static: false}) dag: DagComponent;
+
+  // tslint:disable-next-line:variable-name
+  private _nodeInfoElement: NodeInfoComponent;
+
+  namespace: string;
+  uid: string;
+  workflow: SimpleWorkflowDetail;
+
+  socket: WebSocket;
+
+  nodeInfo?: NodeStatus;
+  height = '1000px'; // Dummy large value.
+  nodeInfoHeight = '1000px'; // Dummy large value.
+  nodeInfoTop = '0'; // Dummy initial value
+
+  showNodeInfo = false;
+  selectedNodeId = null;
+  showLogs = false;
+  showYaml = false;
+
+  labels = new Array<KeyValue>();
+  parameters = new Array<Parameter>();
+
+  showAllParameters = false;
+
+  loadingLabels = false;
+  cloning = false;
+
+  startedAt;
+  finishedAt;
+  permissions = new Permissions();
+
+  backLinkName?: string;
+
+  private backLink?: string;
+  private socketClosedCount = 0;
+  private socketErrorCount = 0;
+
+
+  private markerId;
 
   ngOnInit() {
   }
@@ -140,7 +153,7 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
   private getWorkflowTemplateParametersFromWorkflow(workflow: WorkflowExecution): Array<Parameter> {
     try {
       const workflowTemplateManifest = yaml.safeLoad(workflow.workflowTemplate.manifest);
-      if(workflowTemplateManifest.arguments && workflowTemplateManifest.arguments.parameters) {
+      if (workflowTemplateManifest.arguments && workflowTemplateManifest.arguments.parameters) {
         return workflowTemplateManifest.arguments.parameters;
       }
 
@@ -163,13 +176,13 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
           const templateParameters = this.getWorkflowTemplateParametersFromWorkflow(res);
           this.parameters = ParameterUtils.combineValueAndTemplate(res.parameters, templateParameters);
 
-          if(res.phase === 'Terminated') {
+          if (res.phase === 'Terminated') {
             this.workflow.phase = 'Terminated';
             this.startedAt = res.startedAt;
             this.finishedAt = res.finishedAt;
           }
 
-          if(this.socket) {
+          if (this.socket) {
             this.socket.close();
             this.socket = null;
           }
@@ -233,7 +246,7 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
           this.permissions.create = res.canCreate.authorized;
           this.permissions.update = res.canUpdate.authorized;
           this.permissions.delete = res.canDelete.authorized;
-        })
+        });
   }
 
   ngOnDestroy() {
@@ -263,7 +276,7 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if(!data.result) {
+    if (!data.result) {
       return;
     }
 
@@ -272,21 +285,21 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
     this.startedAt = this.workflow.workflowStatus.startedAt;
     this.finishedAt = this.workflow.workflowStatus.finishedAt;
 
-    if(wasTerminated) {
+    if (wasTerminated) {
       this.workflow.phase = 'Terminated';
     }
 
     const status = this.workflow.workflowStatus;
 
     // It is possible there is no node data yet. In which case, we can't display a dag.
-    if(!status || !status.nodes) {
+    if (!status || !status.nodes) {
       return;
     }
 
-    if(this.selectedNodeId && this.selectedNodeId !== this.workflow.name) {
+    if (this.selectedNodeId && this.selectedNodeId !== this.workflow.name) {
       this.nodeInfo = status.nodes[this.selectedNodeId];
 
-      if(this._nodeInfoElement) {
+      if (this._nodeInfoElement) {
         this._nodeInfoElement.updateNodeStatus(this.nodeInfo);
       }
     }
@@ -296,13 +309,13 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
   }
 
   handleNodeClicked(event: DagClickEvent) {
-    if(event.nodeId === this.workflow.name) {
+    if (event.nodeId === this.workflow.name) {
       this.showNodeInfo = false;
       return;
     }
 
     const newNodeInfo = this.workflow.getNodeStatus(event.nodeId);
-    if(!newNodeInfo) {
+    if (!newNodeInfo) {
       return;
     }
 
@@ -312,14 +325,14 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
     this.showNodeInfo = true;
 
 
-    if(this._nodeInfoElement) {
+    if (this._nodeInfoElement) {
       this._nodeInfoElement.updateNodeStatus(this.nodeInfo);
     }
     this.selectedNodeId = event.nodeId;
 
     this.showLogs = false;
 
-    if(this.showYaml) {
+    if (this.showYaml) {
       this.updateYamlSelection();
     }
   }
@@ -335,15 +348,12 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
     });
   }
 
-
-  private markerId;
-
   onYamlClicked() {
-    if(!this.workflow) {
+    if (!this.workflow) {
       return;
     }
 
-    if(!this.nodeInfo) {
+    if (!this.nodeInfo) {
       return;
     }
 
@@ -357,23 +367,23 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
     const parsedYaml = yaml.safeLoad(spec);
     const templates = parsedYaml.templates;
 
-    let templateNames = [];
+    const templateNames = [];
     let selectedTemplate = null;
-    for(let template of templates) {
+    for (const template of templates) {
       templateNames.push(template.name);
-      if(template.name === this.nodeInfo.templateName) {
+      if (template.name === this.nodeInfo.templateName) {
         selectedTemplate = template;
       }
     }
 
-    const manifestLines = spec.split("\n");
+    const manifestLines = spec.split('\n');
 
     let templatesLineNumber = -1;
     let templatesIndentation = 0;
-    for(let i = 0; i < manifestLines.length; i++) {
+    for (let i = 0; i < manifestLines.length; i++) {
       const line = manifestLines[i];
       const templateIndex = line.indexOf('templates');
-      if(templateIndex >= 0) {
+      if (templateIndex >= 0) {
         templatesLineNumber = i;
         templatesIndentation = templateIndex;
         break;
@@ -384,7 +394,7 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
     let templateEndLineNumber = -1;
     let firstNameIndentation = -1;
 
-    for(let i = templatesLineNumber; i < manifestLines.length; i++) {
+    for (let i = templatesLineNumber; i < manifestLines.length; i++) {
       const line = manifestLines[i];
 
       const trimmedLine = line.trimLeft();
@@ -394,7 +404,7 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
 
       const indentation = line.length - trimmedLine.length;
 
-      if(indentation < templatesIndentation) {
+      if (indentation < templatesIndentation) {
         break;
       }
 
@@ -403,8 +413,8 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
         firstNameIndentation = nameIndex;
       }
 
-      if(templateStartLineNumber === -1 && nameIndex > 0 && nameIndex == firstNameIndentation) {
-        if(line.indexOf(this.nodeInfo.templateName) >= 0) {
+      if (templateStartLineNumber === -1 && nameIndex > 0 && nameIndex === firstNameIndentation) {
+        if (line.indexOf(this.nodeInfo.templateName) >= 0) {
           templateStartLineNumber = i;
         }
         continue;
@@ -416,7 +426,7 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
       }
     }
 
-    if(templateStartLineNumber !== -1 && templateEndLineNumber === -1) {
+    if (templateStartLineNumber !== -1 && templateEndLineNumber === -1) {
       templateEndLineNumber = manifestLines.length;
     }
 
@@ -424,16 +434,16 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
     const to = templateEndLineNumber;
 
 
-    if(this.markerId) {
+    if (this.markerId) {
       this.yamlEditor.getEditor().session.removeMarker(this.markerId);
     }
 
-    this.markerId = this.yamlEditor.getEditor().session.addMarker(new aceRange(from, 0, to, 100), "highlight", "fullLine");
+    this.markerId = this.yamlEditor.getEditor().session.addMarker(new aceRange(from, 0, to, 100), 'highlight', 'fullLine');
     this.yamlEditor.getEditor().scrollToLine(from, true, true, () => {});
   }
 
   onLogsClicked() {
-    if(!this.nodeInfo) {
+    if (!this.nodeInfo) {
       return;
     }
 
@@ -452,15 +462,15 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
   onTerminate() {
     const dialog = this.dialog.open(ConfirmationDialogComponent, {
       data: WorkflowExecutionConstants.getConfirmTerminateDialogData(this.workflow.name),
-    })
+    });
 
     dialog.afterClosed().subscribe(res => {
-      if(!res) {
+      if (!res) {
         return;
       }
 
       this.workflowServiceService.terminateWorkflowExecution(this.namespace, this.workflow.uid)
-          .subscribe(res => {
+          .subscribe(() => {
             if (this.socket) {
               this.socket.close();
             }
@@ -470,7 +480,7 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
             this.snackbarRef = this.snackbar.open('Workflow terminated', 'OK');
           }, err => {
             this.snackbarRef = this.snackbar.open('Unable to terminate workflow', 'OK');
-          })
+          });
     });
   }
 
@@ -479,7 +489,7 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
   }
 
   onShowTotalYaml() {
-    if(this.markerId) {
+    if (this.markerId) {
       this.yamlEditor.getEditor().session.removeMarker(this.markerId);
     }
 
@@ -488,7 +498,7 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
 
   onEdit() {
     let labelsCopy = [];
-    if(this.labels) {
+    if (this.labels) {
       labelsCopy = this.labels.slice();
     }
 
@@ -501,7 +511,7 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(data => {
-      if(!data) {
+      if (!data) {
         return;
       }
 
@@ -558,5 +568,44 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
             }));
           });
     });
+  }
+
+  updateBackLink(namespace: string) {
+    for (let i = AppComponent.routerHistory.length - 1; i > 0; i--) {
+      const route = AppComponent.routerHistory[i];
+
+      if (route.indexOf(`/${namespace}/workflows/`) === -1) {
+        if (route.indexOf(`/${namespace}/workflows`) > -1) {
+          this.backLinkName = 'Back to workflows';
+          this.backLink = route;
+          return;
+        }
+        if (route.indexOf(`/${namespace}/workflow-templates/`) > - 1) {
+          this.backLinkName = 'Back to workflow templates';
+          this.backLink = route;
+          return;
+        }
+      }
+    }
+
+    if (AppComponent.routerHistory.length > 0) {
+      this.backLinkName = 'Go back';
+      this.backLink = AppComponent.getPreviousRoute();
+      return;
+    }
+
+    this.backLinkName = 'Back to workflows';
+    this.backLink = `/${namespace}/workflows`;
+  }
+
+  /**
+   * goBack takes you back to the previous url, if any.
+   */
+  goBack(e: any) {
+    if (e) {
+      e.preventDefault();
+    }
+
+    this.appRouter.navigateByUrl(this.backLink);
   }
 }

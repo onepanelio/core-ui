@@ -71,4 +71,8 @@ export class AppRouter {
   public navigateToSettings(namespace: string) {
     return this.router.navigate(['/', namespace, 'secrets']);
   }
+
+  public navigateToWorkflowsExecutions(namespace: string) {
+    return this.router.navigate(['/', namespace, 'workflows']);
+  }
 }
