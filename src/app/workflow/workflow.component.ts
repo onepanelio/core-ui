@@ -526,8 +526,10 @@ export class WorkflowComponent implements OnInit, OnDestroy {
       width: '60vw',
       maxHeight: '100vh',
       data: {
+        namespace: this.namespace,
         parameters: this.parameters,
-        labels: this.labels
+        labels: this.labels,
+        workflowTemplate: this.workflow.workflowTemplate,
       }
     });
 

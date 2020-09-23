@@ -61,6 +61,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
   workflowPagination = new Pagination();
   cronWorkflowPagination = new Pagination();
 
+  // tslint:disable-next-line:variable-name
   private _hasWorkflowExecutions = false;
   set hasWorkflowExecutions(value: boolean) {
     this._hasWorkflowExecutions = value;
@@ -71,6 +72,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
     return this._hasWorkflowExecutions;
   }
 
+  // tslint:disable-next-line:variable-name
   private _hasCronWorkflows = false;
   set hasCronWorkflows(value: boolean) {
     this._hasCronWorkflows = value;
@@ -147,7 +149,8 @@ export class WorkflowTemplateViewComponent implements OnInit {
       width: '60vw',
       maxHeight: '100vh',
       data: {
-        manifest: this.manifestText,
+        namespace: this.namespace,
+        workflowTemplate: this.workflowTemplate,
         cron,
       }
     });

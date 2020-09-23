@@ -67,4 +67,8 @@ export class AppRouter {
   public navigateToLogin() {
     return this.router.navigate(['/', 'login']);
   }
+
+  public navigateToSettings(namespace: string) {
+    return this.router.navigate(['/', namespace, 'secrets']);
+  }
 }
