@@ -585,6 +585,11 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
           this.backLink = route;
           return;
         }
+        if (route.indexOf(`/${namespace}/dashboard`) > - 1) {
+          this.backLinkName = 'Back to dashboard';
+          this.backLink = route;
+          return;
+        }
       }
     }
 
