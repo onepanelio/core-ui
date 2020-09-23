@@ -13,11 +13,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { AppRouter } from '../router/app-router.service';
 import { combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Permissions } from "../auth/models";
+import { Permissions } from '../auth/models';
 import {
   ConfirmationDialogComponent,
   ConfirmationDialogData
-} from "../confirmation-dialog/confirmation-dialog.component";
+} from '../confirmation-dialog/confirmation-dialog.component';
 
 type WorkspaceState = 'loading-initial-data' | 'loading' | 'new';
 
@@ -72,12 +72,12 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.getWorkspacesInterval = setInterval(() => {
       this.state = 'loading';
-      this.getWorkspaces()
+      this.getWorkspaces();
     }, 5000);
   }
 
   ngOnDestroy() {
-    if(this.getWorkspacesInterval) {
+    if (this.getWorkspacesInterval) {
       clearInterval(this.getWorkspacesInterval);
       this.getWorkspacesInterval = null;
     }
@@ -85,7 +85,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
 
   /**
    * Marks the workspace as updating.
-   * @param workspace
    */
   private markWorkspaceUpdating(workspace: Workspace) {
     this.workspaceUpdatingMap.set(workspace.uid, workspace);
@@ -93,14 +92,12 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
 
   /**
    * Marks the workspace as done updating.
-   * @param workspace
    */
   private markWorkspaceDoneUpdating(workspace: Workspace) {
     this.workspaceUpdatingMap.delete(workspace.uid);
   }
 
   /**
-   * @param workspace
    * @return true if the workspace is updating, false otherwise.
    */
   private isWorkspaceUpdating(workspace: Workspace): boolean {
@@ -115,34 +112,32 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
    *
    * This prevents UI issues where the entire list refreshes, which can remove any open menus
    * like the workspace action menu.
-   *
-   * @param workspaces
    */
   private updateWorkspaceList(workspaces: Workspace[]) {
     // If the lengths are different, we have new workspaces or deleted workspaces,
     // so just update the entire list.
-    if(this.workspaces.length !== workspaces.length) {
+    if (this.workspaces.length !== workspaces.length) {
       this.workspaces = workspaces;
       return;
     }
 
-    let map = new Map<string, Workspace>();
-    for(let workspace of this.workspaces) {
-      map.set(workspace.uid, workspace);
+    const workspaceMap = new Map<string, Workspace>();
+    for (const workspace of this.workspaces) {
+      workspaceMap.set(workspace.uid, workspace);
     }
 
-    for(let workspace of workspaces) {
-      const existingWorkspace = map.get(workspace.uid);
+    for (const workspace of workspaces) {
+      const existingWorkspace = workspaceMap.get(workspace.uid);
 
       // If the workspace isn't in our existing ones, we need to update the entire list.
       // There are missing or deleted Workspaces.
-      if(!existingWorkspace) {
+      if (!existingWorkspace) {
         this.workspaces = workspaces;
         break;
       }
 
       // Only update the workspace if it isn't already in an updating state.
-      if(!this.isWorkspaceUpdating(existingWorkspace)) {
+      if (!this.isWorkspaceUpdating(existingWorkspace)) {
         existingWorkspace.status = workspace.status;
         existingWorkspace.labels = workspace.labels;
       }
@@ -153,14 +148,16 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
     this.workspaceService.listWorkspaces(this.namespace, this.pagination.pageSize, this.pagination.page + 1)
         .subscribe(res => {
           this.workspaceResponse = res;
-          if(res.workspaces) {
-            this.updateWorkspaceList(res.workspaces);
+          if (!res.workspaces) {
+            res.workspaces = [];
           }
+
+          this.updateWorkspaceList(res.workspaces);
 
           this.state = 'new';
         }, err => {
           this.state = 'new';
-        })
+        });
   }
 
   onPageChange(event: PageEvent) {
@@ -215,10 +212,11 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
       title: `Are you sure you want to terminate workspace "${workspace.name}"?`,
       confirmText: 'DELETE',
       type: 'delete',
-    }
+    };
+
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      data: data
-    })
+      data
+    });
 
     dialogRef.afterClosed().subscribe(res => {
       if (!res) {
@@ -228,7 +226,7 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
       this.markWorkspaceUpdating(workspace);
       workspace.status.phase = 'Terminating';
       this.workspaceService.deleteWorkspace(this.namespace, workspace.uid)
-          .subscribe(res => {
+          .subscribe(() => {
             this.markWorkspaceDoneUpdating(workspace);
           }, err => {
             this.markWorkspaceDoneUpdating(workspace);
@@ -252,10 +250,9 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
    * We get the permissions for the workspace for the current logged in user, if no
    * permissions have been loaded yet.
    *
-   * @param workspace
    */
   onMatMenuOpen(workspace: Workspace) {
-    if(this.workspacePermissions.has(workspace.uid)) {
+    if (this.workspacePermissions.has(workspace.uid)) {
       return;
     }
 
@@ -285,9 +282,9 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
     );
     combineLatest([canUpdate$, canDelete$])
         .pipe(
-            map(([canUpdate$, canDelete$]) => ({
-              canUpdate: canUpdate$,
-              canDelete: canDelete$
+            map(([canUpdateVal$, canDeleteVal$]) => ({
+              canUpdate: canUpdateVal$,
+              canDelete: canDeleteVal$
             }))
         ).subscribe(res => {
           this.workspacePermissions.set(
@@ -297,6 +294,6 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
                 update: res.canUpdate.authorized,
               })
           );
-        })
+        });
   }
 }
