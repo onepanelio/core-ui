@@ -24,7 +24,7 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
   @Input() workflowTemplateVersion?: string;
   @Input() page = 0;
   @Input() pageSize = 15;
-  @Input() displayedColumns = ['name', 'status', 'start', 'end', 'version', 'spacer', 'actions'];
+  @Input() displayedColumns = ['name', 'status', 'start', 'end', 'template', 'spacer', 'actions'];
   @Input() sortOrder = 'createdAt,desc';
 
   // tslint:disable-next-line:variable-name
@@ -196,6 +196,9 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
         break;
       case 'end':
         field = 'endedAt';
+        break;
+      case 'status':
+        field = 'phase';
         break;
     }
 

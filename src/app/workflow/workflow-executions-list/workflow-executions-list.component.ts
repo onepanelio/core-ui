@@ -25,7 +25,7 @@ import { Sort } from '@angular/material';
 export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
     private snackbarRef: MatSnackBarRef<SimpleSnackBar>;
 
-    @Input() displayedColumns = ['name', 'status', 'start', 'end', 'version', 'spacer', 'actions'];
+    @Input() displayedColumns = ['name', 'status', 'start', 'end', 'template', 'spacer', 'actions'];
 
     @Input() namespace: string;
     @Input() workflowExecutions: WorkflowExecution[] = [];

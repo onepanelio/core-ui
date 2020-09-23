@@ -1,0 +1,36 @@
+.workflow {
+  /deep/ app-workflow-executions-list {
+    @media screen and (max-width: 1300px) {
+      /deep/ .cdk-column-template {
+        display: none;
+      }
+    }
+
+    @media screen and (max-width: 1050px) {
+      /deep/ .cdk-column-end {
+        display: none;
+      }
+    }
+
+    @media screen and (max-width: 850px) {
+      /deep/ .cdk-column-start {
+        display: none;
+      }
+    }
+  }
+
+  @media screen and (max-width: 700px) {
+    .page-title {
+      flex-direction: column;
+    }
+
+    .page-action-bar {
+      flex-direction: column;
+      align-items: baseline;
+
+      .op-button {
+        margin-top: 15px;
+      }
+    }
+  }
+}

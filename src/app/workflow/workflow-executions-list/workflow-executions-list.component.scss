@@ -20,6 +20,12 @@
     flex-basis: 250px;
   }
 
+  .cdk-column-template {
+    flex-basis: 310px;
+    max-width: 310px;
+    text-align: left;
+  }
+
   .cdk-column-status {
     flex-basis: 250px;
   }
