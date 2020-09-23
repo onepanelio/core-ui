@@ -1,9 +1,23 @@
 <div class="workflow-execution-title op-h1">Execute Workflow</div>
 
-<div>
+<div class="mr-12">
+    <app-alert [alert]="alert" [autoDismiss]="false" class="d-block mt-3"></app-alert>
+
+    <mat-form-field *ngIf="state !== 'ready' || workflowTemplates" class="mt-7 fix-mat-overflow w-100" appearance="outline">
+        <mat-label>Template</mat-label>
+        <mat-select [value]="selectedWorkflowTemplateUid" (valueChange)="onSelectWorkflowTemplateUid($event)">
+            <mat-option *ngFor="let workflowTemplate of workflowTemplates" value="{{workflowTemplate.uid}}">
+                {{workflowTemplate.name}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <div *ngIf="state === 'ready' && !workflowTemplates" class="mt-7 font-roboto color-medium-gray">
+        You have no templates, <a class="action underline pointer-hover color-medium-gray" (click)="goToWorkflowTemplates()">Create a workflow template</a>
+    </div>
+
     <app-form
         [fieldData]="parameters"
-        class="parameters mt-7 mr-12 mb-3 d-block">
+        class="parameters d-block">
     </app-form>
 
     <div class="environment bg-primary-light op-rounded-regular mt-5">
