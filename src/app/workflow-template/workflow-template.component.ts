@@ -1,77 +1,78 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ListWorkflowTemplatesResponse, WorkflowTemplate, WorkflowTemplateServiceService } from "../../api";
-import { Pagination } from "./workflow-template-view/workflow-template-view.component";
-import { PageEvent } from "@angular/material/paginator";
+import { ListWorkflowTemplatesResponse, WorkflowTemplate, WorkflowTemplateServiceService } from '../../api';
+import { PageEvent } from '@angular/material/paginator';
+import { Pagination } from '../requests/pagination';
 
 type WorkflowTemplateState = 'initialization' | 'loading' | 'new';
 
 @Component({
-  selector: 'app-workflow-template',
-  templateUrl: './workflow-template.component.html',
-  styleUrls: ['./workflow-template.component.scss'],
+    selector: 'app-workflow-template',
+    templateUrl: './workflow-template.component.html',
+    styleUrls: ['./workflow-template.component.scss'],
 })
-export class WorkflowTemplateComponent implements OnInit {
-  namespace: string;
+export class WorkflowTemplateComponent implements OnInit, OnDestroy {
+    namespace: string;
 
-  displayedColumns = ['name', 'lastExecuted', 'status', 'createdAt', 'spacer', 'actions', 'labels'];
+    displayedColumns = ['name', 'lastExecuted', 'status', 'createdAt', 'spacer', 'actions', 'labels'];
 
-  workflowTemplateResponse: ListWorkflowTemplatesResponse;
-  workflowTemplates: WorkflowTemplate[] = [];
-  pagination = new Pagination();
-  getWorkflowTemplatesInterval;
-  state: WorkflowTemplateState = 'initialization';
+    workflowTemplateResponse: ListWorkflowTemplatesResponse;
+    workflowTemplates: WorkflowTemplate[] = [];
+    pagination = new Pagination();
+    getWorkflowTemplatesInterval;
+    state: WorkflowTemplateState = 'initialization';
 
-  constructor(
-      private activatedRoute: ActivatedRoute,
-      private workflowTemplateService: WorkflowTemplateServiceService,
-  ) { }
-
-  ngOnInit() {
-    this.activatedRoute.paramMap.subscribe(next => {
-      this.namespace = next.get('namespace');
-      this.getWorkflowTemplates();
-
-      if(this.getWorkflowTemplatesInterval) {
-        clearInterval(this.getWorkflowTemplatesInterval);
-        this.getWorkflowTemplatesInterval = null;
-      }
-
-      this.getWorkflowTemplatesInterval = setInterval(() => {
-        this.state = 'loading';
-        this.getWorkflowTemplates()
-      }, 5000);
-    });
-  }
-
-  ngOnDestroy() {
-    if(this.getWorkflowTemplatesInterval) {
-      clearInterval(this.getWorkflowTemplatesInterval);
-      this.getWorkflowTemplatesInterval = null;
+    constructor(
+        private activatedRoute: ActivatedRoute,
+        private workflowTemplateService: WorkflowTemplateServiceService,
+    ) {
     }
-  }
 
-  getWorkflowTemplates() {
-    this.workflowTemplateService.listWorkflowTemplates(this.namespace, this.pagination.pageSize, this.pagination.page + 1)
-        .subscribe(res => {
-          this.workflowTemplateResponse = res;
+    ngOnInit() {
+        this.activatedRoute.paramMap.subscribe(next => {
+            this.namespace = next.get('namespace');
+            this.getWorkflowTemplates();
 
-          if(res.workflowTemplates) {
-            this.workflowTemplates = res.workflowTemplates;
-          } else {
-            this.workflowTemplates = [];
-          }
+            if (this.getWorkflowTemplatesInterval) {
+                clearInterval(this.getWorkflowTemplatesInterval);
+                this.getWorkflowTemplatesInterval = null;
+            }
 
-          this.state = 'new';
-        }, err => {
-          this.state = 'new';
-        })
-  }
+            this.getWorkflowTemplatesInterval = setInterval(() => {
+                this.state = 'loading';
+                this.getWorkflowTemplates();
+            }, 5000);
+        });
+    }
 
-  onPageChange(event: PageEvent) {
-    this.pagination.page = event.pageIndex;
-    this.pagination.pageSize = event.pageSize;
+    ngOnDestroy() {
+        if (this.getWorkflowTemplatesInterval) {
+            clearInterval(this.getWorkflowTemplatesInterval);
+            this.getWorkflowTemplatesInterval = null;
+        }
+    }
 
-    this.getWorkflowTemplates();
-  }
+    getWorkflowTemplates() {
+        this.workflowTemplateService.listWorkflowTemplates(this.namespace, this.pagination.pageSize, this.pagination.page + 1)
+            .subscribe(res => {
+                this.workflowTemplateResponse = res;
+
+                if (res.workflowTemplates) {
+                    this.workflowTemplates = res.workflowTemplates;
+                } else {
+                    this.workflowTemplates = [];
+                }
+
+                this.state = 'new';
+            }, err => {
+                this.state = 'new';
+            });
+    }
+
+    onPageChange(event: PageEvent) {
+        this.pagination.page = event.pageIndex;
+        this.pagination.pageSize = event.pageSize;
+
+        this.getWorkflowTemplates();
+    }
 }

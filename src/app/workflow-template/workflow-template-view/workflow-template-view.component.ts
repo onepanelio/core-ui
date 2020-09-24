@@ -24,12 +24,7 @@ import {
 import { MatTabGroup } from '@angular/material/tabs';
 import { AppRouter } from '../../router/app-router.service';
 import { WorkflowExecutionsChangedEvent } from '../../workflow/workflow-executions/workflow-executions.component';
-
-// TODO move somewhere else. like utils or requests.
-export class Pagination {
-  page = 0;
-  pageSize = 15;
-}
+import { Pagination } from '../../requests/pagination';
 
 type WorkflowTemplateViewState = 'initialization' | 'new' | 'executing' | 'failed-to-load';
 

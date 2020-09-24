@@ -158,7 +158,8 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
 
     // +1 for API
     const page = this.page + 1;
-    this.workflowService.listWorkflowExecutions(this.namespace, this.workflowTemplateUid, this.workflowTemplateVersion, this.pageSize, page, this.sortOrder, undefined, this._phase, this.showSystem)
+    this.workflowService
+        .listWorkflowExecutions(this.namespace, this.workflowTemplateUid, this.workflowTemplateVersion, this.pageSize, page, this.sortOrder, undefined, this._phase, this.showSystem)
         .subscribe(res => {
           this.workflowResponse = res;
           const hasWorkflowExecutions = !(res.page === 1 && !res.workflowExecutions);
