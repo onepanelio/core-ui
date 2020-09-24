@@ -1,4 +1,4 @@
-import { Component, ElementRef, Host, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SimpleWorkflowDetail, WorkflowService } from '../workflow.service';
 import { NodeRenderer, NodeStatus } from '../../node/node.service';
@@ -85,7 +85,7 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
   private socketErrorCount = 0;
   private markerId;
 
-  @HostListener('window:resize') onWindowResize(event) {
+  @HostListener('window:resize') onWindowResize() {
     setTimeout( () => {
       this.updateNodeInfoProperties();
     });

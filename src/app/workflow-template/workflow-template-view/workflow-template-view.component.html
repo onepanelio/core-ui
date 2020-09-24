@@ -84,6 +84,7 @@
       <mat-tab label="Executions">
         <app-workflow-executions
                 [namespace]="namespace"
+                [showSystem]="true"
                 [workflowTemplateUid]="uid"
                 (workflowsChanged)="onWorkflowsChanged($event)">
         </app-workflow-executions>

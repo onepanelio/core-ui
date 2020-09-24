@@ -730,13 +730,14 @@ export class WorkflowServiceService {
      * @param order 
      * @param labels 
      * @param phase 
+     * @param includeSystem 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listWorkflowExecutions(namespace: string, workflowTemplateUid?: string, workflowTemplateVersion?: string, pageSize?: number, page?: number, order?: string, labels?: string, phase?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<ListWorkflowExecutionsResponse>;
-    public listWorkflowExecutions(namespace: string, workflowTemplateUid?: string, workflowTemplateVersion?: string, pageSize?: number, page?: number, order?: string, labels?: string, phase?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpResponse<ListWorkflowExecutionsResponse>>;
-    public listWorkflowExecutions(namespace: string, workflowTemplateUid?: string, workflowTemplateVersion?: string, pageSize?: number, page?: number, order?: string, labels?: string, phase?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpEvent<ListWorkflowExecutionsResponse>>;
-    public listWorkflowExecutions(namespace: string, workflowTemplateUid?: string, workflowTemplateVersion?: string, pageSize?: number, page?: number, order?: string, labels?: string, phase?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<any> {
+    public listWorkflowExecutions(namespace: string, workflowTemplateUid?: string, workflowTemplateVersion?: string, pageSize?: number, page?: number, order?: string, labels?: string, phase?: string, includeSystem?: boolean, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<ListWorkflowExecutionsResponse>;
+    public listWorkflowExecutions(namespace: string, workflowTemplateUid?: string, workflowTemplateVersion?: string, pageSize?: number, page?: number, order?: string, labels?: string, phase?: string, includeSystem?: boolean, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpResponse<ListWorkflowExecutionsResponse>>;
+    public listWorkflowExecutions(namespace: string, workflowTemplateUid?: string, workflowTemplateVersion?: string, pageSize?: number, page?: number, order?: string, labels?: string, phase?: string, includeSystem?: boolean, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpEvent<ListWorkflowExecutionsResponse>>;
+    public listWorkflowExecutions(namespace: string, workflowTemplateUid?: string, workflowTemplateVersion?: string, pageSize?: number, page?: number, order?: string, labels?: string, phase?: string, includeSystem?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
             throw new Error('Required parameter namespace was null or undefined when calling listWorkflowExecutions.');
         }
@@ -769,6 +770,10 @@ export class WorkflowServiceService {
         if (phase !== undefined && phase !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>phase, 'phase');
+        }
+        if (includeSystem !== undefined && includeSystem !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>includeSystem, 'includeSystem');
         }
 
         let headers = this.defaultHeaders;

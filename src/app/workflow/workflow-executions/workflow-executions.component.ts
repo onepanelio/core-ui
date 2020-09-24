@@ -26,6 +26,7 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
   @Input() pageSize = 15;
   @Input() displayedColumns = ['name', 'status', 'createdAt', 'start', 'end', 'template', 'spacer', 'actions'];
   @Input() sortOrder = 'startedAt,desc';
+  @Input() showSystem = false;
 
   // tslint:disable-next-line:variable-name
   private _phase?: WorkflowExecutionPhase;
@@ -157,7 +158,7 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
 
     // +1 for API
     const page = this.page + 1;
-    this.workflowService.listWorkflowExecutions(this.namespace, this.workflowTemplateUid, this.workflowTemplateVersion, this.pageSize, page, this.sortOrder, undefined, this._phase)
+    this.workflowService.listWorkflowExecutions(this.namespace, this.workflowTemplateUid, this.workflowTemplateVersion, this.pageSize, page, this.sortOrder, undefined, this._phase, this.showSystem)
         .subscribe(res => {
           this.workflowResponse = res;
           const hasWorkflowExecutions = !(res.page === 1 && !res.workflowExecutions);
