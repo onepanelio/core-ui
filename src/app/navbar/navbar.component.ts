@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NamespaceTracker } from '../namespace/namespace-tracker.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-navbar',
@@ -56,7 +57,7 @@ export class NavbarComponent implements OnInit {
   @Output() logout = new EventEmitter();
   @Output() namespaceClick = new EventEmitter();
 
-  constructor(public namespaceTracker: NamespaceTracker) {
+  constructor(public namespaceTracker: NamespaceTracker, private location: Location) {
   }
 
   ngOnInit() {
@@ -69,5 +70,9 @@ export class NavbarComponent implements OnInit {
 
   handleNamespaceClick() {
     this.namespaceClick.emit();
+  }
+
+  goBack() {
+    this.location.back();
   }
 }

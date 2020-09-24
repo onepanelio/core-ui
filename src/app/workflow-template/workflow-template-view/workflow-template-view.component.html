@@ -1,9 +1,9 @@
 <div class="page workflow-template-view">
   <div class="page-header">
     <div class="page-links">
-      <a [routerLink]="['/', this.namespace, 'workflow-templates']" class="op-back-link">
+      <a *ngIf="this.backLinkName" (click)="goBack($event)" href="#" class="op-back-link">
         <i class="fas fa-chevron-left"></i>
-        <span>Back to workflow templates</span>
+        <span>{{this.backLinkName}}</span>
       </a>
     </div>
     <app-alert-panel class="mb-3 d-block"></app-alert-panel>

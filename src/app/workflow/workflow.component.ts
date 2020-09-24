@@ -16,7 +16,7 @@ import { AlertService } from '../alert/alert.service';
 export class WorkflowComponent implements OnInit {
   namespace: string;
   workflowExecutionPhase?: WorkflowExecutionPhase;
-  displayedColumns = ['name', 'status', 'start', 'end', 'template', 'spacer', 'actions'];
+  displayedColumns = ['name', 'status', 'createdAt', 'start', 'end', 'template', 'spacer', 'actions'];
   hasWorkflowExecutions?: boolean;
   pageSize = 15;
 

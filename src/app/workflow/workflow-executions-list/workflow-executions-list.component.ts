@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {
     WorkflowService
 } from '../workflow.service';
@@ -15,6 +15,7 @@ import { AppRouter } from '../../router/app-router.service';
 import { AlertService } from '../../alert/alert.service';
 import { Alert } from '../../alert/alert';
 import { Sort } from '@angular/material';
+import { SortDirection } from '@angular/material/typings/sort';
 
 @Component({
     selector: 'app-workflow-executions-list',
@@ -25,7 +26,9 @@ import { Sort } from '@angular/material';
 export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
     private snackbarRef: MatSnackBarRef<SimpleSnackBar>;
 
-    @Input() displayedColumns = ['name', 'status', 'start', 'end', 'template', 'spacer', 'actions'];
+    @Input() displayedColumns = ['name', 'status', 'createdAt', 'start', 'end', 'template', 'spacer', 'actions'];
+    @Input() sort = 'createdAt';
+    @Input() sortDirection: SortDirection = 'desc';
 
     @Input() namespace: string;
     @Input() workflowExecutions: WorkflowExecution[] = [];
@@ -146,6 +149,9 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
     }
 
     sortData(event: Sort) {
+        this.sort = event.active;
+        this.sortDirection = event.direction;
+
         this.sortChange.emit(event);
     }
 }

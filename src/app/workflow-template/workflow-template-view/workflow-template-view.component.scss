@@ -42,20 +42,26 @@
   }
 
   /deep/ app-workflow-executions-list {
-    @media screen and (max-width: 1300px) {
+    @media screen and (max-width: 1500px) {
       /deep/ .cdk-column-template {
         display: none;
       }
     }
 
-    @media screen and (max-width: 1050px) {
+    @media screen and (max-width: 1250px) {
       /deep/ .cdk-column-end {
         display: none;
       }
     }
 
-    @media screen and (max-width: 850px) {
+    @media screen and (max-width: 1050px) {
       /deep/ .cdk-column-start {
+        display: none;
+      }
+    }
+
+    @media screen and (max-width: 850px) {
+      /deep/ .cdk-column-createdAt {
         display: none;
       }
     }

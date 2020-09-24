@@ -21,16 +21,6 @@ import { AppRouter } from './router/app-router.service';
     styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-    /**
-     * routerHistory keeps track of the urls visited.
-     */
-    static routerHistory = new Array<string>();
-
-    /**
-     * routerHistoryLimit is the maximum number of items to keep in routerHistory.
-     */
-    static routerHistoryLimit = 10;
-
     @ViewChild(MatSelect, {static: false}) matSelect: MatSelect;
 
     activeUrl = '';
@@ -67,9 +57,6 @@ export class AppComponent implements OnInit {
         this.router.events
             .pipe(filter((e) => e instanceof NavigationEnd))
             .subscribe((e: NavigationEnd) => {
-                AppComponent.pushRoute(e.urlAfterRedirects);
-
-                console.log(e.urlAfterRedirects);
                 this.activeUrl = e.urlAfterRedirects;
 
                 this.showNamespaceManager = false;
@@ -80,28 +67,6 @@ export class AppComponent implements OnInit {
                     this.namespaceTracker.getNamespaces();
                 }
             });
-    }
-
-    /**
-     * pushRoute appends a route to the route history and keeps track of bookkeeping like max items allowed.
-     */
-    private static pushRoute(route: string) {
-        AppComponent.routerHistory.push(route);
-
-        if (AppComponent.routerHistory.length > AppComponent.routerHistoryLimit) {
-            AppComponent.routerHistory.splice(0, 1);
-        }
-    }
-
-    /**
-     * getPreviousRoute gets the previous route stored. If there are none, '/' root is returned.
-     */
-    static getPreviousRoute(): string {
-        if (AppComponent.routerHistory.length < 1) {
-            return '/';
-        }
-
-        return AppComponent.routerHistory[AppComponent.routerHistory.length - 2];
     }
 
     ngOnInit(): void {

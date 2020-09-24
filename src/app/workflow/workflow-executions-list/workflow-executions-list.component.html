@@ -1,5 +1,10 @@
 <div class="workflow-executions-list">
-    <cdk-table [dataSource]="workflowExecutions" matSort (matSortChange)="sortData($event)">
+    <cdk-table matSort
+               matSortDisableClear="true"
+               [dataSource]="workflowExecutions"
+               [matSortActive]="sort"
+               [matSortDirection]="sortDirection"
+               (matSortChange)="sortData($event)">
         <ng-container cdkColumnDef="name">
             <cdk-header-cell *cdkHeaderCellDef mat-sort-header>Name</cdk-header-cell>
             <cdk-cell *cdkCellDef="let workflow">
@@ -7,9 +12,16 @@
             </cdk-cell>
         </ng-container>
 
-        <ng-container cdkColumnDef="start">
-            <cdk-header-cell *cdkHeaderCellDef mat-sort-header>Start</cdk-header-cell>
+        <ng-container cdkColumnDef="createdAt">
+            <cdk-header-cell *cdkHeaderCellDef mat-sort-header>Created</cdk-header-cell>
             <cdk-cell *cdkCellDef="let workflow" class="font-size-small font-roboto font-medium-gray">
+                <div *ngIf="workflow.createdAt"><app-date class="" [dateTime]="workflow.createdAt"></app-date></div>
+            </cdk-cell>
+        </ng-container>
+
+        <ng-container cdkColumnDef="start">
+            <cdk-header-cell *cdkHeaderCellDef mat-sort-header class="ml-5">Start</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let workflow" class="ml-5 font-size-small font-roboto font-medium-gray">
                 <div *ngIf="workflow.startedAt"><app-date class="" [dateTime]="workflow.startedAt"></app-date></div>
             </cdk-cell>
         </ng-container>

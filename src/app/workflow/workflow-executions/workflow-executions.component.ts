@@ -24,8 +24,8 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
   @Input() workflowTemplateVersion?: string;
   @Input() page = 0;
   @Input() pageSize = 15;
-  @Input() displayedColumns = ['name', 'status', 'start', 'end', 'template', 'spacer', 'actions'];
-  @Input() sortOrder = 'createdAt,desc';
+  @Input() displayedColumns = ['name', 'status', 'createdAt', 'start', 'end', 'template', 'spacer', 'actions'];
+  @Input() sortOrder = 'startedAt,desc';
 
   // tslint:disable-next-line:variable-name
   private _phase?: WorkflowExecutionPhase;
@@ -195,7 +195,7 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
         field = 'startedAt';
         break;
       case 'end':
-        field = 'endedAt';
+        field = 'finishedAt';
         break;
       case 'status':
         field = 'phase';
@@ -206,7 +206,7 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
 
     // default sort order.
     if (event.direction === '') {
-      this.sortOrder = `createdAt,desc`;
+      this.sortOrder = `startedAt,desc`;
     }
 
     this.getWorkflows();

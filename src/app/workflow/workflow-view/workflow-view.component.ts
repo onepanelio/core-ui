@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Host, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SimpleWorkflowDetail, WorkflowService } from '../workflow.service';
 import { NodeRenderer, NodeStatus } from '../../node/node.service';
@@ -31,7 +31,6 @@ import { map } from 'rxjs/operators';
 import { WorkflowExecuteDialogComponent } from '../workflow-execute-dialog/workflow-execute-dialog.component';
 import { Alert } from '../../alert/alert';
 import { AlertService } from '../../alert/alert.service';
-import { AppComponent } from '../../app.component';
 import { Location } from '@angular/common';
 
 const aceRange = ace.acequire('ace/range').Range;
@@ -41,66 +40,8 @@ const aceRange = ace.acequire('ace/range').Range;
   templateUrl: './workflow-view.component.html',
   styleUrls: ['./workflow-view.component.scss'],
   providers: [WorkflowService],
-  host: {
-    '(window:resize)': 'onPageBodyResize($event)',
-  },
 })
 export class WorkflowViewComponent implements OnInit, OnDestroy {
-  @ViewChild('pageContent', {static: false}) set pageContent(value: ElementRef) {
-    setTimeout( () => {
-      // We (hackily) add 20px to account for padding/margin of elements, so we don't get a scroll.
-      // We subtract 300 so we get a minimum height of 300px
-      this.height = `calc(100vh - ${value.nativeElement.offsetTop + 20 - 300}px)`;
-    }, 0);
-  }
-  @ViewChild(NodeInfoComponent, {static: false}) set nodeInfoElement(value: NodeInfoComponent) {
-    if (!value) {
-      return;
-    }
-
-    setTimeout( () => {
-      this._nodeInfoElement = value;
-      this.updateNodeInfoProperties();
-    });
-  }
-
-  get dagIdentifier() {
-    return {
-      type: 'workflow',
-      namespace: this.namespace,
-      name: this.uid,
-    };
-  }
-
-  constructor(
-    private activatedRoute: ActivatedRoute,
-    private alertService: AlertService,
-    private authService: AuthServiceService,
-    private workflowService: WorkflowService,
-    private workflowServiceService: WorkflowServiceService,
-    private apiWorkflowService: WorkflowServiceService,
-    private labelService: LabelServiceService,
-    private dialog: MatDialog,
-    private appRouter: AppRouter,
-    private snackbar: MatSnackBar,
-    private location: Location
-  ) {
-    this.activatedRoute.paramMap.subscribe(next => {
-      const namespace = next.get('namespace');
-      this.setNamespaceUid(namespace, next.get('uid'));
-      if (this.clock) {
-        this.clock.reset(true);
-      }
-
-      this.showNodeInfo = false;
-      this.selectedNodeId = null;
-      this.showLogs = false;
-      this.showYaml = false;
-      this.startCheckingWorkflow();
-
-      this.updateBackLink(namespace);
-    });
-  }
   private snackbarRef: MatSnackBarRef<SimpleSnackBar>;
 
   @ViewChild('yamlEditor', {static: true}) yamlEditor: AceEditorComponent;
@@ -140,12 +81,71 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
 
   backLinkName?: string;
 
-  private backLink?: string;
   private socketClosedCount = 0;
   private socketErrorCount = 0;
-
-
   private markerId;
+
+  @HostListener('window:resize') onWindowResize(event) {
+    setTimeout( () => {
+      this.updateNodeInfoProperties();
+    });
+  }
+
+  @ViewChild('pageContent', {static: false}) set pageContent(value: ElementRef) {
+    setTimeout( () => {
+      // We (hackily) add 20px to account for padding/margin of elements, so we don't get a scroll.
+      // We subtract 300 so we get a minimum height of 300px
+      this.height = `calc(100vh - ${value.nativeElement.offsetTop + 20 - 300}px)`;
+    }, 0);
+  }
+  @ViewChild(NodeInfoComponent, {static: false}) set nodeInfoElement(value: NodeInfoComponent) {
+    if (!value) {
+      return;
+    }
+
+    setTimeout( () => {
+      this._nodeInfoElement = value;
+      this.updateNodeInfoProperties();
+    });
+  }
+
+  get dagIdentifier() {
+    return {
+      type: 'workflow',
+      namespace: this.namespace,
+      name: this.uid,
+    };
+  }
+
+  constructor(
+      private activatedRoute: ActivatedRoute,
+      private alertService: AlertService,
+      private authService: AuthServiceService,
+      private workflowService: WorkflowService,
+      private workflowServiceService: WorkflowServiceService,
+      private apiWorkflowService: WorkflowServiceService,
+      private labelService: LabelServiceService,
+      private dialog: MatDialog,
+      private appRouter: AppRouter,
+      private snackbar: MatSnackBar,
+      private location: Location
+  ) {
+    this.activatedRoute.paramMap.subscribe(next => {
+      const namespace = next.get('namespace');
+      this.setNamespaceUid(namespace, next.get('uid'));
+      if (this.clock) {
+        this.clock.reset(true);
+      }
+
+      this.showNodeInfo = false;
+      this.selectedNodeId = null;
+      this.showLogs = false;
+      this.showYaml = false;
+      this.startCheckingWorkflow();
+
+      this.updateBackLink(namespace);
+    });
+  }
 
   ngOnInit() {
   }
@@ -237,10 +237,10 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
 
     combineLatest([canCreate$, canUpdate$, canDelete$])
         .pipe(
-            map(([canCreate$, canUpdate$, canDelete$]) => ({
-              canCreate: canCreate$,
-              canUpdate: canUpdate$,
-              canDelete: canDelete$
+            map(([canCreateValue$, canUpdateValue$, canDeleteValue$]) => ({
+              canCreate: canCreateValue$,
+              canUpdate: canUpdateValue$,
+              canDelete: canDeleteValue$
             }))
         ).subscribe(res => {
           this.permissions.create = res.canCreate.authorized;
@@ -340,12 +340,6 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
   onNodeInfoClosed() {
     this.nodeInfo = null;
     this.showNodeInfo = false;
-  }
-
-  onPageBodyResize(event) {
-    setTimeout( () => {
-      this.updateNodeInfoProperties();
-    });
   }
 
   onYamlClicked() {
@@ -571,36 +565,12 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
   }
 
   updateBackLink(namespace: string) {
-    for (let i = AppComponent.routerHistory.length - 1; i > 0; i--) {
-      const route = AppComponent.routerHistory[i];
+    const backLink = this.appRouter.getBackLink(namespace, {
+      name: 'Back to workflows',
+      route: `/${namespace}/workflows`,
+    });
 
-      if (route.indexOf(`/${namespace}/workflows/`) === -1) {
-        if (route.indexOf(`/${namespace}/workflows`) > -1) {
-          this.backLinkName = 'Back to workflows';
-          this.backLink = route;
-          return;
-        }
-        if (route.indexOf(`/${namespace}/workflow-templates/`) > - 1) {
-          this.backLinkName = 'Back to workflow templates';
-          this.backLink = route;
-          return;
-        }
-        if (route.indexOf(`/${namespace}/dashboard`) > - 1) {
-          this.backLinkName = 'Back to dashboard';
-          this.backLink = route;
-          return;
-        }
-      }
-    }
-
-    if (AppComponent.routerHistory.length > 0) {
-      this.backLinkName = 'Go back';
-      this.backLink = AppComponent.getPreviousRoute();
-      return;
-    }
-
-    this.backLinkName = 'Back to workflows';
-    this.backLink = `/${namespace}/workflows`;
+    this.backLinkName = backLink.name;
   }
 
   /**
@@ -611,6 +581,6 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
       e.preventDefault();
     }
 
-    this.appRouter.navigateByUrl(this.backLink);
+    this.appRouter.goBack();
   }
 }
