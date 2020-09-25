@@ -47,7 +47,6 @@ export class StatBarComponent implements OnInit {
   ngOnInit() {
   }
 
-
   private updateBarPercentage() {
     if (!this.maxValue) {
       this.barPercentage = '0';
