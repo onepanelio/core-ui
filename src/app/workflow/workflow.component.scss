@@ -1,5 +1,5 @@
 .workflow {
-  /deep/ app-workflow-executions-list {
+  /deep/ .workflow-executions-list {
     @media screen and (max-width: 1500px) {
       /deep/ .cdk-column-template {
         display: none;

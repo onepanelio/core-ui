@@ -128,8 +128,10 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
       private dialog: MatDialog,
       private appRouter: AppRouter,
       private snackbar: MatSnackBar,
-      private location: Location
   ) {
+  }
+
+  ngOnInit() {
     this.activatedRoute.paramMap.subscribe(next => {
       const namespace = next.get('namespace');
       this.setNamespaceUid(namespace, next.get('uid'));
@@ -145,9 +147,6 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
 
       this.updateBackLink(namespace);
     });
-  }
-
-  ngOnInit() {
   }
 
   private getWorkflowTemplateParametersFromWorkflow(workflow: WorkflowExecution): Array<Parameter> {

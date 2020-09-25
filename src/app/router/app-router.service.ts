@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { NavigationEnd, NavigationExtras, Router, UrlTree } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, NavigationExtras, Router, UrlTree } from '@angular/router';
 import { Location } from '@angular/common';
 import { filter } from 'rxjs/operators';
 
@@ -23,7 +23,10 @@ export class AppRouter {
    */
   readonly routerHistoryLimit = 10;
 
-  constructor(private router: Router, private location: Location) {
+  constructor(
+      private router: Router,
+      private location: Location,
+      private activatedRoute: ActivatedRoute) {
     this.router.events
         .pipe(filter((e) => e instanceof NavigationEnd))
         .subscribe((e: NavigationEnd) => {
@@ -58,19 +61,31 @@ export class AppRouter {
 
   goBack() {
     if (this.routerHistory.length > 0) {
-      this.routerHistory.splice(0, 1);
+      this.routerHistory.splice(this.routerHistory.length - 1, 1);
     }
 
     this.location.back();
   }
 
   getBackLink(namespace: string, defaultLink: BackLink): BackLink {
-    for (let i = this.routerHistory.length - 1; i >= 0; i--) {
+    for (let i = this.routerHistory.length - 2; i >= 0; i--) {
       const route = this.routerHistory[i];
 
+      if (route.indexOf(`/${namespace}/workflows/`) > -1) {
+        return {
+          name: 'Back to workflow execution',
+          route,
+        };
+      }
       if (route.indexOf(`/${namespace}/workflows`) > -1) {
         return {
           name: 'Back to workflows',
+          route,
+        };
+      }
+      if (route.indexOf(`/${namespace}/workflow-templates/`) > - 1) {
+        return {
+          name: 'Back to workflow template details',
           route,
         };
       }
