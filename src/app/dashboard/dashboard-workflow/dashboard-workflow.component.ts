@@ -40,8 +40,21 @@ export class DashboardWorkflowComponent implements OnInit, OnDestroy {
 
   getWorkflowExecutionStatistics() {
     this.workflowService.getWorkflowExecutionStatisticsForNamespace(this.namespace).subscribe(res => {
-      if (!res.stats.total) {
+      if (!res.stats || !res.stats.total) {
         return;
+      }
+
+      if (!res.stats.running) {
+        res.stats.running = 0;
+      }
+      if (!res.stats.completed) {
+        res.stats.completed = 0;
+      }
+      if (!res.stats.failed) {
+        res.stats.failed = 0;
+      }
+      if (!res.stats.terminated) {
+        res.stats.terminated = 0;
       }
 
       this.stats = res.stats;
