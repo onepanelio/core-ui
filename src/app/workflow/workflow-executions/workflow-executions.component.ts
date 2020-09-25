@@ -25,8 +25,10 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
   @Input() page = 0;
   @Input() pageSize = 15;
   @Input() displayedColumns = ['name', 'status', 'createdAt', 'start', 'end', 'template', 'spacer', 'actions'];
-  @Input() sortOrder = 'startedAt,desc';
+  @Input() sortOrder = 'createdAt,desc';
   @Input() showSystem = false;
+
+  private previousSortOrder = 'createdAt,desc';
 
   // tslint:disable-next-line:variable-name
   private _phase?: WorkflowExecutionPhase;
@@ -116,7 +118,8 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
   private updateWorkflowExecutionList(workflowExecutions: WorkflowExecution[]) {
     // If the lengths are different, we have new workflows or deleted workflows,
     // so just update the entire list.
-    if (this.workflows.length !== workflowExecutions.length) {
+    if ((this.workflows.length !== workflowExecutions.length) ||
+        (this.previousSortOrder !== this.sortOrder)) {
       this.workflows = workflowExecutions;
       return;
     }
@@ -204,11 +207,12 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
         break;
     }
 
+    this.previousSortOrder = this.sortOrder;
     this.sortOrder = `${field},${event.direction}`;
 
     // default sort order.
     if (event.direction === '') {
-      this.sortOrder = `startedAt,desc`;
+      this.sortOrder = `createdAt,desc`;
     }
 
     this.getWorkflows();
