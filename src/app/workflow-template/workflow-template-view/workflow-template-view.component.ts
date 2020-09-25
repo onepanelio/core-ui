@@ -18,18 +18,13 @@ import {
   CreateWorkflowExecutionBody,
   CronWorkflow,
   CronWorkflowServiceService,
-  KeyValue, ListCronWorkflowsResponse, ListWorkflowExecutionsResponse,
+  KeyValue, ListCronWorkflowsResponse,
   WorkflowServiceService, WorkflowTemplate, WorkflowTemplateServiceService
 } from '../../../api';
 import { MatTabGroup } from '@angular/material/tabs';
 import { AppRouter } from '../../router/app-router.service';
 import { WorkflowExecutionsChangedEvent } from '../../workflow/workflow-executions/workflow-executions.component';
-
-// TODO move somewhere else. like utils or requests.
-export class Pagination {
-  page = 0;
-  pageSize = 15;
-}
+import { Pagination } from '../../requests/pagination';
 
 type WorkflowTemplateViewState = 'initialization' | 'new' | 'executing' | 'failed-to-load';
 
@@ -61,6 +56,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
   workflowPagination = new Pagination();
   cronWorkflowPagination = new Pagination();
 
+  // tslint:disable-next-line:variable-name
   private _hasWorkflowExecutions = false;
   set hasWorkflowExecutions(value: boolean) {
     this._hasWorkflowExecutions = value;
@@ -71,6 +67,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
     return this._hasWorkflowExecutions;
   }
 
+  // tslint:disable-next-line:variable-name
   private _hasCronWorkflows = false;
   set hasCronWorkflows(value: boolean) {
     this._hasCronWorkflows = value;
@@ -85,13 +82,14 @@ export class WorkflowTemplateViewComponent implements OnInit {
   showWorkflowExecutionsCallToAction = false;
   showCronWorkflowsCallToAction = false;
 
+  backLinkName?: string;
+
   // @todo rename
   private workflowTemplateDetail: WorkflowTemplate;
 
   get workflowTemplate(): WorkflowTemplate {
     return this.workflowTemplateDetail;
   }
-
   set workflowTemplate(value: WorkflowTemplate) {
     this.workflowTemplateDetail = value;
     this.manifestText = value.manifest;
@@ -109,7 +107,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
     private workflowTemplateService: WorkflowTemplateService,
     private workflowTemplateServiceService: WorkflowTemplateServiceService,
     private dialog: MatDialog,
-    private alertService: AlertService
+    private alertService: AlertService,
   ) { }
 
   ngOnInit() {
@@ -120,6 +118,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
 
       this.getWorkflowTemplate();
       this.getCronWorkflows();
+      this.updateBackLink(this.namespace);
     });
   }
 
@@ -147,7 +146,8 @@ export class WorkflowTemplateViewComponent implements OnInit {
       width: '60vw',
       maxHeight: '100vh',
       data: {
-        manifest: this.manifestText,
+        namespace: this.namespace,
+        workflowTemplate: this.workflowTemplate,
         cron,
       }
     });
@@ -300,5 +300,25 @@ export class WorkflowTemplateViewComponent implements OnInit {
     }
 
     this.showCronWorkflowsCallToAction = !this.hasCronWorkflows && this.matTabGroup.selectedIndex === 1;
+  }
+
+  updateBackLink(namespace: string) {
+    const backLink = this.appRouter.getBackLink(namespace, {
+      name: 'Back to workflow templates',
+      route: `/${namespace}/workflow-templates`,
+    });
+
+    this.backLinkName = backLink.name;
+  }
+
+  /**
+   * goBack takes you back to the previous url, if any.
+   */
+  goBack(e: any) {
+    if (e) {
+      e.preventDefault();
+    }
+
+    this.appRouter.goBack();
   }
 }

@@ -1,35 +1,49 @@
 <div class="workflow-executions-list">
-    <cdk-table [dataSource]="workflowExecutions">
+    <cdk-table matSort
+               matSortDisableClear="true"
+               [dataSource]="workflowExecutions"
+               [matSortActive]="sort"
+               [matSortDirection]="sortDirection"
+               (matSortChange)="sortData($event)">
         <ng-container cdkColumnDef="name">
-            <cdk-header-cell *cdkHeaderCellDef>Name</cdk-header-cell>
+            <cdk-header-cell *cdkHeaderCellDef mat-sort-header>Name</cdk-header-cell>
             <cdk-cell *cdkCellDef="let workflow">
                 <a class="name-link" [routerLink]="['/', this.namespace, 'workflows', workflow.name]" >{{workflow.name}}</a>
             </cdk-cell>
         </ng-container>
 
-        <ng-container cdkColumnDef="start">
-            <cdk-header-cell *cdkHeaderCellDef>Start</cdk-header-cell>
+        <ng-container cdkColumnDef="createdAt">
+            <cdk-header-cell *cdkHeaderCellDef mat-sort-header>Created</cdk-header-cell>
             <cdk-cell *cdkCellDef="let workflow" class="font-size-small font-roboto font-medium-gray">
+                <div *ngIf="workflow.createdAt"><app-date class="" [dateTime]="workflow.createdAt"></app-date></div>
+            </cdk-cell>
+        </ng-container>
+
+        <ng-container cdkColumnDef="start">
+            <cdk-header-cell *cdkHeaderCellDef mat-sort-header class="ml-5">Start</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let workflow" class="ml-5 font-size-small font-roboto font-medium-gray">
                 <div *ngIf="workflow.startedAt"><app-date class="" [dateTime]="workflow.startedAt"></app-date></div>
             </cdk-cell>
         </ng-container>
 
         <ng-container cdkColumnDef="end">
-            <cdk-header-cell *cdkHeaderCellDef class="ml-5">End</cdk-header-cell>
+            <cdk-header-cell *cdkHeaderCellDef mat-sort-header class="ml-5">End</cdk-header-cell>
             <cdk-cell *cdkCellDef="let workflow" class="font-size-small font-roboto font-medium-gray ml-5">
                 <div *ngIf="workflow.finishedAt"><app-date class="" [dateTime]="workflow.finishedAt"></app-date></div>
             </cdk-cell>
         </ng-container>
 
-        <ng-container cdkColumnDef="version">
-            <cdk-header-cell *cdkHeaderCellDef class="ml-5">Version</cdk-header-cell>
+        <ng-container cdkColumnDef="template">
+            <cdk-header-cell *cdkHeaderCellDef class="ml-5">Template</cdk-header-cell>
             <cdk-cell *cdkCellDef="let workflow" class="font-size-small font-roboto font-medium-gray ml-5">
-                <app-date class="timestamp d-inline-block" [dateTime]="workflow.workflowTemplate.createdAt"></app-date>
+                <a [routerLink]="['/', this.namespace, 'workflow-templates', workflow.workflowTemplate.uid]"> {{workflow.workflowTemplate.name}}</a>
+                <br/>
+                <span class="font-size-smaller font-roboto font-medium-gray">Version: <app-date class="timestamp d-inline-block" [dateTime]="workflow.workflowTemplate.createdAt"></app-date></span>
             </cdk-cell>
         </ng-container>
 
         <ng-container cdkColumnDef="status">
-            <cdk-header-cell *cdkHeaderCellDef>Status</cdk-header-cell>
+            <cdk-header-cell *cdkHeaderCellDef mat-sort-header>Status</cdk-header-cell>
             <cdk-cell *cdkCellDef="let workflow" class="d-inline-flex align-items-center">
                 <img *ngIf="workflow.phase" class="phase-image" [src]="workflow.phase | phaseImage"/>
                 <div class="ml-2 font-roboto-bold font-weight-bold">{{workflow.phase | phaseTranslate}}</div>

@@ -1,3 +1,5 @@
+@import "../../../styles/colors";
+
 .workflow-executions-list {
   .op-table-header {
     margin-bottom: 0;
@@ -8,16 +10,26 @@
     flex-basis: 200px;
   }
 
+  .cdk-column-createdAt {
+    flex-basis: 210px;
+  }
+
   .cdk-column-start {
-    flex-basis: 200px;
+    flex-basis: 210px;
   }
 
   .cdk-column-end {
-    flex-basis: 200px;
+    flex-basis: 210px;
   }
 
   .cdk-column-timestamps {
     flex-basis: 250px;
+  }
+
+  .cdk-column-template {
+    flex-basis: 310px;
+    max-width: 310px;
+    text-align: left;
   }
 
   .cdk-column-status {
@@ -31,6 +43,14 @@
   .phase-image {
     position: relative;
     bottom: 1px;
+  }
+
+  /deep/ .mat-sort-header-sorted {
+    color: $darkest-gray;
+
+    .mat-sort-header-arrow {
+      color: $darkest-gray;
+    }
   }
 }
 

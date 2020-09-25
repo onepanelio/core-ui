@@ -16,116 +16,116 @@ import 'hammerjs';
 import { AppRouter } from './router/app-router.service';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+    selector: 'app-root',
+    templateUrl: './app.component.html',
+    styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  @ViewChild(MatSelect, {static: false}) matSelect: MatSelect;
+    @ViewChild(MatSelect, {static: false}) matSelect: MatSelect;
 
-  activeUrl = '';
-  title = 'onepanel-core-ui';
-  activeRoute = 'templates';
-  loggingIn = false;
-  version = '1.0.0';
-  showNamespaceManager = false;
-  showNavigationBar = true;
-  servicesVisible?: boolean = undefined;
+    activeUrl = '';
+    title = 'onepanel-core-ui';
+    activeRoute = 'templates';
+    loggingIn = false;
+    version = '1.0.0';
+    showNamespaceManager = false;
+    showNavigationBar = true;
+    servicesVisible?: boolean = undefined;
 
-  constructor(public namespaceTracker: NamespaceTracker,
-              private appRouter: AppRouter,
-              private authService: AuthService,
-              private namespaceService: NamespaceServiceService,
-              private activatedRoute: ActivatedRoute,
-              private router: Router,
-              private dialog: MatDialog,
-              private snackbar: MatSnackBar,
-              private servicesService: ServiceServiceService) {
-      this.version = environment.version;
+    constructor(public namespaceTracker: NamespaceTracker,
+                private appRouter: AppRouter,
+                private authService: AuthService,
+                private namespaceService: NamespaceServiceService,
+                private activatedRoute: ActivatedRoute,
+                private router: Router,
+                private dialog: MatDialog,
+                private snackbar: MatSnackBar,
+                private servicesService: ServiceServiceService) {
+        this.version = environment.version;
 
-      this.namespaceTracker.namespacesChanged.subscribe(() => {
-          const namespace = this.activatedRoute.snapshot.firstChild.paramMap.get('namespace');
+        this.namespaceTracker.namespacesChanged.subscribe(() => {
+            const namespace = this.activatedRoute.snapshot.firstChild.paramMap.get('namespace');
 
-          if (namespace) {
-              this.namespaceTracker.activeNamespace = namespace;
-              this.getServicesVisible(namespace);
-          }
-      });
-
-    // Keep track of the current url so we know what part of the app we are in and highlight it in the
-    // nav bar accordingly.
-      this.router.events
-        .pipe(filter((e) => e instanceof NavigationEnd))
-        .subscribe((e: NavigationEnd) => {
-          this.activeUrl = e.urlAfterRedirects;
-
-          this.showNamespaceManager = false;
-
-          this.loggingIn = e.urlAfterRedirects.indexOf('login') >= 0;
-
-          if (!this.loggingIn && !this.namespaceTracker.hasNamespaces()) {
-              this.namespaceTracker.getNamespaces();
-          }
+            if (namespace) {
+                this.namespaceTracker.activeNamespace = namespace;
+                this.getServicesVisible(namespace);
+            }
         });
-  }
 
-  ngOnInit(): void {
-      this.namespaceTracker.getNamespaces();
-  }
+        // Keep track of the current url so we know what part of the app we are in and highlight it in the
+        // nav bar accordingly.
+        this.router.events
+            .pipe(filter((e) => e instanceof NavigationEnd))
+            .subscribe((e: NavigationEnd) => {
+                this.activeUrl = e.urlAfterRedirects;
 
-  onNewNamespace() {
-      const dialogRef = this.dialog.open(CreateNamespaceDialogComponent, {
-          maxHeight: '100vh',
-      });
+                this.showNamespaceManager = false;
 
-      dialogRef.afterClosed().subscribe(namespaceName => {
-          if (!namespaceName) {
-              return;
-          }
+                this.loggingIn = e.urlAfterRedirects.indexOf('login') >= 0;
 
-          const namespaceData: Namespace = {
-            name: namespaceName
-          };
+                if (!this.loggingIn && !this.namespaceTracker.hasNamespaces()) {
+                    this.namespaceTracker.getNamespaces();
+                }
+            });
+    }
 
-          this.namespaceService.createNamespace(namespaceData)
-              .subscribe(res => {
-                this.onNamespaceChange(namespaceName);
+    ngOnInit(): void {
+        this.namespaceTracker.getNamespaces();
+    }
+
+    onNewNamespace() {
+        const dialogRef = this.dialog.open(CreateNamespaceDialogComponent, {
+            maxHeight: '100vh',
+        });
+
+        dialogRef.afterClosed().subscribe(namespaceName => {
+            if (!namespaceName) {
                 return;
-              });
-      });
-  }
+            }
 
-  onNamespaceChange(newNamespace: string) {
-    this.showNamespaceManager = false;
-    this.namespaceTracker.activeNamespace = newNamespace;
+            const namespaceData: Namespace = {
+                name: namespaceName
+            };
 
-    this.snackbar.open(`Switched to namespace '${this.namespaceTracker.activeNamespace}'`, 'OK');
-    this.appRouter.navigateToNamespaceHomepage(this.namespaceTracker.activeNamespace);
-  }
+            this.namespaceService.createNamespace(namespaceData)
+                .subscribe(res => {
+                    this.onNamespaceChange(namespaceName);
+                    return;
+                });
+        });
+    }
 
-  onFormFieldClick() {
-      this.showNamespaceManager = !this.showNamespaceManager;
-  }
+    onNamespaceChange(newNamespace: string) {
+        this.showNamespaceManager = false;
+        this.namespaceTracker.activeNamespace = newNamespace;
 
-  logout() {
-      this.showNamespaceManager = false;
-      this.authService.clearTokens();
-      localStorage.removeItem('services-visible');
-      this.appRouter.navigateToLogin();
-  }
+        this.snackbar.open(`Switched to namespace '${this.namespaceTracker.activeNamespace}'`, 'OK');
+        this.appRouter.navigateToNamespaceHomepage(this.namespaceTracker.activeNamespace);
+    }
 
-  onRouterOutletActivate(data) {
-      this.showNavigationBar = !data.hideNavigationBar;
-  }
+    onFormFieldClick() {
+        this.showNamespaceManager = !this.showNamespaceManager;
+    }
+
+    logout() {
+        this.showNamespaceManager = false;
+        this.authService.clearTokens();
+        localStorage.removeItem('services-visible');
+        this.appRouter.navigateToLogin();
+    }
+
+    onRouterOutletActivate(data) {
+        this.showNavigationBar = !data.hideNavigationBar;
+    }
 
     /**
      * Sets the servicesVisible variable to the input value.
      * Further stores it in local storage.
      */
-  private setServicesVisible(visible: boolean) {
-      this.servicesVisible = visible;
-      localStorage.setItem('services-visible', JSON.stringify(visible));
-  }
+    private setServicesVisible(visible: boolean) {
+        this.servicesVisible = visible;
+        localStorage.setItem('services-visible', JSON.stringify(visible));
+    }
 
     /**
      * Sets the servicesVisible variable.
@@ -135,19 +135,19 @@ export class AppComponent implements OnInit {
      * Otherwise, make a network request to check.
      *
      */
-  private getServicesVisible(namespace: string) {
-      if (this.servicesVisible !== undefined) {
-          return;
-      }
+    private getServicesVisible(namespace: string) {
+        if (this.servicesVisible !== undefined) {
+            return;
+        }
 
-      const localStorageValue = localStorage.getItem('services-visible');
-      if (localStorageValue !== null) {
-          this.servicesVisible = JSON.parse(localStorageValue);
-          return;
-      }
+        const localStorageValue = localStorage.getItem('services-visible');
+        if (localStorageValue !== null) {
+            this.servicesVisible = JSON.parse(localStorageValue);
+            return;
+        }
 
-      this.servicesService.listServices(namespace).subscribe(res => {
-        this.setServicesVisible(res.count !== undefined);
-      });
-  }
+        this.servicesService.listServices(namespace).subscribe(res => {
+            this.setServicesVisible(res.count !== undefined);
+        });
+    }
 }

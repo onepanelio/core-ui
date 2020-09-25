@@ -1,21 +1,21 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { Router } from "@angular/router";
+import { Router } from '@angular/router';
 import {
   CreateWorkspaceBody,
   KeyValue,
   Parameter, WorkspaceServiceService,
   WorkspaceTemplate,
   WorkspaceTemplateServiceService
-} from "../../../api";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+} from '../../../api';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {
   WorkflowExecuteDialogComponent,
-} from "../../workflow/workflow-execute-dialog/workflow-execute-dialog.component";
-import { FormBuilder, FormGroup } from "@angular/forms";
-import { NamespaceTracker } from "../../namespace/namespace-tracker.service";
-import { AppRouter } from "../../router/app-router.service";
-import { HttpErrorResponse } from "@angular/common/http";
-import { Alert } from "../../alert/alert";
+} from '../../workflow/workflow-execute-dialog/workflow-execute-dialog.component';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { NamespaceTracker } from '../../namespace/namespace-tracker.service';
+import { AppRouter } from '../../router/app-router.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Alert } from '../../alert/alert';
 
 export interface WorkspaceExecuteDialogData {
   namespace: string;
@@ -35,7 +35,7 @@ export class WorkspaceExecuteDialogComponent implements OnInit {
   namespace: string;
   workspaceTemplates: WorkspaceTemplate[] = [];
   workspaceTemplate: WorkspaceTemplate;
-  workspaceTemplateUid: string = '';
+  workspaceTemplateUid = '';
   labels = new Array<KeyValue>();
   parameters: Array<Parameter>;
   errors = {};
@@ -59,8 +59,8 @@ export class WorkspaceExecuteDialogComponent implements OnInit {
     this.form = this.formBuilder.group({});
 
     this.namespace = data.namespace;
-    
-    if(data.template) {
+
+    if (data.template) {
       this.workspaceTemplates = [data.template];
       this.workspaceTemplate = data.template;
       this.workspaceTemplateUid = data.template.uid;
@@ -69,12 +69,12 @@ export class WorkspaceExecuteDialogComponent implements OnInit {
       this.workspaceTemplateService.listWorkspaceTemplates(data.namespace)
           .subscribe(res => {
             this.workspaceTemplates = res.workspaceTemplates;
-            if(!res.workspaceTemplates) {
+            if (!res.workspaceTemplates) {
               this.state = 'no-templates';
             } else {
               this.state = 'ready';
             }
-          })
+          });
     }
   }
 
@@ -86,8 +86,8 @@ export class WorkspaceExecuteDialogComponent implements OnInit {
   }
 
   createAndRun() {
-    let formattedParameters = [];
-    for(let parameter of this.parameters) {
+    const formattedParameters = [];
+    for (const parameter of this.parameters) {
       // convert all the parameters to string
       parameter.value = parameter.value.toString();
       formattedParameters.push(parameter);
@@ -110,7 +110,7 @@ export class WorkspaceExecuteDialogComponent implements OnInit {
           this.dialogRef.close('created');
         }, (err: HttpErrorResponse) => {
           this.state = 'ready';
-          if(err.status === 409) {
+          if (err.status === 409) {
             this.errors = {
               'sys-name': 'conflict'
             };
@@ -121,7 +121,7 @@ export class WorkspaceExecuteDialogComponent implements OnInit {
               type: 'danger'
             });
           }
-        })
+        });
   }
 
   private getWorkspaceTemplate(namespace: string, templateUid: string) {
@@ -132,7 +132,7 @@ export class WorkspaceExecuteDialogComponent implements OnInit {
           this.workspaceTemplateService.generateWorkspaceTemplateWorkflowTemplate(namespace, 'generated', res)
               .subscribe(generatedRes => {
                 this.parameters = WorkflowExecuteDialogComponent.pluckParameters(generatedRes.manifest);
-              })
+              });
         });
   }
 

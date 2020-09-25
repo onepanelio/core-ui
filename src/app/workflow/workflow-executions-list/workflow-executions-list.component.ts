@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {
     WorkflowService
 } from '../workflow.service';
@@ -14,6 +14,8 @@ import { map } from 'rxjs/operators';
 import { AppRouter } from '../../router/app-router.service';
 import { AlertService } from '../../alert/alert.service';
 import { Alert } from '../../alert/alert';
+import { Sort } from '@angular/material';
+import { SortDirection } from '@angular/material/typings/sort';
 
 @Component({
     selector: 'app-workflow-executions-list',
@@ -24,12 +26,15 @@ import { Alert } from '../../alert/alert';
 export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
     private snackbarRef: MatSnackBarRef<SimpleSnackBar>;
 
-    @Input() displayedColumns = ['name', 'status', 'start', 'end', 'version', 'spacer', 'actions'];
+    @Input() displayedColumns = ['name', 'status', 'createdAt', 'start', 'end', 'template', 'spacer', 'actions'];
+    @Input() sort = 'createdAt';
+    @Input() sortDirection: SortDirection = 'desc';
 
     @Input() namespace: string;
     @Input() workflowExecutions: WorkflowExecution[] = [];
 
     @Output() executionTerminated = new EventEmitter();
+    @Output() sortChange = new EventEmitter<Sort>();
 
     /**
      * workflowPermissions keeps track of which permissions the currently logged in user has for each
@@ -141,5 +146,12 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
                 })
             );
         });
+    }
+
+    sortData(event: Sort) {
+        this.sort = event.active;
+        this.sortDirection = event.direction;
+
+        this.sortChange.emit(event);
     }
 }

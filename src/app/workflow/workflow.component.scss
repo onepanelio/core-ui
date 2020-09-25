@@ -1,72 +1,42 @@
-app-activity-bar {
-  display: block;
-  line-height: 40px;
-}
+.workflow {
+  /deep/ .workflow-executions-list {
+    @media screen and (max-width: 1500px) {
+      /deep/ .cdk-column-template {
+        display: none;
+      }
+    }
 
-app-status {
-  height: 40px;
-  line-height: 40px;
-}
+    @media screen and (max-width: 1250px) {
+      /deep/ .cdk-column-end {
+        display: none;
+      }
+    }
 
-text {
-  font-weight: 300;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 14px;
-}
+    @media screen and (max-width: 1050px) {
+      /deep/ .cdk-column-start {
+        display: none;
+      }
+    }
 
-app-node-info {
-  width: 420px;
-  position: absolute;
-  right: 0;
-  top: 0;
-
-  /deep/ .root-element {
-    height: 100%;
-    overflow: scroll;
-  }
-}
-
-app-logs {
-  position: fixed;
-  width: 60vw;
-  right: 0;
-  top: 0;
-  height: 100vh;
-}
-
-app-workflow-parameter {
-  margin-top: 15px;
-
-  &:first-child {
-    margin-top: 0;
-  }
-}
-
-.yaml-root {
-  position: fixed;
-  right: 0;
-  top: 0;
-  width: 60vw;
-  height: 100vh;
-
-  background-color: rgb(47, 49, 41);
-
-  border-top-left-radius: 4px;
-  border-bottom-left-radius: 4px;
-
-  .toolbar {
-    padding-left: 27px;
-  }
-
-  .title {
-    strong {
-      font-weight: bold;
+    @media screen and (max-width: 850px) {
+      /deep/ .cdk-column-createdAt {
+        display: none;
+      }
     }
   }
 
-  /deep/ .highlight {
-    position:absolute;
-    background:rgba(0,87,155,0.5);
-    z-index:20
+  @media screen and (max-width: 700px) {
+    .page-title {
+      flex-direction: column;
+    }
+
+    .page-action-bar {
+      flex-direction: column;
+      align-items: baseline;
+
+      .op-button {
+        margin-top: 15px;
+      }
+    }
   }
 }

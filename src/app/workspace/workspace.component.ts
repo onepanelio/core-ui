@@ -6,7 +6,6 @@ import {
   Workspace,
   WorkspaceServiceService
 } from '../../api';
-import { Pagination } from '../workflow-template/workflow-template-view/workflow-template-view.component';
 import { PageEvent } from '@angular/material/paginator';
 import { WorkspaceExecuteDialogComponent } from './workspace-execute-dialog/workspace-execute-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -18,6 +17,7 @@ import {
   ConfirmationDialogComponent,
   ConfirmationDialogData
 } from '../confirmation-dialog/confirmation-dialog.component';
+import { Pagination } from '../requests/pagination';
 
 type WorkspaceState = 'loading-initial-data' | 'loading' | 'new';
 

@@ -1,14 +1,14 @@
 <div class="page workflow-template-view">
   <div class="page-header">
     <div class="page-links">
-      <a [routerLink]="['/', this.namespace, 'workflow-templates']" class="op-back-link">
+      <a *ngIf="this.backLinkName" (click)="goBack($event)" href="#" class="op-back-link">
         <i class="fas fa-chevron-left"></i>
-        <span>Back to workflows</span>
+        <span>{{this.backLinkName}}</span>
       </a>
     </div>
     <app-alert-panel class="mb-3 d-block"></app-alert-panel>
     <div class="page-title">
-      <div class="page-title-text">Workflow details</div>
+      <div class="page-title-text">Workflow template details</div>
     </div>
   </div>
 
@@ -84,6 +84,7 @@
       <mat-tab label="Executions">
         <app-workflow-executions
                 [namespace]="namespace"
+                [showSystem]="true"
                 [workflowTemplateUid]="uid"
                 (workflowsChanged)="onWorkflowsChanged($event)">
         </app-workflow-executions>

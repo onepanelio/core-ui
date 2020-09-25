@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { PageEvent } from '@angular/material/paginator';
 import { ListWorkflowExecutionsResponse, WorkflowExecution, WorkflowServiceService, Workspace } from '../../../api';
 import { ActivatedRoute } from '@angular/router';
+import { Sort } from '@angular/material';
 
 type WorkflowExecutionsState = 'initialization' | 'new' | 'loading';
 export type WorkflowExecutionPhase = 'running' | 'completed' | 'failed' | 'stopped';
@@ -23,7 +24,9 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
   @Input() workflowTemplateVersion?: string;
   @Input() page = 0;
   @Input() pageSize = 15;
-  @Input() displayedColumns = ['name', 'status', 'start', 'end', 'version', 'spacer', 'actions'];
+  @Input() displayedColumns = ['name', 'status', 'createdAt', 'start', 'end', 'template', 'spacer', 'actions'];
+  @Input() sortOrder = 'startedAt,desc';
+  @Input() showSystem = false;
 
   // tslint:disable-next-line:variable-name
   private _phase?: WorkflowExecutionPhase;
@@ -60,7 +63,7 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
 
   constructor(
       public activatedRoute: ActivatedRoute,
-      public workflowService: WorkflowServiceService
+      public workflowService: WorkflowServiceService,
   ) { }
 
   ngOnInit() {
@@ -155,14 +158,17 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
 
     // +1 for API
     const page = this.page + 1;
-    this.workflowService.listWorkflowExecutions(this.namespace, this.workflowTemplateUid, this.workflowTemplateVersion, this.pageSize, page, 'createdAt,desc', undefined, this._phase)
+    this.workflowService
+        .listWorkflowExecutions(this.namespace, this.workflowTemplateUid, this.workflowTemplateVersion, this.pageSize, page, this.sortOrder, undefined, this._phase, this.showSystem)
         .subscribe(res => {
           this.workflowResponse = res;
           const hasWorkflowExecutions = !(res.page === 1 && !res.workflowExecutions);
 
-          if (res.workflowExecutions) {
-            this.updateWorkflowExecutionList(res.workflowExecutions);
+          if (!res.workflowExecutions) {
+            res.workflowExecutions = [];
           }
+
+          this.updateWorkflowExecutionList(res.workflowExecutions);
 
           this.workflowExecutionsState = 'new';
           this.hasWorkflowExecutions = hasWorkflowExecutions;
@@ -181,6 +187,30 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
   }
 
   onWorkflowExecutionTerminated() {
+    this.getWorkflows();
+  }
+
+  sortData(event: Sort) {
+    let field = event.active;
+    switch (event.active) {
+      case 'start':
+        field = 'startedAt';
+        break;
+      case 'end':
+        field = 'finishedAt';
+        break;
+      case 'status':
+        field = 'phase';
+        break;
+    }
+
+    this.sortOrder = `${field},${event.direction}`;
+
+    // default sort order.
+    if (event.direction === '') {
+      this.sortOrder = `startedAt,desc`;
+    }
+
     this.getWorkflows();
   }
 }
