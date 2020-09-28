@@ -8,6 +8,9 @@ import { map } from 'rxjs/operators';
 
 type WorkspaceAction = 'pause' | 'resume' | 'delete' | 'retry-last-action';
 
+export type WorkspacePhase = 'Launching' | 'Running' | 'Updating' | 'Pausing' | 'Paused' | 'Terminating' | 'Terminated' |
+'Failed to pause' | 'Failed to resume' | 'Failed to launch' | 'Failed to terminate' | 'Failed to update' | 'Failed';
+
 export interface WorkspaceEvent {
   action: WorkspaceAction;
   workspace: Workspace;
@@ -76,7 +79,6 @@ export class WorkspaceListComponent implements OnInit {
       resourceName: workspace.uid,
       group: 'onepanel.io',
     });
-
 
     this.workspacePermissions.set(
         workspace.uid,

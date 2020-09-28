@@ -5,6 +5,8 @@ import { ConfirmationDialogComponent, ConfirmationDialogData } from '../../confi
 import { PageEvent } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
 import { Sort } from '@angular/material';
+import { WorkflowExecutionPhase } from '../../workflow/workflow-executions/workflow-executions.component';
+import { WorkspacePhase } from '../workspace-list/workspace-list.component';
 
 type WorkspaceState = 'initialization' | 'new' | 'loading';
 
@@ -23,6 +25,16 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
   @Input() page = 0;
   @Input() pageSize = 15;
   @Input() sortOrder = 'createdAt,desc';
+
+  // tslint:disable-next-line:variable-name
+  private _phase?: WorkspacePhase;
+  @Input() set phase(value: WorkspacePhase) {
+    this._phase = value;
+    this.page = 0;
+
+    this.getWorkspaces();
+  }
+
   @Output() workspacesChanged = new EventEmitter<WorkspacesChangedEvent>();
   previousSortOrder = '';
 
@@ -133,7 +145,7 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
   }
 
   getWorkspaces() {
-    this.workspaceService.listWorkspaces(this.namespace, this.pageSize, this.page + 1, this.sortOrder)
+    this.workspaceService.listWorkspaces(this.namespace, this.pageSize, this.page + 1, this.sortOrder, undefined, this._phase)
         .subscribe(res => {
           this.workspaceResponse = res;
           if (!res.workspaces) {
@@ -222,7 +234,12 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
   }
 
   sortData(event: Sort) {
-    const field = event.active;
+    let field = event.active;
+    switch(event.active) {
+      case 'status':
+        field = 'phase';
+        break;
+    }
 
     this.previousSortOrder = this.sortOrder;
     this.sortOrder = `${field},${event.direction}`;

@@ -1,32 +1,44 @@
-.cdk-column-name {
-  min-width: 200px;
-  max-width: 200px;
-}
+@import "../../../styles/colors";
 
-.cdk-column-template {
-  width: 140px;
-  margin-right: 10px;
-  word-break: break-all;
-}
+.workspace-list {
+  .cdk-column-name {
+    min-width: 200px;
+    max-width: 200px;
+  }
 
-.cdk-column-createdAt {
-  width: 250px;
-}
+  .cdk-column-template {
+    width: 140px;
+    margin-right: 10px;
+    word-break: break-all;
+  }
 
-.cdk-column-timestamp-status {
-  width: 250px;
-}
+  .cdk-column-createdAt {
+    width: 250px;
+  }
 
-.cdk-column-status {
-  min-width: 150px;
-}
+  .cdk-column-timestamp-status {
+    width: 250px;
+  }
 
-.workspace-menu-icon {
-  width: 14px;
-}
+  .cdk-column-status {
+    min-width: 150px;
+  }
 
-.cdk-column-labels {
-  /deep/ app-labels-list-view .labels-list-item {
-    margin-top: 10px;
+  .workspace-menu-icon {
+    width: 14px;
+  }
+
+  .cdk-column-labels {
+    /deep/ app-labels-list-view .labels-list-item {
+      margin-top: 10px;
+    }
+  }
+
+  /deep/ .mat-sort-header-sorted {
+    color: $darkest-gray;
+
+    .mat-sort-header-arrow {
+      color: $darkest-gray;
+    }
   }
 }

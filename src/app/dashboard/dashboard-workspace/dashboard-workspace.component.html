@@ -6,51 +6,62 @@
             </div>
         </div>
         <div class="d-flex">
-<!--            <div *ngIf="stats" class="stats-container">-->
-<!--                <app-stat-bar-->
-<!--                        [title]="'Running'"-->
-<!--                        [value]="stats.running"-->
-<!--                        [maxValue]="statsTotal"-->
-<!--                        (click)="setPhase('running')"-->
-<!--                        [class.phase-unselected]="workflowExecutionPhase && workflowExecutionPhase !== 'running'"-->
-<!--                        color="rgb(1, 87, 155)"-->
-<!--                        class="stat-bar mt-40px">-->
-<!--                    <a href="#" *ngIf="workflowExecutionPhase === 'running'" class="clear-phase" (click)="clearPhase($event)">clear</a>-->
-<!--                </app-stat-bar>-->
-<!--                <app-stat-bar-->
-<!--                        [title]="'Completed'"-->
-<!--                        [value]="stats.completed"-->
-<!--                        [maxValue]="statsTotal"-->
-<!--                        (click)="setPhase('completed')"-->
-<!--                        [class.phase-unselected]="workflowExecutionPhase && workflowExecutionPhase !== 'completed'"-->
-<!--                        color="rgb(55, 173, 88)"-->
-<!--                        class="stat-bar mt-40px">-->
-<!--                    <span *ngIf="workflowExecutionPhase === 'completed'" class="clear-phase" (click)="clearPhase($event)">clear</span>-->
-<!--                </app-stat-bar>-->
-<!--                <app-stat-bar-->
-<!--                        [title]="'Failed'"-->
-<!--                        [value]="stats.failed"-->
-<!--                        [maxValue]="statsTotal"-->
-<!--                        (click)="setPhase('failed')"-->
-<!--                        [class.phase-unselected]="workflowExecutionPhase &&  workflowExecutionPhase !== 'failed'"-->
-<!--                        color="rgb(211, 35, 69)"-->
-<!--                        class="stat-bar mt-40px">-->
-<!--                    <span *ngIf="workflowExecutionPhase === 'failed'" class="clear-phase" (click)="clearPhase($event)">clear</span>-->
-<!--                </app-stat-bar>-->
-<!--                <app-stat-bar-->
-<!--                        [title]="'Stopped'"-->
-<!--                        [value]="stats.terminated"-->
-<!--                        [maxValue]="statsTotal"-->
-<!--                        (click)="setPhase('stopped')"-->
-<!--                        [class.phase-unselected]="workflowExecutionPhase && workflowExecutionPhase !== 'stopped'"-->
-<!--                        class="stat-bar mt-40px"-->
-<!--                        color="rgb(255, 200, 76)">-->
-<!--                    <span *ngIf="workflowExecutionPhase === 'stopped'" class="clear-phase" (click)="clearPhase($event)">clear</span>-->
-<!--                </app-stat-bar>-->
-<!--            </div>-->
+            <div *ngIf="stats" class="stats-container">
+                <app-stat-bar
+                        [title]="'Launching'"
+                        [value]="stats.launching"
+                        [maxValue]="statsTotal"
+                        (click)="setPhase('Launching')"
+                        [class.phase-unselected]="workspacePhase && workspacePhase !== 'Launching'"
+                        color="rgb(1, 87, 155)"
+                        class="stat-bar mt-40px">
+                    <a href="#" *ngIf="workspacePhase === 'Launching'" class="clear-phase" (click)="clearPhase($event)">clear</a>
+                </app-stat-bar>
+                <app-stat-bar
+                        [title]="'Running'"
+                        [value]="stats.running"
+                        [maxValue]="statsTotal"
+                        (click)="setPhase('Running')"
+                        [class.phase-unselected]="workspacePhase && workspacePhase !== 'Running'"
+                        color="rgb(55, 173, 88)"
+                        class="stat-bar mt-40px">
+                    <span *ngIf="workspacePhase === 'Running'" class="clear-phase" (click)="clearPhase($event)">clear</span>
+                </app-stat-bar>
+                <app-stat-bar
+                        [title]="'Paused'"
+                        [value]="stats.paused"
+                        [maxValue]="statsTotal"
+                        (click)="setPhase('Paused')"
+                        [class.phase-unselected]="workspacePhase && workspacePhase !== 'Paused'"
+                        class="stat-bar mt-40px"
+                        color="rgb(255, 200, 76)">
+                    <span *ngIf="workspacePhase === 'Paused'" class="clear-phase" (click)="clearPhase($event)">clear</span>
+                </app-stat-bar>
+                <app-stat-bar
+                        [title]="'Updating'"
+                        [value]="stats.updating"
+                        [maxValue]="statsTotal"
+                        (click)="setPhase('Updating')"
+                        [class.phase-unselected]="workspacePhase && workspacePhase !== 'Updating'"
+                        color="rgb(255, 145, 0)"
+                        class="stat-bar mt-40px">
+                    <span *ngIf="workspacePhase === 'Updating'" class="clear-phase" (click)="clearPhase($event)">clear</span>
+                </app-stat-bar>
+                <app-stat-bar
+                        [title]="'Failed'"
+                        [value]="stats.failed"
+                        [maxValue]="statsTotal"
+                        (click)="setPhase('Failed')"
+                        [class.phase-unselected]="workspacePhase && workspacePhase !== 'Failed'"
+                        class="stat-bar mt-40px"
+                        color="rgb(211, 35, 69)">
+                    <span *ngIf="workspacePhase === 'Failed'" class="clear-phase" (click)="clearPhase($event)">clear</span>
+                </app-stat-bar>
+            </div>
             <div class="flex-grow-1">
                 <app-workspaces
                         [namespace]="namespace"
+                        [phase]="workspacePhase"
                         [pageSize]="5"
                         (workspacesChanged)="onWorkspacesChanged($event)">
                 </app-workspaces>
