@@ -1,6 +1,11 @@
 @import "../../../styles/colors";
 
 .workspace-list {
+  .op-table-header {
+    margin-bottom: 0;
+    padding: 20px 10px !important;
+  }
+
   .cdk-column-name {
     min-width: 200px;
     max-width: 200px;

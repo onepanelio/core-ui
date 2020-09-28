@@ -5,6 +5,7 @@
         *ngIf="hasWorkspaces"
         [namespace]="namespace"
         [workspaces]="workspaces"
+        (workspaceAction)="onWorkspaceEvent($event)"
         (sortChange)="sortData($event)">
 </app-workspace-list>
 <mat-paginator class="no-background font-size-small"

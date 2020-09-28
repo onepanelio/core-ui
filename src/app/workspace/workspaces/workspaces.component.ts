@@ -6,7 +6,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
 import { Sort } from '@angular/material';
 import { WorkflowExecutionPhase } from '../../workflow/workflow-executions/workflow-executions.component';
-import { WorkspacePhase } from '../workspace-list/workspace-list.component';
+import { WorkspaceEvent, WorkspacePhase } from '../workspace-list/workspace-list.component';
 
 type WorkspaceState = 'initialization' | 'new' | 'loading';
 
@@ -250,5 +250,24 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
     }
 
     this.getWorkspaces();
+  }
+
+  onWorkspaceEvent(event: WorkspaceEvent) {
+    const workspace = event.workspace;
+
+    switch (event.action) {
+      case 'delete':
+        this.onDelete(workspace);
+        break;
+      case 'pause':
+        this.onPause(workspace);
+        break;
+      case 'resume':
+        this.onResume(workspace);
+        break;
+      case 'retry-last-action':
+        this.onRetryLastAction(workspace);
+        break;
+    }
   }
 }
