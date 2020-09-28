@@ -1,0 +1,17 @@
+<app-loading-content *ngIf="workspaceState === 'initialization'">
+    Loading Workspaces
+</app-loading-content>
+<app-workspace-list
+        *ngIf="hasWorkspaces"
+        [namespace]="namespace"
+        [workspaces]="workspaces"
+        (sortChange)="sortData($event)">
+</app-workspace-list>
+<mat-paginator class="no-background font-size-small"
+               *ngIf="hasWorkspaces"
+               (page)="onPageChange($event)"
+               [pageIndex]="this.page"
+               [length]="workspaceResponse.totalCount"
+               [pageSize]="this.pageSize"
+               [pageSizeOptions]="[5, 10, 25, 100]">
+</mat-paginator>

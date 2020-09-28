@@ -18,7 +18,6 @@ export interface WorkflowExecutionsChangedEvent {
   styleUrls: ['./workflow-executions.component.scss']
 })
 export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
-
   @Input() namespace: string;
   @Input() workflowTemplateUid?: string;
   @Input() workflowTemplateVersion?: string;
@@ -75,7 +74,6 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
         this.getWorkflows();
       }, 5000);
     });
-
   }
 
   ngOnDestroy() {
