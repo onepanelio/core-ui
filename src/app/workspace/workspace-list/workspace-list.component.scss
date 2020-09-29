@@ -34,7 +34,7 @@
   }
 
   .cdk-column-labels {
-    /deep/ app-labels-list-view .labels-list-item {
+    /deep/ .labels-list-view .labels-list-item {
       margin-top: 10px;
     }
   }
