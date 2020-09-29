@@ -1,0 +1,49 @@
+@import "../../../styles/colors";
+
+.workspace-list {
+  .op-table-header {
+    margin-bottom: 0;
+    padding: 20px 10px !important;
+  }
+
+  .cdk-column-name {
+    min-width: 200px;
+    max-width: 200px;
+  }
+
+  .cdk-column-template {
+    width: 140px;
+    margin-right: 10px;
+    word-break: break-all;
+  }
+
+  .cdk-column-createdAt {
+    width: 250px;
+  }
+
+  .cdk-column-timestamp-status {
+    width: 250px;
+  }
+
+  .cdk-column-status {
+    min-width: 150px;
+  }
+
+  .workspace-menu-icon {
+    width: 14px;
+  }
+
+  .cdk-column-labels {
+    /deep/ .labels-list-view .labels-list-item {
+      margin-top: 10px;
+    }
+  }
+
+  /deep/ .mat-sort-header-sorted {
+    color: $darkest-gray;
+
+    .mat-sort-header-arrow {
+      color: $darkest-gray;
+    }
+  }
+}

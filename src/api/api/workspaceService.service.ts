@@ -18,6 +18,7 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { CreateWorkspaceBody } from '../model/models';
+import { GetWorkspaceStatisticsForNamespaceResponse } from '../model/models';
 import { GrpcGatewayRuntimeError } from '../model/models';
 import { ListWorkspaceResponse } from '../model/models';
 import { UpdateWorkspaceBody } from '../model/models';
@@ -273,17 +274,71 @@ export class WorkspaceServiceService {
 
     /**
      * @param namespace 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getWorkspaceStatisticsForNamespace(namespace: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<GetWorkspaceStatisticsForNamespaceResponse>;
+    public getWorkspaceStatisticsForNamespace(namespace: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpResponse<GetWorkspaceStatisticsForNamespaceResponse>>;
+    public getWorkspaceStatisticsForNamespace(namespace: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpEvent<GetWorkspaceStatisticsForNamespaceResponse>>;
+    public getWorkspaceStatisticsForNamespace(namespace: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<any> {
+        if (namespace === null || namespace === undefined) {
+            throw new Error('Required parameter namespace was null or undefined when calling getWorkspaceStatisticsForNamespace.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // authentication (Bearer) required
+        if (this.configuration.apiKeys) {
+            const key: string | undefined = this.configuration.apiKeys["Bearer"] || this.configuration.apiKeys["authorization"];
+            if (key) {
+                headers = headers.set('authorization', key);
+            }
+        }
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json',
+                'application/octet-stream'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<GetWorkspaceStatisticsForNamespaceResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workspace/statistics`,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * @param namespace 
      * @param pageSize 
      * @param page 
      * @param order 
      * @param labels 
+     * @param phase 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listWorkspaces(namespace: string, pageSize?: number, page?: number, order?: string, labels?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<ListWorkspaceResponse>;
-    public listWorkspaces(namespace: string, pageSize?: number, page?: number, order?: string, labels?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpResponse<ListWorkspaceResponse>>;
-    public listWorkspaces(namespace: string, pageSize?: number, page?: number, order?: string, labels?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpEvent<ListWorkspaceResponse>>;
-    public listWorkspaces(namespace: string, pageSize?: number, page?: number, order?: string, labels?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<any> {
+    public listWorkspaces(namespace: string, pageSize?: number, page?: number, order?: string, labels?: string, phase?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<ListWorkspaceResponse>;
+    public listWorkspaces(namespace: string, pageSize?: number, page?: number, order?: string, labels?: string, phase?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpResponse<ListWorkspaceResponse>>;
+    public listWorkspaces(namespace: string, pageSize?: number, page?: number, order?: string, labels?: string, phase?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpEvent<ListWorkspaceResponse>>;
+    public listWorkspaces(namespace: string, pageSize?: number, page?: number, order?: string, labels?: string, phase?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
             throw new Error('Required parameter namespace was null or undefined when calling listWorkspaces.');
         }
@@ -304,6 +359,10 @@ export class WorkspaceServiceService {
         if (labels !== undefined && labels !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>labels, 'labels');
+        }
+        if (phase !== undefined && phase !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>phase, 'phase');
         }
 
         let headers = this.defaultHeaders;

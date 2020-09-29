@@ -9,7 +9,6 @@ import { NamespaceTracker } from '../../namespace/namespace-tracker.service';
   styleUrls: ['./dashboard-workflow.component.scss']
 })
 export class DashboardWorkflowComponent implements OnInit, OnDestroy {
-
   // tslint:disable-next-line:variable-name
   _namespace: string;
   @Input() set namespace(value: string|undefined) {
