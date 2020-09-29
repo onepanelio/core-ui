@@ -62,6 +62,9 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
   workflowExecutionsState: WorkflowExecutionsState = 'initialization';
   hasWorkflowExecutions = false;
 
+  lastUpdateRequest?: Date;
+  lastUpdateRequestFinished?: Date;
+
   constructor(
       public activatedRoute: ActivatedRoute,
       public workflowService: WorkflowServiceService,
@@ -87,21 +90,14 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
    * Marks the workflow as updating.
    */
   private markWorkflowUpdating(workflowExecution: WorkflowExecution) {
-    this.workflowExecutionUpdatingMap.set(workflowExecution.uid, workflowExecution);
+    this.lastUpdateRequest = new Date();
   }
 
   /**
    * Marks the workflow as done updating.
    */
   private markWorkflowDoneUpdating(workflowExecution: WorkflowExecution) {
-    this.workflowExecutionUpdatingMap.delete(workflowExecution.uid);
-  }
-
-  /**
-   * @return true if the workflow is updating, false otherwise.
-   */
-  private isWorkflowUpdating(workflowExecution: WorkflowExecution): boolean {
-    return this.workflowExecutionUpdatingMap.has(workflowExecution.uid);
+    this.lastUpdateRequestFinished = new Date();
   }
 
   /**
@@ -137,14 +133,11 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
         break;
       }
 
-      // Only update the workflow if it isn't already in an updating state.
-      if (!this.isWorkflowUpdating(existingWorkflow)) {
-        existingWorkflow.phase = workflowExecution.phase;
-        existingWorkflow.startedAt = workflowExecution.startedAt;
-        existingWorkflow.finishedAt = workflowExecution.finishedAt;
-        existingWorkflow.workflowTemplate = workflowExecution.workflowTemplate;
-        existingWorkflow.labels = workflowExecution.labels;
-      }
+      existingWorkflow.phase = workflowExecution.phase;
+      existingWorkflow.startedAt = workflowExecution.startedAt;
+      existingWorkflow.finishedAt = workflowExecution.finishedAt;
+      existingWorkflow.workflowTemplate = workflowExecution.workflowTemplate;
+      existingWorkflow.labels = workflowExecution.labels;
     }
   }
 
@@ -157,11 +150,23 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
       this.workflowExecutionsState = 'loading';
     }
 
+    if (this.lastUpdateRequest && !this.lastUpdateRequestFinished) {
+      return;
+    }
+
+    this.lastUpdateRequest = undefined;
+    this.lastUpdateRequestFinished = undefined;
+
     // +1 for API
     const page = this.page + 1;
+    const pageSize = this.pageSize;
     this.workflowService
-        .listWorkflowExecutions(this.namespace, this.workflowTemplateUid, this.workflowTemplateVersion, this.pageSize, page, this.sortOrder, undefined, this._phase, this.showSystem)
+        .listWorkflowExecutions(this.namespace, this.workflowTemplateUid, this.workflowTemplateVersion, pageSize, page, this.sortOrder, undefined, this._phase, this.showSystem)
         .subscribe(res => {
+          if (page !== (this.page + 1) || pageSize !== this.pageSize) {
+            return;
+          }
+
           this.workflowResponse = res;
           const hasWorkflowExecutions = !(res.page === 1 && !res.workflowExecutions);
 

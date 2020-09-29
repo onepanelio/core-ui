@@ -5,7 +5,6 @@ import { ConfirmationDialogComponent, ConfirmationDialogData } from '../../confi
 import { PageEvent } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
 import { Sort } from '@angular/material';
-import { WorkflowExecutionPhase } from '../../workflow/workflow-executions/workflow-executions.component';
 import { WorkspaceEvent, WorkspacePhase } from '../workspace-list/workspace-list.component';
 
 type WorkspaceState = 'initialization' | 'new' | 'loading';
@@ -25,6 +24,7 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
   @Input() page = 0;
   @Input() pageSize = 15;
   @Input() sortOrder = 'createdAt,desc';
+  previousSortOrder = 'createdAt,desc';
 
   // tslint:disable-next-line:variable-name
   private _phase?: WorkspacePhase;
@@ -36,7 +36,6 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
   }
 
   @Output() workspacesChanged = new EventEmitter<WorkspacesChangedEvent>();
-  previousSortOrder = '';
 
   workspaces: Workspace[] = [];
   workspaceResponse: ListWorkspaceResponse;
@@ -46,16 +45,8 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
    */
   workspacesInterval: number;
 
-  /**
-   * workspaceUpdatingMap keeps track of which workspaces are being updated, these should not be updated
-   * by the regular interval get request.
-   *
-   * When we perform an action on a workspace like pause, resume, terminate, etc,
-   * it takes a second for API to update and respond. It is possible that the request does not finish
-   * but we do another Get request in that time. So our status change may be pause => running => pause.
-   * To prevent this, we mark the workspace as updating, so the Get request should ignore it.
-   */
-  private workspaceUpdatingMap = new Map<string, Workspace>();
+  lastUpdateRequest?: Date;
+  lastUpdateRequestFinished?: Date;
 
   workspaceState: WorkspaceState = 'initialization';
   hasWorkspaces = false;
@@ -86,21 +77,14 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
    * Marks the workspace as updating.
    */
   private markWorkspaceUpdating(workspace: Workspace) {
-    this.workspaceUpdatingMap.set(workspace.uid, workspace);
+    this.lastUpdateRequest = new Date();
   }
 
   /**
    * Marks the workspace as done updating.
    */
   private markWorkspaceDoneUpdating(workspace: Workspace) {
-    this.workspaceUpdatingMap.delete(workspace.uid);
-  }
-
-  /**
-   * @return true if the workspace is updating, false otherwise.
-   */
-  private isWorkspaceUpdating(workspace: Workspace): boolean {
-    return this.workspaceUpdatingMap.has(workspace.uid);
+    this.lastUpdateRequestFinished = new Date();
   }
 
   /**
@@ -136,17 +120,28 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
         break;
       }
 
-      // Only update the workspace if it isn't already in an updating state.
-      if (!this.isWorkspaceUpdating(existingWorkspace)) {
-        existingWorkspace.status = workspace.status;
-        existingWorkspace.labels = workspace.labels;
-      }
+      existingWorkspace.status = workspace.status;
+      existingWorkspace.labels = workspace.labels;
     }
   }
 
   getWorkspaces() {
-    this.workspaceService.listWorkspaces(this.namespace, this.pageSize, this.page + 1, this.sortOrder, undefined, this._phase)
+    if (this.lastUpdateRequest && !this.lastUpdateRequestFinished) {
+      return;
+    }
+
+    this.lastUpdateRequest = undefined;
+    this.lastUpdateRequestFinished = undefined;
+
+    const page = this.page + 1;
+    const pageSize = this.pageSize;
+
+    this.workspaceService.listWorkspaces(this.namespace, pageSize, page, this.sortOrder, undefined, this._phase)
         .subscribe(res => {
+          if (page !== (this.page + 1) || this.pageSize !== this.pageSize) {
+            return;
+          }
+
           this.workspaceResponse = res;
           if (!res.workspaces) {
             res.workspaces = [];
@@ -235,7 +230,7 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
 
   sortData(event: Sort) {
     let field = event.active;
-    switch(event.active) {
+    switch (event.active) {
       case 'status':
         field = 'phase';
         break;
