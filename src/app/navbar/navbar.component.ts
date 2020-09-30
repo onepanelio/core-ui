@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NamespaceTracker } from '../namespace/namespace-tracker.service';
 import { Location } from '@angular/common';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-navbar',
@@ -23,29 +24,36 @@ export class NavbarComponent implements OnInit {
     for (const urlPart of urlParts) {
       if (urlPart === 'workspace-templates') {
         this.activeRoute = 'workspaces';
+        this.title.setTitle('Onepanel - Workspace Templates');
         return;
       }
       if (urlPart.indexOf('workflows') >= 0) {
         this.activeRoute = 'workflows';
+        this.title.setTitle('Onepanel - Workflows');
         return;
       }
       if (urlPart.indexOf('workflow-templates') >= 0) {
         this.activeRoute = 'workflows';
+        this.title.setTitle('Onepanel - Workflow Templates');
         return;
       }
       if (urlPart.indexOf('secrets') >= 0) {
         this.activeRoute = 'secrets';
+        this.title.setTitle('Onepanel - Settings');
         return;
       }
       if (urlPart.indexOf('workspace') >= 0) {
         this.activeRoute = 'workspaces';
+        this.title.setTitle('Onepanel - Workspaces');
         return;
       }
       if (urlPart.indexOf('services') >= 0) {
+        this.title.setTitle('Onepanel - Services');
         this.activeRoute = 'services';
         return;
       }
       if (urlPart.indexOf('dashboard') >= 0) {
+        this.title.setTitle('Onepanel - Dashboard');
         this.activeRoute = 'dashboard';
         return;
       }
@@ -57,7 +65,10 @@ export class NavbarComponent implements OnInit {
   @Output() logout = new EventEmitter();
   @Output() namespaceClick = new EventEmitter();
 
-  constructor(public namespaceTracker: NamespaceTracker, private location: Location) {
+  constructor(
+      public namespaceTracker: NamespaceTracker,
+      private location: Location,
+      private title: Title) {
   }
 
   ngOnInit() {
