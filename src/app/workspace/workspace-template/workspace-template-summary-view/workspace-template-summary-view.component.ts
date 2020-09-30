@@ -15,6 +15,7 @@ export class WorkspaceTemplateSummaryViewComponent implements OnInit {
   @Output() createWorkspaceClicked = new EventEmitter<WorkspaceTemplate>();
   @Output() cloneWorkspaceTemplateClicked = new EventEmitter<WorkspaceTemplate>();
   @Output() deleteWorkspaceTemplateClicked = new EventEmitter<WorkspaceTemplate>();
+  @Output() shareWorkspaceTemplateClicked = new EventEmitter<WorkspaceTemplate>();
 
   constructor() { }
 
@@ -31,5 +32,9 @@ export class WorkspaceTemplateSummaryViewComponent implements OnInit {
 
   deleteWorkspaceTemplate(template: WorkspaceTemplate) {
     this.deleteWorkspaceTemplateClicked.emit(template);
+  }
+
+  shareWorkspaceTemplate(template: WorkspaceTemplate) {
+    this.shareWorkspaceTemplateClicked.emit(template);
   }
 }

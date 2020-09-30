@@ -31,6 +31,10 @@
 <!--        <i class="far fa-clone mr-1 workspace-template-menu-icon"></i>-->
 <!--        Clone-->
 <!--    </button>-->
+    <button mat-menu-item (click)="shareWorkspaceTemplate(template)">
+        <i class="far fa-copy mr-1 workspace-template-menu-icon"></i>
+        Copy URL
+    </button>
     <button mat-menu-item (click)="deleteWorkspaceTemplate(template)">
         <i class="fas fa-trash mr-1 workspace-template-menu-icon"></i>
         Delete

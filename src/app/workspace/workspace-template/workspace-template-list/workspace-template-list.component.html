@@ -42,10 +42,11 @@
                 </ng-container>
             </div>
             <app-workspace-template-summary-view
+                    class="mr-3 pointer-hover"
                     (click)="selectTemplate(template)"
                     (createWorkspaceClicked)="createWorkspace($event)"
                     (deleteWorkspaceTemplateClicked)="deleteWorkspaceTemplate($event)"
-                    class="mr-3 pointer-hover"
+                    (shareWorkspaceTemplateClicked)="shareWorkspaceTemplate($event)"
                     [ngClass]="{selected: selectedTemplate?.name === template.name}"
                     [template]="template"
                     [deleting]="deletingTemplates.has(template.uid)">
