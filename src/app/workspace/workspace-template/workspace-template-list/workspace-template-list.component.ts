@@ -25,6 +25,8 @@ import {
 import { CanComponentDeactivate } from '../../../guards/can-deactivate.guard';
 import { Observable } from 'rxjs';
 import { Pagination } from '../../../requests/pagination';
+import { environment } from '../../../../environments/environment';
+import { MatSnackBar } from '@angular/material';
 
 /**
  * WorkspaceTemplateState is a way to keep track of the current state of the component.
@@ -73,6 +75,9 @@ export class WorkspaceTemplateListComponent implements OnInit, CanComponentDeact
      */
     deletingTemplates = new Map<string, WorkspaceTemplate>();
 
+    sortOrder = 'createdAt,desc';
+    uidFilter?: string = undefined;
+
     constructor(
         private appRouter: AppRouter,
         private workspaceTemplateService: WorkspaceTemplateServiceService,
@@ -80,10 +85,30 @@ export class WorkspaceTemplateListComponent implements OnInit, CanComponentDeact
         private activatedRoute: ActivatedRoute,
         private dialog: MatDialog,
         private alertService: AlertService,
+        private snackBar: MatSnackBar
     ) {
     }
 
     ngOnInit() {
+        this.activatedRoute.queryParamMap.subscribe(next => {
+            const page = next.get('page');
+            const pageSize = next.get('pageSize');
+            const uid = next.get('uid');
+
+            if (uid && page && pageSize) {
+                try {
+                    this.uidFilter = uid;
+                    this.pagination.page = parseInt(page, 10);
+                    this.pagination.pageSize = parseInt(pageSize, 10);
+                } catch (e) {
+                    this.uidFilter = undefined;
+                    this.pagination = new Pagination();
+                }
+            } else {
+                this.uidFilter = undefined;
+            }
+        });
+
         this.activatedRoute.paramMap.subscribe(next => {
             this.namespace = next.get('namespace');
 
@@ -145,15 +170,26 @@ export class WorkspaceTemplateListComponent implements OnInit, CanComponentDeact
     }
 
     getWorkspaceTemplates() {
-        this.workspaceTemplateService.listWorkspaceTemplates(this.namespace, this.pagination.pageSize, this.pagination.page + 1)
+        this.workspaceTemplateService.listWorkspaceTemplates(this.namespace, this.pagination.pageSize, this.pagination.page + 1, this.sortOrder)
             .subscribe(res => {
                 this.workspaceTemplatesResponse = res;
                 this.workspaceTemplates = res.workspaceTemplates;
+
+                if (this.uidFilter) {
+                    for (const template of this.workspaceTemplates) {
+                        if (template.uid === this.uidFilter) {
+                            this.selectTemplate(template);
+                            break;
+                        }
+                    }
+                } else {
+                    this.selectedTemplate = null;
+                }
             });
     }
 
     getWorkspaceTemplatesAndSelect(template: WorkspaceTemplate) {
-        this.workspaceTemplateService.listWorkspaceTemplates(this.namespace, this.pagination.pageSize, this.pagination.page + 1)
+        this.workspaceTemplateService.listWorkspaceTemplates(this.namespace, this.pagination.pageSize, this.pagination.page + 1, this.sortOrder)
             .subscribe(res => {
                 this.workspaceTemplatesResponse = res;
                 this.workspaceTemplates = res.workspaceTemplates;
@@ -171,6 +207,8 @@ export class WorkspaceTemplateListComponent implements OnInit, CanComponentDeact
         this.selectedTemplate = null;
 
         this.updateWorkspaceTemplateState();
+
+        this.appRouter.navigateToWorkspaceTemplates(this.namespace, this.pagination.page, this.pagination.pageSize);
     }
 
     selectTemplate(template: WorkspaceTemplate) {
@@ -178,6 +216,8 @@ export class WorkspaceTemplateListComponent implements OnInit, CanComponentDeact
         this.selectedTemplate = template;
 
         this.updateWorkspaceTemplateState();
+
+        this.appRouter.navigateToWorkspaceTemplates(this.namespace, this.pagination.page, this.pagination.pageSize, template.uid);
     }
 
     cancelWorkspaceTemplate() {
@@ -297,14 +337,42 @@ export class WorkspaceTemplateListComponent implements OnInit, CanComponentDeact
         });
     }
 
+    /**
+     * shareWorkspaceTemplate copies the url of the workspace template to the clipboard and displays a snack to that effect.
+     */
+    shareWorkspaceTemplate(template: WorkspaceTemplate) {
+        const page = this.pagination.page;
+        const pageSize = this.pagination.pageSize;
+        const webUrl = environment.baseUrl.substring(0, environment.baseUrl.length - 4);
+        const url = `${webUrl}/${this.namespace}/workspace-templates?page=${page}&pageSize=${pageSize}&uid=${template.uid}`;
+
+        const selBox = document.createElement('textarea');
+        selBox.style.position = 'fixed';
+        selBox.style.left = '0';
+        selBox.style.top = '0';
+        selBox.style.opacity = '0';
+        selBox.value = url;
+        document.body.appendChild(selBox);
+        selBox.focus();
+        selBox.select();
+        document.execCommand('copy');
+        document.body.removeChild(selBox);
+
+        this.snackBar.open('URL copied to clipboard', 'OK');
+    }
+
     onPageChange(event: PageEvent) {
         this.pagination.page = event.pageIndex;
         this.pagination.pageSize = event.pageSize;
+        this.uidFilter = undefined;
 
         this.showWorkspaceTemplateEditor = false;
         this.selectedTemplate = undefined;
 
         this.updateWorkspaceTemplateState();
+
+        this.appRouter.navigateToWorkspaceTemplates(this.namespace, event.pageIndex, event.pageSize);
+
         this.getWorkspaceTemplates();
     }
 }

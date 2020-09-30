@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { KeyValue, WorkflowTemplate, WorkspaceTemplate, WorkspaceTemplateServiceService } from "../../../../api";
-import { ActivatedRoute } from "@angular/router";
-import { map } from "rxjs/operators";
-import { LabelsEditComponent } from "../../../labels/labels-edit/labels-edit.component";
-import { ManifestDagEditorComponent } from "../../../manifest-dag-editor/manifest-dag-editor.component";
-import { Alert } from "../../../alert/alert";
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { KeyValue, WorkflowTemplate, WorkspaceTemplate, WorkspaceTemplateServiceService } from '../../../../api';
+import { ActivatedRoute } from '@angular/router';
+import { map } from 'rxjs/operators';
+import { LabelsEditComponent } from '../../../labels/labels-edit/labels-edit.component';
+import { ManifestDagEditorComponent } from '../../../manifest-dag-editor/manifest-dag-editor.component';
+import { Alert } from '../../../alert/alert';
 
 @Component({
   selector: 'app-workspace-template-edit',
@@ -18,13 +18,14 @@ export class WorkspaceTemplateEditComponent implements OnInit {
 
   @Input() namespace: string;
 
+  // tslint:disable-next-line:variable-name
   private _workspaceTemplate: WorkspaceTemplate;
   @Input() set workspaceTemplate(value: WorkspaceTemplate) {
-    if(!value) {
+    if (!value) {
       return;
     }
 
-    if(value && this._workspaceTemplate && value.name === this._workspaceTemplate.name) {
+    if (value && this._workspaceTemplate && value.name === this._workspaceTemplate.name) {
       return;
     }
 
@@ -45,7 +46,7 @@ export class WorkspaceTemplateEditComponent implements OnInit {
   apiManifestInterceptor = undefined;
   templateDescriptionInput: AbstractControl;
 
-  selectedWorkspaceTemplateVersion: string = "";
+  selectedWorkspaceTemplateVersion = '';
   workspaceTemplateVersions: WorkflowTemplate[] = [];
 
   @Input() loading = false;
@@ -77,22 +78,22 @@ export class WorkspaceTemplateEditComponent implements OnInit {
     this.apiManifestInterceptor = (newManifest: string) => {
       const body = {
         manifest: newManifest,
-      }
+      };
       return this.workspaceTemplateService.generateWorkspaceTemplateWorkflowTemplate(this.namespace, 'generated', body)
           .pipe(
               map(res => res.manifest)
           );
-    }
+    };
   }
 
   getWorkspaceTemplateVersions() {
     this.workspaceTemplateService.listWorkspaceTemplateVersions(this.namespace, this.workspaceTemplate.uid)
         .subscribe(res => {
-          if(res.workspaceTemplates && res.workspaceTemplates.length > 0) {
+          if (res.workspaceTemplates && res.workspaceTemplates.length > 0) {
             this.selectedWorkspaceTemplateVersion = res.workspaceTemplates[0].version;
 
             const labels = res.workspaceTemplates[0].labels;
-            if(labels) {
+            if (labels) {
               this.labels = labels;
             } else {
               this.labels = [];
@@ -103,7 +104,7 @@ export class WorkspaceTemplateEditComponent implements OnInit {
             this.manifest = res.workspaceTemplates[0].manifest;
             this.manifestDagEditor.onManifestChange(this.manifest);
           }
-        })
+        });
   }
 
   cancel() {
@@ -111,7 +112,7 @@ export class WorkspaceTemplateEditComponent implements OnInit {
   }
 
   save() {
-    if(!this.labelEditor.isValid) {
+    if (!this.labelEditor.isValid) {
       this.labelEditor.markAllAsDirty();
       return;
     }
@@ -123,17 +124,17 @@ export class WorkspaceTemplateEditComponent implements OnInit {
       manifest: this.manifestDagEditor.rawManifest,
       labels: this.labels,
     };
-    
+
     this.saveEmitted.emit(body);
     this.manifestChangedSinceSave = false;
   }
 
   onVersionSelected(version: string) {
-    let workspaceTemplateVersion = this.workspaceTemplateVersions.find((value => {
+    const workspaceTemplateVersion = this.workspaceTemplateVersions.find((value => {
       return value.version === version;
-    }))
+    }));
 
-    if(!workspaceTemplateVersion) {
+    if (!workspaceTemplateVersion) {
       return;
     }
 
@@ -148,11 +149,11 @@ export class WorkspaceTemplateEditComponent implements OnInit {
 
   onManifestTextModified(manifest: string) {
     // No need to update it again.
-    if(this.manifestChangedSinceSave) {
+    if (this.manifestChangedSinceSave) {
       return;
     }
 
-    if(manifest === this.manifest) {
+    if (manifest === this.manifest) {
       this.manifestChangedSinceSave = false;
       return;
     }

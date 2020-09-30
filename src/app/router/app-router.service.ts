@@ -153,8 +153,16 @@ export class AppRouter {
     return this.router.navigate(['/', namespace, 'workflows', name]);
   }
 
-  public navigateToWorkspaceTemplates(namespace: string) {
-    return this.router.navigate(['/', namespace, 'workspace-templates']);
+  public navigateToWorkspaceTemplates(namespace: string, page: number = 0, pageSize: number = 15, templateUid?: string) {
+    const queryParams = {
+      page,
+      pageSize,
+      uid: templateUid
+    };
+
+    return this.router.navigate(['/', namespace, 'workspace-templates'], {
+      queryParams
+    });
   }
 
   public navigateToWorkspaces(namespace: string) {

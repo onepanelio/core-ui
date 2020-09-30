@@ -411,13 +411,16 @@ export class WorkspaceTemplateServiceService {
      * @param namespace 
      * @param pageSize 
      * @param page 
+     * @param order 
+     * @param labels 
+     * @param uid 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listWorkspaceTemplates(namespace: string, pageSize?: number, page?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<ListWorkspaceTemplatesResponse>;
-    public listWorkspaceTemplates(namespace: string, pageSize?: number, page?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpResponse<ListWorkspaceTemplatesResponse>>;
-    public listWorkspaceTemplates(namespace: string, pageSize?: number, page?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpEvent<ListWorkspaceTemplatesResponse>>;
-    public listWorkspaceTemplates(namespace: string, pageSize?: number, page?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<any> {
+    public listWorkspaceTemplates(namespace: string, pageSize?: number, page?: number, order?: string, labels?: string, uid?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<ListWorkspaceTemplatesResponse>;
+    public listWorkspaceTemplates(namespace: string, pageSize?: number, page?: number, order?: string, labels?: string, uid?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpResponse<ListWorkspaceTemplatesResponse>>;
+    public listWorkspaceTemplates(namespace: string, pageSize?: number, page?: number, order?: string, labels?: string, uid?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpEvent<ListWorkspaceTemplatesResponse>>;
+    public listWorkspaceTemplates(namespace: string, pageSize?: number, page?: number, order?: string, labels?: string, uid?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
             throw new Error('Required parameter namespace was null or undefined when calling listWorkspaceTemplates.');
         }
@@ -430,6 +433,18 @@ export class WorkspaceTemplateServiceService {
         if (page !== undefined && page !== null) {
           queryParameters = this.addToHttpParams(queryParameters,
             <any>page, 'page');
+        }
+        if (order !== undefined && order !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>order, 'order');
+        }
+        if (labels !== undefined && labels !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>labels, 'labels');
+        }
+        if (uid !== undefined && uid !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>uid, 'uid');
         }
 
         let headers = this.defaultHeaders;
