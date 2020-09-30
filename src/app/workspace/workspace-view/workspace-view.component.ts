@@ -1,13 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from "@angular/router";
-import { Parameter, UpdateWorkspaceBody, Workspace, WorkspaceServiceService } from "../../../api";
-import { DomSanitizer, SafeResourceUrl } from "@angular/platform-browser";
-import { MatDialog } from "@angular/material/dialog";
+import { ActivatedRoute } from '@angular/router';
+import { Parameter, UpdateWorkspaceBody, Workspace, WorkspaceServiceService } from '../../../api';
+import { DomSanitizer, SafeResourceUrl, Title } from '@angular/platform-browser';
+import { MatDialog } from '@angular/material/dialog';
 import {
   ConfirmationDialogComponent,
   ConfirmationDialogData
-} from "../../confirmation-dialog/confirmation-dialog.component";
-import { AppRouter } from "../../router/app-router.service";
+} from '../../confirmation-dialog/confirmation-dialog.component';
+import { AppRouter } from '../../router/app-router.service';
 
 export type WorkspaceState = 'Launching' | 'Updating' | 'Pausing' | 'Paused' | 'Resuming' | 'Running' | 'Deleting';
 
@@ -37,6 +37,7 @@ export class WorkspaceViewComponent implements OnInit, OnDestroy {
       private domSanitizer: DomSanitizer,
       private workspaceService: WorkspaceServiceService,
       private dialog: MatDialog,
+      private title: Title,
   ) {
     this.activatedRoute.paramMap.subscribe(next => {
       this.namespace = next.get('namespace');
@@ -56,17 +57,17 @@ export class WorkspaceViewComponent implements OnInit, OnDestroy {
   private startWorkspaceChecker(runNow: boolean = true) {
     this.clearWorkspaceChecker();
 
-    if(runNow) {
+    if (runNow) {
       this.getWorkspace();
     }
 
     this.workspaceChecker = setInterval(() => {
-      this.getWorkspace()
+      this.getWorkspace();
     }, 5000);
   }
 
   private clearWorkspaceChecker() {
-    if(this.workspaceChecker) {
+    if (this.workspaceChecker) {
       clearInterval(this.workspaceChecker);
       this.workspaceChecker = null;
     }
@@ -74,14 +75,16 @@ export class WorkspaceViewComponent implements OnInit, OnDestroy {
 
   getWorkspace() {
     this.workspaceService.getWorkspace(this.namespace, this.workspaceUid).subscribe(res => {
+      if (res && !this.workspace) {
+        this.title.setTitle(`Onepanel - ${res.name}`);
+      }
       this.workspace = res;
       // We add a 't' query parameter is so we avoid caching the response.
-      this.workspaceUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(res.url + "?t=" + Date.now());
+      this.workspaceUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(res.url + '?t=' + Date.now());
 
       this.parameters = res.parameters;
-      
-      switch(res.status.phase)
-      {
+
+      switch (res.status.phase) {
         case 'Running':
           this.state = 'Running';
           this.clearWorkspaceChecker();
@@ -94,7 +97,7 @@ export class WorkspaceViewComponent implements OnInit, OnDestroy {
           this.state = 'Updating';
           break;
       }
-    })
+    });
   }
 
   onPause(workspace: Workspace) {
@@ -102,22 +105,22 @@ export class WorkspaceViewComponent implements OnInit, OnDestroy {
     this.workspaceService.pauseWorkspace(this.namespace, workspace.uid)
         .subscribe(res => {
           this.startWorkspaceChecker(true);
-        })
+        });
   }
 
   onDelete(workspace: Workspace) {
-    let data: ConfirmationDialogData = {
+    const data: ConfirmationDialogData = {
       title: 'Are you sure you want to delete this workspace?',
       confirmText: 'DELETE',
       type: 'delete'
-    }
+    };
 
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      data: data
-    })
+      data
+    });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(!result) {
+      if (!result) {
         return;
       }
 
@@ -125,8 +128,8 @@ export class WorkspaceViewComponent implements OnInit, OnDestroy {
       this.workspaceService.deleteWorkspace(this.namespace, workspace.uid)
           .subscribe(res => {
             this.appRouter.navigateToWorkspaces(this.namespace);
-          })
-    })
+          });
+    });
 
   }
 
@@ -135,7 +138,7 @@ export class WorkspaceViewComponent implements OnInit, OnDestroy {
     this.workspaceService.resumeWorkspace(this.namespace, workspace.uid)
         .subscribe(res => {
           this.startWorkspaceChecker(true);
-        })
+        });
   }
 
   onToggleWorkspaceDetails() {
@@ -152,12 +155,12 @@ export class WorkspaceViewComponent implements OnInit, OnDestroy {
     this.state = 'Updating';
 
     const body: UpdateWorkspaceBody = {
-      parameters: parameters,
+      parameters,
     };
 
     this.workspaceService.updateWorkspace(this.namespace, this.workspace.uid, body)
         .subscribe(res => {
           this.startWorkspaceChecker(true);
-        })
+        });
   }
 }
