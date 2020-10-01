@@ -118,6 +118,10 @@ export class DashboardWorkspaceComponent implements OnInit, OnDestroy {
       this.stats = res.stats;
 
       this.statsTotal = Math.max(this.stats.running, this.stats.terminating, this.stats.failed, this.stats.launching, this.stats.running, this.stats.paused);
+
+      if (this.statsTotal === 0) {
+        this.stats = undefined;
+      }
     });
   }
 }

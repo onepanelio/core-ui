@@ -141,6 +141,8 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
           if (page !== (this.page + 1) || this.pageSize !== this.pageSize) {
             return;
           }
+          const hasWorkspaces = !(res.page === 1 && !res.workspaces);
+          this.hasWorkspaces = hasWorkspaces;
 
           this.workspaceResponse = res;
           if (!res.workspaces) {
@@ -149,8 +151,6 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
 
           this.updateWorkspaceList(res.workspaces);
           this.workspaceState = 'new';
-          const hasWorkspaces = !(res.page === 1 && !res.workspaces);
-          this.hasWorkspaces = hasWorkspaces;
 
           this.workspacesChanged.emit({
             response: res,
