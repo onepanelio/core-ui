@@ -19,7 +19,7 @@ jobs:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
           buildargs: VERSION
-          tag_semver: true
+          tags: $GIT_TAG_NAME
       - name: Set Slack Message
         run: echo "::set-env name=SLACK_MESSAGE::Version $VERSION. Docker Tag onepanel/core-ui:$VERSION"
       - name: Notify Slack Channels
