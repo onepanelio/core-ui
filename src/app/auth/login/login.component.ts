@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { AuthService } from "../auth.service";
-import { AuthServiceService } from "../../../api";
-import { NamespaceTracker } from "../../namespace/namespace-tracker.service";
-import { AppRouter } from "../../router/app-router.service";
-import { MatSnackBar } from "@angular/material/snack-bar";
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../auth.service';
+import { AuthServiceService } from '../../../api';
+import { NamespaceTracker } from '../../namespace/namespace-tracker.service';
+import { AppRouter } from '../../router/app-router.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
@@ -37,13 +37,13 @@ export class LoginComponent implements OnInit {
     this.snackBar.dismiss();
 
     const state = history.state;
-    if(state.referer && !this.authService.redirectUrl) {
+    if (state.referer && !this.authService.redirectUrl) {
       this.authService.redirectUrl = state.referer;
     }
   }
 
   login() {
-    if(this.tokenInput.value.length === 0) {
+    if (this.tokenInput.value.length === 0) {
       this.tokenInput.setErrors({error: 'Must not be blank'});
       return;
     }
@@ -52,13 +52,13 @@ export class LoginComponent implements OnInit {
     const tokenValue = this.tokenInput.value;
     const token = `Bearer ${tokenValue}`;
 
-    this.apiAuthService.isValidToken({token: token})
+    this.apiAuthService.isValidToken({token})
         .subscribe(res => {
             this.authService.setAuthToken(tokenValue, res.domain);
 
             this.namespaceTracker.getNamespaces();
 
-            if(this.authService.redirectUrl) {
+            if (this.authService.redirectUrl) {
               this.appRouter.navigateByUrl(this.authService.redirectUrl);
               this.authService.redirectUrl = null;
               this.loggingIn = false;
@@ -68,8 +68,8 @@ export class LoginComponent implements OnInit {
             this.appRouter.navigateToHomePage();
             this.loggingIn = false;
         }, err => {
-          this.tokenInput.setErrors({error: 'Invalid token'})
+          this.tokenInput.setErrors({error: 'Invalid token'});
           this.loggingIn = false;
-        })
+        });
   }
 }
