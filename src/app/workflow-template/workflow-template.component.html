@@ -3,7 +3,11 @@
     <app-alert-panel></app-alert-panel>
   </div>
   <div class="page-header">
-    <div class="page-title">
+    <a [routerLink]="['/', this.namespace, 'workflows']" class="op-back-link">
+      <i class="fas fa-chevron-left"></i>
+      <span>Back to workflows</span>
+    </a>
+    <div class="page-title mt-3">
       <div class="page-title-text">Workflow Templates</div>
       <div class="page-action-bar">
         <a mat-flat-button color="accent" class="op-rounded op-button ml-p40" [routerLink]="['/', this.namespace, 'workflow-templates', 'create']">
