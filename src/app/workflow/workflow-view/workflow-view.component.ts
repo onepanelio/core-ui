@@ -215,7 +215,7 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
       verb: 'create',
       resource: 'workflows',
       resourceName: workflowExecution.uid,
-      group: 'onepanel.io',
+      group: 'argoproj.io',
     });
 
     const canUpdate$ = this.authService.isAuthorized({
@@ -223,7 +223,7 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
       verb: 'update',
       resource: 'workflows',
       resourceName: workflowExecution.uid,
-      group: 'onepanel.io',
+      group: 'argoproj.io',
     });
 
     const canDelete$ = this.authService.isAuthorized({
@@ -231,7 +231,7 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
       verb: 'delete',
       resource: 'workflows',
       resourceName: workflowExecution.uid,
-      group: 'onepanel.io',
+      group: 'argoproj.io',
     });
 
     combineLatest([canCreate$, canUpdate$, canDelete$])
