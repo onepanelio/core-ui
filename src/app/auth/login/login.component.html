@@ -3,8 +3,13 @@
         <div class="font-proxima-bold font-size-larger color-primary">Log in</div>
         <form class="mt-3" [formGroup]="form">
             <mat-form-field class="w-100 fix-mat-overflow" appearance="outline">
+                <mat-label>Username</mat-label>
+                <input matInput formControlName="username" />
+                <mat-error>{{usernameInput.getError('error')}}</mat-error>
+            </mat-form-field>
+            <mat-form-field class="w-100 fix-mat-overflow" appearance="outline">
                 <mat-label>Token</mat-label>
-                <input matInput formControlName="token" />
+                <input type="password" matInput formControlName="token"/>
                 <mat-error>{{tokenInput.getError('error')}}</mat-error>
             </mat-form-field>
 
