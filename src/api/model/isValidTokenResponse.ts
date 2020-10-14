@@ -13,7 +13,7 @@
 
 export interface IsValidTokenResponse { 
     domain?: string;
-    jwtToken?: string;
+    token?: string;
     username?: string;
 }
 

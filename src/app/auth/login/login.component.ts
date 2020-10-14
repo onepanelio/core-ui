@@ -71,9 +71,8 @@ export class LoginComponent implements OnInit {
         this.apiAuthService.isValidToken({
             token: this.tokenInput.value,
             username: this.usernameInput.value
-        })
-            .subscribe(res => {
-                this.authService.setLogin(res.username, res.jwtToken, res.domain);
+        }).subscribe(res => {
+                this.authService.setLogin(this.usernameInput.value, res.token);
 
                 this.namespaceTracker.getNamespaces();
 
