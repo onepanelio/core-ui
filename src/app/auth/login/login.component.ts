@@ -72,7 +72,7 @@ export class LoginComponent implements OnInit {
             token: this.tokenInput.value,
             username: this.usernameInput.value
         }).subscribe(res => {
-                this.authService.setLogin(this.usernameInput.value, res.token);
+                this.authService.setLogin(this.usernameInput.value, res.token, res.domain);
 
                 this.namespaceTracker.getNamespaces();
 
