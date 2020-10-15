@@ -52,6 +52,11 @@
       color: $darkest-gray;
     }
   }
+
+  .offset-top-by-2 {
+    position: relative;
+    top: 2px;
+  }
 }
 
 .workflow-menu-icon {

@@ -23,8 +23,6 @@ export class DashboardWorkflowComponent implements OnInit, OnDestroy {
     return this._namespace;
   }
 
-  displayedColumns = ['name', 'status', 'createdAt', 'start', 'end', 'template', 'spacer', 'actions'];
-
   stats?: WorkflowExecutionStatisticReport;
   statsTotal = 0.0;
   workflowExecutionPhase?: WorkflowExecutionPhase;

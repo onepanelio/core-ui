@@ -126,6 +126,7 @@ import { StatBarComponent } from './ui-tools/stat-bar/stat-bar.component';
 import { WorkflowComponent } from './workflow/workflow.component';
 import { WorkspaceListComponent } from './workspace/workspace-list/workspace-list.component';
 import { WorkspacesComponent } from './workspace/workspaces/workspaces.component';
+import { WorkStatusComponent } from './ui-tools/work-status/work-status.component';
 
 @NgModule({
     declarations: [
@@ -223,6 +224,7 @@ import { WorkspacesComponent } from './workspace/workspaces/workspaces.component
         WorkflowComponent,
         WorkspaceListComponent,
         WorkspacesComponent,
+        WorkStatusComponent
     ],
     entryComponents: [
         WorkflowExecuteDialogComponent,
