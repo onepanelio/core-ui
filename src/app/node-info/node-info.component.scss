@@ -4,33 +4,53 @@
   display: block;
 }
 
-.summary-box {
-  padding: 0 16px 16px 16px;
-  text-align: center;
-}
+.node-info {
+  overflow-y: scroll;
 
-.close-button {
-  margin-right: -16px;
-  color: $medium-gray;
-}
+  .top-box {
+    top: 0;
+    position: sticky;
+    background-color: white;
+  }
 
-.additional-info-block {
-  padding: 30px 30px 0 30px;
-  overflow: scroll;
-}
+  .summary-box {
+    padding: 0 16px 16px 16px;
+    text-align: center;
+    top: 0;
+  }
 
-.op-expansion-panel.mat-expansion-panel:not([class*='mat-elevation-z']) {
-  margin-left: -30px;
-  margin-right: -30px;
-  border-top: $gray solid 1px;
-  border-radius: 0;
-}
+  .close-button {
+    margin-right: -16px;
+    color: $medium-gray;
+  }
 
-.invisible-node-info {
-  visibility: hidden !important;
-}
+  .parameters {
+    margin-top: -1px;
+  }
+  // TODO is this needed?
+  // also, do we need a top border on the first mat panel? Or can we just give it a top margin of -1?
+  .additional-info-block {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
 
-.expansion-icon {
-  font-size: 30px;
-  line-height: 30px;
+  .op-expansion-panel.mat-expansion-panel:not([class*='mat-elevation-z']) {
+    margin-left: -30px;
+    margin-right: -30px;
+    border-top: $gray solid 1px;
+    border-radius: 0;
+  }
+
+  .invisible-node-info {
+    visibility: hidden !important;
+  }
+
+  .expansion-icon {
+    font-size: 30px;
+    line-height: 30px;
+  }
+
+  .finished-at {
+    margin-bottom: 35px;
+  }
 }

@@ -31,7 +31,6 @@ import { map } from 'rxjs/operators';
 import { WorkflowExecuteDialogComponent } from '../workflow-execute-dialog/workflow-execute-dialog.component';
 import { Alert } from '../../alert/alert';
 import { AlertService } from '../../alert/alert.service';
-import { Location } from '@angular/common';
 
 const aceRange = ace.acequire('ace/range').Range;
 
@@ -59,8 +58,6 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
 
   nodeInfo?: NodeStatus;
   height = '1000px'; // Dummy large value.
-  nodeInfoHeight = '1000px'; // Dummy large value.
-  nodeInfoTop = '0'; // Dummy initial value
 
   showNodeInfo = false;
   selectedNodeId = null;
@@ -87,7 +84,7 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
 
   @HostListener('window:resize') onWindowResize() {
     setTimeout( () => {
-      this.updateNodeInfoProperties();
+      // this.updateNodeInfoProperties();
     });
   }
 
@@ -105,7 +102,6 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
 
     setTimeout( () => {
       this._nodeInfoElement = value;
-      this.updateNodeInfoProperties();
     });
   }
 
@@ -319,7 +315,6 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
     }
 
     this.nodeInfo = newNodeInfo;
-    this.updateNodeInfoProperties();
 
     this.showNodeInfo = true;
 
@@ -445,11 +440,6 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
 
   onLogsClosed() {
     this.showLogs = false;
-  }
-
-  updateNodeInfoProperties() {
-    this.nodeInfoHeight = (document.getElementById('info-box').offsetHeight - 2) + 'px';
-    this.nodeInfoTop = (document.getElementById('info-box').offsetTop) + 'px';
   }
 
   onTerminate() {

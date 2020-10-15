@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { NodeStatus } from '../node/node.service';
-import { SimpleWorkflowDetail, WorkflowPhase, WorkflowService, } from "../workflow/workflow.service";
+import { SimpleWorkflowDetail, WorkflowPhase, WorkflowService, } from '../workflow/workflow.service';
 import * as yaml from 'js-yaml';
-import { TemplateDefinition } from "../workflow-template/workflow-template.service";
-import { FileNavigator, LongRunningTaskState, SlowValueUpdate } from "../files/fileNavigator";
-import { ModelFile, WorkflowServiceService } from "../../api";
-import { Metric, MetricsService } from "./metrics/metrics.service";
+import { TemplateDefinition } from '../workflow-template/workflow-template.service';
+import { FileNavigator } from '../files/fileNavigator';
+import { WorkflowServiceService } from '../../api';
+import { Metric, MetricsService } from './metrics/metrics.service';
 
 @Component({
   selector: 'app-node-info',
@@ -14,6 +14,7 @@ import { Metric, MetricsService } from "./metrics/metrics.service";
   providers: [WorkflowService, MetricsService]
 })
 export class NodeInfoComponent implements OnInit, OnDestroy {
+
   @Input() namespace: string;
   @Input() name: string;
 
@@ -25,13 +26,12 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
   node: NodeStatus;
   previousNodeStatus: NodeStatus;
-  protected fileLoaderSubscriber;
 
   startedAt = null;
   finishedAt = null;
   status: WorkflowPhase;
   message: string;
-  logsAvailable: boolean = false;
+  logsAvailable = false;
   statusClass = {};
   inputParameters = [];
   outputParameters = [];
@@ -43,13 +43,45 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   artifactsExpanded = false;
   template: TemplateDefinition;
 
-  fileNavigator: FileNavigator;
   hasFiles = false;
   metrics: Metric[] = [];
+
+  fileNavigators = [];
+  fileLoaderSubscriptions = {};
 
   constructor(private workflowService: WorkflowService,
               private workflowServiceService: WorkflowServiceService,
               private metricsService: MetricsService) { }
+
+  static outputArtifactsToDirectories(outputArtifacts: any[]): Array<string> {
+    const directoriesSet = new Map<string, boolean>();
+
+    for (const outputArtifact of outputArtifacts) {
+      let key: string|undefined;
+      if (outputArtifact.s3 && outputArtifact.s3.key) {
+        key = outputArtifact.s3.key;
+      }
+
+      if (key === undefined) {
+        continue;
+      }
+
+      const lastSlash = key.lastIndexOf('/');
+      let directory = key.substring(0, lastSlash);
+      while (directory.lastIndexOf('/') === directory.length - 1) {
+        directory = directory.substring(0, directory.length - 1);
+      }
+
+      directoriesSet.set(directory, true);
+    }
+
+    const directories = [];
+    for (const key of directoriesSet.keys()) {
+      directories.push(key);
+    }
+
+    return directories;
+  }
 
   ngOnInit() {
   }
@@ -58,7 +90,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   }
 
   updateNodeStatus(node: NodeStatus) {
-    if(!node) {
+    if (!node) {
       return;
     }
 
@@ -72,14 +104,14 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
     const skipped = node.phase === 'Skipped';
 
-    if(!skipped) {
+    if (!skipped) {
       if (node.startedAt) {
         this.startedAt = new Date(node.startedAt);
       } else {
         this.startedAt = node.startedAt;
       }
 
-      if(node.finishedAt) {
+      if (node.finishedAt) {
         this.finishedAt = new Date(node.finishedAt);
       } else {
         // Error phase has no finished date
@@ -108,7 +140,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
     try {
       const manifest = this.workflow.manifest;
       loaded = yaml.safeLoad(manifest);
-      for (let template of loaded.spec.templates) {
+      for (const template of loaded.spec.templates) {
         if (template.name === node.templateName) {
           this.template = template;
         }
@@ -121,7 +153,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
       && node.templateName === loaded.spec.entrypoint
       && loaded && loaded.spec.arguments.parameters) {
       this.inputParameters = loaded.spec.arguments.parameters;
-    } else if (node.type == 'Pod' && node.inputs) {
+    } else if (node.type === 'Pod' && node.inputs) {
       this.inputParameters = node.inputs.parameters;
       this.inputArtifacts = node.inputs.artifacts;
     }
@@ -161,32 +193,45 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   }
 
   updateFiles() {
-    if(this.updatedToSameNode() && !this.transitionedToFinishedNode()) {
+    if (this.updatedToSameNode() && !this.transitionedToFinishedNode()) {
       return;
     }
 
-    if(this.fileNavigator) {
-      this.fileNavigator.cleanUp();
+    for (const fileNavigator of this.fileNavigators) {
+      fileNavigator.cleanUp();
     }
 
-    this.fileNavigator = new FileNavigator({
-      rootPath: `artifacts/${this.namespace}/${this.name}/${this.node.id}`,
-      namespace: this.namespace,
-      name: this.name,
-      workflowService: this.workflowServiceService,
-    });
+    this.fileNavigators = [];
+    const directories = NodeInfoComponent.outputArtifactsToDirectories(this.outputArtifacts);
 
-    // Check if there are any files at all. If there isn't, don't display the file browser.
-    this.fileLoaderSubscriber = this.fileNavigator.filesChanged.subscribe(() => {
-      this.hasFiles = this.fileNavigator.hasFiles;
-      this.fileLoaderSubscriber.unsubscribe();
-    });
+    for (const directory of directories) {
+      const fileNavigator = new FileNavigator({
+        rootPath: directory,
+        namespace: this.namespace,
+        name: this.name,
+        workflowService: this.workflowServiceService,
+      });
 
-    this.fileNavigator.loadFiles();
+      const parts = directory.split('/');
+      if (parts.length > 0) {
+        fileNavigator.displayRootPath = parts[parts.length - 1];
+      }
+
+      // Check if there are any files at all. If there isn't, don't display the file browser.
+      this.fileLoaderSubscriptions[directory] = fileNavigator.filesChanged.subscribe(() => {
+        this.hasFiles = this.hasFiles || fileNavigator.hasFiles;
+
+        this.fileLoaderSubscriptions[directory].unsubscribe();
+      });
+
+      fileNavigator.loadFiles();
+
+      this.fileNavigators.push(fileNavigator);
+    }
   }
 
   updateMetrics() {
-    if(this.updatedToSameNode() && !this.transitionedToFinishedNode()) {
+    if (this.updatedToSameNode() && !this.transitionedToFinishedNode()) {
       return;
     }
 
