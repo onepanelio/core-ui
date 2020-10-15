@@ -26,7 +26,7 @@ import { SortDirection } from '@angular/material/typings/sort';
 export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
     private snackbarRef: MatSnackBarRef<SimpleSnackBar>;
 
-    @Input() displayedColumns = ['name', 'status', 'createdAt', 'start', 'end', 'template', 'spacer', 'actions'];
+    @Input() displayedColumns = ['name', 'status', 'createdAt', 'start', 'end', 'template', 'spacer', 'actions', 'labels'];
     @Input() sort = 'createdAt';
     @Input() sortDirection: SortDirection = 'desc';
 
