@@ -57,6 +57,12 @@
     position: relative;
     top: 2px;
   }
+
+  .cdk-column-labels {
+    /deep/ .labels-list-view .labels-list-item {
+      margin-top: 10px;
+    }
+  }
 }
 
 .workflow-menu-icon {
