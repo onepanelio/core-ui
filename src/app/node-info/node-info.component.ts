@@ -68,6 +68,10 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
       const lastSlash = key.lastIndexOf('/');
       let directory = key.substring(0, lastSlash);
+      if (key.indexOf('.') === -1) {
+        directory = key;
+      }
+      
       while (directory.lastIndexOf('/') === directory.length - 1) {
         directory = directory.substring(0, directory.length - 1);
       }
