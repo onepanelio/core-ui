@@ -30,7 +30,6 @@ export class AppComponent implements OnInit {
     version = '1.0.0';
     showNamespaceManager = false;
     showNavigationBar = true;
-    servicesVisible?: boolean = undefined;
 
     constructor(public namespaceTracker: NamespaceTracker,
                 private appRouter: AppRouter,
@@ -39,8 +38,7 @@ export class AppComponent implements OnInit {
                 private activatedRoute: ActivatedRoute,
                 private router: Router,
                 private dialog: MatDialog,
-                private snackbar: MatSnackBar,
-                private servicesService: ServiceServiceService) {
+                private snackbar: MatSnackBar) {
         this.version = environment.version;
 
         this.namespaceTracker.namespacesChanged.subscribe(() => {
@@ -48,7 +46,6 @@ export class AppComponent implements OnInit {
 
             if (namespace) {
                 this.namespaceTracker.activeNamespace = namespace;
-                this.getServicesVisible(namespace);
             }
         });
 
@@ -116,38 +113,5 @@ export class AppComponent implements OnInit {
 
     onRouterOutletActivate(data) {
         this.showNavigationBar = !data.hideNavigationBar;
-    }
-
-    /**
-     * Sets the servicesVisible variable to the input value.
-     * Further stores it in local storage.
-     */
-    private setServicesVisible(visible: boolean) {
-        this.servicesVisible = visible;
-        localStorage.setItem('services-visible', JSON.stringify(visible));
-    }
-
-    /**
-     * Sets the servicesVisible variable.
-     *
-     * If it is already set, use that.
-     * If we have it stored in local storage, use that.
-     * Otherwise, make a network request to check.
-     *
-     */
-    private getServicesVisible(namespace: string) {
-        if (this.servicesVisible !== undefined) {
-            return;
-        }
-
-        const localStorageValue = localStorage.getItem('services-visible');
-        if (localStorageValue !== null) {
-            this.servicesVisible = JSON.parse(localStorageValue);
-            return;
-        }
-
-        this.servicesService.listServices(namespace).subscribe(res => {
-            this.setServicesVisible(res.count !== undefined);
-        });
     }
 }

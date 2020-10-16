@@ -71,7 +71,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
       if (key.indexOf('.') === -1) {
         directory = key;
       }
-      
+
       while (directory.lastIndexOf('/') === directory.length - 1) {
         directory = directory.substring(0, directory.length - 1);
       }
