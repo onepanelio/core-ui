@@ -1,8 +1,9 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { FileNavigator, LongRunningTaskState, SlowValueUpdate } from "../fileNavigator";
-import { BreadcrumbEvent } from "../../breadcrumbs/breadcrumbs.component";
-import { FileActionEvent } from "../file-navigator/file-navigator.component";
-import { ModelFile, WorkflowServiceService } from "../../../api";
+import { FileNavigator, LongRunningTaskState, SlowValueUpdate } from '../fileNavigator';
+import { BreadcrumbEvent } from '../../breadcrumbs/breadcrumbs.component';
+import { FileActionEvent } from '../file-navigator/file-navigator.component';
+import { ModelFile, WorkflowServiceService } from '../../../api';
+import { GenericFileViewComponent } from '../file-viewer/generic-file-view/generic-file-view.component';
 
 @Component({
   selector: 'app-file-browser',
@@ -12,47 +13,49 @@ import { ModelFile, WorkflowServiceService } from "../../../api";
 export class FileBrowserComponent implements OnInit, OnDestroy {
   private filePathChangedSubscriber;
   private fileChangedSubscriber;
+
+  // tslint:disable-next-line:variable-name
   private _fileNavigator: FileNavigator;
 
   @Input() displayedColumns = [];
 
   showingFile = false;
 
-  loading: boolean = false;
+  loading = false;
 
-  @Input() rootName: string = '';
+  @Input() rootName = '';
   @Input() set fileNavigator(value: FileNavigator) {
     this._fileNavigator = value;
 
-    if(this.filePathChangedSubscriber) {
+    if (this.filePathChangedSubscriber) {
       this.filePathChangedSubscriber.unsubscribe();
     }
 
     this.filePathChangedSubscriber = value.path.valueChanged.subscribe((change: SlowValueUpdate<string>)  => {
-      if(change.state === LongRunningTaskState.Succeeded) {
+      if (change.state === LongRunningTaskState.Succeeded) {
         this.updatePathParts(change.value);
       }
     });
 
-    if(this.fileChangedSubscriber) {
+    if (this.fileChangedSubscriber) {
       this.fileChangedSubscriber.unsubscribe();
     }
 
     this.fileChangedSubscriber = value.file.valueChanged.subscribe((change: SlowValueUpdate<ModelFile>) => {
-      if(!this.showingFile && change.state === LongRunningTaskState.Started) {
+      if (!this.showingFile && change.state === LongRunningTaskState.Started) {
         this.loading = true;
       }
 
-      if(change.state === LongRunningTaskState.Succeeded) {
+      if (change.state === LongRunningTaskState.Succeeded) {
         this.updateFile(change.value);
 
-        if(!this.showingFile) {
+        if (!this.showingFile) {
           this.loading = false;
         }
       }
 
-      if(change.state === LongRunningTaskState.Failed) {
-        if(!this.showingFile) {
+      if (change.state === LongRunningTaskState.Failed) {
+        if (!this.showingFile) {
           this.loading = false;
         }
       }
@@ -81,7 +84,7 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
   }
 
   updateFile(newFile: ModelFile) {
-    if(newFile.directory) {
+    if (newFile.directory) {
       this.showingFile = false;
       return;
     }
@@ -90,7 +93,7 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if(this.filePathChangedSubscriber) {
+    if (this.filePathChangedSubscriber) {
       this.filePathChangedSubscriber.unsubscribe();
       this.filePathChangedSubscriber = null;
     }
@@ -109,7 +112,7 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
     const path = this.fileNavigator.path.value;
     const subPath = path.substring(this.fileNavigator.rootPath.length);
 
-    let parts = subPath.split('/').filter(value => value.length != 0);
+    const parts = subPath.split('/').filter(value => value.length != 0);
 
     const partUntil = parts.slice(0, index + 1).join('/');
 
@@ -117,21 +120,21 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
   }
 
   onFileEvent(e: FileActionEvent) {
-    if(e.action === 'download') {
+    if (e.action === 'download') {
       this.onFileDownload(e.file);
     }
   }
 
   onFileDownload(file: ModelFile) {
-    if(file.directory) {
-      throw 'Unable to download a directory';
+    if (file.directory) {
+      throw new Error('Unable to download a directory');
     }
 
     this.workflowService.getArtifact(this.namespace, this.name, file.path)
         .subscribe((res: any) => {
-          const link = <HTMLAnchorElement>document.createElement('a');
+          const link = document.createElement('a') as HTMLAnchorElement;
           let downloadName = `${this.namespace}-${this.name}-${file.name}`;
-          if(file.extension) {
+          if (file.extension) {
             downloadName += `.${file.extension}`;
           }
 
@@ -142,14 +145,20 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
-        })
+        });
   }
 
   onFileLoadingChange(value: boolean) {
-    if(this.showingFile) {
+    if (this.showingFile) {
       setTimeout(() => {
         this.loading = value;
       });
     }
+  }
+
+  canDownload(file: ModelFile) {
+    return !file.directory &&
+            parseInt(file.size, 10) < GenericFileViewComponent.MAX_DOWNLOAD_SIZE
+    ;
   }
 }

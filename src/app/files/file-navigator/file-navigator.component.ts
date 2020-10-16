@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FileNavigator } from "../fileNavigator";
 import { ModelFile } from "../../../api";
+import { GenericFileViewComponent } from '../file-viewer/generic-file-view/generic-file-view.component';
 
 export type FileAction = 'download';
 
@@ -17,24 +18,23 @@ export interface FileActionEvent {
 export class FileNavigatorComponent implements OnInit {
   @Input() displayedColumns = ['icon', 'name', 'last-modified', 'size', 'actions'];
 
+  // tslint:disable-next-line:variable-name
   private _fileNavigator: FileNavigator;
 
 
   @Input() set fileNavigator(fileNavigator: FileNavigator) {
-    if(!fileNavigator) {
+    if (!fileNavigator) {
       return;
     }
 
     this._fileNavigator = fileNavigator;
     this._fileNavigator.loadFiles();
   }
-
-  @Output() fileAction = new EventEmitter<FileActionEvent>();
-
   get fileNavigator(): FileNavigator {
     return this._fileNavigator;
   }
 
+  @Output() fileAction = new EventEmitter<FileActionEvent>();
   constructor() { }
 
   ngOnInit() {
@@ -47,7 +47,13 @@ export class FileNavigatorComponent implements OnInit {
   onFileDownload(file: ModelFile) {
     this.fileAction.emit({
       action: 'download',
-      file: file,
-    })
+      file,
+    });
+  }
+
+  canDownload(file: ModelFile) {
+    return !file.directory &&
+            parseInt(file.size, 10) < GenericFileViewComponent.MAX_DOWNLOAD_SIZE
+    ;
   }
 }

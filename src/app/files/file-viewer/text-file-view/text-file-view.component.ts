@@ -28,7 +28,7 @@ export class TextFileViewComponent implements OnInit {
           console.error(err);
         }, () => {
           this.loading.emit(false);
-        })
+        });
   }
 
   public static CanEdit(): boolean {
@@ -40,7 +40,7 @@ export class TextFileViewComponent implements OnInit {
   }
 
   public static IsTextExtension(extension: string){
-    return (/(txt|text|log)$/i).test(extension);
+    return (/(txt|text|log|config)$/i).test(extension);
   }
 
   private setBase64Content(content: string) {

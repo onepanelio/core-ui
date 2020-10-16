@@ -15,14 +15,19 @@ text {
 }
 
 app-node-info {
-  width: 420px;
-  position: absolute;
+  position: fixed;
+  width: 50vw;
   right: 0;
   top: 0;
+  height: 100vh;
+  border-top-right-radius: 0 !important;
+
+  .ended-at {
+    margin-bottom: 35px;
+  }
 
   /deep/ .root-element {
     height: 100%;
-    overflow: scroll;
   }
 }
 

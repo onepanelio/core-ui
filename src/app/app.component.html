@@ -1,7 +1,6 @@
 <app-navbar
   *ngIf="!loggingIn && showNavigationBar"
   [activeUrl]="activeUrl"
-  [servicesVisible]="servicesVisible"
   (logout)="logout()"
   (namespaceClick)="onFormFieldClick()">
 </app-navbar>

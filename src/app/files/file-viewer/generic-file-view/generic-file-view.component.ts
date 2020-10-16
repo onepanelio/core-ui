@@ -11,6 +11,10 @@ import { TextFileViewComponent } from "../text-file-view/text-file-view.componen
   styleUrls: ['./generic-file-view.component.scss'],
 })
 export class GenericFileViewComponent {
+  public static BIG_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
+  public static MAX_IMAGE_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
+  public static MAX_DOWNLOAD_SIZE = 10 * 1024 * 1024; // 10 MB
+
   public static IsFileTooBigToDisplay(file: ModelFile): boolean {
     let size = 0;
     if(file.size) {
@@ -24,14 +28,13 @@ export class GenericFileViewComponent {
     return size > GenericFileViewComponent.BIG_FILE_SIZE;
   }
 
-  public static BIG_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
-  public static MAX_IMAGE_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 
-  fileType: string = 'unknown';
+  fileType = 'unknown';
 
+  // tslint:disable-next-line:variable-name
   _file: ModelFile = null;
 
-  @Input() showDownload: boolean = true;
+  @Input() showDownload = true;
   @Output() actionClick = new EventEmitter<FileActionEvent>();
 
   constructor() {}

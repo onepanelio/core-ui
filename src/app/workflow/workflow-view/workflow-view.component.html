@@ -95,14 +95,11 @@
       </div>
     </div>
     <app-node-info
-       class="ml-3 op-border scroll-overflow"
+       class="ml-3 op-border"
        [ngClass]="{ 'visible': showNodeInfo, 'hidden': !showNodeInfo }"
        [namespace]="namespace"
        [name]="uid"
        [visible]="showNodeInfo"
-       [style.height]="nodeInfoHeight"
-       [style.minHeight]="nodeInfoHeight"
-       [style.top]="nodeInfoTop"
        [workflow]="workflow"
        (closeClicked)="onNodeInfoClosed()"
        (yamlClicked)="onYamlClicked()"

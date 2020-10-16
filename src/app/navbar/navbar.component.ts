@@ -47,11 +47,6 @@ export class NavbarComponent implements OnInit {
         this.title.setTitle('Onepanel - Workspaces');
         return;
       }
-      if (urlPart.indexOf('services') >= 0) {
-        this.title.setTitle('Onepanel - Services');
-        this.activeRoute = 'services';
-        return;
-      }
       if (urlPart.indexOf('dashboard') >= 0) {
         this.title.setTitle('Onepanel - Dashboard');
         this.activeRoute = 'dashboard';
@@ -59,8 +54,6 @@ export class NavbarComponent implements OnInit {
       }
     }
   }
-
-  @Input() servicesVisible?: boolean = undefined;
 
   @Output() logout = new EventEmitter();
   @Output() namespaceClick = new EventEmitter();

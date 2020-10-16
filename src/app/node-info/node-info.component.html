@@ -1,11 +1,12 @@
-<div class="root-element bg-white" [class.invisible-node-info]="!visible">
-  <div class="bg-primary-light summary-box">
-    <div class="d-flex flex-row-reverse">
-      <button mat-icon-button class="close-button" aria-label="close icon" (click)="onCloseClick()">
-        <mat-icon>close</mat-icon>
-      </button>
-    </div>
-    <div class="d-flex flex-column">
+<div class="root-element bg-white node-info" [class.invisible-node-info]="!visible">
+  <div class="top-box op-border-bottom pb-3">
+    <div class="bg-primary-light summary-box">
+      <div class="d-flex flex-row-reverse">
+        <button mat-icon-button class="close-button" aria-label="close icon" (click)="onCloseClick()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+      <div class="d-flex flex-column">
       <app-status
               *ngIf="status"
               class="font-roboto-bold font-size-large line-height-large"
@@ -17,10 +18,10 @@
                  [startedAt]="startedAt"
                  [finishedAt]="finishedAt">
       </app-clock>
-      <div *ngIf="startedAt" class="font-size-small font-medium-gray font-roboto-bold mt-1">
+      <div *ngIf="startedAt" class="font-size-small font-medium-gray font-roboto-bold mt-2">
         Started <app-date [dateTime]="startedAt"></app-date>
       </div>
-      <div *ngIf="finishedAt" class="font-size-small font-medium-gray font-roboto-bold mt-1">
+      <div *ngIf="finishedAt" class="font-size-small font-medium-gray font-roboto-bold mt-2 finished-at">
         Finished <app-date [dateTime]="finishedAt"></app-date>
       </div>
       <div>
@@ -29,9 +30,8 @@
         <button *ngIf="logsAvailable" mat-button color="primary" class="w-50 font-size-regular" (click)="openLogs()">LOGS</button>
       </div>
     </div>
-  </div>
-  <div *ngIf="visible" class="additional-info-block font-roboto">
-    <table class="w-100">
+    </div>
+    <table class="w-100 mt-3 font-roboto additional-info-block">
       <thead>
       <tr class="text-left">
         <th>Name</th>
@@ -45,19 +45,21 @@
       </tr>
       </tbody>
     </table>
-    <table class="w-100" *ngIf="node && node.message">
+    <table *ngIf="node && node.message" class="w-100 mt-3 font-roboto additional-info-block">
       <thead>
-        <tr class="text-left">
-          <th>Message</th>
-        </tr>
+      <tr class="text-left">
+        <th>Message</th>
+      </tr>
       </thead>
       <tbody>
-        <tr>
-          <td class="w-100 word-break-all">{{node.message}}</td>
-        </tr>
+      <tr>
+        <td class="w-100 word-break-all">{{node.message}}</td>
+      </tr>
       </tbody>
     </table>
-    <mat-expansion-panel class="op-expansion-panel mt-5" hideToggle="true" (expandedChange)="onParametersExpandChange($event)">
+  </div>
+  <div *ngIf="visible" class="additional-info-block font-roboto">
+    <mat-expansion-panel class="op-expansion-panel parameters" hideToggle="true" (expandedChange)="onParametersExpandChange($event)">
       <mat-expansion-panel-header [expandedHeight]="'48px'">
         <mat-panel-title class="font-size-larger font-primary justify-content-between align-items-center">
           Parameters
@@ -150,14 +152,14 @@
 
         <div *ngIf="hasFiles" class="mt-4">
           <div class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold">FILES</div>
-          <app-file-browser *ngIf="this.fileNavigator"
-                            class="d-block mt-3"
-                            [displayedColumns]="['icon', 'name', 'size', 'actions']"
-                            [rootName]="name"
-                            [fileNavigator]="fileNavigator"
-                            [namespace]="this.namespace"
-                            [name]="this.name">
-          </app-file-browser>
+            <app-file-browser *ngFor="let fileNavigator of fileNavigators"
+                              class="d-block mt-3"
+                              [displayedColumns]="['icon', 'name', 'size', 'actions']"
+                              [rootName]="fileNavigator.displayRootPath"
+                              [fileNavigator]="fileNavigator"
+                              [namespace]="this.namespace"
+                              [name]="fileNavigator.name">
+            </app-file-browser>
         </div>
       </div>
       <div *ngIf="!metrics.length && !hasFiles" class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold">
