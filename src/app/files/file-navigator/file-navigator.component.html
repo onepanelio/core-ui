@@ -31,7 +31,7 @@
     <ng-container cdkColumnDef="actions">
         <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
         <cdk-cell *cdkCellDef="let file" class="color-primary">
-            <div *ngIf="!file.directory" (click)="onFileDownload(file)" class="pointer-hover"><i class="fas fa-download"></i></div>
+            <div (click)="onFileDownload(file)" [class.hidden]="!canDownload(file)" class="pointer-hover"><i class="fas fa-download"></i></div>
         </cdk-cell>
     </ng-container>
 

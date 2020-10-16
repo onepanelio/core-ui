@@ -3,6 +3,7 @@ import { FileNavigator, LongRunningTaskState, SlowValueUpdate } from '../fileNav
 import { BreadcrumbEvent } from '../../breadcrumbs/breadcrumbs.component';
 import { FileActionEvent } from '../file-navigator/file-navigator.component';
 import { ModelFile, WorkflowServiceService } from '../../../api';
+import { GenericFileViewComponent } from '../file-viewer/generic-file-view/generic-file-view.component';
 
 @Component({
   selector: 'app-file-browser',
@@ -153,5 +154,11 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
         this.loading = value;
       });
     }
+  }
+
+  canDownload(file: ModelFile) {
+    return !file.directory &&
+            parseInt(file.size, 10) < GenericFileViewComponent.MAX_DOWNLOAD_SIZE
+    ;
   }
 }

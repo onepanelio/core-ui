@@ -76,6 +76,8 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
         directory = directory.substring(0, directory.length - 1);
       }
 
+      directory = directory.replace('//', '/');
+
       directoriesSet.set(directory, true);
     }
 
@@ -162,7 +164,6 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
       this.inputArtifacts = node.inputs.artifacts;
     }
 
-
     if (node.type !== 'DAG' && node.type !== 'Steps' && node.outputs) {
       this.outputParameters = node.outputs.parameters;
       this.outputArtifacts = node.outputs.artifacts;
@@ -216,10 +217,10 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
         workflowService: this.workflowServiceService,
       });
 
-      const parts = directory.split('/');
-      if (parts.length > 0) {
-        fileNavigator.displayRootPath = parts[parts.length - 1];
-      }
+      // const parts = directory.split('/');
+      // if (parts.length > 0) {
+      //   fileNavigator.displayRootPath = parts[parts.length - 1];
+      // }
 
       // Check if there are any files at all. If there isn't, don't display the file browser.
       this.fileLoaderSubscriptions[directory] = fileNavigator.filesChanged.subscribe(() => {
