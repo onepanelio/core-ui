@@ -63,7 +63,7 @@
         <ng-container cdkColumnDef="actions">
             <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
             <cdk-cell *cdkCellDef="let workspace" class="flex align-items-center">
-                <a class="link-button" target="_blank" [routerLink]="['/', this.namespace, 'workspaces', workspace.uid]">View</a>
+                <a class="link-button op-edit-button" target="_blank" [routerLink]="['/', this.namespace, 'workspaces', workspace.uid]">View</a>
                 <button mat-icon-button color="primary" [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{'workspace' :workspace}" (click)="onMatMenuOpen(workspace)">
                     <mat-icon>more_vert</mat-icon>
                 </button>
