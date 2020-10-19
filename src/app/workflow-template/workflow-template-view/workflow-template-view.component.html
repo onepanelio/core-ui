@@ -36,17 +36,17 @@
             </div>
           </div>
           <div class="actions font-roboto">
-            <button mat-button color="primary" class="link-button font-size-regular" (click)="editSelectedWorkflowTemplateVersion()">
+            <button mat-button color="primary" class="link-button" (click)="editSelectedWorkflowTemplateVersion()">
               <mat-icon [fontSet]="'fas'" [fontIcon]="'fa-pencil-alt'"></mat-icon>
-              <span class="ml-2">Edit Template</span>
+              <span class="ml-2 no-vertical-align">Edit Template</span>
             </button>
-            <button mat-button color="primary" class="link-button font-size-regular ml-10" (click)="cloneSelectedWorkflowTemplateVersion()">
+            <button mat-button color="primary" class="link-button op-edit-button ml-10" (click)="cloneSelectedWorkflowTemplateVersion()">
               <mat-icon [fontSet]="'far'" [fontIcon]="'fa-clone'"></mat-icon>
-              <span class="ml-2">Clone</span>
+              <span class="ml-2 no-vertical-align">Clone</span>
             </button>
-            <button mat-button color="primary" class="link-button font-size-regular ml-10" (click)="deleteWorkflowTemplate()">
+            <button mat-button color="primary" class="link-button op-edit-button ml-10" (click)="deleteWorkflowTemplate()">
               <mat-icon [fontSet]="'fas'" [fontIcon]="'fa-trash-alt'"></mat-icon>
-              Delete
+              <span class="no-vertical-align">Delete</span>
             </button>
           </div>
         </div>

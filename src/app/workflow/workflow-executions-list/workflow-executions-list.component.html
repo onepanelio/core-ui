@@ -65,7 +65,7 @@
         <ng-container cdkColumnDef="actions">
             <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
             <cdk-cell *cdkCellDef="let workflow">
-                <a class="link-button" [routerLink]="['/', this.namespace, 'workflows', workflow.name]">View</a>
+                <a class="link-button op-edit-button" [routerLink]="['/', this.namespace, 'workflows', workflow.name]">View</a>
                 <button mat-icon-button color="primary" [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{'workflow': workflow}" (click)="onMatMenuOpen(workflow)">
                     <mat-icon>more_vert</mat-icon>
                 </button>

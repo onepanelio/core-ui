@@ -22,7 +22,7 @@
                 <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
                 <cdk-cell *cdkCellDef="let service">
                     <div class="d-inline-flex flex-row-reverse w-100">
-                        <a class="link-button" [routerLink]="['/', this.namespace, 'services', service.name]">View</a>
+                        <a class="link-button op-edit-button" [routerLink]="['/', this.namespace, 'services', service.name]">View</a>
                     </div>
                 </cdk-cell>
             </ng-container>
