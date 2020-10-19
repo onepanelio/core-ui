@@ -104,6 +104,8 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
     this.inputParameters = [];
     this.inputArtifacts = [];
+    this.outputParameters = [];
+    this.outputArtifacts = [];
 
     this.previousNodeStatus = this.node;
     this.node = node;
@@ -216,11 +218,6 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
         name: this.name,
         workflowService: this.workflowServiceService,
       });
-
-      // const parts = directory.split('/');
-      // if (parts.length > 0) {
-      //   fileNavigator.displayRootPath = parts[parts.length - 1];
-      // }
 
       // Check if there are any files at all. If there isn't, don't display the file browser.
       this.fileLoaderSubscriptions[directory] = fileNavigator.filesChanged.subscribe(() => {
