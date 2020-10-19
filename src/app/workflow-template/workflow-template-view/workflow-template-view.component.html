@@ -75,6 +75,7 @@
       <div class="header-2-text">Activity</div>
       <div class="flex-grow-1"></div>
       <app-button (click)="executeWorkflow()" [loading]="state === 'executing'">
+        <mat-icon class="icon">add</mat-icon>
         <span>Execute Workflow</span>
         <span class="loading">Executing Workflow</span>
       </app-button>
