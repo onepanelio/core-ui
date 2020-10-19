@@ -200,6 +200,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   }
 
   updateFiles() {
+    this.hasFiles = false;
     if (this.updatedToSameNode() && !this.transitionedToFinishedNode()) {
       return;
     }
