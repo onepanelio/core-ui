@@ -69,7 +69,7 @@ $mat-red: (
 );
 
 $primary: mat-palette($mat-light-blue, 900);
-$accent: mat-palette($mat-orange, A400);
+$accent: mat-palette($mat-light-blue, 900);
 $warn: mat-palette($mat-red, A700);
 $theme: mat-light-theme($primary, $accent, $warn);
 
