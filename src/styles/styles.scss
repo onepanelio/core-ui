@@ -489,3 +489,7 @@ mat-spinner.color-danger {
 .op-edit-button {
   font-size: $fontSmall;
 }
+
+.no-vertical-align {
+  vertical-align: unset !important;
+}
