@@ -225,10 +225,11 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   }
 
   updateFiles() {
-    this.hasFiles = false;
     if (this.updatedToSameNode() && !this.transitionedToFinishedNode()) {
       return;
     }
+
+    this.hasFiles = false;
 
     for (const fileNavigator of this.fileNavigators) {
       fileNavigator.cleanUp();
