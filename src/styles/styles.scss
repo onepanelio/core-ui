@@ -220,6 +220,9 @@ a {
     &.mat-primary {
       border-color: $primary;
     }
+    .mat-button-wrapper {
+      line-height: 40px;
+    }
   }
 }
 
