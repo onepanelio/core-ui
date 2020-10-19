@@ -81,6 +81,31 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
       directoriesSet.set(directory, true);
     }
 
+    const keysToDelete = [];
+
+    // Check to make sure we aren't dealing with any subdirectories
+    // we don't want to have both a/b/c and a/b. Just a/b since we can navigate to c.
+    for (const directory of directoriesSet.keys()) {
+      const directoryParts = directory.split('/');
+      let sumOfDirectory = '';
+      for (let i = 0; i < directoryParts.length - 1; i++) {
+        const part = directoryParts[i];
+        sumOfDirectory = sumOfDirectory + part;
+
+        if (directoriesSet.has(sumOfDirectory)) {
+          // the directory has a common path with another one, delete it.
+          keysToDelete.push(directory);
+          break;
+        }
+
+        sumOfDirectory += '/';
+      }
+    }
+
+    for (const keyToDelete of keysToDelete) {
+      directoriesSet.delete(keyToDelete);
+    }
+
     const directories = [];
     for (const key of directoriesSet.keys()) {
       directories.push(key);
