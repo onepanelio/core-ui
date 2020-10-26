@@ -3,6 +3,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { ListWorkflowExecutionsResponse, WorkflowExecution, WorkflowServiceService, Workspace } from '../../../api';
 import { ActivatedRoute } from '@angular/router';
 import { Sort } from '@angular/material';
+import { Filter, FilterChangedEvent } from '../../list-filter/list-filter.component';
 
 type WorkflowExecutionsState = 'initialization' | 'new' | 'loading';
 export type WorkflowExecutionPhase = 'running' | 'completed' | 'failed' | 'stopped';
@@ -64,6 +65,8 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
 
   lastUpdateRequest?: Date;
   lastUpdateRequestFinished?: Date;
+
+  private labelFilter?: string;
 
   constructor(
       public activatedRoute: ActivatedRoute,
@@ -161,7 +164,7 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
     const page = this.page + 1;
     const pageSize = this.pageSize;
     this.workflowService
-        .listWorkflowExecutions(this.namespace, this.workflowTemplateUid, this.workflowTemplateVersion, pageSize, page, this.sortOrder, undefined, this._phase, this.showSystem)
+        .listWorkflowExecutions(this.namespace, this.workflowTemplateUid, this.workflowTemplateVersion, pageSize, page, this.sortOrder, this.labelFilter, this._phase, this.showSystem)
         .subscribe(res => {
           if (page !== (this.page + 1) || pageSize !== this.pageSize) {
             return;
@@ -217,6 +220,12 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
     if (event.direction === '') {
       this.sortOrder = `createdAt,desc`;
     }
+
+    this.getWorkflows();
+  }
+
+  labelsChanged(event: FilterChangedEvent) {
+    this.labelFilter = event.filterString;
 
     this.getWorkflows();
   }

@@ -1,6 +1,12 @@
 <app-loading-content *ngIf="workflowExecutionsState === 'initialization'">
     Loading Workflows
 </app-loading-content>
+<app-list-filter
+    *ngIf="hasWorkflowExecutions"
+    [namespace]="namespace"
+    [resource]="'workflow_execution'"
+    (labelsChanged)="labelsChanged($event)">
+</app-list-filter>
 <app-workflow-executions-list
     *ngIf="hasWorkflowExecutions"
     [namespace]="namespace"
