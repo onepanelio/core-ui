@@ -29,7 +29,7 @@ export class ListFilterComponent implements OnInit {
 
   @Input() namespace = '';
   @Input() resource = '';
-  @Input() placeholder = 'Filter';
+  @Input() placeholder = 'Filter by label...';
   @Output() labelsChanged = new EventEmitter<FilterChangedEvent>();
 
   constructor(private labelService: LabelServiceService) {

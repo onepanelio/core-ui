@@ -1,5 +1,6 @@
-<mat-form-field class="w-100">
+<mat-form-field class="w-100 list-filter" appearance="outline">
     <mat-chip-list #chipList aria-label="Filters">
+        <mat-icon matPrefix class="ml-2 mr-2">filter_list</mat-icon>
         <mat-chip
                 *ngFor="let filter of filters"
                 [selectable]="true"
@@ -10,6 +11,7 @@
         </mat-chip>
         <input
                 #filterInput
+                class="ml-2"
                 [placeholder]="placeholder"
                 [formControl]="filterCtrl"
                 [matChipInputFor]="chipList"
