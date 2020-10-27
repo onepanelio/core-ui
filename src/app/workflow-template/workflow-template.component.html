@@ -19,6 +19,12 @@
   </div>
 
   <div class="page-body mt-3 workflow-list">
+    <app-list-filter
+      *ngIf="workflowTemplates.length !== 0 || state !== 'new'"
+      [namespace]="namespace"
+      [resource]="'workflow_template'"
+      (labelsChanged)="labelsChanged($event)">
+    </app-list-filter>
     <cdk-table [dataSource]="workflowTemplates">
       <ng-container cdkColumnDef="name">
         <cdk-header-cell *cdkHeaderCellDef>Name</cdk-header-cell>

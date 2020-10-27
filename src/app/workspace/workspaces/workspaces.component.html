@@ -1,6 +1,12 @@
 <app-loading-content *ngIf="workspaceState === 'initialization'">
     Loading Workspaces
 </app-loading-content>
+<app-list-filter
+        *ngIf="hasWorkspaces"
+        [namespace]="namespace"
+        [resource]="'workspace'"
+        (labelsChanged)="labelsChanged($event)">
+</app-list-filter>
 <app-workspace-list
         *ngIf="hasWorkspaces"
         [namespace]="namespace"

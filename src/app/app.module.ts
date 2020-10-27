@@ -12,6 +12,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { WorkflowTemplateViewComponent } from './workflow-template/workflow-template-view/workflow-template-view.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {
+    MatAutocompleteModule,
     MatButtonModule,
     MatExpansionModule,
     MatFormFieldModule,
@@ -127,6 +128,7 @@ import { WorkflowComponent } from './workflow/workflow.component';
 import { WorkspaceListComponent } from './workspace/workspace-list/workspace-list.component';
 import { WorkspacesComponent } from './workspace/workspaces/workspaces.component';
 import { WorkStatusComponent } from './ui-tools/work-status/work-status.component';
+import { ListFilterComponent } from './list-filter/list-filter.component';
 
 @NgModule({
     declarations: [
@@ -224,7 +226,8 @@ import { WorkStatusComponent } from './ui-tools/work-status/work-status.componen
         WorkflowComponent,
         WorkspaceListComponent,
         WorkspacesComponent,
-        WorkStatusComponent
+        WorkStatusComponent,
+        ListFilterComponent
     ],
     entryComponents: [
         WorkflowExecuteDialogComponent,
@@ -265,7 +268,8 @@ import { WorkStatusComponent } from './ui-tools/work-status/work-status.componen
         MatChipsModule,
         MatMenuModule,
         MatProgressBarModule,
-        MatSortModule
+        MatSortModule,
+        MatAutocompleteModule
     ],
   providers: [
       NamespaceTracker,

@@ -6,6 +6,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
 import { Sort } from '@angular/material';
 import { WorkspaceEvent, WorkspacePhase } from '../workspace-list/workspace-list.component';
+import { FilterChangedEvent } from '../../list-filter/list-filter.component';
 
 type WorkspaceState = 'initialization' | 'new' | 'loading';
 
@@ -50,6 +51,7 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
 
   workspaceState: WorkspaceState = 'initialization';
   hasWorkspaces = false;
+  private labelFilter?: string;
 
   constructor(
       public activatedRoute: ActivatedRoute,
@@ -136,7 +138,7 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
     const page = this.page + 1;
     const pageSize = this.pageSize;
 
-    this.workspaceService.listWorkspaces(this.namespace, pageSize, page, this.sortOrder, undefined, this._phase)
+    this.workspaceService.listWorkspaces(this.namespace, pageSize, page, this.sortOrder, this.labelFilter, this._phase)
         .subscribe(res => {
           if (page !== (this.page + 1) || this.pageSize !== this.pageSize) {
             return;
@@ -264,5 +266,11 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
         this.onRetryLastAction(workspace);
         break;
     }
+  }
+
+  labelsChanged(event: FilterChangedEvent) {
+    this.labelFilter = event.filterString;
+
+    this.getWorkspaces();
   }
 }

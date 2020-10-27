@@ -1,0 +1,27 @@
+@import '../../styles/colors';
+
+.list-filter {
+  /deep/ .mat-form-field-infix {
+    border-top-width: 4px;
+    padding: 0.5em 0;
+  }
+
+  /deep/ .mat-form-field-outline {
+    background-color: white;
+  }
+
+  /deep/ .mat-chip-list-wrapper {
+    height: 40px;
+  }
+
+  .mat-chip.mat-standard-chip {
+    background-color: $white;
+    color: $primary;
+    border: 1px solid $primary;
+
+    .mat-chip-remove {
+      color: $primary;
+      opacity: 0.7;
+    }
+  }
+}

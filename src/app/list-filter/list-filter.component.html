@@ -1,0 +1,25 @@
+<mat-form-field class="w-100 list-filter" appearance="outline">
+    <mat-chip-list #chipList aria-label="Filters">
+        <mat-icon matPrefix class="ml-2 mr-2">filter_list</mat-icon>
+        <mat-chip
+                *ngFor="let filter of filters"
+                [selectable]="true"
+                [removable]="true"
+                (removed)="remove(filter)">
+            {{filter.key}}: {{filter.value}}
+            <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input
+                #filterInput
+                class="ml-2"
+                [placeholder]="placeholder"
+                [formControl]="filterCtrl"
+                [matChipInputFor]="chipList"
+                [matAutocomplete]="auto">
+    </mat-chip-list>
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="autoCompleteSelect($event)">
+        <mat-option *ngFor="let option of labelOptions" [value]="option">
+            {{option}}
+        </mat-option>
+    </mat-autocomplete>
+</mat-form-field>
