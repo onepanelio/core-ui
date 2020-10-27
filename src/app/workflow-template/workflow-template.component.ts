@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { ListWorkflowTemplatesResponse, WorkflowTemplate, WorkflowTemplateServiceService } from '../../api';
 import { PageEvent } from '@angular/material/paginator';
 import { Pagination } from '../requests/pagination';
+import { FilterChangedEvent } from '../list-filter/list-filter.component';
 
 type WorkflowTemplateState = 'initialization' | 'loading' | 'new';
 
@@ -21,6 +22,7 @@ export class WorkflowTemplateComponent implements OnInit, OnDestroy {
     pagination = new Pagination();
     getWorkflowTemplatesInterval;
     state: WorkflowTemplateState = 'initialization';
+    private labelFilter?: string;
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -53,7 +55,7 @@ export class WorkflowTemplateComponent implements OnInit, OnDestroy {
     }
 
     getWorkflowTemplates() {
-        this.workflowTemplateService.listWorkflowTemplates(this.namespace, this.pagination.pageSize, this.pagination.page + 1)
+        this.workflowTemplateService.listWorkflowTemplates(this.namespace, this.pagination.pageSize, this.pagination.page + 1, this.labelFilter)
             .subscribe(res => {
                 this.workflowTemplateResponse = res;
 
@@ -72,6 +74,12 @@ export class WorkflowTemplateComponent implements OnInit, OnDestroy {
     onPageChange(event: PageEvent) {
         this.pagination.page = event.pageIndex;
         this.pagination.pageSize = event.pageSize;
+
+        this.getWorkflowTemplates();
+    }
+
+    labelsChanged(event: FilterChangedEvent) {
+        this.labelFilter = event.filterString;
 
         this.getWorkflowTemplates();
     }
