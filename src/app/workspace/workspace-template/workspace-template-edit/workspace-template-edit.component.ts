@@ -31,6 +31,7 @@ export class WorkspaceTemplateEditComponent implements OnInit {
     }
 
     this._workspaceTemplate = value;
+    this.templateDescriptionInput.setValue(value.description);
     this.getWorkspaceTemplateVersions();
   }
 
