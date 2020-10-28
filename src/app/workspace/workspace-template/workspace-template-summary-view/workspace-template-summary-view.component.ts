@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { WorkspaceTemplate } from "../../../../api";
+import { WorkspaceTemplate } from '../../../../api';
 
 @Component({
   selector: 'app-workspace-template-summary-view',
