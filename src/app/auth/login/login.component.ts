@@ -72,22 +72,22 @@ export class LoginComponent implements OnInit {
             token: this.tokenInput.value,
             username: this.usernameInput.value
         }).subscribe(res => {
-                this.authService.setLogin(this.usernameInput.value, res.token, res.domain);
+            this.authService.setLogin(this.usernameInput.value, res.token, res.domain);
 
-                this.namespaceTracker.getNamespaces();
+            this.namespaceTracker.getNamespaces();
 
-                if (this.authService.redirectUrl) {
-                    this.appRouter.navigateByUrl(this.authService.redirectUrl);
-                    this.authService.redirectUrl = null;
-                    this.loggingIn = false;
-                    return;
-                }
-
-                this.appRouter.navigateToHomePage();
+            if (this.authService.redirectUrl) {
+                this.appRouter.navigateByUrl(this.authService.redirectUrl);
+                this.authService.redirectUrl = null;
                 this.loggingIn = false;
-            }, err => {
-                this.tokenInput.setErrors({error: 'Invalid token'});
-                this.loggingIn = false;
-            });
+                return;
+            }
+
+            this.appRouter.navigateToHomePage();
+            this.loggingIn = false;
+        }, err => {
+            this.tokenInput.setErrors({error: 'Invalid token'});
+            this.loggingIn = false;
+        });
     }
 }
