@@ -20,6 +20,7 @@ export class WorkspaceTemplateCreateComponent implements OnInit {
   @Output() saveEmitted = new EventEmitter<WorkspaceTemplate>();
 
   @Input() loading = false;
+  @Input() showSave = true;
 
   namespace: string;
 

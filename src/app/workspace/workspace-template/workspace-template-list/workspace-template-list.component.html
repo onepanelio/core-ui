@@ -29,7 +29,8 @@
                     class="mr-3 pointer-hover"
                     [showMenu]="false"
                     [ngClass]="{selected: selectedTemplate === null}"
-                    [template]="blankTemplate">
+                    [template]="blankTemplate"
+                    [permissions]="workspacePermissions">
             </app-workspace-template-summary-view>
         </div>
         <div *ngFor="let template of workspaceTemplates; let index = index">
@@ -49,7 +50,8 @@
                     (shareWorkspaceTemplateClicked)="shareWorkspaceTemplate($event)"
                     [ngClass]="{selected: selectedTemplate?.name === template.name}"
                     [template]="template"
-                    [deleting]="deletingTemplates.has(template.uid)">
+                    [deleting]="deletingTemplates.has(template.uid)"
+                    [permissions]="workspacePermissions">
             </app-workspace-template-summary-view>
         </div>
     </div>
@@ -64,6 +66,7 @@
 
     <app-workspace-template-create
             *ngIf="state == 'create'"
+            [showSave]="workflowTemplatePermissions.create"
             (cancelEmitted)="cancelWorkspaceTemplate()"
             (saveEmitted)="onCreate($event)"
             [loading]="creatingWorkspaceTemplate">
@@ -71,6 +74,7 @@
 
     <app-workspace-template-edit
         *ngIf="state == 'edit'"
+        [showUpdate]="workflowTemplatePermissions.update"
         [loading]="workspaceTemplateEditLoading"
         [namespace]="namespace"
         [workspaceTemplate]="selectedTemplate"

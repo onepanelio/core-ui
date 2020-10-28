@@ -2,23 +2,14 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   AuthServiceService,
-  ListWorkspaceResponse,
-  Workspace,
   WorkspaceServiceService
 } from '../../api';
-import { PageEvent } from '@angular/material/paginator';
 import { WorkspaceExecuteDialogComponent } from './workspace-execute-dialog/workspace-execute-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { AppRouter } from '../router/app-router.service';
-import { combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { Permissions } from '../auth/models';
-import {
-  ConfirmationDialogComponent,
-  ConfirmationDialogData
-} from '../confirmation-dialog/confirmation-dialog.component';
-import { Pagination } from '../requests/pagination';
 import { WorkspacesChangedEvent } from './workspaces/workspaces.component';
+import { PermissionService } from '../permissions/permission.service';
 
 type WorkspaceState = 'loading-initial-data' | 'loading' | 'new';
 
@@ -30,16 +21,9 @@ type WorkspaceState = 'loading-initial-data' | 'loading' | 'new';
 export class WorkspaceComponent implements OnInit, OnDestroy {
   namespace: string;
   state: WorkspaceState = 'loading-initial-data';
-  hasWorkspaces = false;
 
-  /**
-   * workspacePermissions keeps track of which permissions the currently logged in user has for each
-   * workspace.
-   *
-   * Right now, when the menu is opened, a network request is made (if we don't already have data),
-   * to get these permissions.
-   */
-  workspacePermissions = new Map<string, Permissions>();
+  workspacePermissions = new Permissions();
+  workspaceTemplatePermissions = new Permissions();
 
   showWorkspacesCallToAction = false;
 
@@ -47,12 +31,14 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
       private appRouter: AppRouter,
       private activatedRoute: ActivatedRoute,
       private authService: AuthServiceService,
+      private permissionService: PermissionService,
       private workspaceService: WorkspaceServiceService,
       private dialog: MatDialog
   ) {
     this.activatedRoute.paramMap.subscribe(next => {
       this.namespace = next.get('namespace');
 
+      this.checkPermissions(this.namespace);
     });
   }
 
@@ -82,5 +68,19 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
 
   workspacesChanged(event: WorkspacesChangedEvent) {
     this.showWorkspacesCallToAction = !event.hasWorkspaces;
+  }
+
+  private checkPermissions(namespace: string) {
+    this.permissionService
+        .getWorkspaceTemplatePermissions(namespace, '', 'list')
+        .subscribe(res => {
+          this.workspaceTemplatePermissions = res;
+        });
+
+    this.permissionService
+        .getWorkspacePermissions(namespace, '', 'create')
+        .subscribe(res => {
+          this.workspacePermissions = res;
+        });
   }
 }

@@ -31,6 +31,7 @@ import { map } from 'rxjs/operators';
 import { WorkflowExecuteDialogComponent } from '../workflow-execute-dialog/workflow-execute-dialog.component';
 import { Alert } from '../../alert/alert';
 import { AlertService } from '../../alert/alert.service';
+import { PermissionService } from '../../permissions/permission.service';
 
 const aceRange = ace.acequire('ace/range').Range;
 
@@ -117,6 +118,7 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
       private activatedRoute: ActivatedRoute,
       private alertService: AlertService,
       private authService: AuthServiceService,
+      private permissionService: PermissionService,
       private workflowService: WorkflowService,
       private workflowServiceService: WorkflowServiceService,
       private apiWorkflowService: WorkflowServiceService,
@@ -206,41 +208,10 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
   }
 
   private getPermissions(workflowExecution: WorkflowExecution) {
-    const canCreate$ = this.authService.isAuthorized({
-      namespace: this.namespace,
-      verb: 'create',
-      resource: 'workflows',
-      resourceName: workflowExecution.uid,
-      group: 'argoproj.io',
-    });
-
-    const canUpdate$ = this.authService.isAuthorized({
-      namespace: this.namespace,
-      verb: 'update',
-      resource: 'workflows',
-      resourceName: workflowExecution.uid,
-      group: 'argoproj.io',
-    });
-
-    const canDelete$ = this.authService.isAuthorized({
-      namespace: this.namespace,
-      verb: 'delete',
-      resource: 'workflows',
-      resourceName: workflowExecution.uid,
-      group: 'argoproj.io',
-    });
-
-    combineLatest([canCreate$, canUpdate$, canDelete$])
-        .pipe(
-            map(([canCreateValue$, canUpdateValue$, canDeleteValue$]) => ({
-              canCreate: canCreateValue$,
-              canUpdate: canUpdateValue$,
-              canDelete: canDeleteValue$
-            }))
-        ).subscribe(res => {
-          this.permissions.create = res.canCreate.authorized;
-          this.permissions.update = res.canUpdate.authorized;
-          this.permissions.delete = res.canDelete.authorized;
+    this.permissionService
+        .getWorkflowPermissions(this.namespace, workflowExecution.uid, 'create', 'update', 'delete')
+        .subscribe(res => {
+          this.permissions = res;
         });
   }
 
