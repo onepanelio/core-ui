@@ -114,7 +114,7 @@
                 <i class="far fa-play-circle mr-1 workflow-menu-icon"></i>
                 Rerun
             </button>
-            <button *ngIf="workflowExecutionPermissions.get(workflow.uid).delete" mat-menu-item (click)="onDelete(workflow)" [disabled]="!(workflow | workflowIsActive)">
+            <button *ngIf="workflowExecutionPermissions.get(workflow.uid).update" mat-menu-item (click)="onDelete(workflow)" [disabled]="!(workflow | workflowIsActive)">
                 <i class="fas fa-trash mr-1 workflow-menu-icon"></i>
                 Terminate
             </button>

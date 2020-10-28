@@ -17,6 +17,7 @@ export class WorkspaceTemplateEditComponent implements OnInit {
   @ViewChild(LabelsEditComponent, {static: false}) labelEditor: LabelsEditComponent;
 
   @Input() namespace: string;
+  @Input() showUpdate = true;
 
   // tslint:disable-next-line:variable-name
   private _workspaceTemplate: WorkspaceTemplate;

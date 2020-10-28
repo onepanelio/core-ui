@@ -129,6 +129,7 @@ import { WorkspaceListComponent } from './workspace/workspace-list/workspace-lis
 import { WorkspacesComponent } from './workspace/workspaces/workspaces.component';
 import { WorkStatusComponent } from './ui-tools/work-status/work-status.component';
 import { ListFilterComponent } from './list-filter/list-filter.component';
+import { ErrorComponent } from './error/error.component';
 
 @NgModule({
     declarations: [
@@ -227,7 +228,8 @@ import { ListFilterComponent } from './list-filter/list-filter.component';
         WorkspaceListComponent,
         WorkspacesComponent,
         WorkStatusComponent,
-        ListFilterComponent
+        ListFilterComponent,
+        ErrorComponent,
     ],
     entryComponents: [
         WorkflowExecuteDialogComponent,

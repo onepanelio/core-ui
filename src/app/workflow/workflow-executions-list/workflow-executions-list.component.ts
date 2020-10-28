@@ -16,6 +16,7 @@ import { AlertService } from '../../alert/alert.service';
 import { Alert } from '../../alert/alert';
 import { Sort } from '@angular/material';
 import { SortDirection } from '@angular/material/typings/sort';
+import { PermissionService } from '../../permissions/permission.service';
 
 @Component({
     selector: 'app-workflow-executions-list',
@@ -49,6 +50,7 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
         private appRouter: AppRouter,
         private alertService: AlertService,
         private authService: AuthServiceService,
+        private permissionService: PermissionService,
         private activatedRoute: ActivatedRoute,
         private workflowService: WorkflowService,
         private workflowServiceService: WorkflowServiceService,
@@ -115,37 +117,10 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
             return;
         }
 
-        const canCreate$ = this.authService.isAuthorized({
-            namespace: this.namespace,
-            verb: 'create',
-            resource: 'workspaces',
-            resourceName: workflowExecution.uid,
-            group: 'onepanel.io',
-        });
-
-        const canDelete$ = this.authService.isAuthorized({
-            namespace: this.namespace,
-            verb: 'delete',
-            resource: 'workspaces',
-            resourceName: workflowExecution.uid,
-            group: 'onepanel.io',
-        });
-
-        combineLatest([canCreate$, canDelete$])
-            .pipe(
-                map(([canCreate$, canDelete$]) => ({
-                    canCreate: canCreate$,
-                    canDelete: canDelete$
-                }))
-            ).subscribe(res => {
-            this.workflowExecutionPermissions.set(
-                workflowExecution.uid,
-                new Permissions({
-                    delete: res.canDelete.authorized,
-                    create: res.canCreate.authorized
-                })
-            );
-        });
+        this.permissionService.getWorkflowPermissions(this.namespace, workflowExecution.uid, 'create', 'update')
+            .subscribe( res => {
+                this.workflowExecutionPermissions.set(workflowExecution.uid, res);
+            });
     }
 
     sortData(event: Sort) {
