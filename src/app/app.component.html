@@ -1,5 +1,6 @@
 <app-navbar
   *ngIf="!loggingIn && showNavigationBar"
+  [version]="version"
   [activeUrl]="activeUrl"
   (logout)="logout()"
   (namespaceClick)="onFormFieldClick()">
