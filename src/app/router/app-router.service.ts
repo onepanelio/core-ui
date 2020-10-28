@@ -188,4 +188,8 @@ export class AppRouter {
   public navigateToWorkflowsExecutions(namespace: string) {
     return this.router.navigate(['/', namespace, 'workflows']);
   }
+
+  public navigateToError(namespace: string, code: string) {
+    return this.router.navigate(['/', namespace, 'error', code]);
+  }
 }

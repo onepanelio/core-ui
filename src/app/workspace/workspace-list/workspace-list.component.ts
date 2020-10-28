@@ -5,6 +5,7 @@ import { Permissions } from '../../auth/models';
 import { AuthServiceService, Workspace } from '../../../api';
 import { combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { PermissionService } from '../../permissions/permission.service';
 
 type WorkspaceAction = 'pause' | 'resume' | 'delete' | 'retry-last-action';
 
@@ -41,6 +42,7 @@ export class WorkspaceListComponent implements OnInit {
 
   constructor(
       private authService: AuthServiceService,
+      private permissionService: PermissionService
   ) { }
 
   ngOnInit() {
@@ -64,44 +66,10 @@ export class WorkspaceListComponent implements OnInit {
       return;
     }
 
-    const canUpdate$ = this.authService.isAuthorized({
-      namespace: this.namespace,
-      verb: 'update',
-      resource: 'workspaces',
-      resourceName: workspace.uid,
-      group: 'onepanel.io',
-    });
-
-    const canDelete$ = this.authService.isAuthorized({
-      namespace: this.namespace,
-      verb: 'delete',
-      resource: 'workspaces',
-      resourceName: workspace.uid,
-      group: 'onepanel.io',
-    });
-
-    this.workspacePermissions.set(
-        workspace.uid,
-        new Permissions({
-          delete: true,
-          update: true,
-        })
-    );
-    combineLatest([canUpdate$, canDelete$])
-        .pipe(
-            map(([canUpdateVal$, canDeleteVal$]) => ({
-              canUpdate: canUpdateVal$,
-              canDelete: canDeleteVal$
-            }))
-        ).subscribe(res => {
-      this.workspacePermissions.set(
-          workspace.uid,
-          new Permissions({
-            delete: res.canDelete.authorized,
-            update: res.canUpdate.authorized,
-          })
-      );
-    });
+    this.permissionService.getWorkspacePermissions(this.namespace, workspace.uid,  'update', 'delete')
+        .subscribe( res => {
+          this.workspacePermissions.set(workspace.uid, res);
+        });
   }
 
   onRetryLastAction(workspace: Workspace) {

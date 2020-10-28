@@ -1,0 +1,8 @@
+@import '../../styles/colors';
+
+.error {
+  height: calc(100vh - 50px); // 50 for header bar
+
+  font-size: 42px;
+  color: $danger;
+}

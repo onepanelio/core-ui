@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {
+    AuthServiceService,
     ListWorkspaceTemplatesResponse,
     WorkspaceServiceService,
     WorkspaceTemplate,
@@ -27,6 +28,8 @@ import { Observable } from 'rxjs';
 import { Pagination } from '../../../requests/pagination';
 import { environment } from '../../../../environments/environment';
 import { MatSnackBar } from '@angular/material';
+import { Permissions } from '../../../auth/models';
+import { PermissionService } from '../../../permissions/permission.service';
 
 /**
  * WorkspaceTemplateState is a way to keep track of the current state of the component.
@@ -78,6 +81,9 @@ export class WorkspaceTemplateListComponent implements OnInit, CanComponentDeact
     sortOrder = 'createdAt,desc';
     uidFilter?: string = undefined;
 
+    workflowTemplatePermissions = new Permissions();
+    workspacePermissions = new Permissions();
+
     constructor(
         private appRouter: AppRouter,
         private workspaceTemplateService: WorkspaceTemplateServiceService,
@@ -85,7 +91,9 @@ export class WorkspaceTemplateListComponent implements OnInit, CanComponentDeact
         private activatedRoute: ActivatedRoute,
         private dialog: MatDialog,
         private alertService: AlertService,
-        private snackBar: MatSnackBar
+        private snackBar: MatSnackBar,
+        private authService: AuthServiceService,
+        private permissionService: PermissionService
     ) {
     }
 
@@ -112,7 +120,23 @@ export class WorkspaceTemplateListComponent implements OnInit, CanComponentDeact
         this.activatedRoute.paramMap.subscribe(next => {
             this.namespace = next.get('namespace');
 
-            this.getWorkspaceTemplates();
+            this.permissionService
+                .getWorkspaceTemplatePermissions(this.namespace, '', 'list', 'create', 'update')
+                .subscribe(res => {
+                    this.workflowTemplatePermissions = res;
+
+                    if (res.list) {
+                        this.getWorkspaceTemplates();
+                    } else {
+                        this.appRouter.navigateToError(this.namespace, '403');
+                    }
+                });
+
+            this.permissionService
+                .getWorkspacePermissions(this.namespace, '', 'create', 'delete')
+                .subscribe(res => {
+                    this.workspacePermissions = res;
+                });
         });
     }
 

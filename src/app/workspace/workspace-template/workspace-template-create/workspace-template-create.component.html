@@ -23,7 +23,7 @@
         </div>
         <div class="mt-5 d-flex justify-content-between">
             <button mat-button class="font-medium-gray cancel-button" (click)="cancel()">CANCEL</button>
-            <app-button (click)="save()" [loading]="loading">
+            <app-button *ngIf="showSave" (click)="save()" [loading]="loading">
                 Save
                 <span class="loading">Saving</span>
             </app-button>

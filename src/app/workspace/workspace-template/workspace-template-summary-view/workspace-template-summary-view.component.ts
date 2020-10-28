@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { WorkspaceTemplate } from "../../../../api";
+import { WorkspaceTemplate } from '../../../../api';
+import { Permissions } from '../../../auth/models';
 
 @Component({
   selector: 'app-workspace-template-summary-view',
@@ -11,6 +12,7 @@ export class WorkspaceTemplateSummaryViewComponent implements OnInit {
   @Input() template: WorkspaceTemplate;
   @Input() showMenu = true;
   @Input() deleting = false;
+  @Input() permissions = new Permissions();
 
   @Output() createWorkspaceClicked = new EventEmitter<WorkspaceTemplate>();
   @Output() cloneWorkspaceTemplateClicked = new EventEmitter<WorkspaceTemplate>();
