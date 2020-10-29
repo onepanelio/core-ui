@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -45,6 +46,12 @@ export class AuthService {
   }
 
   setLogin(username: string, token: string, domain?: string) {
+    // When using a local environment, we don't want the domain set as we could be connected to a live running server
+    // on it's domain. This causes issues with cookies, so we don't set a domain when running locally.
+    if (environment.type === 'local') {
+      domain = undefined;
+    }
+
     localStorage.setItem('auth-token', token);
     localStorage.setItem('auth-username', username);
     if (domain) {

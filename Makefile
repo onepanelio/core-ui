@@ -31,7 +31,7 @@ docker-push:
 	docker push onepanel/core-ui:$(COMMIT_HASH)
 
 docker-custom:
-	docker build -t onepanel-core-ui .
+	docker build -t onepanel-core-ui . --build-arg VERSION=$(VERSION)
 	docker tag onepanel-core-ui:latest onepanel/core-ui:$(TAG)
 	docker push onepanel/core-ui:$(TAG)
 

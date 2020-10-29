@@ -76,7 +76,7 @@
               "browserTarget": "onepanel-core-ui:build:production"
             },
             "local": {
-              "browserTarget": "onepanel-core-ui:build:local",
+              "browserTarget": "onepanel-core-ui:build:local"
             }
           }
         },

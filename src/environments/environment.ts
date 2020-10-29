@@ -4,9 +4,10 @@
 
 export const environment = {
   production: false,
+  type: 'local',
   baseUrl: 'http://localhost:8888',
   baseWsUrl: 'ws://localhost:8888',
-  version: "1.0.0"
+  version: 'development'
 };
 
 /*
@@ -16,4 +17,4 @@ export const environment = {
  * This import should be commented out in production mode because it will have a negative impact
  * on performance if an error is thrown.
  */
-// import 'zone.js/dist/zone-error';  // Included with Angular CLI.
+import 'zone.js/dist/zone-error';  // Included with Angular CLI.
