@@ -25,7 +25,8 @@
                         [class.phase-unselected]="workspacePhase && workspacePhase !== 'Running'"
                         color="rgb(55, 173, 88)"
                         class="stat-bar mt-40px">
-                    <span *ngIf="workspacePhase === 'Running'" class="clear-phase" (click)="clearPhase($event)">clear</span>
+                    <span *ngIf="workspacePhase === 'Running'" class="clear-phase"
+                          (click)="clearPhase($event)">clear</span>
                 </app-stat-bar>
                 <app-stat-bar
                         [title]="'Paused'"
@@ -35,7 +36,8 @@
                         [class.phase-unselected]="workspacePhase && workspacePhase !== 'Paused'"
                         class="stat-bar mt-40px"
                         color="rgb(255, 200, 76)">
-                    <span *ngIf="workspacePhase === 'Paused'" class="clear-phase" (click)="clearPhase($event)">clear</span>
+                    <span *ngIf="workspacePhase === 'Paused'" class="clear-phase"
+                          (click)="clearPhase($event)">clear</span>
                 </app-stat-bar>
                 <app-stat-bar
                         [title]="'Updating'"
@@ -45,7 +47,8 @@
                         [class.phase-unselected]="workspacePhase && workspacePhase !== 'Updating'"
                         color="rgb(255, 145, 0)"
                         class="stat-bar mt-40px">
-                    <span *ngIf="workspacePhase === 'Updating'" class="clear-phase" (click)="clearPhase($event)">clear</span>
+                    <span *ngIf="workspacePhase === 'Updating'" class="clear-phase"
+                          (click)="clearPhase($event)">clear</span>
                 </app-stat-bar>
                 <app-stat-bar
                         [title]="'Failed'"
@@ -55,7 +58,8 @@
                         [class.phase-unselected]="workspacePhase && workspacePhase !== 'Failed'"
                         class="stat-bar mt-40px"
                         color="rgb(211, 35, 69)">
-                    <span *ngIf="workspacePhase === 'Failed'" class="clear-phase" (click)="clearPhase($event)">clear</span>
+                    <span *ngIf="workspacePhase === 'Failed'" class="clear-phase"
+                          (click)="clearPhase($event)">clear</span>
                 </app-stat-bar>
             </div>
             <div class="flex-grow-1">
@@ -63,12 +67,13 @@
                         [namespace]="namespace"
                         [phase]="workspacePhase"
                         [pageSize]="5"
-                        (workspacesChanged)="onWorkspacesChanged($event)">
+                        (hasWorkspacesChanged)="onHasWorkspacesChanged($event)">
                 </app-workspaces>
                 <app-call-to-action *ngIf="hasWorkspaces !== undefined && !hasWorkspaces">
                     <div class="header text-center d-block">Get started with workspaces</div>
                     <div class="body">This is where all your workspace statistics live.</div>
-                    <a class="action underline pointer-hover" [routerLink]="['/', this.namespace, 'workspaces']">Create a workspace</a>
+                    <a class="action underline pointer-hover" [routerLink]="['/', this.namespace, 'workspaces']">Create
+                        a workspace</a>
                 </app-call-to-action>
             </div>
         </div>

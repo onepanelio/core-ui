@@ -13,14 +13,14 @@
             Workspace template builder
 
             <div class="font-size-large color-black mt-3">
-                Select an option to build your own template or start with a predefined template. 
+                Select an option to build your own template or start with a predefined template.
             </div>
             <div class="font-size-regular-large color-black mt-3">
-                See our <a href="https://github.com/onepanelio/templates/tree/master/workspaces" target="_blank">templates repository</a> for more community contributed templates.
+                See our <a href="https://github.com/onepanelio/templates/tree/master/workspaces" target="_blank">templates
+                repository</a> for more community contributed templates.
             </div>
         </div>
     </div>
-
     <div class="page-body mt-5 workflow-list d-flex flex-wrap">
         <div>
             <div class="color-dark-gray font-roboto mb-3">New template</div>
@@ -63,7 +63,6 @@
                    [pageSize]="this.pagination.pageSize"
                    [pageSizeOptions]="[5, 10, 25, 100]">
     </mat-paginator>
-
     <app-workspace-template-create
             *ngIf="state == 'create'"
             [showSave]="workflowTemplatePermissions.create"
@@ -71,15 +70,14 @@
             (saveEmitted)="onCreate($event)"
             [loading]="creatingWorkspaceTemplate">
     </app-workspace-template-create>
-
     <app-workspace-template-edit
-        *ngIf="state == 'edit'"
-        [showUpdate]="workflowTemplatePermissions.update"
-        [loading]="workspaceTemplateEditLoading"
-        [namespace]="namespace"
-        [workspaceTemplate]="selectedTemplate"
-        (saveEmitted)="onEditUpdate($event)"
-        (cancelEmitted)="cancelWorkspaceTemplate()">
+            *ngIf="state == 'edit'"
+            [showUpdate]="workflowTemplatePermissions.update"
+            [loading]="workspaceTemplateEditLoading"
+            [namespace]="namespace"
+            [workspaceTemplate]="selectedTemplate"
+            (saveEmitted)="onEditUpdate($event)"
+            (cancelEmitted)="cancelWorkspaceTemplate()">
     </app-workspace-template-edit>
 </div>
 

@@ -18,11 +18,13 @@ export class WorkflowTemplateComponent implements OnInit, OnDestroy {
     displayedColumns = ['name', 'lastExecuted', 'status', 'createdAt', 'spacer', 'actions', 'labels'];
 
     workflowTemplateResponse: ListWorkflowTemplatesResponse;
-    workflowTemplates: WorkflowTemplate[] = [];
+    workflowTemplates?: WorkflowTemplate[];
     pagination = new Pagination();
     getWorkflowTemplatesInterval;
     state: WorkflowTemplateState = 'initialization';
     private labelFilter?: string;
+
+    hasAnyWorkflowTemplates?: boolean;
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -33,6 +35,7 @@ export class WorkflowTemplateComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.activatedRoute.paramMap.subscribe(next => {
             this.namespace = next.get('namespace');
+            this.checkIfHasAnyWorkflowTemplates();
             this.getWorkflowTemplates();
 
             if (this.getWorkflowTemplatesInterval) {
@@ -54,8 +57,21 @@ export class WorkflowTemplateComponent implements OnInit, OnDestroy {
         }
     }
 
+    checkIfHasAnyWorkflowTemplates() {
+        this.workflowTemplateService
+            .listWorkflowTemplates(this.namespace, 1, 1)
+            .subscribe(res => {
+                if (!res.workflowTemplates) {
+                    this.hasAnyWorkflowTemplates = false;
+                } else {
+                    this.hasAnyWorkflowTemplates = res.workflowTemplates.length !== 0;
+                }
+            });
+    }
+
     getWorkflowTemplates() {
-        this.workflowTemplateService.listWorkflowTemplates(this.namespace, this.pagination.pageSize, this.pagination.page + 1, this.labelFilter)
+        this.workflowTemplateService
+            .listWorkflowTemplates(this.namespace, this.pagination.pageSize, this.pagination.page + 1, this.labelFilter)
             .subscribe(res => {
                 this.workflowTemplateResponse = res;
 
