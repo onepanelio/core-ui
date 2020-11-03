@@ -68,11 +68,11 @@ export class LoginComponent implements OnInit {
 
         this.loggingIn = true;
 
-        this.apiAuthService.isValidToken({
+        this.apiAuthService.getAccessToken({
             token: this.tokenInput.value,
             username: this.usernameInput.value
         }).subscribe(res => {
-            this.authService.setLogin(this.usernameInput.value, res.token, res.domain);
+            this.authService.setLogin(this.usernameInput.value, res.accessToken, res.domain);
 
             this.namespaceTracker.getNamespaces();
 

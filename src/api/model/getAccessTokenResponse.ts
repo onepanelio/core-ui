@@ -11,9 +11,9 @@
  */
 
 
-export interface IsValidTokenResponse { 
+export interface GetAccessTokenResponse { 
     domain?: string;
-    token?: string;
+    accessToken?: string;
     username?: string;
 }
 

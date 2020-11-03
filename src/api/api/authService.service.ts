@@ -17,11 +17,11 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
+import { GetAccessTokenRequest } from '../model/models';
+import { GetAccessTokenResponse } from '../model/models';
 import { GrpcGatewayRuntimeError } from '../model/models';
 import { IsAuthorized } from '../model/models';
 import { IsAuthorizedResponse } from '../model/models';
-import { IsValidTokenRequest } from '../model/models';
-import { IsValidTokenResponse } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -94,6 +94,69 @@ export class AuthServiceService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
+    public getAccessToken(body: GetAccessTokenRequest, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<GetAccessTokenResponse>;
+    public getAccessToken(body: GetAccessTokenRequest, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpResponse<GetAccessTokenResponse>>;
+    public getAccessToken(body: GetAccessTokenRequest, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpEvent<GetAccessTokenResponse>>;
+    public getAccessToken(body: GetAccessTokenRequest, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<any> {
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling getAccessToken.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // authentication (Bearer) required
+        if (this.configuration.apiKeys) {
+            const key: string | undefined = this.configuration.apiKeys["Bearer"] || this.configuration.apiKeys["authorization"];
+            if (key) {
+                headers = headers.set('authorization', key);
+            }
+        }
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json',
+                'application/octet-stream'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.post<GetAccessTokenResponse>(`${this.configuration.basePath}/apis/v1beta1/auth/get_access_token`,
+            body,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * @param body 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
     public isAuthorized(body: IsAuthorized, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<IsAuthorizedResponse>;
     public isAuthorized(body: IsAuthorized, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpResponse<IsAuthorizedResponse>>;
     public isAuthorized(body: IsAuthorized, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpEvent<IsAuthorizedResponse>>;
@@ -141,69 +204,6 @@ export class AuthServiceService {
         }
 
         return this.httpClient.post<IsAuthorizedResponse>(`${this.configuration.basePath}/apis/v1beta1/auth`,
-            body,
-            {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * @param body 
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public isValidToken(body: IsValidTokenRequest, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<IsValidTokenResponse>;
-    public isValidToken(body: IsValidTokenRequest, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpResponse<IsValidTokenResponse>>;
-    public isValidToken(body: IsValidTokenRequest, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpEvent<IsValidTokenResponse>>;
-    public isValidToken(body: IsValidTokenRequest, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<any> {
-        if (body === null || body === undefined) {
-            throw new Error('Required parameter body was null or undefined when calling isValidToken.');
-        }
-
-        let headers = this.defaultHeaders;
-
-        // authentication (Bearer) required
-        if (this.configuration.apiKeys) {
-            const key: string | undefined = this.configuration.apiKeys["Bearer"] || this.configuration.apiKeys["authorization"];
-            if (key) {
-                headers = headers.set('authorization', key);
-            }
-        }
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json',
-                'application/octet-stream'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            headers = headers.set('Content-Type', httpContentTypeSelected);
-        }
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.post<IsValidTokenResponse>(`${this.configuration.basePath}/apis/v1beta1/auth/token`,
             body,
             {
                 responseType: <any>responseType,
