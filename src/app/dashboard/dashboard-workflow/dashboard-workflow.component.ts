@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { WorkflowExecutionStatisticReport, WorkflowServiceService } from '../../../api';
-import { WorkflowExecutionPhase, WorkflowExecutionsChangedEvent } from '../../workflow/workflow-executions/workflow-executions.component';
+import { WorkflowExecutionPhase } from '../../workflow/workflow-executions/workflow-executions.component';
 import { NamespaceTracker } from '../../namespace/namespace-tracker.service';
 
 @Component({
@@ -86,7 +86,7 @@ export class DashboardWorkflowComponent implements OnInit, OnDestroy {
     this.workflowExecutionPhase = undefined;
   }
 
-  onWorkflowsChanged(res: WorkflowExecutionsChangedEvent) {
-    this.hasWorkflowExecutions = res.hasWorkflowExecutions;
+  onHasWorkflowExecutionsChanged(hasExecutions: boolean) {
+    this.hasWorkflowExecutions = hasExecutions;
   }
 }

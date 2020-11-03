@@ -1,25 +1,30 @@
-<app-loading-content *ngIf="workflowExecutionsState === 'initialization'">
+<app-loading-content *ngIf="hasAnyWorkflowExecutions === undefined || workflows === undefined">
     Loading Workflows
 </app-loading-content>
 <app-list-filter
-    *ngIf="hasWorkflowExecutions"
-    [namespace]="namespace"
-    [resource]="'workflow_execution'"
-    (labelsChanged)="labelsChanged($event)">
+        *ngIf="hasAnyWorkflowExecutions"
+        [namespace]="namespace"
+        [resource]="'workflow_execution'"
+        (labelsChanged)="labelsChanged($event)">
 </app-list-filter>
+<app-call-to-action
+        *ngIf="hasAnyWorkflowExecutions && this.workflows?.length === 0">
+    <div class="body workflow-executions">No workflows found</div>
+</app-call-to-action>
 <app-workflow-executions-list
-    *ngIf="hasWorkflowExecutions"
-    [namespace]="namespace"
-    [displayedColumns]="displayedColumns"
-    [workflowExecutions]="workflows"
-    (executionTerminated)="onWorkflowExecutionTerminated()"
-    (sortChange)="sortData($event)">
+        *ngIf="hasAnyWorkflowExecutions && this.workflows?.length !== 0"
+        [namespace]="namespace"
+        [displayedColumns]="displayedColumns"
+        [workflowExecutions]="workflows"
+        (executionTerminated)="onWorkflowExecutionTerminated()"
+        (sortChange)="sortData($event)">
 </app-workflow-executions-list>
-<mat-paginator class="no-background font-size-small"
-               *ngIf="hasWorkflowExecutions"
-               (page)="onPageChange($event)"
-               [pageIndex]="this.page"
-               [length]="this.workflowResponse.totalCount"
-               [pageSize]="this.pageSize"
-               [pageSizeOptions]="[5, 10, 25, 100]">
+<mat-paginator
+        class="no-background font-size-small"
+        *ngIf="hasAnyWorkflowExecutions && this.workflowResponse?.totalCount"
+        (page)="onPageChange($event)"
+        [pageIndex]="this.page"
+        [length]="this.workflowResponse?.totalCount"
+        [pageSize]="this.pageSize"
+        [pageSizeOptions]="[5, 10, 25, 100]">
 </mat-paginator>

@@ -15,7 +15,8 @@
                         [class.phase-unselected]="workflowExecutionPhase && workflowExecutionPhase !== 'running'"
                         color="rgb(1, 87, 155)"
                         class="stat-bar mt-40px">
-                    <a href="#" *ngIf="workflowExecutionPhase === 'running'" class="clear-phase" (click)="clearPhase($event)">clear</a>
+                    <a href="#" *ngIf="workflowExecutionPhase === 'running'" class="clear-phase"
+                       (click)="clearPhase($event)">clear</a>
                 </app-stat-bar>
                 <app-stat-bar
                         [title]="'Completed'"
@@ -25,7 +26,8 @@
                         [class.phase-unselected]="workflowExecutionPhase && workflowExecutionPhase !== 'completed'"
                         color="rgb(55, 173, 88)"
                         class="stat-bar mt-40px">
-                    <span *ngIf="workflowExecutionPhase === 'completed'" class="clear-phase" (click)="clearPhase($event)">clear</span>
+                    <span *ngIf="workflowExecutionPhase === 'completed'" class="clear-phase"
+                          (click)="clearPhase($event)">clear</span>
                 </app-stat-bar>
                 <app-stat-bar
                         [title]="'Failed'"
@@ -50,15 +52,16 @@
             </div>
             <div class="flex-grow-1">
                 <app-workflow-executions
-                    [namespace]="namespace"
-                    [phase]="workflowExecutionPhase"
-                    [pageSize]="5"
-                    (workflowsChanged)="onWorkflowsChanged($event)">
+                        [namespace]="namespace"
+                        [phase]="workflowExecutionPhase"
+                        [pageSize]="5"
+                        (hasWorkflowsChanged)="onHasWorkflowExecutionsChanged($event)">
                 </app-workflow-executions>
-                <app-call-to-action *ngIf="hasWorkflowExecutions !== undefined && !hasWorkflowExecutions">
+                <app-call-to-action *ngIf="hasWorkflowExecutions === false">
                     <div class="header text-center d-block">Get started with workflow executions</div>
                     <div class="body">This is where all your workflow executions statistics live.</div>
-                    <a class="action underline pointer-hover" [routerLink]="['/', this.namespace, 'workflow-templates']">Create a workflow template</a>
+                    <a class="action underline pointer-hover"
+                       [routerLink]="['/', this.namespace, 'workflow-templates']">Create a workflow template</a>
                 </app-call-to-action>
             </div>
         </div>

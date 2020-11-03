@@ -4,13 +4,11 @@ import {
 } from '../workflow.service';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material/snack-bar';
-import { AuthServiceService, WorkflowExecution, WorkflowServiceService, Workspace } from '../../../api';
+import { AuthServiceService, WorkflowExecution, WorkflowServiceService } from '../../../api';
 import { ConfirmationDialogComponent } from '../../confirmation-dialog/confirmation-dialog.component';
 import { WorkflowExecutionConstants } from '../models';
 import { MatDialog } from '@angular/material/dialog';
 import { Permissions } from '../../auth/models';
-import { combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { AppRouter } from '../../router/app-router.service';
 import { AlertService } from '../../alert/alert.service';
 import { Alert } from '../../alert/alert';
@@ -58,7 +56,6 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
         private snackbar: MatSnackBar) { }
 
     ngOnInit(): void {
-
     }
 
     ngOnDestroy(): void {

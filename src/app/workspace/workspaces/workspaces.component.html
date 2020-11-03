@@ -1,24 +1,29 @@
-<app-loading-content *ngIf="workspaceState === 'initialization'">
+<app-loading-content *ngIf="hasAnyWorkspaces === undefined || workspaces === undefined">
     Loading Workspaces
 </app-loading-content>
 <app-list-filter
-        *ngIf="hasWorkspaces"
+        *ngIf="hasAnyWorkspaces"
         [namespace]="namespace"
         [resource]="'workspace'"
         (labelsChanged)="labelsChanged($event)">
 </app-list-filter>
+<app-call-to-action
+        *ngIf="hasAnyWorkspaces && this.workspaces?.length === 0">
+    <div class="body workspaces">No workspaces found</div>
+</app-call-to-action>
 <app-workspace-list
-        *ngIf="hasWorkspaces"
+        *ngIf="hasAnyWorkspaces && this.workspaces?.length !== 0"
         [namespace]="namespace"
         [workspaces]="workspaces"
         (workspaceAction)="onWorkspaceEvent($event)"
         (sortChange)="sortData($event)">
 </app-workspace-list>
-<mat-paginator class="no-background font-size-small"
-               *ngIf="hasWorkspaces"
-               (page)="onPageChange($event)"
-               [pageIndex]="this.page"
-               [length]="workspaceResponse.totalCount"
-               [pageSize]="this.pageSize"
-               [pageSizeOptions]="[5, 10, 25, 100]">
+<mat-paginator
+        class="no-background font-size-small"
+        *ngIf="hasAnyWorkspaces && this.workspaceResponse?.totalCount"
+        (page)="onPageChange($event)"
+        [pageIndex]="this.page"
+        [length]="this.workspaceResponse?.totalCount"
+        [pageSize]="this.pageSize"
+        [pageSizeOptions]="[5, 10, 25, 100]">
 </mat-paginator>

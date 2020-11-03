@@ -6,11 +6,14 @@
         <div class="page-title">
             <div class="page-title-text">Workspaces</div>
             <div class="page-action-bar d-flex">
-                <button *ngIf="workspaceTemplatePermissions.list" mat-stroked-button color="primary" class="op-rounded op-button vertical-align-icon vertical-baseline-mat-icon-fa" [routerLink]="['/', this.namespace, 'workspace-templates']">
+                <button *ngIf="workspaceTemplatePermissions.list" mat-stroked-button color="primary"
+                        class="op-rounded op-button vertical-align-icon vertical-baseline-mat-icon-fa"
+                        [routerLink]="['/', this.namespace, 'workspace-templates']">
                     <mat-icon [fontSet]="'fas'" [fontIcon]="'fa-desktop'"></mat-icon>
                     <span class="ml-1">WORKSPACE TEMPLATES</span>
                 </button>
-                <button *ngIf="workspacePermissions.create" mat-flat-button color="accent" class="op-rounded op-button ml-3" (click)="createWorkspace()">
+                <button *ngIf="workspacePermissions.create" mat-flat-button color="accent"
+                        class="op-rounded op-button ml-3" (click)="createWorkspace()">
                     <mat-icon class="icon">add</mat-icon>
                     <span class="ml-1">Create Workspace</span>
                 </button>
@@ -21,7 +24,7 @@
     <div class="page-body mt-3 workflow-list">
         <app-workspaces
                 [namespace]="namespace"
-                (workspacesChanged)="workspacesChanged($event)">
+                (hasWorkspacesChanged)="hasWorkspacesChanged($event)">
         </app-workspaces>
         <app-call-to-action *ngIf="showWorkspacesCallToAction">
             <img class="icon" width="37" src="../../assets/images/workflows-icon.svg"/>

@@ -1,125 +1,130 @@
 <div class="page workflow-template-view">
-  <div class="page-header">
-    <div class="page-links">
-      <a *ngIf="this.backLinkName" (click)="goBack($event)" href="#" class="op-back-link">
-        <i class="fas fa-chevron-left"></i>
-        <span>{{this.backLinkName}}</span>
-      </a>
+    <div class="page-header">
+        <div class="page-links">
+            <a *ngIf="this.backLinkName" (click)="goBack($event)" href="#" class="op-back-link">
+                <i class="fas fa-chevron-left"></i>
+                <span>{{this.backLinkName}}</span>
+            </a>
+        </div>
+        <app-alert-panel class="mb-3 d-block"></app-alert-panel>
+        <div class="page-title">
+            <div class="page-title-text">Workflow template details</div>
+        </div>
     </div>
-    <app-alert-panel class="mb-3 d-block"></app-alert-panel>
-    <div class="page-title">
-      <div class="page-title-text">Workflow template details</div>
-    </div>
-  </div>
 
-  <div class="page-body">
-    <div class="op-info-box mt-8">
-      <div *ngIf="state === 'initialization'" class="d-flex align-items-center justify-content-center">
-        <mat-spinner
-          class="color-medium-gray"
-          [diameter]="20"
-          [mode]="'indeterminate'">
-        </mat-spinner>
-        <span class="font-roboto-bold font-weight-bold font-size-large color-medium-gray ml-3">Loading Workflow template</span>
-      </div>
-      <div *ngIf="state === 'failed-to-load'" class="d-flex align-items-center justify-content-center">
-        <span class="font-roboto-bold font-weight-bold font-size-large color-medium-gray ml-3">Failed to load Workflow template</span>
-      </div>
-      <div *ngIf="workflowTemplate">
-        <div class="header">
-          <div class="title">
-            <div>
-              {{workflowTemplate.name}}
+    <div class="page-body">
+        <div class="op-info-box mt-8">
+            <div *ngIf="state === 'initialization'" class="d-flex align-items-center justify-content-center">
+                <mat-spinner
+                        class="color-medium-gray"
+                        [diameter]="20"
+                        [mode]="'indeterminate'">
+                </mat-spinner>
+                <span class="font-roboto-bold font-weight-bold font-size-large color-medium-gray ml-3">Loading Workflow template</span>
             </div>
-            <div class="font-size-small color-medium-gray">
-              uid: {{workflowTemplate.uid}}
+            <div *ngIf="state === 'failed-to-load'" class="d-flex align-items-center justify-content-center">
+                <span class="font-roboto-bold font-weight-bold font-size-large color-medium-gray ml-3">Failed to load Workflow template</span>
             </div>
-          </div>
-          <div class="actions font-roboto">
-            <button mat-button color="primary" class="link-button" (click)="editSelectedWorkflowTemplateVersion()">
-              <mat-icon [fontSet]="'fas'" [fontIcon]="'fa-pencil-alt'"></mat-icon>
-              <span class="ml-2 no-vertical-align">Edit Template</span>
-            </button>
-            <button mat-button color="primary" class="link-button op-edit-button ml-10" (click)="cloneSelectedWorkflowTemplateVersion()">
-              <mat-icon [fontSet]="'far'" [fontIcon]="'fa-clone'"></mat-icon>
-              <span class="ml-2 no-vertical-align">Clone</span>
-            </button>
-            <button mat-button color="primary" class="link-button op-edit-button ml-10" (click)="deleteWorkflowTemplate()">
-              <mat-icon [fontSet]="'fas'" [fontIcon]="'fa-trash-alt'"></mat-icon>
-              <span class="no-vertical-align">Delete</span>
-            </button>
-          </div>
+            <div *ngIf="workflowTemplate">
+                <div class="header">
+                    <div class="title">
+                        <div>
+                            {{workflowTemplate.name}}
+                        </div>
+                        <div class="font-size-small color-medium-gray">
+                            uid: {{workflowTemplate.uid}}
+                        </div>
+                    </div>
+                    <div class="actions font-roboto">
+                        <button mat-button color="primary" class="link-button"
+                                (click)="editSelectedWorkflowTemplateVersion()">
+                            <mat-icon [fontSet]="'fas'" [fontIcon]="'fa-pencil-alt'"></mat-icon>
+                            <span class="ml-2 no-vertical-align">Edit Template</span>
+                        </button>
+                        <button mat-button color="primary" class="link-button op-edit-button ml-10"
+                                (click)="cloneSelectedWorkflowTemplateVersion()">
+                            <mat-icon [fontSet]="'far'" [fontIcon]="'fa-clone'"></mat-icon>
+                            <span class="ml-2 no-vertical-align">Clone</span>
+                        </button>
+                        <button mat-button color="primary" class="link-button op-edit-button ml-10"
+                                (click)="deleteWorkflowTemplate()">
+                            <mat-icon [fontSet]="'fas'" [fontIcon]="'fa-trash-alt'"></mat-icon>
+                            <span class="no-vertical-align">Delete</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="d-flex align-items-baseline mt-2">
+                    <div class="info">
+                        <i class="far fa-calendar-check"></i>
+                        <span class="ml-2 font-roboto">Created:</span>
+                        <app-date class="ml-2" [dateTime]="workflowTemplate.createdAt"></app-date>
+                    </div>
+                    <div class="info ml-4">
+                        <i class="far fa-calendar-check"></i>
+                        <span class="ml-2 font-roboto">Modified:</span>
+                        <app-date class="ml-2" [dateTime]="workflowTemplate.modifiedAt"></app-date>
+                    </div>
+                    <div class="info ml-2">
+                        <span class="ml-2 font-roboto"><i
+                                class="fas fa-code-branch"></i> Versions: {{workflowTemplate.versions}}</span>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <app-labels-list-view [labels]="labels" class="d-inline-block"></app-labels-list-view>
+                </div>
+            </div>
         </div>
-        <div class="d-flex align-items-baseline mt-2">
-          <div class="info">
-            <i class="far fa-calendar-check"></i>
-            <span class="ml-2 font-roboto">Created:</span>
-            <app-date class="ml-2" [dateTime]="workflowTemplate.createdAt"></app-date>
-          </div>
-          <div class="info ml-4">
-            <i class="far fa-calendar-check"></i>
-            <span class="ml-2 font-roboto">Modified:</span>
-            <app-date class="ml-2" [dateTime]="workflowTemplate.modifiedAt"></app-date>
-          </div>
-          <div class="info ml-2">
-            <span class="ml-2 font-roboto"><i class="fas fa-code-branch"></i> Versions: {{workflowTemplate.versions}}</span>
-          </div>
+
+        <div class="d-flex align-items-baseline mt-5">
+            <div class="header-2-text">Activity</div>
+            <div class="flex-grow-1"></div>
+            <app-button (click)="executeWorkflow()" [loading]="state === 'executing'">
+                <mat-icon class="icon">add</mat-icon>
+                <span>Execute Workflow</span>
+                <span class="loading">Executing Workflow</span>
+            </app-button>
         </div>
-        <div class="mt-3">
-          <app-labels-list-view [labels]="labels" class="d-inline-block"></app-labels-list-view>
-        </div>
-      </div>
+
+        <mat-tab-group class="no-bottom-border" (selectedTabChange)="onTabChange($event)" [dynamicHeight]="true">
+            <mat-tab label="Executions">
+                <app-workflow-executions
+                        [namespace]="namespace"
+                        [showSystem]="true"
+                        [workflowTemplateUid]="uid"
+                        (hasWorkflowsChanged)="onHasWorkflowsChanged($event)">
+                </app-workflow-executions>
+                <app-call-to-action *ngIf="showWorkflowExecutionsCallToAction">
+                    <div class="header">Get started with workflow executions</div>
+                    <div class="body">This is where all your workflow executions live.</div>
+                    <a class="action underline pointer-hover" (click)="executeWorkflow($event)">Execute a workflow</a>
+                </app-call-to-action>
+            </mat-tab>
+
+            <mat-tab label="Scheduled">
+                <div *ngIf="hasCronWorkflows">
+                    <app-cron-workflow-list
+                            *ngIf="cronWorkflows"
+                            [namespace]="namespace"
+                            [template]="workflowTemplate"
+                            [cronWorkflows]="cronWorkflows"
+                            (listRowsModified)="getCronWorkflows()">
+                    </app-cron-workflow-list>
+                    <mat-paginator class="no-background font-size-small"
+                                   *ngIf="cronWorkflowResponse"
+                                   (page)="onCronWorkflowPageChange($event)"
+                                   [pageIndex]="this.cronWorkflowPagination.page"
+                                   [length]="this.cronWorkflowResponse.totalCount"
+                                   [pageSize]="this.cronWorkflowPagination.pageSize"
+                                   [pageSizeOptions]="[5, 10, 25, 100]">
+                    </mat-paginator>
+                </div>
+                <app-call-to-action *ngIf="showCronWorkflowsCallToAction">
+                    <div class="header">Get started with scheduled workflows</div>
+                    <div class="body">This is where all your scheduled workflows live.</div>
+                    <a class="action underline pointer-hover" (click)="executeWorkflow($event, true)">Schedule a
+                        workflow</a>
+                </app-call-to-action>
+            </mat-tab>
+        </mat-tab-group>
     </div>
-
-    <div class="d-flex align-items-baseline mt-5">
-      <div class="header-2-text">Activity</div>
-      <div class="flex-grow-1"></div>
-      <app-button (click)="executeWorkflow()" [loading]="state === 'executing'">
-        <mat-icon class="icon">add</mat-icon>
-        <span>Execute Workflow</span>
-        <span class="loading">Executing Workflow</span>
-      </app-button>
-    </div>
-
-    <mat-tab-group class="no-bottom-border" (selectedTabChange)="onTabChange($event)" [dynamicHeight]="true">
-      <mat-tab label="Executions">
-        <app-workflow-executions
-                [namespace]="namespace"
-                [showSystem]="true"
-                [workflowTemplateUid]="uid"
-                (workflowsChanged)="onWorkflowsChanged($event)">
-        </app-workflow-executions>
-          <app-call-to-action *ngIf="showWorkflowExecutionsCallToAction">
-            <div class="header">Get started with workflow executions</div>
-            <div class="body">This is where all your workflow executions live.</div>
-            <a class="action underline pointer-hover" (click)="executeWorkflow($event)" >Execute a workflow</a>
-          </app-call-to-action>
-      </mat-tab>
-
-      <mat-tab label="Scheduled">
-        <div *ngIf="hasCronWorkflows">
-          <app-cron-workflow-list
-                  *ngIf="cronWorkflows"
-                  [namespace]="namespace"
-                  [template]="workflowTemplate"
-                  [cronWorkflows]="cronWorkflows"
-                  (listRowsModified)="getCronWorkflows()">
-          </app-cron-workflow-list>
-          <mat-paginator class="no-background font-size-small"
-                         *ngIf="cronWorkflowResponse"
-                         (page)="onCronWorkflowPageChange($event)"
-                         [pageIndex]="this.cronWorkflowPagination.page"
-                         [length]="this.cronWorkflowResponse.totalCount"
-                         [pageSize]="this.cronWorkflowPagination.pageSize"
-                         [pageSizeOptions]="[5, 10, 25, 100]">
-          </mat-paginator>
-        </div>
-        <app-call-to-action *ngIf="showCronWorkflowsCallToAction">
-          <div class="header">Get started with scheduled workflows</div>
-          <div class="body">This is where all your scheduled workflows live.</div>
-          <a class="action underline pointer-hover" (click)="executeWorkflow($event, true)">Schedule a workflow</a>
-        </app-call-to-action>
-      </mat-tab>
-    </mat-tab-group>
-  </div>
 </div>
