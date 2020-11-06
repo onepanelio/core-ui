@@ -36,7 +36,7 @@
                        [routerLink]="['/', this.namespace, 'workflow-templates', workflowTemplate.uid]">{{workflowTemplate.name}}</a>
                     <div class="d-inline-flex justify-content-between color-medium-gray font-roboto font-size-small mt-2">
                         <div class="mr-5">{{workflowTemplate.versions}} versions</div>
-                        <div class="mr-5" *ngIf="workflowTemplate.stats">{{workflowTemplate.stats?.total}}executions
+                        <div class="mr-5" *ngIf="workflowTemplate.stats">{{workflowTemplate.stats?.total}} executions
                         </div>
                         <div class="mr-5" *ngIf="!workflowTemplate.stats">0 executions</div>
                         <div *ngIf="workflowTemplate.cronStats">{{workflowTemplate.cronStats?.total}} crons</div>
