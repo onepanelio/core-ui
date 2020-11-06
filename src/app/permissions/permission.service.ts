@@ -47,7 +47,7 @@ export class PermissionService {
         for (const verb of verbs) {
             requests.push(
                 this.authServiceService.isAuthorized({
-                    namespace: name,
+                    namespace,
                     verb,
                     resource: 'workflows',
                     resourceName,
@@ -65,7 +65,7 @@ export class PermissionService {
         for (const verb of verbs) {
             requests.push(
                 this.authServiceService.isAuthorized({
-                    namespace: name,
+                    namespace,
                     verb,
                     resource: 'workflowtemplates',
                     resourceName,
@@ -83,7 +83,7 @@ export class PermissionService {
         for (const verb of verbs) {
             requests.push(
                 this.authServiceService.isAuthorized({
-                    namespace: name,
+                    namespace,
                     verb,
                     resource: 'workspaces',
                     resourceName,
