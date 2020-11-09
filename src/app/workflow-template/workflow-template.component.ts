@@ -70,6 +70,10 @@ export class WorkflowTemplateComponent implements OnInit, OnDestroy {
     }
 
     getWorkflowTemplates() {
+        if (!this.hasAnyWorkflowTemplates) {
+            this.checkIfHasAnyWorkflowTemplates();
+        }
+
         this.workflowTemplateService
             .listWorkflowTemplates(this.namespace, this.pagination.pageSize, this.pagination.page + 1, this.labelFilter)
             .subscribe(res => {
