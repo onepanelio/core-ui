@@ -89,7 +89,6 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
         }
     }
 
-
     /**
      * Marks the workspace as updating.
      */
@@ -163,6 +162,10 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
     getWorkspaces() {
         if (this.lastUpdateRequest && !this.lastUpdateRequestFinished) {
             return;
+        }
+
+        if (!this.hasAnyWorkspaces) {
+            this.checkIfHasAnyWorkspaces();
         }
 
         this.lastUpdateRequest = undefined;

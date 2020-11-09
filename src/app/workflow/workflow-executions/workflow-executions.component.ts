@@ -163,6 +163,10 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
             return;
         }
 
+        if (!this.hasAnyWorkflowExecutions) {
+            this.checkIfHasAnyRecords();
+        }
+
         this.lastUpdateRequest = undefined;
         this.lastUpdateRequestFinished = undefined;
 
