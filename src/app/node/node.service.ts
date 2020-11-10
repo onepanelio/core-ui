@@ -116,10 +116,10 @@ export class NodeRenderer {
 
   static nodeTemplate(node: any) {
     let nodeRootClasses = 'node-root ';
-    if (node.type === 'StepGroup' || node.type === 'DAG') {
-      nodeRootClasses += ' dashed-circle';
+    if (node.type === 'StepGroup' || node.type === 'DAG' || node.name.includes('sys-')) {
+      nodeRootClasses += 'dashed-circle';
     } else {
-      nodeRootClasses += ' rect';
+      nodeRootClasses += 'rect';
     }
 
     let html = `<div class="${nodeRootClasses}"`;
@@ -128,7 +128,7 @@ export class NodeRenderer {
     }
     html += '>';
 
-    const showInfo = !(node.type === 'StepGroup' || node.type === 'DAG');
+    const showInfo = !(node.type === 'StepGroup' || node.type === 'DAG' || node.name.includes('sys-'));
 
     if(showInfo) {
       if (node.phase === 'Succeeded') {
@@ -412,7 +412,7 @@ export class NodeRenderer {
   }
 
   static getNodeShape(node: any): NodeShape {
-    if (node.type === 'StepGroup' || node.type === 'DAG') {
+    if (node.type === 'StepGroup' || node.type === 'DAG' ||  node.name.includes('sys-')) {
       return 'Dashed-Circle';
     }
 
