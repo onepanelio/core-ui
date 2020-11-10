@@ -9,9 +9,17 @@ export interface ContainerDefinition {
   args: Array<string>;
 }
 
+export interface ScriptDefinition {
+  image: string;
+  command: Array<string>;
+  args: Array<string>;
+  source: string;
+}
+
 export interface TemplateDefinition {
   name: string;
   container?: ContainerDefinition;
+  script?: ScriptDefinition;
 }
 
 export interface WorkflowTemplateBase {
