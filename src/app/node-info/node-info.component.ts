@@ -264,6 +264,10 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
       return;
     }
 
+    // Clear out the metrics. On success, it'll load new data.
+    // On failure, we will not have any metrics. 
+    this.metrics = [];
+
     this.metricsService.getWorkflowMetrics(this.namespace, this.workflow.name, this.node.id)
         .subscribe(res => {
           this.metrics = res.metrics;
