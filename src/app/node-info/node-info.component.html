@@ -74,7 +74,7 @@
           <app-parameter
                   *ngFor="let parameter of inputParameters"
                   [parameter]="parameter"
-                  class="d-block mt-2">
+                  class="d-block mt-2 ml-1">
           </app-parameter>
         </div>
 
@@ -83,7 +83,7 @@
           <app-artifact-parameter
                   *ngFor="let parameter of inputArtifacts"
                   [parameter]="parameter"
-                  class="d-block mt-2">
+                  class="d-block mt-2 ml-1">
           </app-artifact-parameter>
         </div>
       </div>
@@ -127,32 +127,30 @@
         </mat-panel-title>
       </mat-expansion-panel-header>
 
+      <app-metrics *ngIf="metrics.length" [metrics]="metrics">
+      </app-metrics>
+
       <div *ngIf="outputParameters?.length">
         <div class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold mt-5">PARAMETERS</div>
         <app-parameter
                 *ngFor="let parameter of outputParameters"
                 [parameter]="parameter"
-                class="d-block mt-2">
+                class="d-block mt-2 ml-1">
         </app-parameter>
       </div>
 
-      <div>
-        <app-metrics *ngIf="metrics.length" [metrics]="metrics">
-        </app-metrics>
-
-        <div *ngIf="hasFiles" class="mt-4">
-          <div class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold">ARTIFACTS</div>
-            <app-file-browser *ngFor="let fileNavigator of fileNavigators"
-                              class="d-block mt-3"
-                              [displayedColumns]="['icon', 'name', 'size', 'actions']"
-                              [rootName]="fileNavigator.displayRootPath"
-                              [fileNavigator]="fileNavigator"
-                              [namespace]="this.namespace"
-                              [name]="fileNavigator.name">
-            </app-file-browser>
-        </div>
+      <div *ngIf="hasFiles" class="mt-4">
+        <div class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold">ARTIFACTS</div>
+          <app-file-browser *ngFor="let fileNavigator of fileNavigators"
+                            class="d-block mt-3"
+                            [displayedColumns]="['icon', 'name', 'size', 'actions']"
+                            [rootName]="fileNavigator.displayRootPath"
+                            [fileNavigator]="fileNavigator"
+                            [namespace]="this.namespace"
+                            [name]="fileNavigator.name">
+          </app-file-browser>
       </div>
-      <div *ngIf="!metrics.length && !hasFiles" class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold">
+      <div *ngIf="!outputParameters?.length && !metrics.length && !hasFiles" class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold">
         No outputs
       </div>
     </mat-expansion-panel>
