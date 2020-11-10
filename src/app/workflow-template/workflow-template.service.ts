@@ -16,10 +16,18 @@ export interface ScriptDefinition {
   source: string;
 }
 
+export interface ResourceDefinition {
+  action: string;
+  successCondition: string;
+  failureCondition: string;
+  manifest: string;
+}
+
 export interface TemplateDefinition {
   name: string;
   container?: ContainerDefinition;
   script?: ScriptDefinition;
+  resource?: ResourceDefinition;
 }
 
 export interface WorkflowTemplateBase {
