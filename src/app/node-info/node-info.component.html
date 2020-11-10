@@ -62,53 +62,36 @@
     <mat-expansion-panel class="op-expansion-panel parameters" hideToggle="true" (expandedChange)="onParametersExpandChange($event)">
       <mat-expansion-panel-header [expandedHeight]="'48px'">
         <mat-panel-title class="font-size-larger font-primary justify-content-between align-items-center">
-          Parameters
+          Inputs
           <div class="expansion-icon" *ngIf="!parametersExpanded">&#43;</div>
           <div class="expansion-icon" *ngIf="parametersExpanded">&#8722;</div>
         </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <div *ngIf="inputArtifacts?.length || inputParameters?.length">
-        <div class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold">INPUTS</div>
-
-        <div *ngIf="inputArtifacts?.length">
-          <div class="font-roboto-bold font-size-small font-medium-gray font-weight-bold mt-5 ml-2">ARTIFACTS</div>
-          <app-artifact-parameter
-                  *ngFor="let parameter of inputArtifacts"
-                  [parameter]="parameter"
-                  class="d-block mt-2 ml-4">
-          </app-artifact-parameter>
-        </div>
-
-        <div *ngIf="inputParameters?.length">
-          <div class="font-roboto-bold font-size-small font-medium-gray font-weight-bold mt-5 ml-2">PARAMETERS</div>
-          <app-parameter
-                  *ngFor="let parameter of inputParameters"
-                  [parameter]="parameter"
-                  class="ml-4">
-          </app-parameter>
-        </div>
+      <div *ngIf="inputParameters?.length">
+        <div class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold mt-2">PARAMETERS</div>
+        <app-parameter
+                *ngFor="let parameter of inputParameters"
+                [parameter]="parameter"
+                class="d-block mt-2 ml-1">
+        </app-parameter>
       </div>
 
-      <div *ngIf="outputArtifacts?.length || outputParameters?.length">
-        <div class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold mt-5" *ngIf="node.type === 'Pod'">OUTPUTS</div>
-
-        <div *ngIf="outputArtifacts?.length">
-          <div class="font-roboto-bold font-size-small font-medium-gray font-weight-bold mt-5 ml-2">ARTIFACTS</div>
-          <app-artifact-parameter *ngFor="let parameter of outputArtifacts" [parameter]="parameter" class="d-block mt-2 ml-4">
-          </app-artifact-parameter>
-        </div>
-
-        <div *ngIf="outputParameters?.length">
-          <div class="font-roboto-bold font-size-small font-medium-gray font-weight-bold mt-5 ml-2">PARAMETERS</div>
-          <app-parameter
-                  *ngFor="let parameter of outputParameters"
-                  [parameter]="parameter"
-                  class="ml-4">
-          </app-parameter>
-        </div>
+      <div *ngIf="inputArtifacts?.length">
+        <div class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold mt-5">ARTIFACTS</div>
+        <app-artifact-parameter
+                *ngFor="let parameter of inputArtifacts"
+                [parameter]="parameter"
+                class="d-block mt-2 ml-1">
+        </app-artifact-parameter>
       </div>
+
+      <div *ngIf="!inputParameters?.length && !inputArtifacts?.length" class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold">
+        No inputs
+      </div>
+
     </mat-expansion-panel>
+
     <mat-expansion-panel class="op-expansion-panel" hideToggle="true" *ngIf="node.type === 'Pod'" (expandedChange)="onContainersExpandChange($event)">
       <mat-expansion-panel-header [expandedHeight]="'48px'">
         <mat-panel-title class="font-size-larger font-primary justify-content-between align-items-center">
@@ -120,51 +103,81 @@
 
       <div *ngIf="template">
         <div>
-          <div class="font-weight-bold">Name</div>
-          <div>{{template.name}}</div>
+          <span class="font-weight-bold">Name: </span>
+          <span>{{template.name}}</span>
         </div>
-        <div class="mt-2">
-          <div class="font-weight-bold w-50">Image</div>
-          <div>{{template.container?.image}}</div>
+        <div class="mt-2" *ngIf="template.container?.image || template.script?.image">
+          <span class="font-weight-bold w-50">Image: </span>
+          <span>{{template.container?.image}}{{template.script?.image}}</span>
         </div>
-        <div class="mt-2">
-          <div class="font-weight-bold w-50">Command</div>
-          <div>{{template.container?.command?.join(" ")}}</div>
+        <div class="mt-2" *ngIf="template.container?.command || template.script?.command">
+          <div class="font-weight-bold w-50">Command:</div>
+          <pre class="source-code">{{template.container?.command?.join(" ")}}{{template.script?.command?.join(" ")}}</pre>
         </div>
-        <div class="mt-2">
-          <div class="font-weight-bold w-50">Args</div>
-          <div>{{template.container?.args?.join(" ")}}</div>
+        <div class="mt-2" *ngIf="template.container?.args || template.script?.args">
+          <div class="font-weight-bold w-50">Args:</div>
+          <pre class="source-code">{{template.container?.args?.join(" ")}}{{template.script?.args?.join(" ")}}</pre>
+        </div>
+        <div class="mt-2" *ngIf="template.script?.source">
+          <div class="font-weight-bold w-50">Source:</div>
+          <pre class="source-code">{{template.script?.source}}</pre>
+        </div>
+        <div class="mt-2" *ngIf="template.resource?.action">
+          <span class="font-weight-bold w-50">Action: </span>
+          <span class="source-code">{{template.resource?.action}}</span>
+        </div>
+        <div class="mt-2" *ngIf="template.resource?.successCondition">
+          <span class="font-weight-bold w-50">Success condition: </span>
+          <span class="source-code">{{template.resource?.successCondition}}</span>
+        </div>
+        <div class="mt-2" *ngIf="template.resource?.failureCondition">
+          <span class="font-weight-bold w-50">Failure condition: </span>
+          <span class="source-code">{{template.resource?.failureCondition}}</span>
+        </div>
+        <div class="mt-2" *ngIf="template.resource?.manifest">
+          <div class="font-weight-bold w-50">Manifest:</div>
+          <pre class="source-code">{{template.resource?.manifest}}</pre>
         </div>
       </div>
     </mat-expansion-panel>
+
     <mat-expansion-panel class="op-expansion-panel" hideToggle="true" *ngIf="node.type === 'Pod'" (expandedChange)="onArtifactsExpandChange($event)">
       <mat-expansion-panel-header [expandedHeight]="'48px'">
         <mat-panel-title class="font-size-larger font-primary justify-content-between align-items-center">
-          Artifacts
+          Outputs
           <div class="expansion-icon" *ngIf="!artifactsExpanded">&#43;</div>
           <div class="expansion-icon" *ngIf="artifactsExpanded">&#8722;</div>
         </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <div>
-        <app-metrics *ngIf="metrics.length" [metrics]="metrics">
-        </app-metrics>
+      <app-metrics *ngIf="metrics.length" [metrics]="metrics">
+      </app-metrics>
 
-        <div *ngIf="hasFiles" class="mt-4">
-          <div class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold">FILES</div>
-            <app-file-browser *ngFor="let fileNavigator of fileNavigators"
-                              class="d-block mt-3"
-                              [displayedColumns]="['icon', 'name', 'size', 'actions']"
-                              [rootName]="fileNavigator.displayRootPath"
-                              [fileNavigator]="fileNavigator"
-                              [namespace]="this.namespace"
-                              [name]="fileNavigator.name">
-            </app-file-browser>
-        </div>
+      <div *ngIf="outputParameters?.length">
+        <div class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold mt-5">PARAMETERS</div>
+        <app-parameter
+                *ngFor="let parameter of outputParameters"
+                [parameter]="parameter"
+                class="d-block mt-2 ml-1">
+        </app-parameter>
       </div>
-      <div *ngIf="!metrics.length && !hasFiles" class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold">
-        No Artifacts
+
+      <div *ngIf="hasFiles" class="mt-4">
+        <div class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold">ARTIFACTS</div>
+          <app-file-browser *ngFor="let fileNavigator of fileNavigators"
+                            class="d-block mt-3"
+                            [displayedColumns]="['icon', 'name', 'size', 'actions']"
+                            [rootName]="fileNavigator.displayRootPath"
+                            [fileNavigator]="fileNavigator"
+                            [namespace]="this.namespace"
+                            [name]="fileNavigator.name">
+          </app-file-browser>
       </div>
+
+      <div *ngIf="!outputParameters?.length && !metrics.length && !hasFiles" class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold">
+        No outputs
+      </div>
+
     </mat-expansion-panel>
   </div>
 </div>
