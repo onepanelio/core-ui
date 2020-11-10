@@ -109,11 +109,11 @@
         </div>
         <div class="mt-2" *ngIf="template.container?.command || template.script?.command">
           <div class="font-weight-bold w-50">Command</div>
-          <div>{{template.container?.command?.join(" ")}}{{template.script?.command?.join(" ")}}</div>
+          <pre class="source-code">{{template.container?.command?.join(" ")}}{{template.script?.command?.join(" ")}}</pre>
         </div>
         <div class="mt-2" *ngIf="template.container?.args || template.script?.args">
           <div class="font-weight-bold w-50">Args</div>
-          <div>{{template.container?.args?.join(" ")}}{{template.script?.args?.join(" ")}}</div>
+          <pre class="source-code">{{template.container?.args?.join(" ")}}{{template.script?.args?.join(" ")}}</pre>
         </div>
         <div class="mt-2" *ngIf="template.script?.source">
           <div class="font-weight-bold w-50">Source</div>
