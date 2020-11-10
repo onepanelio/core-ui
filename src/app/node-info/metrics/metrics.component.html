@@ -1,4 +1,4 @@
-<div class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold">METRICS</div>
+<div class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold mt-2">METRICS</div>
 <div *ngFor="let item of metrics" class="font-roboto d-block mt-2 ml-1">
     <span class="key font-weight-bold">{{item.name}}: </span>
     <span *ngIf="item.value" class="value">{{item.value}}</span>
