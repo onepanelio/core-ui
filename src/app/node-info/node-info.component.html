@@ -154,7 +154,8 @@
         <div class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold mt-2">SIDECARS</div>
         <div class="d-inline-flex w-100 mt-5">
           <button *ngFor="let sidecar of sidecars" mat-stroked-button color="primary"
-                  class="op-rounded op-button ml-1"
+                  [disabled]="node.phase !== 'Running'"
+                  class="op-rounded op-button op-button-disableable ml-1"
                   (click)="this.openSidecar(sidecar.url)">
               <span class="ml-1">OPEN {{sidecar.name}}</span>
           </button>

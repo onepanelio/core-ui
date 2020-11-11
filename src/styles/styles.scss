@@ -227,6 +227,14 @@ a {
   }
 }
 
+.op-button-disableable {
+  &.mat-stroked-button {
+    &[disabled] {
+      border-color: rgba(0, 0, 0, 0.26);
+    }
+  }
+}
+
 .vertical-baseline-mat-icon-fa {
   .mat-button-wrapper {
     align-items: baseline;
