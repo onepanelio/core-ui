@@ -137,6 +137,17 @@ export class SimpleWorkflowDetail {
 
     return status.nodes[nodeId];
   }
+
+  getTemplateManifestParameters(name: string) {
+    const templates = this.jsonManifest.spec.templates;
+    for(const template of templates) {
+      if(template.name === name) {
+        return template.outputs.parameters;
+      }
+    }
+
+    return null;
+  }
 }
 
 // todo deprecated. Remove this and use API generated WorkflowExecution.

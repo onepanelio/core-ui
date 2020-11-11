@@ -150,7 +150,14 @@
         </mat-panel-title>
       </mat-expansion-panel-header>
 
-      <app-metrics *ngIf="metrics.length" [metrics]="metrics">
+      <div *ngIf="sidecars.length">
+        <div class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold mt-5">SIDECARS</div>
+        <div *ngFor="let sidecar of sidecars" class="mt-3">
+          <a [href]="sidecar.url" target="_blank"><app-button color="primary">{{sidecar.name}}</app-button></a>
+        </div>
+      </div>
+
+      <app-metrics *ngIf="metrics.length" [metrics]="metrics" class="mt-3">
       </app-metrics>
 
       <div *ngIf="outputParameters?.length">

@@ -1,11 +1,16 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { NodeStatus } from '../node/node.service';
+import { NodeParameter, NodeStatus } from '../node/node.service';
 import { SimpleWorkflowDetail, WorkflowPhase, WorkflowService, } from '../workflow/workflow.service';
 import * as yaml from 'js-yaml';
 import { TemplateDefinition } from '../workflow-template/workflow-template.service';
 import { FileNavigator } from '../files/fileNavigator';
 import { WorkflowServiceService } from '../../api';
 import { Metric, MetricsService } from './metrics/metrics.service';
+
+interface SideCar {
+  name: string;
+  url: string;
+}
 
 @Component({
   selector: 'app-node-info',
@@ -14,7 +19,6 @@ import { Metric, MetricsService } from './metrics/metrics.service';
   providers: [WorkflowService, MetricsService]
 })
 export class NodeInfoComponent implements OnInit, OnDestroy {
-
   @Input() namespace: string;
   @Input() name: string;
 
@@ -48,6 +52,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
   fileNavigators = [];
   fileLoaderSubscriptions = {};
+  sidecars = new Array<SideCar>();
 
   constructor(private workflowService: WorkflowService,
               private workflowServiceService: WorkflowServiceService,
@@ -112,6 +117,18 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
     }
 
     return directories;
+  }
+
+  private static sysSideCarUrlPrefixLength = 17;
+
+  private static paramToSideCar(parameter: NodeParameter): SideCar {
+    let name = parameter.name.substring(NodeInfoComponent.sysSideCarUrlPrefixLength);
+    let url = `//${parameter.value}`;
+
+    return {
+      name,
+      url
+    };
   }
 
   ngOnInit() {
@@ -192,7 +209,10 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
     }
 
     if (node.type !== 'DAG' && node.type !== 'Steps' && node.outputs) {
-      this.outputParameters = node.outputs.parameters;
+      if(node.outputs.parameters) {
+        this.updateOutputParameters(node.outputs.parameters);
+      }
+
       this.outputArtifacts = node.outputs.artifacts;
     }
 
@@ -265,7 +285,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
     }
 
     // Clear out the metrics. On success, it'll load new data.
-    // On failure, we will not have any metrics. 
+    // On failure, we will not have any metrics.
     this.metrics = [];
 
     this.metricsService.getWorkflowMetrics(this.namespace, this.workflow.name, this.node.id)
@@ -288,5 +308,21 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
    */
   private transitionedToFinishedNode(): boolean {
     return this.previousNodeStatus && this.previousNodeStatus.finishedAt === null && this.node.finishedAt !== null;
+  }
+
+  updateOutputParameters(parameters: NodeParameter[]) {
+    let sidecars = [];
+    let outputParameters = [];
+
+    for(const param of parameters) {
+      if(param.name.startsWith('sys-sidecar-url')) {
+        sidecars.push(NodeInfoComponent.paramToSideCar(param));
+      } else {
+        outputParameters.push(param);
+      }
+    }
+
+    this.sidecars = sidecars;
+    this.outputParameters = outputParameters;
   }
 }
