@@ -142,11 +142,16 @@ export class SimpleWorkflowDetail {
     const templates = this.jsonManifest.spec.templates;
     for(const template of templates) {
       if(template.name === name) {
-        return template.outputs.parameters;
+        // output parameters may be undefined
+        if(template.outputs.parameters) {
+          return template.outputs.parameters;
+        }
+
+        return [];
       }
     }
 
-    return null;
+    return [];
   }
 }
 

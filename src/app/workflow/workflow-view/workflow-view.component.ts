@@ -291,9 +291,7 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
     if (this._nodeInfoElement) {
       this._nodeInfoElement.updateNodeStatus(this.nodeInfo);
       let templateParameters = this.workflow.getTemplateManifestParameters(newNodeInfo.templateName);
-      if(templateParameters) {
-        this._nodeInfoElement.updateOutputParameters(templateParameters);
-      }
+      this._nodeInfoElement.updateOutputParameters(templateParameters);
     }
     this.selectedNodeId = event.nodeId;
 
