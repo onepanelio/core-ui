@@ -325,4 +325,8 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
     this.sidecars = sidecars;
     this.outputParameters = outputParameters;
   }
+
+  openSidecar(url: string) {
+    window.open(url);
+  }
 }
