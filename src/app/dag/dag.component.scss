@@ -13,7 +13,8 @@
 }
 
 /deep/ g.root {
-  rect, circle {
+  rect, circle
+  {
     stroke: $primary-lighter !important;
     fill: $primary-light !important;
   }
