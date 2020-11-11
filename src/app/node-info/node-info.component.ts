@@ -125,7 +125,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
     let name = parameter.name.substring(NodeInfoComponent.sysSideCarUrlPrefixLength);
     // some of the names have dashes like 'tensor-first'.
     // change it to be 'tensor first' instead to look nicer for the button
-    name = name.replace('-', ' ');
+    name = name.replace(/-/g, ' ');
     let url = `//${parameter.value}`;
 
     return {
