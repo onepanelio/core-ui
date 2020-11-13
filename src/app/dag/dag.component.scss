@@ -13,7 +13,8 @@
 }
 
 /deep/ g.root {
-  rect {
+  rect,
+  circle {
     stroke: $primary-lighter !important;
     fill: $primary-light !important;
   }
@@ -134,28 +135,32 @@
 }
 
 /deep/ .node.succeeded {
-  rect {
+  rect,
+  circle {
     stroke: $success;
     fill: $success-light;
   }
 }
 
 /deep/ .node.running {
-  rect {
+  rect,
+  circle {
     stroke: $primary;
     fill: $primary-light;
   }
 }
 
 /deep/ .node.failed {
-  rect {
+  rect,
+  circle {
     stroke: $danger;
     fill: $danger-light;
   }
 }
 
 /deep/ .node.error {
-  rect {
+  rect,
+  circle {
     stroke: $danger;
     fill: $danger-light;
   }
@@ -171,7 +176,8 @@
 }
 
 /deep/ .node.selected {
-  rect {
+  rect,
+  circle {
     stroke: #F6881F !important;
     stroke-width: 2px;
   }

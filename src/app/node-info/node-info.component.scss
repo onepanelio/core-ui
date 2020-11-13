@@ -54,4 +54,19 @@
   .finished-at {
     margin-bottom: 35px;
   }
+
+  pre.source-code {
+    background: #f4f4f4;
+    border: 1px solid #ddd;
+    color: #666;
+    page-break-inside: avoid;
+    font-family: monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    max-width: 100%;
+    overflow: auto;
+    padding: 0.5em 0.75em;
+    display: block;
+    word-wrap: break-word;
+  }
 }

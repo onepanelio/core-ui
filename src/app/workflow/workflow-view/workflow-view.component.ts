@@ -26,8 +26,6 @@ import {
 import { WorkflowExecutionConstants } from '../models';
 import { ParameterUtils } from '../../parameters/models';
 import { Permissions } from '../../auth/models';
-import { combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { WorkflowExecuteDialogComponent } from '../workflow-execute-dialog/workflow-execute-dialog.component';
 import { Alert } from '../../alert/alert';
 import { AlertService } from '../../alert/alert.service';
@@ -248,6 +246,7 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
 
     const wasTerminated = this.workflow.phase === 'Terminated';
     this.workflow.updateWorkflowManifest(data.result.manifest);
+
     this.startedAt = this.workflow.workflowStatus.startedAt;
     this.finishedAt = this.workflow.workflowStatus.finishedAt;
 
@@ -289,9 +288,10 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
 
     this.showNodeInfo = true;
 
-
     if (this._nodeInfoElement) {
       this._nodeInfoElement.updateNodeStatus(this.nodeInfo);
+      let templateParameters = this.workflow.getTemplateManifestParameters(newNodeInfo.templateName);
+      this._nodeInfoElement.updateOutputParameters(templateParameters);
     }
     this.selectedNodeId = event.nodeId;
 

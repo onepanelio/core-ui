@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Metric, MetricsService } from "./metrics.service";
+import { Metric } from "./metrics.service";
 
 @Component({
   selector: 'app-metrics',
