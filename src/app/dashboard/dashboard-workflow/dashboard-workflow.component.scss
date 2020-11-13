@@ -14,13 +14,13 @@
     margin-top: 15px;
   }
 
-  @media screen and (max-width: 1900px) {
+  @media screen and (max-width: 1940px) {
     /deep/ .cdk-column-template {
       display: none;
     }
   }
 
-  @media screen and (max-width: 1600px) {
+  @media screen and (max-width: 1610px) {
     /deep/ .cdk-column-end {
       display: none;
     }
@@ -32,8 +32,14 @@
     }
   }
 
-  @media screen and (max-width: 1100px) {
+  @media screen and (max-width: 1150px) {
     /deep/ .cdk-column-createdAt {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: 950px) {
+    /deep/ .cdk-column-status {
       display: none;
     }
   }

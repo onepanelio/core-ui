@@ -46,4 +46,16 @@
       color: $darkest-gray;
     }
   }
+
+  @media screen and (max-width: 1200px) {
+    /deep/ .cdk-column-timestamp-status {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: 950px) {
+    /deep/ .cdk-column-createdAt {
+      display: none;
+    }
+  }
 }
