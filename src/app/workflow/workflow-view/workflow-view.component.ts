@@ -11,7 +11,7 @@ import * as ace from 'brace';
 import {
   AuthServiceService, CreateWorkflowExecutionBody,
   KeyValue,
-  LabelServiceService,
+  LabelServiceService, Metric,
   Parameter,
   WorkflowExecution,
   WorkflowServiceService
@@ -76,6 +76,8 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
   permissions = new Permissions();
 
   backLinkName?: string;
+
+  metrics: Metric[] = [];
 
   private socketClosedCount = 0;
   private socketErrorCount = 0;
@@ -162,6 +164,8 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
   startCheckingWorkflow() {
     this.workflowServiceService.getWorkflowExecution(this.namespace, this.uid)
         .subscribe(res => {
+          this.metrics = res.metrics;
+
           this.workflow = new SimpleWorkflowDetail(res);
 
           this.getPermissions(res);
