@@ -1,0 +1,9 @@
+<div class="op-h2 mb-3">Metrics</div>
+<app-metrics-edit [metrics]="metrics"></app-metrics-edit>
+<hr class="divider op-just-border-top border-gray mt-5" />
+<div class="d-flex justify-content-between w-100 mt-5">
+    <button mat-button class="font-medium-gray cancel-button" (click)="cancel()">CANCEL</button>
+    <app-button (click)="save()">
+        Save
+    </app-button>
+</div>

@@ -1,10 +1,7 @@
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
-import { NamespaceTracker } from "../../namespace/namespace-tracker.service";
-import { Router } from "@angular/router";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
-import { WorkflowExecuteDialogData } from "../../workflow/workflow-execute-dialog/workflow-execute-dialog.component";
-import { KeyValue } from "../../../api";
-import { LabelsEditComponent } from "../labels-edit/labels-edit.component";
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { KeyValue } from '../../../api';
+import { LabelsEditComponent } from '../labels-edit/labels-edit.component';
 
 export interface LabelEditDialogData {
   labels: Array<KeyValue>;
@@ -34,7 +31,7 @@ export class LabelEditDialogComponent implements OnInit {
   }
 
   save() {
-    if(!this.labelsEdit.isValid) {
+    if (!this.labelsEdit.isValid) {
       this.labelsEdit.markAllAsDirty();
       return;
     }

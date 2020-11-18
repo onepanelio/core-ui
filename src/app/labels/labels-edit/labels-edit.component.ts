@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { KeyValue } from "../../../api";
-import { FormControl, RequiredValidator, Validators } from "@angular/forms";
+import { KeyValue } from '../../../api';
+import { FormControl, Validators } from '@angular/forms';
 
 interface LabelItem {
   id: number;
@@ -16,6 +16,8 @@ interface LabelItem {
 })
 export class LabelsEditComponent implements OnInit {
   private nextId = 0;
+
+  // tslint:disable-next-line:variable-name
   private _labels: Array<KeyValue>;
 
   displayedColumns = ['key', 'value', 'delete'];
@@ -23,18 +25,18 @@ export class LabelsEditComponent implements OnInit {
   items = new Array<LabelItem>();
 
   @Input() set labels(value: Array<KeyValue>) {
-    if(!value) {
+    if (!value) {
       this.items = [];
       return;
     }
 
     this._labels = value;
-    let newItems = new Array<LabelItem>();
+    const newItems = new Array<LabelItem>();
 
-    for(const item of value) {
+    for (const item of value) {
       newItems.push({
         id: this.getNextId(),
-        item: item,
+        item,
         controlKey: this.createNewKeyControl(item.key),
         controlValue: this.createNewValueControl(item.value),
       });
@@ -53,14 +55,14 @@ export class LabelsEditComponent implements OnInit {
       return value.id !== item.id;
     });
 
-    let indexOfItem = this._labels.indexOf(item.item);
-    if(indexOfItem >= 0) {
+    const indexOfItem = this._labels.indexOf(item.item);
+    if (indexOfItem >= 0) {
       this._labels.splice(indexOfItem, 1);
     }
   }
 
   onAdd() {
-    let labelsPlusOne = this.items.slice();
+    const labelsPlusOne = this.items.slice();
 
     const newItem = {
       key: '',
@@ -91,37 +93,32 @@ export class LabelsEditComponent implements OnInit {
   }
 
   get isValid(): boolean {
-    for(const item of this.items) {
-      if(item.controlKey.invalid) {
+    for (const item of this.items) {
+      if (item.controlKey.invalid) {
         return false;
       }
 
-      if(item.controlValue.invalid) {
+      if (item.controlValue.invalid) {
         return false;
       }
     }
 
     let duplicate = false;
-    for(const duplicateKey of this.findDuplicateKeys()) {
-      duplicateKey.controlKey.setErrors({'duplicate': true});
+    for (const duplicateKey of this.findDuplicateKeys()) {
+      duplicateKey.controlKey.setErrors({duplicate: true});
       duplicate = true;
     }
 
-    if(duplicate) {
-      return false;
-    }
-
-    return true;
+    return !duplicate;
   }
 
   private findDuplicateKeys(): LabelItem[] {
-    let keyMap = new Map<string, LabelItem>();
+    const keyMap = new Map<string, LabelItem>();
+    const duplicates = [];
 
-    let duplicates = [];
-
-    for(const item of this.items) {
+    for (const item of this.items) {
       const key = item.controlKey.value;
-      if(keyMap.has(key)) {
+      if (keyMap.has(key)) {
         duplicates.push(item);
       } else {
         keyMap.set(key, item);
@@ -132,14 +129,14 @@ export class LabelsEditComponent implements OnInit {
   }
 
   markAllAsDirty() {
-    for(const item of this.items) {
+    for (const item of this.items) {
       item.controlKey.markAllAsTouched();
       item.controlValue.markAllAsTouched();
     }
   }
 
   private createNewKeyControl(value: string): FormControl {
-    let control = new FormControl(value);
+    const control = new FormControl(value);
     control.setValidators([
         Validators.required
     ]);
@@ -148,7 +145,7 @@ export class LabelsEditComponent implements OnInit {
   }
 
   private createNewValueControl(value: string): FormControl {
-    let control = new FormControl(value);
+    const control = new FormControl(value);
     control.setValidators([
       Validators.required
     ]);

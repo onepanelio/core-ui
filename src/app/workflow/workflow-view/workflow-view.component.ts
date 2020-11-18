@@ -30,6 +30,7 @@ import { WorkflowExecuteDialogComponent } from '../workflow-execute-dialog/workf
 import { Alert } from '../../alert/alert';
 import { AlertService } from '../../alert/alert.service';
 import { PermissionService } from '../../permissions/permission.service';
+import { MetricsEditDialogComponent } from '../../metrics/metrics-edit-dialog/metrics-edit-dialog.component';
 
 const aceRange = ace.acequire('ace/range').Range;
 
@@ -69,6 +70,7 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
   showAllParameters = false;
 
   loadingLabels = false;
+  loadingMetrics = false;
   cloning = false;
 
   startedAt;
@@ -294,7 +296,7 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
 
     if (this._nodeInfoElement) {
       this._nodeInfoElement.updateNodeStatus(this.nodeInfo);
-      let templateParameters = this.workflow.getTemplateManifestParameters(newNodeInfo.templateName);
+      const templateParameters = this.workflow.getTemplateManifestParameters(newNodeInfo.templateName);
       this._nodeInfoElement.updateOutputParameters(templateParameters);
     }
     this.selectedNodeId = event.nodeId;
@@ -481,6 +483,38 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
         this.loadingLabels = false;
       }, err => {
         this.loadingLabels = false;
+      });
+    });
+  }
+
+  onEditMetrics() {
+    const metricsCopy = this.metrics.slice();
+
+    const dialogRef = this.dialog.open(MetricsEditDialogComponent, {
+      width: '700px',
+      maxHeight: '100vh',
+      data: {
+        metrics: metricsCopy
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(data => {
+      if (!data) {
+        return;
+      }
+
+      this.loadingMetrics = true;
+      this.workflowServiceService.updateWorkflowExecutionMetrics(this.namespace, this.uid, {
+        metrics: data
+      }).subscribe(res => {
+        if (!res.metrics) {
+          res.metrics = [];
+        }
+
+        this.metrics = res.metrics;
+        this.loadingMetrics = false;
+      }, err => {
+        this.loadingMetrics = false;
       });
     });
   }

@@ -1,0 +1,66 @@
+<cdk-table *ngIf="items?.length > 0" [dataSource]="items" class="mb-8">
+    <ng-container cdkColumnDef="key">
+        <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+        <cdk-cell *cdkCellDef="let metric" class="d-flex flex-column flex-grow-3">
+            <mat-form-field appearance="outline" class="small">
+                <mat-label>Name</mat-label>
+                <input #inputKey matInput
+                       [value]="metric.item.name"
+                       (keyup)="onNameChange(metric.item, inputKey.value)"
+                       [formControl]="metric.controlName"/>
+                <mat-error
+                        *ngIf="!metric.controlName.hasError('duplicate')"
+                        class="color-danger font-size-small font-roboto ml-2">Must not be blank.</mat-error>
+            </mat-form-field>
+        </cdk-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="value">
+        <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+        <cdk-cell *cdkCellDef="let metric" class="d-inline-flex flex-column flex-grow-5">
+            <mat-form-field appearance="outline" class="small">
+                <mat-label>Value</mat-label>
+                <input #inputValue matInput
+                       type="number"
+                       [value]="metric.item.value"
+                       (keyup)="onValueChange(metric.item, inputValue.value)"
+                       [formControl]="metric.controlValue"/>
+                <mat-error class="color-danger font-size-small font-roboto ml-2">Must not be blank.</mat-error>
+            </mat-form-field>
+        </cdk-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="format">
+        <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+        <cdk-cell *cdkCellDef="let metric" class="d-inline-flex flex-column">
+            <mat-form-field appearance="outline" class="small">
+                <mat-label>Format</mat-label>
+                <input #inputValue matInput
+                       [value]="metric.item.format || ''"
+                       (keyup)="onFormatChange(metric.item, inputValue.value)"
+                       [formControl]="metric.controlValue"/>
+                <mat-error class="color-danger font-size-small font-roboto ml-2">Error</mat-error>
+            </mat-form-field>
+        </cdk-cell>
+    </ng-container>
+
+    <ng-container cdkColumnDef="delete">
+        <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+        <cdk-cell *cdkCellDef="let label">
+            <button mat-button color="primary" class="link-button delete-button font-size-regular" (click)="onDelete(label)">
+                <mat-icon [fontSet]="'fas'" [fontIcon]="'fa-trash-alt'"></mat-icon>
+            </button>
+        </cdk-cell>
+    </ng-container>
+
+    <!-- Header and Row Declarations -->
+    <cdk-header-row *cdkHeaderRowDef="displayedColumns" class="d-flex font-roboto font-weight-bold"></cdk-header-row>
+    <cdk-row *cdkRowDef="let row; columns: displayedColumns"
+             class="d-flex align-items-baseline">
+    </cdk-row>
+</cdk-table>
+
+<button mat-stroked-button color="primary" class="op-rounded op-button" (click)="onAdd()">
+    <mat-icon>add</mat-icon>
+    ADD METRIC
+</button>
