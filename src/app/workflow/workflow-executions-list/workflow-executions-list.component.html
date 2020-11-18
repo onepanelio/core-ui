@@ -62,6 +62,34 @@
             </cdk-cell>
         </ng-container>
 
+        <ng-container cdkColumnDef="metrics">
+            <cdk-header-cell *cdkHeaderCellDef mat-sort-header class="ml-4">Metrics</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let workflow" class="ml-2">
+                <ng-container *ngIf="workflow.metrics">
+                    <table class="font-roboto">
+                        <ng-container *ngFor="let metric of workflow.metrics; let index = index">
+                            <tr *ngIf="index == 0 || showAllMetrics">
+                                <td class="pr-2 text-left">
+                                    <strong>{{metric.name}}</strong>
+                                </td>
+                                <td *ngIf="metric.format === '%'" class="text-right">
+                                    {{(metric.value * 100).toFixed(2)}}%
+                                </td>
+                                <td *ngIf="!metric.format" class="text-right">
+                                    {{metric.value}}
+                                </td>
+                            </tr>
+                        </ng-container>
+                    </table>
+
+                    <div class="font-roboto font-size-regular underline pointer-hover mt-3" (click)="this.toggleShowMetrics()">
+                        <span *ngIf="showAllMetrics">Hide metrics</span>
+                        <span *ngIf="!showAllMetrics">Show all metrics</span>
+                    </div>
+                </ng-container>
+            </cdk-cell>
+        </ng-container>
+
         <ng-container cdkColumnDef="actions">
             <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
             <cdk-cell *cdkCellDef="let workflow">

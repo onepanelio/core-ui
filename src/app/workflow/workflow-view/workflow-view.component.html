@@ -100,7 +100,7 @@
         </ng-container>
         <table class="font-roboto">
           <tr *ngFor="let metric of this.metrics; let index = index">
-            <td class="pr-2">
+            <td class="pr-2 text-left">
               <strong>{{metric.name}}</strong>
             </td>
             <td *ngIf="metric.format === '%'" class="text-right">

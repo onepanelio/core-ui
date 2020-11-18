@@ -14,7 +14,6 @@
 <app-workflow-executions-list
         *ngIf="hasAnyWorkflowExecutions && this.workflows?.length !== 0"
         [namespace]="namespace"
-        [displayedColumns]="displayedColumns"
         [workflowExecutions]="workflows"
         (executionTerminated)="onWorkflowExecutionTerminated()"
         (sortChange)="sortData($event)">
