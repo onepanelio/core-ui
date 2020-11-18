@@ -36,6 +36,16 @@ export class MetricsEditDialogComponent implements OnInit {
       return;
     }
 
+    const formattedMetrics = this.metrics.slice();
+    for (const metric of formattedMetrics) {
+      if (metric.format === 'none') {
+         metric.format = '';
+      }
+      if (metric.format === 'percent') {
+        metric.format = '%';
+      }
+    }
+
     this.dialogRef.close(this.metrics);
   }
 }

@@ -1,8 +1,8 @@
-<cdk-table *ngIf="items?.length > 0" [dataSource]="items" class="mb-8">
+<cdk-table *ngIf="items?.length > 0" [dataSource]="items" class="mb-8 metrics-edit">
     <ng-container cdkColumnDef="key">
         <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
-        <cdk-cell *cdkCellDef="let metric" class="d-flex flex-column flex-grow-3">
-            <mat-form-field appearance="outline" class="small">
+        <cdk-cell *cdkCellDef="let metric" class="d-flex flex-column">
+            <mat-form-field appearance="outline" class="small fix-mat-overflow">
                 <mat-label>Name</mat-label>
                 <input #inputKey matInput
                        [value]="metric.item.name"
@@ -17,8 +17,8 @@
 
     <ng-container cdkColumnDef="value">
         <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
-        <cdk-cell *cdkCellDef="let metric" class="d-inline-flex flex-column flex-grow-5">
-            <mat-form-field appearance="outline" class="small">
+        <cdk-cell *cdkCellDef="let metric" class="d-inline-flex flex-column">
+            <mat-form-field appearance="outline" class="small fix-mat-overflow">
                 <mat-label>Value</mat-label>
                 <input #inputValue matInput
                        type="number"
@@ -33,12 +33,14 @@
     <ng-container cdkColumnDef="format">
         <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
         <cdk-cell *cdkCellDef="let metric" class="d-inline-flex flex-column">
-            <mat-form-field appearance="outline" class="small">
+            <mat-form-field appearance="outline" class="small fix-mat-overflow">
                 <mat-label>Format</mat-label>
-                <input #inputValue matInput
-                       [value]="metric.item.format || ''"
-                       (keyup)="onFormatChange(metric.item, inputValue.value)"
-                       [formControl]="metric.controlValue"/>
+                <mat-select #formatValue
+                        [formControl]="metric.controlFormat"
+                        (selectionChange)="onFormatChange(metric.item, formatValue.selected.value)">
+                    <mat-option value="none">None</mat-option>
+                    <mat-option value="percent">%</mat-option>
+                </mat-select>
                 <mat-error class="color-danger font-size-small font-roboto ml-2">Error</mat-error>
             </mat-form-field>
         </cdk-cell>
@@ -56,7 +58,7 @@
     <!-- Header and Row Declarations -->
     <cdk-header-row *cdkHeaderRowDef="displayedColumns" class="d-flex font-roboto font-weight-bold"></cdk-header-row>
     <cdk-row *cdkRowDef="let row; columns: displayedColumns"
-             class="d-flex align-items-baseline">
+             class="d-flex align-items-baseline justify-content-between">
     </cdk-row>
 </cdk-table>
 

@@ -118,24 +118,6 @@ export class MetricsEditComponent implements OnInit {
     return true;
   }
 
-  // TODO override checkbox
-
-  private findDuplicateKeys(): MetricItem[] {
-    const keyMap = new Map<string, MetricItem>();
-    const duplicates = [];
-
-    for (const item of this.items) {
-      const key = item.controlName.value;
-      if (keyMap.has(key)) {
-        duplicates.push(item);
-      } else {
-        keyMap.set(key, item);
-      }
-    }
-
-    return duplicates;
-  }
-
   markAllAsDirty() {
     for (const item of this.items) {
       item.controlName.markAllAsTouched();
@@ -163,6 +145,14 @@ export class MetricsEditComponent implements OnInit {
   }
 
   private createNewFormatControl(value: string): FormControl {
+    if (!value) {
+      value = 'none';
+    }
+
+    if (value === '%') {
+      value = 'percent';
+    }
+
     const control = new FormControl(value);
     control.setValidators([
       Validators.required
