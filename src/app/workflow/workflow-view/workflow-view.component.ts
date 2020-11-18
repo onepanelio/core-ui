@@ -166,6 +166,10 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
   startCheckingWorkflow() {
     this.workflowServiceService.getWorkflowExecution(this.namespace, this.uid)
         .subscribe(res => {
+          if (!res.metrics) {
+            res.metrics = [];
+          }
+
           this.metrics = res.metrics;
 
           this.workflow = new SimpleWorkflowDetail(res);
