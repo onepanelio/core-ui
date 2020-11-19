@@ -37,7 +37,7 @@
                 <mat-label>Format</mat-label>
                 <mat-select #formatValue
                         [formControl]="metric.controlFormat"
-                        (selectionChange)="onFormatChange(metric.item, formatValue.selected.value)">
+                        (selectionChange)="onFormatChangeOption(metric.item, formatValue.selected)">
                     <mat-option value="none">None</mat-option>
                     <mat-option value="percent">%</mat-option>
                 </mat-select>
