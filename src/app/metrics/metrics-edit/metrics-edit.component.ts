@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Metric } from '../../../api';
+import { MatOption } from '@angular/material';
 
 interface MetricItem {
   id: number;
@@ -94,6 +95,12 @@ export class MetricsEditComponent implements OnInit {
 
   onFormatChange(metric: Metric, change: string) {
     metric.format = change;
+  }
+
+  onFormatChangeOption(metric: Metric, val: MatOption|MatOption[]) {
+    if (val instanceof MatOption) {
+      this.onFormatChange(metric, val.value);
+    }
   }
 
   getNextId() {
