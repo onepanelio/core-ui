@@ -48,6 +48,9 @@
           <button *ngIf="permissions.update" mat-button color="primary" class="ml-2 op-edit-button" (click)="onEdit()">
             <i class="fas fa-pencil-alt mr-2"></i> EDIT LABELS
           </button>
+          <button *ngIf="permissions.update" mat-button color="primary" class="ml-2 op-edit-button" (click)="onEditMetrics()">
+            <i class="fas fa-pencil-alt mr-2"></i> EDIT METRICS
+          </button>
           <button mat-button color="primary" class="ml-2 op-edit-button" (click)="onShowTotalYaml()">
             <i class="fas fa-terminal mr-2 op-edit-button"></i>VIEW YAML
           </button>
@@ -69,21 +72,45 @@
         </app-labels-viewer>
       </div>
 
-      <div class="op-h2 mt-4 mb-4">Parameters</div>
-      <ng-container *ngIf="this.parameters.length === 0">
-        <span class="font-roboto color-medium-gray">No parameters</span>
-      </ng-container>
-      <ng-container *ngFor="let parameter of this.parameters; let index = index">
-        <app-workflow-parameter
-                *ngIf="index == 0 || showAllParameters"
-                [parameter]="parameter"
-                class="d-block">
-        </app-workflow-parameter>
-      </ng-container>
+      <div class="d-flex">
+        <div class="flex-grow-1">
+          <div class="op-h2 mt-4 mb-4">Parameters</div>
+          <ng-container *ngIf="this.parameters.length === 0">
+            <span class="font-roboto color-medium-gray">No parameters</span>
+          </ng-container>
+          <ng-container *ngFor="let parameter of this.parameters; let index = index">
+            <app-workflow-parameter
+                    *ngIf="index == 0 || showAllParameters"
+                    [parameter]="parameter"
+                    class="d-block">
+            </app-workflow-parameter>
+          </ng-container>
 
-      <div *ngIf="this.parameters.length > 0" class="font-roboto font-size-regular underline pointer-hover mt-3" (click)="this.toggleShowParameters()">
-        <span *ngIf="showAllParameters">Hide parameters</span>
-        <span *ngIf="!showAllParameters">Show all parameters</span>
+          <div *ngIf="this.parameters.length > 0" class="font-roboto font-size-regular underline pointer-hover mt-3" (click)="this.toggleShowParameters()">
+            <span *ngIf="showAllParameters">Hide parameters</span>
+            <span *ngIf="!showAllParameters">Show all parameters</span>
+          </div>
+        </div>
+
+
+      <div class="flex-grow-1">
+        <div class="op-h2 mt-4 mb-4">Metrics</div>
+        <ng-container *ngIf="this.metrics.length === 0">
+          <span class="font-roboto color-medium-gray">No metrics</span>
+        </ng-container>
+        <table class="font-roboto">
+          <tr *ngFor="let metric of this.metrics; let index = index">
+            <td class="pr-2 text-left">
+              <strong>{{metric.name}}</strong>
+            </td>
+            <td *ngIf="metric.format === '%'" class="text-right">
+              {{(metric.value * 100).toFixed(2)}}%
+            </td>
+            <td *ngIf="!metric.format" class="text-right">
+              {{metric.value}}
+            </td>
+          </tr>
+        </table>
       </div>
     </div>
 

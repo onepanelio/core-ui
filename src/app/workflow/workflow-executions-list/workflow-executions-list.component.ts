@@ -24,8 +24,9 @@ import { PermissionService } from '../../permissions/permission.service';
 })
 export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
     private snackbarRef: MatSnackBarRef<SimpleSnackBar>;
+    showAllMetrics = false;
 
-    @Input() displayedColumns = ['name', 'status', 'createdAt', 'start', 'end', 'template', 'spacer', 'actions', 'labels'];
+    @Input() displayedColumns = ['name', 'status', 'createdAt', 'start', 'end', 'template', 'metrics', 'spacer', 'actions', 'labels'];
     @Input() sort = 'createdAt';
     @Input() sortDirection: SortDirection = 'desc';
 
@@ -125,5 +126,9 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
         this.sortDirection = event.direction;
 
         this.sortChange.emit(event);
+    }
+
+    toggleShowMetrics() {
+        this.showAllMetrics = !this.showAllMetrics;
     }
 }

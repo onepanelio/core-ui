@@ -130,6 +130,8 @@ import { WorkspacesComponent } from './workspace/workspaces/workspaces.component
 import { WorkStatusComponent } from './ui-tools/work-status/work-status.component';
 import { ListFilterComponent } from './list-filter/list-filter.component';
 import { ErrorComponent } from './error/error.component';
+import { MetricsEditComponent } from './metrics/metrics-edit/metrics-edit.component';
+import { MetricsEditDialogComponent } from './metrics/metrics-edit-dialog/metrics-edit-dialog.component';
 
 @NgModule({
     declarations: [
@@ -183,6 +185,7 @@ import { ErrorComponent } from './error/error.component';
         LabelsListViewComponent,
         LabelsEditComponent,
         LabelEditDialogComponent,
+        MetricsEditDialogComponent,
         CronWorkflowListComponent,
         CronWorkflowEditDialogComponent,
         WorkflowParameterComponent,
@@ -230,6 +233,7 @@ import { ErrorComponent } from './error/error.component';
         WorkStatusComponent,
         ListFilterComponent,
         ErrorComponent,
+        MetricsEditComponent
     ],
     entryComponents: [
         WorkflowExecuteDialogComponent,
@@ -237,6 +241,7 @@ import { ErrorComponent } from './error/error.component';
         ConfirmationDialogComponent,
         ClosableSnackComponent,
         LabelEditDialogComponent,
+        MetricsEditDialogComponent,
         CreateNamespaceDialogComponent,
         WorkspaceExecuteDialogComponent
     ],

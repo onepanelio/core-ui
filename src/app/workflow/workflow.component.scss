@@ -1,5 +1,11 @@
 .workflow {
   /deep/ .workflow-executions-list {
+    @media screen and (max-width: 1800px) {
+      /deep/ .cdk-column-metrics {
+        display: none;
+      }
+    }
+
     @media screen and (max-width: 1580px) {
       /deep/ .cdk-column-template {
         display: none;

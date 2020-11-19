@@ -23,7 +23,6 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
     @Input() workflowTemplateVersion?: string;
     @Input() page = 0;
     @Input() pageSize = 15;
-    @Input() displayedColumns = ['name', 'status', 'createdAt', 'start', 'end', 'template', 'spacer', 'actions', 'labels'];
     @Input() sortOrder = 'createdAt,desc';
     @Input() showSystem = false;
 
