@@ -1,6 +1,6 @@
 import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { SimpleWorkflowDetail, WorkflowService } from '../workflow.service';
+import { SimpleWorkflowDetail, WorkflowPhase, WorkflowService } from '../workflow.service';
 import { NodeRenderer, NodeStatus } from '../../node/node.service';
 import { DagClickEvent, DagComponent } from '../../dag/dag.component';
 import { NodeInfoComponent } from '../../node-info/node-info.component';
@@ -254,8 +254,12 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const wasTerminated = this.workflow.phase === 'Terminated';
+    const oldPhase = this.workflow.phase;
+    const wasTerminated = oldPhase === 'Terminated';
     this.workflow.updateWorkflowManifest(data.result.manifest);
+    const newPhase = this.workflow.phase;
+
+    this.onPhaseUpdate(oldPhase, newPhase);
 
     this.startedAt = this.workflow.workflowStatus.startedAt;
     this.finishedAt = this.workflow.workflowStatus.finishedAt;
@@ -492,7 +496,6 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
   }
 
   onEditMetrics() {
-
     const dialogRef = this.dialog.open(MetricsEditDialogComponent, {
       width: '550px',
       maxHeight: '100vh',
@@ -584,4 +587,26 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
 
     this.appRouter.goBack();
   }
+
+  onPhaseUpdate(oldPhase: WorkflowPhase, newPhase: WorkflowPhase) {
+    if (oldPhase === newPhase) {
+      return;
+    }
+
+    // When a workflow finishes, metrics may have been updated along the way.
+    // make sure to fetch the latest metrics so UI is up to date.
+    switch (newPhase) {
+      case 'Error':
+      case 'Failed':
+      case 'Terminated':
+      case 'Succeeded':
+        this.workflowServiceService.getWorkflowExecution(this.namespace, this.uid).subscribe(res => {
+          if (!res.metrics) {
+            res.metrics = [];
+          }
+          this.metrics = res.metrics;
+        });
+    }
+  }
+
 }
