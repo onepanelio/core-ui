@@ -1,173 +1,183 @@
 <div class="page mb-0">
-  <div class="page-header">
-    <div class="page-links">
-      <a *ngIf="this.backLinkName" (click)="goBack($event)" href="#" class="op-back-link">
-        <i class="fas fa-chevron-left"></i>
-        <span>{{this.backLinkName}}</span>
-      </a>
-    </div>
-    <div class="page-title-text">Workflow execution</div>
-    <app-alert-panel></app-alert-panel>
-  </div>
-
-  <div class="page-body">
-    <app-activity-bar *ngIf="workflow?.phase" [status]="workflow.phase" class="mt-4">
-      <div class="d-flex align-items-center w-100">
-        <app-status *ngIf="workflow" class="font-roboto-bold font-weight-bold" [phase]="workflow.phase"></app-status>
-        <span *ngIf="workflow && workflow.succeeded" class="ml-1"> in </span>
-        <app-clock *ngIf="workflow"
-                   class="ml-1"
-                   [startedAt]="startedAt"
-                   [finishedAt]="finishedAt">
-        </app-clock>
-
-        <div class="flex-grow-1">
+    <div class="page-header">
+        <div class="page-links">
+            <a *ngIf="this.backLinkName" (click)="goBack($event)" href="#" class="op-back-link">
+                <i class="fas fa-chevron-left"></i>
+                <span>{{this.backLinkName}}</span>
+            </a>
         </div>
-
-        <app-button
-                *ngIf="!workflow?.active && permissions.create"
-                color="primary"
-                (click)="runAgain()"
-                [loading]="cloning">
-          <span>RUN AGAIN</span>
-          <span class="loading">RUNNING AGAIN</span>
-        </app-button>
-      </div>
-
-      <div>
-        <button *ngIf="workflow?.active && permissions.delete" mat-button color="primary" class="font-size-regular" (click)="onTerminate()">Terminate</button>
-      </div>
-    </app-activity-bar>
-
-    <div class="op-info-box mt-4">
-      <div class="header">
-        <div class="page-title-text">
-          <ng-container *ngIf="workflow">{{workflow.name}}</ng-container>
-        </div>
-        <div class="actions">
-          <button *ngIf="permissions.update" mat-button color="primary" class="ml-2 op-edit-button" (click)="onEdit()">
-            <i class="fas fa-pencil-alt mr-2"></i> EDIT LABELS
-          </button>
-          <button *ngIf="permissions.update" mat-button color="primary" class="ml-2 op-edit-button" (click)="onEditMetrics()">
-            <i class="fas fa-pencil-alt mr-2"></i> EDIT METRICS
-          </button>
-          <button mat-button color="primary" class="ml-2 op-edit-button" (click)="onShowTotalYaml()">
-            <i class="fas fa-terminal mr-2 op-edit-button"></i>VIEW YAML
-          </button>
-        </div>
-      </div>
-      <div class="d-flex align-items-baseline font-roboto font-size-small color-medium-gray mt-3">
-        <div>
-          Started: <app-date *ngIf="workflow" [dateTime]="startedAt"></app-date>
-        </div>
-        <div *ngIf="workflow?.workflowStatus?.finishedAt" class="ml-5">
-          Ended: <app-date *ngIf="workflow" [dateTime]="finishedAt"></app-date>
-        </div>
-
-        <app-labels-viewer
-                *ngIf="labels?.length !== 0 || loadingLabels"
-                class="ml-2"
-                [labels]="labels"
-                [loading]="loadingLabels">
-        </app-labels-viewer>
-      </div>
-
-      <div class="d-flex">
-        <div class="flex-grow-1">
-          <div class="op-h2 mt-4 mb-4">Parameters</div>
-          <ng-container *ngIf="this.parameters.length === 0">
-            <span class="font-roboto color-medium-gray">No parameters</span>
-          </ng-container>
-          <ng-container *ngFor="let parameter of this.parameters; let index = index">
-            <app-workflow-parameter
-                    *ngIf="index == 0 || showAllParameters"
-                    [parameter]="parameter"
-                    class="d-block">
-            </app-workflow-parameter>
-          </ng-container>
-
-          <div *ngIf="this.parameters.length > 0" class="font-roboto font-size-regular underline pointer-hover mt-3" (click)="this.toggleShowParameters()">
-            <span *ngIf="showAllParameters">Hide parameters</span>
-            <span *ngIf="!showAllParameters">Show all parameters</span>
-          </div>
-        </div>
-
-
-      <div class="flex-grow-1">
-        <div class="op-h2 mt-4 mb-4">Metrics</div>
-        <ng-container *ngIf="this.metrics.length === 0">
-          <span class="font-roboto color-medium-gray">No metrics</span>
-        </ng-container>
-        <table class="font-roboto">
-          <tr *ngFor="let metric of this.metrics; let index = index">
-            <td class="pr-2 text-left">
-              <strong>{{metric.name}}</strong>
-            </td>
-            <td *ngIf="metric.format === '%'" class="text-right">
-              {{metric.value}}%
-            </td>
-            <td *ngIf="!metric.format" class="text-right">
-              {{metric.value}}
-            </td>
-          </tr>
-        </table>
-      </div>
+        <div class="page-title-text">Workflow execution</div>
+        <app-alert-panel></app-alert-panel>
     </div>
 
-    <div id="info-box" class="op-info-box mt-4">
-      <div #pageContent>
-        <app-dag
-          class="mt-4 h-100"
-          [style.height]="height"
-          [style.minHeight]="'500px'"
-          (nodeClicked)="handleNodeClicked($event)"
-          [identifier]="dagIdentifier">
-        </app-dag>
-      </div>
+    <div class="page-body">
+        <app-activity-bar *ngIf="workflow?.phase" [status]="workflow.phase" class="mt-4">
+            <div class="d-flex align-items-center w-100">
+                <app-status *ngIf="workflow" class="font-roboto-bold font-weight-bold"
+                            [phase]="workflow.phase"></app-status>
+                <span *ngIf="workflow && workflow.succeeded" class="ml-1"> in </span>
+                <app-clock *ngIf="workflow"
+                           class="ml-1"
+                           [startedAt]="startedAt"
+                           [finishedAt]="finishedAt">
+                </app-clock>
+
+                <div class="flex-grow-1">
+                </div>
+
+                <app-button
+                        *ngIf="!workflow?.active && permissions.create"
+                        color="primary"
+                        (click)="runAgain()"
+                        [loading]="cloning">
+                    <span>RUN AGAIN</span>
+                    <span class="loading">RUNNING AGAIN</span>
+                </app-button>
+            </div>
+
+            <div>
+                <button *ngIf="workflow?.active && permissions.delete" mat-button color="primary"
+                        class="font-size-regular" (click)="onTerminate()">Terminate
+                </button>
+            </div>
+        </app-activity-bar>
+
+        <div class="op-info-box mt-4">
+            <div class="header">
+                <div class="page-title-text">
+                    <ng-container *ngIf="workflow">{{workflow.name}}</ng-container>
+                </div>
+                <div class="actions">
+                    <button *ngIf="permissions.update" mat-button color="primary" class="ml-2 op-edit-button"
+                            (click)="onEdit()">
+                        <i class="fas fa-pencil-alt mr-2"></i> EDIT LABELS
+                    </button>
+                    <button *ngIf="permissions.update" mat-button color="primary" class="ml-2 op-edit-button"
+                            (click)="onEditMetrics()">
+                        <i class="fas fa-pencil-alt mr-2"></i> EDIT METRICS
+                    </button>
+                    <button mat-button color="primary" class="ml-2 op-edit-button" (click)="onShowTotalYaml()">
+                        <i class="fas fa-terminal mr-2 op-edit-button"></i>VIEW YAML
+                    </button>
+                </div>
+            </div>
+            <div class="d-flex align-items-baseline font-roboto font-size-small color-medium-gray mt-3">
+                <div>
+                    Started:
+                    <app-date *ngIf="workflow" [dateTime]="startedAt"></app-date>
+                </div>
+                <div *ngIf="workflow?.workflowStatus?.finishedAt" class="ml-5">
+                    Ended:
+                    <app-date *ngIf="workflow" [dateTime]="finishedAt"></app-date>
+                </div>
+
+                <app-labels-viewer
+                        *ngIf="labels?.length !== 0 || loadingLabels"
+                        class="ml-2"
+                        [labels]="labels"
+                        [loading]="loadingLabels">
+                </app-labels-viewer>
+            </div>
+
+            <div class="d-flex mt-4 mb-4">
+                <div class="flex-grow-1">
+                    <div class="op-h2">Parameters</div>
+                    <ng-container *ngIf="this.parameters.length === 0">
+                        <span class="font-roboto color-medium-gray">No parameters</span>
+                    </ng-container>
+                    <ng-container *ngFor="let parameter of this.parameters; let index = index">
+                        <app-workflow-parameter
+                                *ngIf="index == 0 || showAllParameters"
+                                [parameter]="parameter"
+                                class="d-block">
+                        </app-workflow-parameter>
+                    </ng-container>
+
+                    <div *ngIf="this.parameters.length > 0"
+                         class="font-roboto font-size-regular underline pointer-hover mt-3"
+                         (click)="this.toggleShowParameters()">
+                        <span *ngIf="showAllParameters">Hide parameters</span>
+                        <span *ngIf="!showAllParameters">Show all parameters</span>
+                    </div>
+                </div>
+
+
+                <div class="flex-grow-1">
+                    <div class="op-h2">Metrics</div>
+                    <ng-container *ngIf="this.metrics.length === 0">
+                        <span class="font-roboto color-medium-gray">No metrics</span>
+                    </ng-container>
+                    <table class="font-roboto">
+                        <tr *ngFor="let metric of this.metrics; let index = index">
+                            <td class="pr-2 text-left">
+                                <strong>{{metric.name}}</strong>
+                            </td>
+                            <td *ngIf="metric.format === '%'" class="text-right">
+                                {{metric.value}}%
+                            </td>
+                            <td *ngIf="!metric.format" class="text-right">
+                                {{metric.value}}
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="info-box" class="op-info-box mt-4">
+            <div #pageContent>
+                <app-dag
+                        class="mt-4 h-100"
+                        [style.height]="height"
+                        [style.minHeight]="'500px'"
+                        (nodeClicked)="handleNodeClicked($event)"
+                        [identifier]="dagIdentifier">
+                </app-dag>
+            </div>
+        </div>
+        <app-node-info
+                class="ml-3 op-border"
+                [ngClass]="{ 'visible': showNodeInfo, 'hidden': !showNodeInfo }"
+                [namespace]="namespace"
+                [name]="uid"
+                [visible]="showNodeInfo"
+                [workflow]="workflow"
+                (closeClicked)="onNodeInfoClosed()"
+                (yamlClicked)="onYamlClicked()"
+                (logsClicked)="onLogsClicked()">
+        </app-node-info>
     </div>
-    <app-node-info
-       class="ml-3 op-border"
-       [ngClass]="{ 'visible': showNodeInfo, 'hidden': !showNodeInfo }"
-       [namespace]="namespace"
-       [name]="uid"
-       [visible]="showNodeInfo"
-       [workflow]="workflow"
-       (closeClicked)="onNodeInfoClosed()"
-       (yamlClicked)="onYamlClicked()"
-       (logsClicked)="onLogsClicked()">
-    </app-node-info>
-  </div>
-  <app-logs
-    *ngIf="showLogs && nodeInfo"
-    [namespace]="namespace"
-    [workflowName]="workflow.name"
-    [podId]="nodeInfo.id"
-    [nodeInfo]="nodeInfo"
-    (closeClicked)="onLogsClosed()">
-  </app-logs>
-  <div [ngClass]="{ 'visible': showYaml, 'hidden': !showYaml }" class="yaml-root">
-    <div class="d-flex align-items-center toolbar font-roboto">
-      <div class="title font-white">
-        <strong>YAML: </strong>
-        <span class="node-name">{{workflow?.name}}</span>
-      </div>
-      <div class="flex-grow-1"></div>
-      <button mat-icon-button class="close-button font-white" aria-label="close icon" (click)="onYamlClose()">
-        <mat-icon>close</mat-icon>
-      </button>
-    </div>
-    <ace-editor
-        #yamlEditor
-        class="w-100 h-100"
-        [mode]="'yaml'"
-        [readOnly]="true"
-        [text]="workflow?.yamlManifest"
-        [options]="{
+    <app-logs
+            *ngIf="showLogs && nodeInfo"
+            [namespace]="namespace"
+            [workflowName]="workflow.name"
+            [podId]="nodeInfo.id"
+            [nodeInfo]="nodeInfo"
+            (closeClicked)="onLogsClosed()">
+    </app-logs>
+    <div [ngClass]="{ 'visible': showYaml, 'hidden': !showYaml }" class="yaml-root">
+        <div class="d-flex align-items-center toolbar font-roboto">
+            <div class="title font-white">
+                <strong>YAML: </strong>
+                <span class="node-name">{{workflow?.name}}</span>
+            </div>
+            <div class="flex-grow-1"></div>
+            <button mat-icon-button class="close-button font-white" aria-label="close icon" (click)="onYamlClose()">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+        <ace-editor
+            #yamlEditor
+            class="w-100 h-100"
+            [mode]="'yaml'"
+            [readOnly]="true"
+            [text]="workflow?.yamlManifest"
+            [options]="{
                     showInvisibles: false,
                     showPrintMargin: false,
                     scrollPastEnd: 1,
                     showLineNumbers: true
                   }"
-    ></ace-editor>
-  </div>
+        ></ace-editor>
+    </div>
 </div>
