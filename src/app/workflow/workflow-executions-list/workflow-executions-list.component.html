@@ -73,7 +73,7 @@
                                     <strong>{{metric.name}}</strong>
                                 </td>
                                 <td *ngIf="metric.format === '%'" class="text-right">
-                                    {{(metric.value * 100).toFixed(2)}}%
+                                    {{(metric.value).toFixed(2)}}%
                                 </td>
                                 <td *ngIf="!metric.format" class="text-right">
                                     {{metric.value}}
