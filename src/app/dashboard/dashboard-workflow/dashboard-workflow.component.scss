@@ -15,7 +15,7 @@
   }
 
   @media screen and (max-width: 2180px) {
-    /deep/ .cdk-column-metrics {
+    /deep/ .cdk-column-createdAt {
       display: none;
     }
   }
@@ -27,19 +27,19 @@
   }
 
   @media screen and (max-width: 1610px) {
-    /deep/ .cdk-column-end {
+    /deep/ .cdk-column-metrics {
       display: none;
     }
   }
 
   @media screen and (max-width: 1400px) {
-    /deep/ .cdk-column-start {
+    /deep/ .cdk-column-end {
       display: none;
     }
   }
 
   @media screen and (max-width: 1150px) {
-    /deep/ .cdk-column-createdAt {
+    /deep/ .cdk-column-start {
       display: none;
     }
   }
