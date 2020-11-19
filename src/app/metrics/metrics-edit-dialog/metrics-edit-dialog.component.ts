@@ -20,7 +20,16 @@ export class MetricsEditDialogComponent implements OnInit {
   constructor(
       public dialogRef: MatDialogRef<MetricsEditDialogComponent>,
       @Inject(MAT_DIALOG_DATA) public data: MetricEditDialogData) {
-    this.metrics = data.metrics;
+    const metricsCopy = [];
+    for (const metric of data.metrics) {
+      metricsCopy.push({
+        name: metric.name,
+        value: metric.value,
+        format: metric.format,
+      });
+    }
+
+    this.metrics = metricsCopy;
   }
 
   ngOnInit() {

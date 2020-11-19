@@ -492,13 +492,12 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
   }
 
   onEditMetrics() {
-    const metricsCopy = this.metrics.slice();
 
     const dialogRef = this.dialog.open(MetricsEditDialogComponent, {
       width: '550px',
       maxHeight: '100vh',
       data: {
-        metrics: metricsCopy
+        metrics: this.metrics
       }
     });
 
