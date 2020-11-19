@@ -26,7 +26,7 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
     private snackbarRef: MatSnackBarRef<SimpleSnackBar>;
     showAllMetrics = false;
 
-    @Input() displayedColumns = ['name', 'status', 'createdAt', 'start', 'end', 'template', 'metrics', 'spacer', 'actions', 'labels'];
+    @Input() displayedColumns = ['name', 'status', 'start', 'end', 'metrics', 'template', 'createdAt', 'spacer', 'actions', 'labels'];
     @Input() sort = 'createdAt';
     @Input() sortDirection: SortDirection = 'desc';
 
