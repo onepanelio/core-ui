@@ -8,10 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - uses: olegtarasov/get-tag@v2
+      - uses: little-core-labs/get-git-tag@v3.0.1
         id: tagName
-      - name: Alias GIT_TAG_NAME to VERSION
-        run: echo "::set-env name=VERSION::$GIT_TAG_NAME"
       - name: Publish to Registry
         uses: elgohr/Publish-Docker-Github-Action@master
         with:
@@ -20,13 +18,13 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
           buildargs: VERSION
           tags: "${{ env.GIT_TAG_NAME }}"
-      - name: Set Slack Message
-        run: echo "::set-env name=SLACK_MESSAGE::Version $VERSION. Docker Tag onepanel/core-ui:$VERSION"
       - name: Notify Slack Channels
-        uses: rtCamp/action-slack-notify@v2.0.0
+        uses: rtCamp/action-slack-notify@v2.1.1
         env:
           SLACK_CHANNEL: org
           SLACK_ICON: https://avatars1.githubusercontent.com/u/30390575?s=48&v=4
           SLACK_TITLE: New Core-UI Version
           SLACK_USERNAME: opBot
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          MSG_MINIMAL: true
+          SLACK_MESSAGE: "${{ env.GIT_TAG_NAME }}\nDocker Tag: onepanel/core-ui:${{ env.GIT_TAG_NAME }}"
