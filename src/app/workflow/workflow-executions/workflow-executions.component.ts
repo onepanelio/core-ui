@@ -10,6 +10,7 @@ export type WorkflowExecutionPhase = 'running' | 'completed' | 'failed' | 'stopp
 
 export interface WorkflowExecutionsChangedEvent {
     response: ListWorkflowExecutionsResponse;
+    hasAnyWorkflows: boolean;
 }
 
 @Component({
@@ -38,7 +39,6 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
     }
 
     @Output() workflowsChanged = new EventEmitter<WorkflowExecutionsChangedEvent>();
-    @Output() hasWorkflowsChanged = new EventEmitter<boolean>();
 
     workflows?: WorkflowExecution[];
     workflowResponse: ListWorkflowExecutionsResponse;
@@ -52,17 +52,7 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
     lastUpdateRequest?: Date;
     lastUpdateRequestFinished?: Date;
 
-    // tslint:disable-next-line:variable-name
-    _hasAnyWorkflowExecutions?: boolean;
-    set hasAnyWorkflowExecutions(value: boolean) {
-        this._hasAnyWorkflowExecutions = value;
-
-        this.hasWorkflowsChanged.emit(value);
-    }
-
-    get hasAnyWorkflowExecutions(): boolean|undefined {
-        return this._hasAnyWorkflowExecutions;
-    }
+    hasAnyWorkflowExecutions = false;
 
     private labelFilter?: string;
     private previousListUpdate = (new Date()).getTime();
@@ -75,7 +65,6 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.activatedRoute.paramMap.subscribe(next => {
-            this.checkIfHasAnyRecords();
             this.getWorkflows();
             this.workflowsInterval = setInterval(() => {
                 this.getWorkflows();
@@ -137,18 +126,6 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
         }
     }
 
-    checkIfHasAnyRecords() {
-        this.workflowService
-            .listWorkflowExecutions(this.namespace, this.workflowTemplateUid, this.workflowTemplateVersion, 1, 1, undefined, undefined, undefined, this.showSystem)
-            .subscribe(res => {
-                if (!res.workflowExecutions) {
-                    this.hasAnyWorkflowExecutions = false;
-                } else {
-                    this.hasAnyWorkflowExecutions = res.workflowExecutions.length !== 0;
-                }
-            });
-    }
-
     getWorkflows() {
         if (!this.namespace) {
             return;
@@ -160,10 +137,6 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
 
         if (this.lastUpdateRequest && !this.lastUpdateRequestFinished) {
             return;
-        }
-
-        if (!this.hasAnyWorkflowExecutions) {
-            this.checkIfHasAnyRecords();
         }
 
         this.lastUpdateRequest = undefined;
@@ -183,6 +156,7 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
                 }
 
                 this.workflowResponse = res;
+                this.hasAnyWorkflowExecutions = !!(res.totalAvailableCount && res.totalAvailableCount !== 0);
 
                 if (!res.workflowExecutions) {
                     res.workflowExecutions = [];
@@ -193,6 +167,7 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
                 this.workflowExecutionsState = 'new';
                 this.workflowsChanged.emit({
                     response: res,
+                    hasAnyWorkflows: this.hasAnyWorkflowExecutions
                 });
             });
     }

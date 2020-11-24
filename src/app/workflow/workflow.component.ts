@@ -35,8 +35,8 @@ export class WorkflowComponent implements OnInit {
   ngOnInit() {
   }
 
-  hasWorkflowsChanged(hasWorkflows: boolean) {
-    this.hasWorkflowExecutions = hasWorkflows;
+  workflowsChanged(event: WorkflowExecutionsChangedEvent) {
+    this.hasWorkflowExecutions = event.hasAnyWorkflows;
   }
 
   executeWorkflow(e?: any) {

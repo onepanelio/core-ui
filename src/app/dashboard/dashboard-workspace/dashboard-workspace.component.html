@@ -67,7 +67,7 @@
                         [namespace]="namespace"
                         [phase]="workspacePhase"
                         [pageSize]="5"
-                        (hasWorkspacesChanged)="onHasWorkspacesChanged($event)">
+                        (workspacesChanged)="workspacesChanged($event)">
                 </app-workspaces>
                 <app-call-to-action *ngIf="hasWorkspaces !== undefined && !hasWorkspaces">
                     <div class="header text-center d-block">Get started with workspaces</div>

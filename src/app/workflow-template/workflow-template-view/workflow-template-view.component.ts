@@ -24,6 +24,7 @@ import {
 import { MatTabGroup } from '@angular/material/tabs';
 import { AppRouter } from '../../router/app-router.service';
 import { Pagination } from '../../requests/pagination';
+import { WorkflowExecutionsChangedEvent } from '../../workflow/workflow-executions/workflow-executions.component';
 
 type WorkflowTemplateViewState = 'initialization' | 'new' | 'executing' | 'failed-to-load';
 
@@ -138,8 +139,8 @@ export class WorkflowTemplateViewComponent implements OnInit {
             });
     }
 
-    onHasWorkflowsChanged(hasWorkflows: boolean) {
-        this.hasWorkflowExecutions = hasWorkflows;
+    workflowsChanged(event: WorkflowExecutionsChangedEvent) {
+        this.hasWorkflowExecutions = event.hasAnyWorkflows;
     }
 
     executeWorkflow(e?: any, cron: boolean = false) {

@@ -24,7 +24,7 @@
     <div class="page-body mt-3 workflow-list">
         <app-workspaces
                 [namespace]="namespace"
-                (hasWorkspacesChanged)="hasWorkspacesChanged($event)">
+                (workspacesChanged)="workspacesChanged($event)">
         </app-workspaces>
         <app-call-to-action *ngIf="showWorkspacesCallToAction">
             <img class="icon" width="37" src="../../assets/images/workflows-icon.svg"/>

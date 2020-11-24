@@ -1,6 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { WorkspaceServiceService, WorkspaceStatisticReport } from '../../../api';
 import { WorkspacePhase } from '../../workspace/workspace-list/workspace-list.component';
+import { WorkspacesChangedEvent } from '../../workspace/workspaces/workspaces.component';
 
 @Component({
     selector: 'app-dashboard-workspace',
@@ -57,10 +58,6 @@ export class DashboardWorkspaceComponent implements OnInit, OnDestroy {
         }
 
         this.workspacePhase = undefined;
-    }
-
-    onHasWorkspacesChanged(hasWorkspaces: boolean) {
-        this.hasWorkspaces = hasWorkspaces;
     }
 
     getWorkspaceStatistics() {
@@ -123,5 +120,9 @@ export class DashboardWorkspaceComponent implements OnInit, OnDestroy {
                 this.stats = undefined;
             }
         });
+    }
+
+    workspacesChanged(event: WorkspacesChangedEvent) {
+        this.hasWorkspaces = event.hasAnyWorkspaces;
     }
 }

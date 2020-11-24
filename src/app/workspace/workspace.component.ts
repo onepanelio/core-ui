@@ -66,8 +66,8 @@ export class WorkspaceComponent implements OnInit, OnDestroy {
     });
   }
 
-  hasWorkspacesChanged(hasWorkspaces: boolean) {
-    this.showWorkspacesCallToAction = !hasWorkspaces;
+  workspacesChanged(event: WorkspacesChangedEvent) {
+    this.showWorkspacesCallToAction = !event.hasAnyWorkspaces;
   }
 
   private checkPermissions(namespace: string) {
