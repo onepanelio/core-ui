@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { WorkflowPhase } from "../workflow/workflow.service";
+import { WorkflowPhase } from '../workflow/workflow.service';
 
 @Component({
     selector: 'app-status',

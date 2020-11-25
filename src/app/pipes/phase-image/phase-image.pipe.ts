@@ -1,5 +1,5 @@
-import { Input, Pipe, PipeTransform } from '@angular/core';
-import { WorkflowPhase } from "../../workflow/workflow.service";
+import { Pipe, PipeTransform } from '@angular/core';
+import { WorkflowPhase } from '../../workflow/workflow.service';
 
 @Pipe({
   name: 'phaseImage'
@@ -14,17 +14,26 @@ export class PhaseImagePipe implements PipeTransform {
   static notRunImageSource = '/assets/images/status-icons/notrun.svg';
   static skippedImageSource = '/assets/images/status-icons/notrun.svg';
 
-  static statusMap = new Map<WorkflowPhase, string>([
-    ['Succeeded', PhaseImagePipe.completeImageSource],
-    ['Pending', PhaseImagePipe.notRunImageSource],
-    ['Running', PhaseImagePipe.runningBlueImageSource],
-    ['Failed', PhaseImagePipe.failedImageSource],
-    ['Error', PhaseImagePipe.failedImageSource],
-    ['Terminated', PhaseImagePipe.stoppedImageSource],
-    ['Skipped', PhaseImagePipe.skippedImageSource]
-  ]);
-
   transform(phase: WorkflowPhase, ...args: any[]): any {
-    return PhaseImagePipe.statusMap.get(phase);
+    switch (phase) {
+      case 'Pending':
+        return PhaseImagePipe.notRunImageSource;
+      case 'Running':
+        return PhaseImagePipe.runningBlueImageSource;
+      case 'Succeeded':
+        return PhaseImagePipe.completeImageSource;
+      case 'Skipped':
+        return PhaseImagePipe.skippedImageSource;
+      case 'Failed':
+        return PhaseImagePipe.failedImageSource;
+      case 'Error':
+        return PhaseImagePipe.failedImageSource;
+      case 'Omitted':
+        return PhaseImagePipe.skippedImageSource;
+      case 'Terminated':
+        return PhaseImagePipe.stoppedImageSource;
+    }
+
+    return null;
   }
 }
