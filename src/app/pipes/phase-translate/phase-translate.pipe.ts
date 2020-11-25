@@ -9,6 +9,8 @@ export class PhaseTranslatePipe implements PipeTransform {
         switch (phase) {
             case 'Succeeded':
                 return 'Completed';
+            case 'Omitted':
+                return 'Skipped';
         }
 
         return phase;
