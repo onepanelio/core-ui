@@ -62,7 +62,10 @@
                 </div>
             </div>
             <div class="d-flex align-items-baseline font-roboto font-size-small color-medium-gray mt-3">
-                <div>
+                <div *ngIf="workflow">
+                    Template: <a [routerLink]="['/', this.namespace, 'workflow-templates', workflow.workflowTemplate.uid]">{{workflow.workflowTemplate.name}}</a>
+                </div>
+                <div class="ml-5">
                     Started:
                     <app-date *ngIf="workflow" [dateTime]="startedAt"></app-date>
                 </div>
