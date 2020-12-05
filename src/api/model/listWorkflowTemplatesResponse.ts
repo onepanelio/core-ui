@@ -18,5 +18,6 @@ export interface ListWorkflowTemplatesResponse {
     page?: number;
     pages?: number;
     totalCount?: number;
+    totalAvailableCount?: number;
 }
 

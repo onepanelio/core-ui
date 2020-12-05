@@ -12,6 +12,7 @@ type WorkspaceState = 'initialization' | 'new' | 'loading';
 
 export interface WorkspacesChangedEvent {
     response: ListWorkspaceResponse;
+    hasAnyWorkspaces: boolean;
 }
 
 @Component({
@@ -36,7 +37,6 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
     }
 
     @Output() workspacesChanged = new EventEmitter<WorkspacesChangedEvent>();
-    @Output() hasWorkspacesChanged = new EventEmitter<boolean>();
 
     workspaces?: Workspace[];
     workspaceResponse: ListWorkspaceResponse;
@@ -50,20 +50,9 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
     lastUpdateRequestFinished?: Date;
 
     workspaceState: WorkspaceState = 'initialization';
-
-    // tslint:disable-next-line:variable-name
-    _hasAnyWorkspaces = false;
-    set hasAnyWorkspaces(value: boolean) {
-        this._hasAnyWorkspaces = value;
-        this.hasWorkspacesChanged.emit(value);
-    }
-
-    get hasAnyWorkspaces(): boolean {
-        return this._hasAnyWorkspaces;
-    }
+    hasAnyWorkspaces = false;
 
     private labelFilter?: string;
-
     private previousListUpdate = (new Date()).getTime();
 
     constructor(
@@ -74,7 +63,6 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         this.activatedRoute.paramMap.subscribe(next => {
-            this.checkIfHasAnyWorkspaces();
             this.getWorkspaces();
             this.workspacesInterval = setInterval(() => {
                 this.getWorkspaces();
@@ -113,6 +101,14 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
      * like the workspace action menu.
      */
     private updateWorkspaceList(workspaces: Workspace[], timestamp: number) {
+        // If we started an action request like 'delete' it may not have finished yet.
+        // To make sure our UI is consistent, we discard any requests until the action request finishes.
+        if (this.lastUpdateRequest && !this.lastUpdateRequestFinished) {
+            return;
+        }
+
+        // It is possible that a network request came in late, in which case it has older data.
+        // Don't update to older data.
         if (timestamp < this.previousListUpdate) {
             return;
         }
@@ -121,7 +117,7 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
 
         // If the lengths are different, we have new workspaces or deleted workspaces,
         // so just update the entire list.
-        if ( (this.workspaces === undefined) || (this.workspaces.length !== workspaces.length) ||
+        if ((this.workspaces === undefined) || (this.workspaces.length !== workspaces.length) ||
             (this.previousSortOrder !== this.sortOrder)) {
             this.workspaces = workspaces;
             return;
@@ -147,25 +143,11 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
         }
     }
 
-    checkIfHasAnyWorkspaces() {
-        this.workspaceService
-            .listWorkspaces(this.namespace, 1, 1)
-            .subscribe(res => {
-                if (!res.workspaces) {
-                    this.hasAnyWorkspaces = false;
-                } else {
-                    this.hasAnyWorkspaces = res.workspaces.length !== 0;
-                }
-            });
-    }
-
     getWorkspaces() {
+        // If we started an action request like 'delete' it may not have finished yet.
+        // To make sure our UI is consistent, we discard any requests until the action request finishes.
         if (this.lastUpdateRequest && !this.lastUpdateRequestFinished) {
             return;
-        }
-
-        if (!this.hasAnyWorkspaces) {
-            this.checkIfHasAnyWorkspaces();
         }
 
         this.lastUpdateRequest = undefined;
@@ -187,11 +169,14 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
                     res.workspaces = [];
                 }
 
+                this.hasAnyWorkspaces = !!(res.totalAvailableCount && res.totalAvailableCount !== 0);
+
                 this.updateWorkspaceList(res.workspaces, now);
                 this.workspaceState = 'new';
 
                 this.workspacesChanged.emit({
                     response: res,
+                    hasAnyWorkspaces: this.hasAnyWorkspaces,
                 });
             }, err => {
                 this.workspaceState = 'new';

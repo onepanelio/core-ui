@@ -91,7 +91,7 @@
                         [namespace]="namespace"
                         [showSystem]="true"
                         [workflowTemplateUid]="uid"
-                        (hasWorkflowsChanged)="onHasWorkflowsChanged($event)">
+                        (workflowsChanged)="workflowsChanged($event)">
                 </app-workflow-executions>
                 <app-call-to-action *ngIf="showWorkflowExecutionsCallToAction">
                     <div class="header">Get started with workflow executions</div>

@@ -111,14 +111,14 @@
                 *ngIf="hasAnyWorkflowTemplates && this.workflowTemplates?.length === 0">
             <div class="body workflow-templates">No workflow templates found</div>
         </app-call-to-action>
-        <app-call-to-action *ngIf="hasAnyWorkflowTemplates !== undefined && !hasAnyWorkflowTemplates">
+        <app-call-to-action *ngIf="this.workflowTemplates !== undefined && !hasAnyWorkflowTemplates">
             <img class="icon" width="37" src="/assets/images/workflows-icon.svg"/>
             <div class="header">Get started with workflows</div>
             <div class="body">This is where all your workflow templates live.</div>
             <a class="action underline pointer-hover"
                [routerLink]="['/', this.namespace, 'workflow-templates', 'create']">Creating a new workflow template</a>
         </app-call-to-action>
-        <app-loading-content *ngIf="hasAnyWorkflowTemplates === undefined || workflowTemplates === undefined">
+        <app-loading-content *ngIf="workflowTemplates === undefined">
             Loading Workflow Templates
         </app-loading-content>
     </div>

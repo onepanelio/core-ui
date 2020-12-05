@@ -24,7 +24,7 @@ export class WorkflowTemplateComponent implements OnInit, OnDestroy {
     state: WorkflowTemplateState = 'initialization';
     private labelFilter?: string;
 
-    hasAnyWorkflowTemplates?: boolean;
+    hasAnyWorkflowTemplates = false;
 
     constructor(
         private activatedRoute: ActivatedRoute,
@@ -35,7 +35,6 @@ export class WorkflowTemplateComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.activatedRoute.paramMap.subscribe(next => {
             this.namespace = next.get('namespace');
-            this.checkIfHasAnyWorkflowTemplates();
             this.getWorkflowTemplates();
 
             if (this.getWorkflowTemplatesInterval) {
@@ -57,23 +56,7 @@ export class WorkflowTemplateComponent implements OnInit, OnDestroy {
         }
     }
 
-    checkIfHasAnyWorkflowTemplates() {
-        this.workflowTemplateService
-            .listWorkflowTemplates(this.namespace, 1, 1)
-            .subscribe(res => {
-                if (!res.workflowTemplates) {
-                    this.hasAnyWorkflowTemplates = false;
-                } else {
-                    this.hasAnyWorkflowTemplates = res.workflowTemplates.length !== 0;
-                }
-            });
-    }
-
     getWorkflowTemplates() {
-        if (!this.hasAnyWorkflowTemplates) {
-            this.checkIfHasAnyWorkflowTemplates();
-        }
-
         this.workflowTemplateService
             .listWorkflowTemplates(this.namespace, this.pagination.pageSize, this.pagination.page + 1, this.labelFilter)
             .subscribe(res => {
@@ -84,6 +67,8 @@ export class WorkflowTemplateComponent implements OnInit, OnDestroy {
                 } else {
                     this.workflowTemplates = [];
                 }
+
+                this.hasAnyWorkflowTemplates = !!(res.totalAvailableCount && res.totalAvailableCount !== 0);
 
                 this.state = 'new';
             }, err => {
