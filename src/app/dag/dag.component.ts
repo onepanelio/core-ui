@@ -10,7 +10,7 @@ import {
 import * as d3 from 'd3';
 import * as dagre from 'dagre';
 import * as dagreD3 from 'dagre-d3';
-import { NodeInfo } from "../node/node.service";
+import { NodeInfo } from '../node/node.service';
 
 export interface DagClickEvent {
   nodeId: string;
@@ -77,7 +77,7 @@ export class DagComponent implements OnInit {
       node.append(this.bufferInner.select('.output').node().cloneNode(true));
 
       // Persist the node selection.
-      if(this.selectedNodeId) {
+      if (this.selectedNodeId) {
         try {
           this.svg.select(`#${this.selectedNodeId}`).classed('selected', true);
         } catch (e) {
@@ -103,6 +103,37 @@ export class DagComponent implements OnInit {
         info: nodeData.info,
       });
     });
+  }
+
+  /**
+   * Selects a node given it's id.
+   * No nodeClicked event is emitted.
+   */
+  selectNode(nodeId: string, scrollIntoView: boolean = true) {
+    this.selectedNodeId = nodeId;
+    this.svg.selectAll('g.node.selected').classed('selected', false);
+    const selection = this.svg.select(`#${this.selectedNodeId}`).classed('selected', true);
+
+    if (!scrollIntoView) {
+      return;
+    }
+
+    const groups = selection._groups;
+    if (groups.length !== 1) {
+      return;
+    }
+
+    const groupItems = groups[0];
+    if (groupItems.length !== 1) {
+      return;
+    }
+
+    if (!groupItems[0].id) {
+      return;
+    }
+
+    const id = groupItems[0].id;
+    document.getElementById(id).scrollIntoView(true);
   }
 
   clear() {
