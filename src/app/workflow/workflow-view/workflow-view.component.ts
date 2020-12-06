@@ -1,5 +1,5 @@
 import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SimpleWorkflowDetail, WorkflowPhase, WorkflowService } from '../workflow.service';
 import { NodeRenderer, NodeStatus } from '../../node/node.service';
 import { DagClickEvent, DagComponent } from '../../dag/dag.component';
@@ -31,6 +31,7 @@ import { Alert } from '../../alert/alert';
 import { AlertService } from '../../alert/alert.service';
 import { PermissionService } from '../../permissions/permission.service';
 import { MetricsEditDialogComponent } from '../../metrics/metrics-edit-dialog/metrics-edit-dialog.component';
+import { environment } from '../../../environments/environment';
 
 const aceRange = ace.acequire('ace/range').Range;
 
@@ -61,6 +62,7 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
 
   showNodeInfo = false;
   selectedNodeId = null;
+  pendingSelectedNodeId = null;
   showLogs = false;
   showYaml = false;
 
@@ -84,12 +86,6 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
   private socketClosedCount = 0;
   private socketErrorCount = 0;
   private markerId;
-
-  @HostListener('window:resize') onWindowResize() {
-    setTimeout( () => {
-      // this.updateNodeInfoProperties();
-    });
-  }
 
   @ViewChild('pageContent', {static: false}) set pageContent(value: ElementRef) {
     setTimeout( () => {
@@ -128,6 +124,7 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
       private dialog: MatDialog,
       private appRouter: AppRouter,
       private snackbar: MatSnackBar,
+      private router: Router,
   ) {
   }
 
@@ -146,6 +143,16 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
       this.startCheckingWorkflow();
 
       this.updateBackLink(namespace);
+    });
+
+    this.activatedRoute.queryParamMap.subscribe(next => {
+      const nodeId = next.get('node');
+
+      if (this.selectedNodeId === nodeId) {
+        return;
+      }
+
+      this.pendingSelectedNodeId = nodeId;
     });
   }
 
@@ -285,9 +292,18 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
 
     const graph = NodeRenderer.createGraphFromWorkflowStatus(status);
     this.dag.display(graph);
+
+    if (this.pendingSelectedNodeId) {
+      const nodeId = this.pendingSelectedNodeId;
+      this.pendingSelectedNodeId = null;
+      this.handleNodeClicked({
+        nodeId
+      });
+      this.dag.selectNode(nodeId, true);
+    }
   }
 
-  handleNodeClicked(event: DagClickEvent) {
+  handleNodeClicked(event: { nodeId: string}) {
     if (event.nodeId === this.workflow.name) {
       this.showNodeInfo = false;
       return;
@@ -314,6 +330,13 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
     if (this.showYaml) {
       this.updateYamlSelection();
     }
+
+    this.router.navigate([], {
+      relativeTo: this.activatedRoute,
+      queryParams: {
+        node: this.selectedNodeId,
+      }
+    });
   }
 
   onNodeInfoClosed() {
