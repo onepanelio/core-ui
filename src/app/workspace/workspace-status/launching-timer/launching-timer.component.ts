@@ -24,7 +24,7 @@ export class LaunchingTimerComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.timer = setInterval(() => {
       this.timerUpdate();
-    }, 1000)
+    }, 1000);
   }
 
   ngOnDestroy() {
@@ -35,7 +35,7 @@ export class LaunchingTimerComponent implements OnInit, OnDestroy {
   }
 
   timerUpdate() {
-    if(!this._startedAt) {
+    if (!this._startedAt) {
       return;
     }
 

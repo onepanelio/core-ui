@@ -33,7 +33,8 @@ export class DashboardWorkflowComponent implements OnInit, OnDestroy {
   workflowsStatisticsInterval?: number;
   hasWorkflowExecutions?: boolean;
 
-  constructor(private workflowService: WorkflowServiceService, private namespaceTracker: NamespaceTracker) { }
+  constructor(private workflowService: WorkflowServiceService) {
+  }
 
   getWorkflowExecutionStatistics() {
     this.workflowService.getWorkflowExecutionStatisticsForNamespace(this.namespace).subscribe(res => {

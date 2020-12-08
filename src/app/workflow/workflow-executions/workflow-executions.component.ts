@@ -66,6 +66,11 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.activatedRoute.paramMap.subscribe(next => {
             this.getWorkflows();
+
+            if (this.workflowsInterval) {
+                clearInterval(this.workflowsInterval);
+            }
+
             this.workflowsInterval = setInterval(() => {
                 this.getWorkflows();
             }, 5000);
