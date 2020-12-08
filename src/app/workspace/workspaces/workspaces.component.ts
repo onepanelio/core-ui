@@ -64,6 +64,11 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.activatedRoute.paramMap.subscribe(next => {
             this.getWorkspaces();
+
+            if (this.workspacesInterval) {
+                clearInterval(this.workspacesInterval);
+            }
+
             this.workspacesInterval = setInterval(() => {
                 this.getWorkspaces();
             }, 5000);

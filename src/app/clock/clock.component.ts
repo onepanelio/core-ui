@@ -74,20 +74,22 @@ export class ClockComponent implements OnInit, OnDestroy {
   }
 
   public reset(resetTimestamps = false) {
-    if(resetTimestamps) {
+    if (resetTimestamps) {
       this._startedAt = undefined;
       this._finishedAt = undefined;
     }
 
     this.updateDuration();
 
+    this.clearTimer();
+
     this.timer = setInterval(() => {
       this.updateDuration();
-    }, this.interval)
+    }, this.interval);
   }
 
   private clearTimer() {
-    if(this.timer) {
+    if (this.timer) {
       clearInterval(this.timer);
     }
   }
