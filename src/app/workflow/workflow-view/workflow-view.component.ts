@@ -1,8 +1,8 @@
-import { Component, ElementRef, HostListener, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SimpleWorkflowDetail, WorkflowPhase, WorkflowService } from '../workflow.service';
 import { NodeRenderer, NodeStatus } from '../../node/node.service';
-import { DagClickEvent, DagComponent } from '../../dag/dag.component';
+import { DagComponent } from '../../dag/dag.component';
 import { NodeInfoComponent } from '../../node-info/node-info.component';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material/snack-bar';
 import { AceEditorComponent } from 'ng2-ace-editor';
@@ -31,7 +31,6 @@ import { Alert } from '../../alert/alert';
 import { AlertService } from '../../alert/alert.service';
 import { PermissionService } from '../../permissions/permission.service';
 import { MetricsEditDialogComponent } from '../../metrics/metrics-edit-dialog/metrics-edit-dialog.component';
-import { environment } from '../../../environments/environment';
 
 const aceRange = ace.acequire('ace/range').Range;
 
@@ -608,7 +607,9 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
       e.preventDefault();
     }
 
-    this.appRouter.goBack();
+    if (!this.appRouter.goBack()) {
+      this.appRouter.navigateToWorkflowsExecutions(this.namespace);
+    }
   }
 
   onPhaseUpdate(oldPhase: WorkflowPhase, newPhase: WorkflowPhase) {
