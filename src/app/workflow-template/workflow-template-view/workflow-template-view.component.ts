@@ -325,6 +325,8 @@ export class WorkflowTemplateViewComponent implements OnInit {
             e.preventDefault();
         }
 
-        this.appRouter.goBack();
+        if (!this.appRouter.goBack()) {
+            this.appRouter.navigateToWorkflowTemplates(this.namespace);
+        }
     }
 }

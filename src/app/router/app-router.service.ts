@@ -46,8 +46,14 @@ export class AppRouter {
    * pushRoute appends a route to the route history and keeps track of bookkeeping like max items allowed.
    */
   private pushRoute(route: string) {
-    const lastRoute = this.getLastRoute();
+    // format route so we don't store query parameters
+    // this way we don't have a back link that takes you to the same page but different query parameters
+    const indexOfParam = route.indexOf('?');
+    if ( indexOfParam > 0 ) {
+      route = route.substring(0, indexOfParam);
+    }
 
+    const lastRoute = this.getLastRoute();
     if (route === lastRoute) {
       return;
     }
@@ -59,12 +65,21 @@ export class AppRouter {
     }
   }
 
+  /**
+   * returns false if there is no where to go back to.
+   */
   goBack() {
     if (this.routerHistory.length > 0) {
       this.routerHistory.splice(this.routerHistory.length - 1, 1);
     }
 
+    if (this.routerHistory.length === 0) {
+      return false;
+    }
+
     this.location.back();
+
+    return true;
   }
 
   getBackLink(namespace: string, defaultLink: BackLink): BackLink {
