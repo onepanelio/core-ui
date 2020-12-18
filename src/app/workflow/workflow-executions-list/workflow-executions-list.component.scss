@@ -38,6 +38,11 @@
 
   .cdk-column-metrics {
     flex-basis: 200px;
+
+    table {
+      position: relative;
+      top: -1px;
+    }
   }
 
   .cdk-column-actions {
