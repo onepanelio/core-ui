@@ -66,25 +66,25 @@
             <cdk-header-cell *cdkHeaderCellDef mat-sort-header class="ml-4">Metrics</cdk-header-cell>
             <cdk-cell *cdkCellDef="let workflow" class="ml-2">
                 <ng-container *ngIf="workflow.metrics">
-                    <table class="font-roboto">
+                    <table class="font-roboto font-size-smaller">
                         <ng-container *ngFor="let metric of workflow.metrics; let index = index">
-                            <tr *ngIf="index == 0 || showAllMetrics">
+                            <tr *ngIf="index == 0 || showAllMetrics.get(workflow.uid)">
                                 <td class="pr-2 text-left">
-                                    <strong>{{metric.name}}</strong>
+                                    {{metric.name}}
                                 </td>
                                 <td *ngIf="metric.format === '%'" class="text-right">
                                     {{metric.value}}%
                                 </td>
-                                <td *ngIf="!metric.format" class="text-right">
+                                <td *ngIf="!metric.format" class="text-right font-medium-gray">
                                     {{metric.value}}
                                 </td>
                             </tr>
                         </ng-container>
                     </table>
 
-                    <div class="font-roboto font-size-regular underline pointer-hover mt-3" (click)="this.toggleShowMetrics()">
-                        <span *ngIf="showAllMetrics">Hide metrics</span>
-                        <span *ngIf="!showAllMetrics">Show all metrics</span>
+                    <div class="font-roboto font-size-regular underline pointer-hover mt-3" (click)="this.toggleShowMetrics(workflow.uid)">
+                        <span *ngIf="showAllMetrics.get(workflow.uid)">Hide metrics</span>
+                        <span *ngIf="!showAllMetrics.get(workflow.uid)">Show all metrics</span>
                     </div>
                 </ng-container>
             </cdk-cell>
@@ -119,7 +119,7 @@
         <!-- Header and Row Declarations -->
         <cdk-header-row *cdkHeaderRowDef="displayedColumns" class="op-table-header d-flex"></cdk-header-row>
         <cdk-row *cdkRowDef="let row; columns: displayedColumns"
-                 class="d-flex flex-wrap op-table-row align-items-baseline">
+                 class="d-flex flex-wrap op-table-row align-items-flex-start">
         </cdk-row>
     </cdk-table>
 </div>

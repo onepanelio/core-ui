@@ -24,7 +24,7 @@ import { PermissionService } from '../../permissions/permission.service';
 })
 export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
     private snackbarRef: MatSnackBarRef<SimpleSnackBar>;
-    showAllMetrics = false;
+    showAllMetrics = new Map<string, boolean>();
 
     @Input() displayedColumns = ['name', 'status', 'start', 'end', 'metrics', 'template', 'createdAt', 'spacer', 'actions', 'labels'];
     @Input() sort = 'createdAt';
@@ -128,7 +128,11 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
         this.sortChange.emit(event);
     }
 
-    toggleShowMetrics() {
-        this.showAllMetrics = !this.showAllMetrics;
+    toggleShowMetrics(workflowUid: string) {
+        if (this.showAllMetrics.get(workflowUid)) {
+            this.showAllMetrics.set(workflowUid, false);
+        } else {
+            this.showAllMetrics.set(workflowUid, true);
+        }
     }
 }

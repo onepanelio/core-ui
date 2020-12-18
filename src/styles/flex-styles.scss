@@ -30,6 +30,10 @@
   align-items: center;
 }
 
+.align-items-flex-start {
+  align-items: flex-start;
+}
+
 .justify-content-between {
   justify-content: space-between;
 }
@@ -37,6 +41,7 @@
 .justify-content-center {
   justify-content: center;
 }
+
 
 @for $i from 1 through 10 {
   .flex-grow-#{$i} {
