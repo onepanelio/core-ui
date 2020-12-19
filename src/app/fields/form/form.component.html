@@ -3,6 +3,7 @@
         <ng-container *ngIf="!(fieldDataum.visibility == 'private')" [ngSwitch]="fieldDataum.type">
             <app-textarea class="form-item fix-mat-overflow" *ngSwitchCase="'textarea.textarea'" [data]="fieldDataum" [form]="form" [class.extraBottomSpace]="!last && !!fieldDataum.hint"></app-textarea>
             <app-select class="form-item fix-mat-overflow" *ngSwitchCase="'select.select'" [data]="fieldDataum" [form]="form" [disabled]="disabled" [class.extraBottomSpace]="!last && !!fieldDataum.hint"></app-select>
+            <app-select class="form-item fix-mat-overflow" *ngSwitchCase="'select.nodepool'" [data]="fieldDataum" [form]="form" [disabled]="disabled" [class.extraBottomSpace]="!last && !!fieldDataum.hint"></app-select>
             <app-radio class="form-item fix-mat-overflow" *ngSwitchCase="'input.radio'" [data]="fieldDataum" [form]="form" [class.extraBottomSpace]="!last && !!fieldDataum.hint"></app-radio>
             <ng-container *ngSwitchDefault>
                 <app-input

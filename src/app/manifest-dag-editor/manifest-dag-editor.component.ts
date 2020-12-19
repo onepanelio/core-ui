@@ -1,14 +1,14 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { NodeRenderer } from "../node/node.service";
-import { DagComponent } from "../dag/dag.component";
-import { AceEditorComponent } from "ng2-ace-editor";
+import { NodeRenderer } from '../node/node.service';
+import { DagComponent } from '../dag/dag.component';
+import { AceEditorComponent } from 'ng2-ace-editor';
 import * as yaml from 'js-yaml';
 import * as ace from 'brace';
-import { Alert } from "../alert/alert";
-import { WorkflowExecuteDialogComponent } from "../workflow/workflow-execute-dialog/workflow-execute-dialog.component";
-import { Observable, of } from "rxjs";
-import { HttpErrorResponse } from "@angular/common/http";
-import { Parameter } from "../../api";
+import { Alert } from '../alert/alert';
+import { WorkflowExecuteDialogComponent } from '../workflow/workflow-execute-dialog/workflow-execute-dialog.component';
+import { Observable, of } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Parameter } from '../../api';
 const aceRange = ace.acequire('ace/range').Range;
 
 type ManifestDagEditorState = 'editor-and-dag' | 'editor-and-parameters' | 'editor' | 'transitioning';
@@ -106,11 +106,11 @@ export class ManifestDagEditorComponent implements OnInit {
   onManifestChange(newManifest: string, emitModified = true) {
     this.rawManifest = newManifest;
 
-    if(emitModified) {
+    if (emitModified) {
       this.manifestTextModified.emit(newManifest);
     }
 
-    if(!this.manifestInterceptor) {
+    if (!this.manifestInterceptor) {
       this.onManifestChangeFinalized(newManifest);
     } else {
       this.manifestInterceptor(newManifest)
@@ -123,19 +123,19 @@ export class ManifestDagEditorComponent implements OnInit {
                 type: 'danger'
               };
             });
-          })
+          });
     }
   }
 
   onManifestChangeFinalized(newManifest: string) {
     this.manifestTextCurrent = newManifest;
-    if(newManifest === '') {
+    if (newManifest === '') {
       this.dag.clear();
       return;
     }
 
-    if(this.errorMarkerId) {
-      this.aceEditor.getEditor().session.removeMarker(this.errorMarkerId)
+    if (this.errorMarkerId) {
+      this.aceEditor.getEditor().session.removeMarker(this.errorMarkerId);
     }
 
     try {
@@ -145,18 +145,17 @@ export class ManifestDagEditorComponent implements OnInit {
       setTimeout( () => {
         this.error = null;
       });
-    }
-    catch (e) {
-      if(e instanceof yaml.YAMLException) {
+    } catch (e) {
+      if (e instanceof yaml.YAMLException) {
         const line = e.mark.line + 1;
         const column = e.mark.column + 1;
 
         const codeErrorRange = new aceRange(line - 1, 0, line - 1, column);
-        this.errorMarkerId = this.aceEditor.getEditor().session.addMarker(codeErrorRange, "highlight-error", "fullLine");
+        this.errorMarkerId = this.aceEditor.getEditor().session.addMarker(codeErrorRange, 'highlight-error', 'fullLine');
 
         setTimeout(() => {
           this.error = {
-            message: e.reason + " at line: " + line + " column: " + column,
+            message: e.reason + ' at line: ' + line + ' column: ' + column,
             type: 'danger'
           };
         });
@@ -165,7 +164,7 @@ export class ManifestDagEditorComponent implements OnInit {
   }
 
   private updateParameters(manifest: string) {
-    let previousParameters = this.parameters;
+    const previousParameters = this.parameters;
     try {
       this.parameters = WorkflowExecuteDialogComponent.pluckParameters(manifest);
     } catch (e) {
@@ -174,11 +173,11 @@ export class ManifestDagEditorComponent implements OnInit {
   }
 
   private updateState() {
-    if(this.state === 'editor') {
+    if (this.state === 'editor') {
       return;
     }
 
-    if(this.renderState === 'dag') {
+    if (this.renderState === 'dag') {
       this.state = 'editor-and-dag';
       return;
     }
@@ -187,7 +186,7 @@ export class ManifestDagEditorComponent implements OnInit {
   }
 
   toggleFormRender() {
-    if(this.renderState === 'dag') {
+    if (this.renderState === 'dag') {
       this.renderState = 'parameters';
     } else {
       this.renderState = 'dag';
@@ -197,7 +196,7 @@ export class ManifestDagEditorComponent implements OnInit {
   }
 
   toggleFullWidthEditor() {
-    if(this.state !== 'editor') {
+    if (this.state !== 'editor') {
       this.state = 'editor';
       return;
     }
