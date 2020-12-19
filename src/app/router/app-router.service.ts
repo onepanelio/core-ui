@@ -77,7 +77,7 @@ export class AppRouter {
       return false;
     }
 
-    this.location.back();
+    this.router.navigateByUrl(this.routerHistory[this.routerHistory.length - 1]);
 
     return true;
   }
