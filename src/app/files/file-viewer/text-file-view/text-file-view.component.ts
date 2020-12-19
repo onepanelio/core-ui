@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ModelFile, WorkflowServiceService } from "../../../../api";
-import { ImageFileViewComponent } from "../image-file-view/image-file-view.component";
+import { ModelFile, WorkflowServiceService } from '../../../../api';
+import 'brace/mode/json';
 
 @Component({
   selector: 'app-text-file-view',
@@ -14,12 +14,28 @@ export class TextFileViewComponent implements OnInit {
   @Output() loading = new EventEmitter<boolean>();
 
   displayContent: string;
+  renderMode = 'text';
+  formattedExtension  = 'text';
 
   constructor(private workflowService: WorkflowServiceService) {
   }
 
   ngOnInit() {
     this.loading.emit(true);
+
+    this.formattedExtension = this.file.extension.toLowerCase();
+
+    switch (this.formattedExtension) {
+      case 'json':
+        this.renderMode = 'json';
+        break;
+      case 'yaml':
+        this.renderMode = 'yaml';
+        break;
+      default:
+        this.renderMode = 'text';
+        break;
+    }
 
     this.workflowService.getArtifact(this.namespace, this.name, this.file.path)
         .subscribe(res => {
@@ -44,6 +60,17 @@ export class TextFileViewComponent implements OnInit {
   }
 
   private setBase64Content(content: string) {
-    this.displayContent = atob(content);
+    const parsedContent = atob(content);
+
+    if (this.formattedExtension  === 'json') {
+      try {
+        const rawJson = JSON.parse(parsedContent);
+        this.displayContent = JSON.stringify(rawJson, null, 2);
+      } catch (e) {
+        this.displayContent = parsedContent;
+      }
+    } else {
+      this.displayContent = parsedContent;
+    }
   }
 }
