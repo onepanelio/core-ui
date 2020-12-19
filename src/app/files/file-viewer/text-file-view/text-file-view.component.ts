@@ -40,7 +40,7 @@ export class TextFileViewComponent implements OnInit {
   }
 
   public static IsTextExtension(extension: string){
-    return (/(txt|text|log|config)$/i).test(extension);
+    return (/(txt|text|log|config|json|yaml)$/i).test(extension);
   }
 
   private setBase64Content(content: string) {
