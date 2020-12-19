@@ -7,7 +7,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { filter } from 'rxjs/operators';
 import { MatSelect } from '@angular/material/select';
-import { Namespace, NamespaceServiceService, ServiceServiceService } from '../api';
+import { Namespace, NamespaceServiceService } from '../api';
 import { AuthService } from './auth/auth.service';
 import { environment } from '../environments/environment';
 import { MatDialog } from '@angular/material/dialog';
