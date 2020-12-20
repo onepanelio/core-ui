@@ -120,12 +120,13 @@ postExecutionWorkflow:
     this.apiManifestInterceptor = (newManifest: string) => {
       const body = {
         manifest: newManifest,
-      }
+      };
+
       return this.workspaceTemplateService.generateWorkspaceTemplateWorkflowTemplate(this.namespace, 'generated', body)
           .pipe(
             map(res => res.manifest)
           );
-    }
+    };
 
     this.setDefaultManifest();
   }

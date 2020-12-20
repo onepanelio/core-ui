@@ -15,7 +15,6 @@ export class ErrorComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(next => {
       this.errorCode = next.get('code');
-      console.log(this.errorCode);
 
       switch (this.errorCode) {
         case '403':
@@ -24,7 +23,6 @@ export class ErrorComponent implements OnInit {
         default:
           this.errorMessage = 'Unknown error';
       }
-
     });
   }
 

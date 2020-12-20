@@ -16,12 +16,10 @@ export class SelectComponent implements OnInit {
     @Input() form: FormGroup;
 
     @Input() set data(value: Parameter) {
-        console.log('setting data', value);
         this._data = value;
 
         this.options = [];
         if (!value.options) {
-            console.log('no options in value');
             return;
         }
 
