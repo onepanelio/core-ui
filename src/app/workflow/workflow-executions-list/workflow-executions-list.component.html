@@ -65,7 +65,7 @@
         <ng-container cdkColumnDef="metrics">
             <cdk-header-cell *cdkHeaderCellDef mat-sort-header class="ml-4">Metrics</cdk-header-cell>
             <cdk-cell *cdkCellDef="let workflow" class="ml-2">
-                <ng-container *ngIf="workflow.metrics">
+                <ng-container *ngIf="workflow.metrics?.length !== 0">
                     <table class="font-roboto font-size-smaller">
                         <ng-container *ngFor="let metric of workflow.metrics; let index = index">
                             <tr *ngIf="index == 0 || showAllMetrics.get(workflow.uid)">
@@ -87,6 +87,10 @@
                         <span *ngIf="!showAllMetrics.get(workflow.uid)">Show all metrics</span>
                     </div>
                 </ng-container>
+                <div *ngIf="!workflow.metrics || workflow.metrics.length === 0"
+                       class="font-roboto font-size-small color-medium-gray">
+                    No metrics
+                </div>
             </cdk-cell>
         </ng-container>
 
