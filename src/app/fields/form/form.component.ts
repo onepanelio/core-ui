@@ -18,8 +18,6 @@ export class FormComponent implements OnInit {
 
     @Input() set fieldData(value: Array<Parameter>) {
         this._fieldData = value;
-
-        console.log(value);
     }
 
     get fieldData(): Array<Parameter> {
