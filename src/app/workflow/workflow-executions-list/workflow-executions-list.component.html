@@ -23,14 +23,14 @@
         <ng-container cdkColumnDef="start">
             <cdk-header-cell *cdkHeaderCellDef mat-sort-header class="ml-5">Start</cdk-header-cell>
             <cdk-cell *cdkCellDef="let workflow" class="ml-5 font-size-small font-roboto font-medium-gray">
-                <div *ngIf="workflow.startedAt"><app-date class="" [dateTime]="workflow.startedAt"></app-date></div>
+                <div *ngIf="workflow.startedAt"><app-date [dateTime]="workflow.startedAt"></app-date></div>
             </cdk-cell>
         </ng-container>
 
         <ng-container cdkColumnDef="end">
             <cdk-header-cell *cdkHeaderCellDef mat-sort-header class="ml-5">End</cdk-header-cell>
             <cdk-cell *cdkCellDef="let workflow" class="font-size-small font-roboto font-medium-gray ml-5">
-                <div *ngIf="workflow.finishedAt"><app-date class="" [dateTime]="workflow.finishedAt"></app-date></div>
+                <div *ngIf="workflow.finishedAt"><app-date [dateTime]="workflow.finishedAt"></app-date></div>
             </cdk-cell>
         </ng-container>
 
