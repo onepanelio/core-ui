@@ -20,6 +20,7 @@
         <app-manifest-dag-editor
                 class="ml-8 flex-grow-1"
                 [manifestText]="manifestText"
+                [manifestInterceptor]="apiManifestInterceptor"
                 (manifestTextModified)="onManifestTextModified($event)">
         </app-manifest-dag-editor>
       </div>

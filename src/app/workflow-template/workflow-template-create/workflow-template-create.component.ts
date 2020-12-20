@@ -25,6 +25,7 @@ import {
   ConfirmationDialogData
 } from '../../confirmation-dialog/confirmation-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { map } from 'rxjs/operators';
 const aceRange = ace.acequire('ace/range').Range;
 
 type WorkflowTemplateCreateState = 'new' | 'creating';
@@ -57,6 +58,14 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy, CanCo
    * manifestChanged keeps track if any changes have been made since the editor was opened.
    */
   manifestChanged = false;
+
+  apiManifestInterceptor = (manifest: string) => {
+    const body = { manifest };
+    return this.workflowTemplateServiceService.generateWorkflowTemplate(this.namespace, 'generated', body)
+        .pipe(
+            map(res => res.manifest)
+        );
+  }
 
   private workflowTemplateDetail: WorkflowTemplateDetail;
 
