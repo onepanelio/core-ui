@@ -1,6 +1,6 @@
 import * as dagre from 'dagre';
 import * as yaml from 'js-yaml';
-import { WorkflowPhase } from "../workflow/workflow.service";
+import { WorkflowPhase } from '../workflow/workflow.service';
 
 export type NodeType = 'Pod' | 'Resource' | 'DAG' | 'Unknown';
 
