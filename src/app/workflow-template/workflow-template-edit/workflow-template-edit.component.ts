@@ -23,6 +23,7 @@ import {
     ConfirmationDialogData
 } from '../../confirmation-dialog/confirmation-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-workflow-template-edit',
@@ -64,6 +65,14 @@ export class WorkflowTemplateEditComponent implements OnInit, CanComponentDeacti
       workflowTemplate: true,
       workflowTemplateVersions: true
   };
+
+  apiManifestInterceptor = (manifest: string) => {
+      const body = { manifest };
+      return this.workflowTemplateService.generateWorkflowTemplate(this.namespace, 'generated', body)
+          .pipe(
+              map(res => res.manifest)
+          );
+  }
 
   get workflowTemplate(): WorkflowTemplate {
     return this._workflowTemplate;

@@ -34,7 +34,8 @@
         <app-manifest-dag-editor
                 class="flex-grow-1"
                 [manifestText]="manifestText"
-                (manifestTextModified)="onManifestTextModified($event)">
+                (manifestTextModified)="onManifestTextModified($event)"
+                [manifestInterceptor]="apiManifestInterceptor">
         </app-manifest-dag-editor>
       </div>
       <div class="mt-5">
