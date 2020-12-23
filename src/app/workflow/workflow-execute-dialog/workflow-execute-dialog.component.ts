@@ -7,6 +7,7 @@ import { CronWorkflowFormatter } from '../../cron-workflow/models';
 import * as yaml from 'js-yaml';
 import { Alert } from '../../alert/alert';
 import { AppRouter } from '../../router/app-router.service';
+import { ParameterUtils } from '../../parameters/models';
 
 export interface WorkflowExecuteDialogData {
     namespace: string;
@@ -24,16 +25,6 @@ type WorkflowExecutionState = 'loading' | 'ready' | 'creating';
     styleUrls: ['./workflow-execute-dialog.component.scss']
 })
 export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
-    state: WorkflowExecutionState = 'loading';
-
-    alert: Alert;
-    namespace = '';
-    workflowTemplates: WorkflowTemplate[] = [];
-
-    selectedWorkflowTemplateUid = '';
-
-    // tslint:disable-next-line:variable-name
-    private _selectedTemplate: WorkflowTemplate;
     set selectedTemplate(value: WorkflowTemplate) {
         this.selectedWorkflowTemplateUid = value.uid;
         this._selectedTemplate = value;
@@ -44,17 +35,9 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
             this.parameters = [];
         }
     }
-
     get selectedTemplate(): WorkflowTemplate {
         return this._selectedTemplate;
     }
-
-    @ViewChild(FormComponent, {static: false}) form: FormComponent;
-
-    showCron = false;
-    parameters: Array<Parameter> = [];
-    labels = new Array<KeyValue>();
-    schedulingText: string = CronWorkflowFormatter.toYamlString({}, true);
 
     constructor(
         private appRouter: AppRouter,
@@ -81,9 +64,26 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
 
         // Parameters are set after setting workflow template to override any parameters it has
         if (data.parameters) {
-            this.parameters = data.parameters;
+            this.updateParameterValues(data.parameters);
         }
     }
+    state: WorkflowExecutionState = 'loading';
+
+    alert: Alert;
+    namespace = '';
+    workflowTemplates: WorkflowTemplate[] = [];
+
+    selectedWorkflowTemplateUid = '';
+
+    @ViewChild(FormComponent, {static: false}) form: FormComponent;
+
+    showCron = false;
+    parameters: Array<Parameter> = [];
+    labels = new Array<KeyValue>();
+    schedulingText: string = CronWorkflowFormatter.toYamlString({}, true);
+
+    // tslint:disable-next-line:variable-name
+    private _selectedTemplate: WorkflowTemplate;
 
     public static pluckParameters(manifest) {
         const res = yaml.safeLoad(manifest);
@@ -98,6 +98,10 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
         }
 
         return parameters;
+    }
+
+    updateParameterValues(parameters: Parameter[]) {
+        this.parameters = ParameterUtils.combineValueAndTemplate(parameters, this.parameters);
     }
 
     ngOnInit() {
