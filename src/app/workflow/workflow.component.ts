@@ -7,6 +7,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { Alert } from '../alert/alert';
 import { AppRouter } from '../router/app-router.service';
 import { AlertService } from '../alert/alert.service';
+import { Permissions } from '../auth/models';
+import { PermissionService } from '../permissions/permission.service';
 
 @Component({
   selector: 'app-workflow',
@@ -19,17 +21,22 @@ export class WorkflowComponent implements OnInit {
   hasWorkflowExecutions?: boolean;
   pageSize = 15;
 
+  workflowPermissions = new Permissions();
+
   constructor(
       private activatedRoute: ActivatedRoute,
       private dialog: MatDialog,
       private appRouter: AppRouter,
       private alertService: AlertService,
       private workflowServiceService: WorkflowServiceService,
-      private cronWorkflowService: CronWorkflowServiceService
+      private cronWorkflowService: CronWorkflowServiceService,
+      private permissionService: PermissionService,
   ) {
     this.activatedRoute.paramMap.subscribe(next => {
       this.namespace = next.get('namespace');
     });
+
+    this.checkPermissions(this.namespace);
   }
 
   ngOnInit() {
@@ -102,6 +109,20 @@ export class WorkflowComponent implements OnInit {
             message: 'Unable to schedule workflow',
             type: 'danger'
           }));
+        });
+  }
+
+  private checkPermissions(namespace: string) {
+    this.permissionService
+        .getWorkflowPermissions(namespace, '', 'list')
+        .subscribe(res => {
+          this.workflowPermissions = res;
+        });
+
+    this.permissionService
+        .getWorkspacePermissions(namespace, '', 'create')
+        .subscribe(res => {
+          this.workflowPermissions = res;
         });
   }
 }
