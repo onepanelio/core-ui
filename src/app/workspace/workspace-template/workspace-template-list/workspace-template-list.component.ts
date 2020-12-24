@@ -30,6 +30,7 @@ import { environment } from '../../../../environments/environment';
 import { MatSnackBar } from '@angular/material';
 import { Permissions } from '../../../auth/models';
 import { PermissionService } from '../../../permissions/permission.service';
+import { error } from 'util';
 
 /**
  * WorkspaceTemplateState is a way to keep track of the current state of the component.
@@ -266,9 +267,16 @@ export class WorkspaceTemplateListComponent implements OnInit, CanComponentDeact
                         type: 'danger',
                     }));
                 } else {
+                    let errorMessage = '';
+                    if (err.error.error) {
+                        errorMessage = err.error.error;
+                    } else {
+                        errorMessage = err.error.message;
+                    }
+
                     this.workspaceTemplateCreateEditor.setAlert(new Alert({
                         title: 'Unable to create workspace template',
-                        message: err.error.error,
+                        message: errorMessage,
                         type: 'danger',
                     }));
                 }
