@@ -2,7 +2,7 @@
     Loading Workspaces
 </app-loading-content>
 <app-list-filter
-        *ngIf="hasAnyWorkspaces"
+        *ngIf="hasAnyWorkspaces && this.showFilter"
         [namespace]="namespace"
         [resource]="'workspace'"
         (labelsChanged)="labelsChanged($event)">
@@ -20,7 +20,7 @@
 </app-workspace-list>
 <mat-paginator
         class="no-background font-size-small"
-        *ngIf="hasAnyWorkspaces && this.workspaceResponse?.totalCount"
+        *ngIf="hasAnyWorkspaces && this.workspaceResponse?.totalCount && this.showPaginator"
         (page)="onPageChange($event)"
         [pageIndex]="this.page"
         [length]="this.workspaceResponse?.totalCount"

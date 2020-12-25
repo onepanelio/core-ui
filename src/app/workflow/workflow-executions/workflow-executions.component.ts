@@ -26,6 +26,8 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
     @Input() pageSize = 15;
     @Input() sortOrder = 'createdAt,desc';
     @Input() showSystem = false;
+    @Input() showFilter = true;
+    @Input() showPaginator = true;
 
     private previousSortOrder = 'createdAt,desc';
 
