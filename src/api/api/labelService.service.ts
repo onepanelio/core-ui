@@ -285,7 +285,7 @@ export class LabelServiceService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<GetLabelsResponse>(`${this.configuration.basePath}/apis/v1beta1/labels/${encodeURIComponent(String(namespace))}/${encodeURIComponent(String(resource))}/labels`,
+        return this.httpClient.get<GetLabelsResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/${encodeURIComponent(String(resource))}/labels`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,
