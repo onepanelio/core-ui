@@ -2,7 +2,7 @@
     Loading Workflows
 </app-loading-content>
 <app-list-filter
-        *ngIf="hasAnyWorkflowExecutions"
+        *ngIf="hasAnyWorkflowExecutions && this.showFilter"
         [namespace]="namespace"
         [resource]="'workflow_execution'"
         (labelsChanged)="labelsChanged($event)">
@@ -20,7 +20,7 @@
 </app-workflow-executions-list>
 <mat-paginator
         class="no-background font-size-small"
-        *ngIf="hasAnyWorkflowExecutions && this.workflowResponse?.totalCount"
+        *ngIf="hasAnyWorkflowExecutions && this.workflowResponse?.totalCount && this.showPaginator"
         (page)="onPageChange($event)"
         [pageIndex]="this.page"
         [length]="this.workflowResponse?.totalCount"

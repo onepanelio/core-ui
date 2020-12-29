@@ -12,10 +12,10 @@
                     <mat-icon [fontSet]="'fas'" [fontIcon]="'fa-desktop'"></mat-icon>
                     <span class="ml-1">WORKFLOW TEMPLATES</span>
                 </button>
-                <a mat-flat-button color="accent" class="op-rounded op-button ml-3" (click)="executeWorkflow($event)">
+                <button *ngIf="workflowPermissions.create"  mat-flat-button color="accent" class="op-rounded op-button ml-3" (click)="executeWorkflow($event)">
                     <mat-icon id="create-button" class="icon">add</mat-icon>
                     <span class="ml-1">Execute Workflow</span>
-                </a>
+                </button>
             </div>
         </div>
     </div>

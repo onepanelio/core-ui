@@ -25,7 +25,11 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
     @Input() page = 0;
     @Input() pageSize = 15;
     @Input() sortOrder = 'createdAt,desc';
+    @Input() showFilter = true;
+    @Input() showPaginator = true;
+
     previousSortOrder = 'createdAt,desc';
+    
 
     // tslint:disable-next-line:variable-name
     private _phase?: WorkspacePhase;

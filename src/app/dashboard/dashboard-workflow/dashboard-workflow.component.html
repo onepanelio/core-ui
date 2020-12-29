@@ -14,7 +14,7 @@
                         (click)="setPhase('running')"
                         [class.phase-unselected]="workflowExecutionPhase && workflowExecutionPhase !== 'running'"
                         color="rgb(1, 87, 155)"
-                        class="stat-bar mt-40px">
+                        class="stat-bar mt-20px">
                     <a href="#" *ngIf="workflowExecutionPhase === 'running'" class="clear-phase"
                        (click)="clearPhase($event)">clear</a>
                 </app-stat-bar>
@@ -25,7 +25,7 @@
                         (click)="setPhase('completed')"
                         [class.phase-unselected]="workflowExecutionPhase && workflowExecutionPhase !== 'completed'"
                         color="rgb(55, 173, 88)"
-                        class="stat-bar mt-40px">
+                        class="stat-bar mt-20px">
                     <span *ngIf="workflowExecutionPhase === 'completed'" class="clear-phase"
                           (click)="clearPhase($event)">clear</span>
                 </app-stat-bar>
@@ -36,7 +36,7 @@
                         (click)="setPhase('failed')"
                         [class.phase-unselected]="workflowExecutionPhase &&  workflowExecutionPhase !== 'failed'"
                         color="rgb(211, 35, 69)"
-                        class="stat-bar mt-40px">
+                        class="stat-bar mt-20px">
                     <span *ngIf="workflowExecutionPhase === 'failed'" class="clear-phase" (click)="clearPhase($event)">clear</span>
                 </app-stat-bar>
                 <app-stat-bar
@@ -45,7 +45,7 @@
                         [maxValue]="statsTotal"
                         (click)="setPhase('stopped')"
                         [class.phase-unselected]="workflowExecutionPhase && workflowExecutionPhase !== 'stopped'"
-                        class="stat-bar mt-40px"
+                        class="stat-bar mt-20px"
                         color="rgb(255, 200, 76)">
                     <span *ngIf="workflowExecutionPhase === 'stopped'" class="clear-phase" (click)="clearPhase($event)">clear</span>
                 </app-stat-bar>
@@ -55,7 +55,9 @@
                         [namespace]="namespace"
                         [phase]="workflowExecutionPhase"
                         [pageSize]="5"
-                        (workflowsChanged)="workflowExecutionsChanged($event)">
+                        (workflowsChanged)="workflowExecutionsChanged($event)"
+                        [showFilter]="false"
+                        [showPaginator]="false">
                 </app-workflow-executions>
                 <app-call-to-action *ngIf="hasWorkflowExecutions === false">
                     <div class="header text-center d-block">Get started with workflow executions</div>
