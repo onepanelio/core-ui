@@ -181,7 +181,7 @@ export class WorkflowTemplateEditComponent implements OnInit, CanComponentDeacti
         return;
     }
 
-    const manifestText = this.manifestDagEditor.manifestTextCurrent;
+    const manifestText = this.manifestDagEditor.rawManifest;
 
     this.saving = true;
 
