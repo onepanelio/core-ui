@@ -39,7 +39,12 @@ export class SelectComponent implements OnInit {
     selectControl: FormControl;
 
     constructor() {
-        this.selectControl = new FormControl('');
+        this.selectControl = new FormControl({disabled: this.disabled});
+        this.selectControl.valueChanges.subscribe(newValue => {
+            if (this._data) {
+                this._data.value = newValue;
+            }
+        });
     }
 
     ngOnInit() {
