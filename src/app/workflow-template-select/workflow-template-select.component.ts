@@ -89,7 +89,7 @@ export class WorkflowTemplateSelectComponent implements OnInit {
   - name: cvat-num-classes
     displayName: Number of classes
     hint: Number of classes (i.e in CVAT taks) + 1 for background
-    value: 81
+    value: '81'
     visibility: internal
 
   # A set of hyperparameters used by the source code
