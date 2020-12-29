@@ -17,6 +17,8 @@ export class FormComponent implements OnInit {
     @Input() errors = {};
 
     @Input() set fieldData(value: Array<Parameter>) {
+        this._fieldData = [];
+        this.form = this.formBuilder.group({});
         this._fieldData = value;
     }
 
