@@ -147,7 +147,8 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy, CanCo
     this.manifestChanged = false;
 
     this.state = 'creating';
-    const manifestText = this.manifestDagEditor.manifestTextCurrent;
+    const manifestText = this.manifestDagEditor.rawManifest;
+
     this.workflowTemplateServiceService
         .createWorkflowTemplate(this.namespace, {
           name: templateName,

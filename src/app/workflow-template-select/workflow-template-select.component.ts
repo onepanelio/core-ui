@@ -42,7 +42,7 @@ export class WorkflowTemplateSelectComponent implements OnInit {
       name: 'Model training',
       manifest: `arguments:
   parameters:
-
+  
   # following are a list of parameters that might change based on user response.
   # some of these parameters are prefixed with cvat- to denote that they are special parameters and will be automatically populated by CVAT.
   # you can change the names, but changing names of special parameters might break the workflow.
@@ -233,7 +233,7 @@ volumeClaimTemplates:
       name: 'Ensemble inference',
       manifest: `arguments:
   parameters:
-
+  
   # Following are a list of parameters that might change based on user response.
   # some of these parameters are prefixed with cvat- to denote that they are special parameters and will be automatically populated by CVAT.
   # you can change the names, but changing names of special parameters might break the workflow.
