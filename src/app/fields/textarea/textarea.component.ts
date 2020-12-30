@@ -8,11 +8,19 @@ import { Parameter } from '../../../api';
     styleUrls: ['./textarea.component.scss']
 })
 export class TextareaComponent implements OnInit {
-    @Input() data: Parameter;
     @Input() form: FormGroup;
-
     textAreaControl: FormControl;
 
+    // tslint:disable-next-line:variable-name
+    @Input() _data: Parameter;
+    @Input() set data(value: Parameter) {
+        this._data = value;
+        this.textAreaControl.setValue(value.value);
+    }
+    get data(): Parameter {
+        return this._data;
+    }
+    
     constructor() {
         this.textAreaControl = new FormControl('');
         this.textAreaControl.valueChanges.subscribe(newValue => {
