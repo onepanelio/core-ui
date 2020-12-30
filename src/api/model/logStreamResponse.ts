@@ -9,12 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { GoogleRpcStatus } from './googleRpcStatus';
 import { LogEntry } from './logEntry';
 
 
-export interface StreamResultOfLogEntry { 
-    result?: LogEntry;
-    error?: GoogleRpcStatus;
+export interface LogStreamResponse { 
+    logEntries?: Array<LogEntry>;
 }
 

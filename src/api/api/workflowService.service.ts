@@ -26,7 +26,7 @@ import { GoogleRpcStatus } from '../model/models';
 import { ListFilesResponse } from '../model/models';
 import { ListWorkflowExecutionsResponse } from '../model/models';
 import { Statistics } from '../model/models';
-import { StreamResultOfLogEntry } from '../model/models';
+import { StreamResultOfLogStreamResponse } from '../model/models';
 import { StreamResultOfWorkflowExecution } from '../model/models';
 import { UpdateWorkflowExecutionsMetricsRequest } from '../model/models';
 import { WorkflowExecution } from '../model/models';
@@ -565,9 +565,9 @@ export class WorkflowServiceService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getWorkflowExecutionLogs(namespace: string, uid: string, podName: string, containerName: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<StreamResultOfLogEntry>;
-    public getWorkflowExecutionLogs(namespace: string, uid: string, podName: string, containerName: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpResponse<StreamResultOfLogEntry>>;
-    public getWorkflowExecutionLogs(namespace: string, uid: string, podName: string, containerName: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpEvent<StreamResultOfLogEntry>>;
+    public getWorkflowExecutionLogs(namespace: string, uid: string, podName: string, containerName: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<StreamResultOfLogStreamResponse>;
+    public getWorkflowExecutionLogs(namespace: string, uid: string, podName: string, containerName: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpResponse<StreamResultOfLogStreamResponse>>;
+    public getWorkflowExecutionLogs(namespace: string, uid: string, podName: string, containerName: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpEvent<StreamResultOfLogStreamResponse>>;
     public getWorkflowExecutionLogs(namespace: string, uid: string, podName: string, containerName: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
             throw new Error('Required parameter namespace was null or undefined when calling getWorkflowExecutionLogs.');
@@ -611,7 +611,7 @@ export class WorkflowServiceService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<StreamResultOfLogEntry>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflow_executions/${encodeURIComponent(String(uid))}/pods/${encodeURIComponent(String(podName))}/containers/${encodeURIComponent(String(containerName))}/logs`,
+        return this.httpClient.get<StreamResultOfLogStreamResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflow_executions/${encodeURIComponent(String(uid))}/pods/${encodeURIComponent(String(podName))}/containers/${encodeURIComponent(String(containerName))}/logs`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

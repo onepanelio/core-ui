@@ -142,12 +142,12 @@ export class LogsComponent implements OnInit, OnDestroy {
    */
   writeLog(text: string) {
     if(this.lines > this.maxLines) {
-      const indexCount = strings.findNthIndex(this.logText, "\n", this.linesChunkDelete);
+      const indexCount = strings.findNthIndex(this.logText, '\n', this.linesChunkDelete);
 
       const index = indexCount['index'];
       const count = indexCount['count'];
 
-      if(index > -1) {
+      if (index > -1) {
         this.logText = this.logText.substr(index + 1);
 
         this.lines -= count;
@@ -155,7 +155,7 @@ export class LogsComponent implements OnInit, OnDestroy {
         // keep track of the total lines, so the editor displays the correct line number
         this.aceEditor.setOptions({
           firstLineNumber: this.totalLines - this.lines + 1
-        })
+        });
 
         this.aceEditor.setText(this.logText);
       }
@@ -179,7 +179,7 @@ export class LogsComponent implements OnInit, OnDestroy {
    * @param text
    */
   writeLogLn(text: string) {
-    this.writeLog(text + "\n");
+    this.writeLog(text + '\n');
   }
 
   getLogs() {
@@ -202,9 +202,20 @@ export class LogsComponent implements OnInit, OnDestroy {
     this.socket.onmessage = (event) => {
         try {
           const jsonData = JSON.parse(event.data);
+          const logEntries = jsonData.result.logEntries;
 
-          if (jsonData.result && jsonData.result.content) {
-            this.writeLogLn(jsonData.result.content);
+          let bufferedString = '';
+          for (let i = 0; i < logEntries.length; i++) {
+            const logEntry = logEntries[i];
+            bufferedString += `${logEntry.timestamp} ${logEntry.content}`;
+
+            if (i < logEntries.length) {
+              bufferedString += '\n';
+            }
+          }
+
+          if (bufferedString !== '') {
+            this.writeLog(bufferedString);
           }
         } catch (e) {
            console.error(e);
