@@ -1,4 +1,12 @@
-<div class="workflow-execution-title op-h1">Execute Workflow</div>
+<div class="workflow-execution-title op-h1">
+    <mat-spinner
+            *ngIf="loading"
+            class="d-inline-block mr-2 color-primary"
+            [diameter]="20"
+            [mode]="'indeterminate'">
+    </mat-spinner>
+    Execute Workflow
+</div>
 
 <div class="mr-12">
     <app-alert [alert]="alert" [autoDismiss]="false" class="d-block mt-3"></app-alert>

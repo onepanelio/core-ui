@@ -12,6 +12,8 @@ import { ParameterUtils } from '../../parameters/models';
 export interface WorkflowExecuteDialogData {
     namespace: string;
     workflowTemplate?: WorkflowTemplate; // if provided, sets the current template
+    // if true, this will load the workflow template from the network and override the provided data
+    loadWorkflowTemplate?: boolean;
     cron: boolean;
     parameters?: Parameter[]; // if provided, uses the parameters as the current ones
     labels?: KeyValue[]; // if provided, automatically sets the labels
@@ -25,6 +27,8 @@ type WorkflowExecutionState = 'loading' | 'ready' | 'creating';
     styleUrls: ['./workflow-execute-dialog.component.scss']
 })
 export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
+    loading = false;
+
     set selectedTemplate(value: WorkflowTemplate) {
         this.selectedWorkflowTemplateUid = value.uid;
         this._selectedTemplate = value;
@@ -41,7 +45,7 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
 
     constructor(
         private appRouter: AppRouter,
-        private workflowTemplateSerivce: WorkflowTemplateServiceService,
+        private workflowTemplateService: WorkflowTemplateServiceService,
         public dialogRef: MatDialogRef<WorkflowExecuteDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: WorkflowExecuteDialogData) {
         if (data.labels) {
@@ -51,14 +55,29 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
             this.showCron = true;
         }
 
-        if (data.workflowTemplate) {
+        if (data.workflowTemplate && data.loadWorkflowTemplate) {
+            this.loading = true;
+            this.workflowTemplateService.getWorkflowTemplate(data.namespace, data.workflowTemplate.uid, data.workflowTemplate.version)
+                .subscribe(res => {
+                    this.workflowTemplates = [res];
+                    this.selectedTemplate = res;
+                    this.loading = false;
+
+                    // Parameters are set after setting workflow template to override any parameters it has
+                    if (data.parameters) {
+                        this.updateParameterValues(data.parameters);
+                    }
+                });
+        } else if (data.workflowTemplate) {
             this.workflowTemplates = [data.workflowTemplate];
             this.selectedTemplate = data.workflowTemplate;
         } else {
-            this.workflowTemplateSerivce.listWorkflowTemplates(data.namespace)
+            this.loading = true;
+            this.workflowTemplateService.listWorkflowTemplates(data.namespace)
                 .subscribe(res => {
                     this.workflowTemplates = res.workflowTemplates;
                     this.state = 'ready';
+                    this.loading = false;
                 });
         }
 
@@ -172,7 +191,7 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
     }
 
     getWorkflowTemplate(namespace: string, uid: string) {
-        this.workflowTemplateSerivce.getWorkflowTemplate(namespace, uid).subscribe(res => {
+        this.workflowTemplateService.getWorkflowTemplate(namespace, uid).subscribe(res => {
             this.selectedTemplate = res;
         }, err => {
             this.alert = new Alert({
