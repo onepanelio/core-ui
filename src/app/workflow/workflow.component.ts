@@ -114,13 +114,7 @@ export class WorkflowComponent implements OnInit {
 
   private checkPermissions(namespace: string) {
     this.permissionService
-        .getWorkflowPermissions(namespace, '', 'list')
-        .subscribe(res => {
-          this.workflowPermissions = res;
-        });
-
-    this.permissionService
-        .getWorkspacePermissions(namespace, '', 'create')
+        .getWorkflowPermissions(namespace, '', 'create', 'list')
         .subscribe(res => {
           this.workflowPermissions = res;
         });

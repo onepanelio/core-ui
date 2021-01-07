@@ -1,10 +1,10 @@
 export interface AvailablePermissions {
-    create?: boolean,
-    get?: boolean,
-    watch?: boolean
-    list?: boolean
-    delete?: boolean,
-    update?: boolean,
+    create?: boolean;
+    get?: boolean;
+    watch?: boolean;
+    list?: boolean;
+    delete?: boolean;
+    update?: boolean;
 }
 
 export class Permissions {
