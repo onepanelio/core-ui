@@ -207,7 +207,12 @@ export class LogsComponent implements OnInit, OnDestroy {
           let bufferedString = '';
           for (let i = 0; i < logEntries.length; i++) {
             const logEntry = logEntries[i];
-            bufferedString += `${logEntry.timestamp} ${logEntry.content}`;
+
+            if (logEntry.timestamp) {
+              bufferedString += `${logEntry.timestamp} ${logEntry.content}`;
+            } else {
+              bufferedString += logEntry.content;
+            }
 
             if (i < logEntries.length) {
               bufferedString += '\n';
