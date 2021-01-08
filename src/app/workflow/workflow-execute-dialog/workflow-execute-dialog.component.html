@@ -1,6 +1,6 @@
 <div class="workflow-execution-title op-h1">
     <mat-spinner
-            *ngIf="loading"
+            *ngIf="state === 'loading'"
             class="d-inline-block mr-2 color-primary"
             [diameter]="20"
             [mode]="'indeterminate'">

@@ -1,13 +1,14 @@
 import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormComponent } from '../../fields/form/form.component';
-import { KeyValue, Parameter, WorkflowTemplate, WorkflowTemplateServiceService, WorkspaceTemplate } from '../../../api';
+import { KeyValue, Parameter, WorkflowTemplate, WorkflowTemplateServiceService } from '../../../api';
 import { MatCheckboxChange } from '@angular/material/checkbox';
 import { CronWorkflowFormatter } from '../../cron-workflow/models';
-import * as yaml from 'js-yaml';
 import { Alert } from '../../alert/alert';
 import { AppRouter } from '../../router/app-router.service';
 import { ParameterUtils } from '../../parameters/models';
+import { combineLatest } from 'rxjs';
+import * as yaml from 'js-yaml';
 
 export interface WorkflowExecuteDialogData {
     namespace: string;
@@ -27,8 +28,23 @@ type WorkflowExecutionState = 'loading' | 'ready' | 'creating';
     styleUrls: ['./workflow-execute-dialog.component.scss']
 })
 export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
-    loading = false;
+    state: WorkflowExecutionState = 'loading';
 
+    alert: Alert;
+    namespace = '';
+    workflowTemplates: WorkflowTemplate[] = [];
+
+    selectedWorkflowTemplateUid = '';
+
+    @ViewChild(FormComponent, {static: false}) form: FormComponent;
+
+    showCron = false;
+    parameters: Array<Parameter> = [];
+    labels = new Array<KeyValue>();
+    schedulingText: string = CronWorkflowFormatter.toYamlString({}, true);
+
+    // tslint:disable-next-line:variable-name
+    private _selectedTemplate: WorkflowTemplate;
     set selectedTemplate(value: WorkflowTemplate) {
         this.selectedWorkflowTemplateUid = value.uid;
         this._selectedTemplate = value;
@@ -56,28 +72,15 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
         }
 
         if (data.workflowTemplate && data.loadWorkflowTemplate) {
-            this.loading = true;
-            this.workflowTemplateService.getWorkflowTemplate(data.namespace, data.workflowTemplate.uid, data.workflowTemplate.version)
-                .subscribe(res => {
-                    this.workflowTemplates = [res];
-                    this.selectedTemplate = res;
-                    this.loading = false;
-
-                    // Parameters are set after setting workflow template to override any parameters it has
-                    if (data.parameters) {
-                        this.updateParameterValues(data.parameters);
-                    }
-                });
+            this.loadWorkflowTemplate(data.namespace, data.workflowTemplate.uid, data.workflowTemplate.version, data.parameters);
         } else if (data.workflowTemplate) {
             this.workflowTemplates = [data.workflowTemplate];
             this.selectedTemplate = data.workflowTemplate;
         } else {
-            this.loading = true;
             this.workflowTemplateService.listWorkflowTemplates(data.namespace)
                 .subscribe(res => {
                     this.workflowTemplates = res.workflowTemplates;
                     this.state = 'ready';
-                    this.loading = false;
                 });
         }
 
@@ -86,23 +89,6 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
             this.updateParameterValues(data.parameters);
         }
     }
-    state: WorkflowExecutionState = 'loading';
-
-    alert: Alert;
-    namespace = '';
-    workflowTemplates: WorkflowTemplate[] = [];
-
-    selectedWorkflowTemplateUid = '';
-
-    @ViewChild(FormComponent, {static: false}) form: FormComponent;
-
-    showCron = false;
-    parameters: Array<Parameter> = [];
-    labels = new Array<KeyValue>();
-    schedulingText: string = CronWorkflowFormatter.toYamlString({}, true);
-
-    // tslint:disable-next-line:variable-name
-    private _selectedTemplate: WorkflowTemplate;
 
     public static pluckParameters(manifest) {
         const res = yaml.safeLoad(manifest);
@@ -191,9 +177,13 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
     }
 
     getWorkflowTemplate(namespace: string, uid: string) {
+        this.state = 'loading';
+        this.parameters = [];
         this.workflowTemplateService.getWorkflowTemplate(namespace, uid).subscribe(res => {
             this.selectedTemplate = res;
+            this.state = 'ready';
         }, err => {
+            this.state = 'ready';
             this.alert = new Alert({
                 type: 'danger',
                 title: `Unable to get workflow template ${uid}`,
@@ -208,5 +198,24 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
 
     goToWorkflowTemplates() {
         this.appRouter.navigateToWorkflowTemplates(this.namespace);
+    }
+
+    loadWorkflowTemplate(namespace: string, uid: string, version: string, parameters?: Parameter[]) {
+        this.state = 'loading';
+
+        const listRequest = this.workflowTemplateService.listWorkflowTemplates(namespace);
+        const getRequest = this.workflowTemplateService.getWorkflowTemplate(namespace, uid, version);
+
+        combineLatest(listRequest, getRequest)
+            .subscribe(([workflowTemplates, selectedWorkflowTemplate]) => {
+            this.workflowTemplates = workflowTemplates.workflowTemplates;
+            this.selectedTemplate = selectedWorkflowTemplate;
+
+            if (parameters) {
+                this.updateParameterValues(parameters);
+            }
+
+            this.state = 'ready';
+        });
     }
 }
