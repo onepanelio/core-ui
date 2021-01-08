@@ -31,6 +31,7 @@ import { Alert } from '../../alert/alert';
 import { AlertService } from '../../alert/alert.service';
 import { PermissionService } from '../../permissions/permission.service';
 import { MetricsEditDialogComponent } from '../../metrics/metrics-edit-dialog/metrics-edit-dialog.component';
+import { Subscription } from 'rxjs';
 
 const aceRange = ace.acequire('ace/range').Range;
 
@@ -111,6 +112,8 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
     };
   }
 
+  private routerHistoryChangedSubscription?: Subscription;
+
   constructor(
       private activatedRoute: ActivatedRoute,
       private alertService: AlertService,
@@ -135,13 +138,21 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
         this.clock.reset(true);
       }
 
+      // If we're on this page and we click 'run again' we need to catch the back link update
+      // after app route finishes
+      if (!this.routerHistoryChangedSubscription) {
+        this.routerHistoryChangedSubscription = this.appRouter.routerHistoryChanged.subscribe(res => {
+          this.updateBackLink(namespace);
+        });
+      }
+      // Update the app route initially, because the initial subscription won't be triggered on page load
+      this.updateBackLink(namespace);
+
       this.showNodeInfo = false;
       this.selectedNodeId = null;
       this.showLogs = false;
       this.showYaml = false;
       this.startCheckingWorkflow();
-
-      this.updateBackLink(namespace);
     });
 
     this.activatedRoute.queryParamMap.subscribe(next => {
@@ -236,6 +247,10 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
 
     if (this.snackbarRef) {
       this.snackbarRef.dismiss();
+    }
+
+    if (this.routerHistoryChangedSubscription) {
+      this.routerHistoryChangedSubscription.unsubscribe();
     }
   }
 
@@ -632,5 +647,4 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
         });
     }
   }
-
 }
