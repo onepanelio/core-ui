@@ -132,6 +132,7 @@ import { ListFilterComponent } from './list-filter/list-filter.component';
 import { ErrorComponent } from './error/error.component';
 import { MetricsEditComponent } from './metrics/metrics-edit/metrics-edit.component';
 import { MetricsEditDialogComponent } from './metrics/metrics-edit-dialog/metrics-edit-dialog.component';
+import { DateFromUtcPipe } from './pipes/date-from-utc/date-from-utc.pipe';
 
 @NgModule({
     declarations: [
@@ -233,7 +234,8 @@ import { MetricsEditDialogComponent } from './metrics/metrics-edit-dialog/metric
         WorkStatusComponent,
         ListFilterComponent,
         ErrorComponent,
-        MetricsEditComponent
+        MetricsEditComponent,
+        DateFromUtcPipe,
     ],
     entryComponents: [
         WorkflowExecuteDialogComponent,

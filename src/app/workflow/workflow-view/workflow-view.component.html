@@ -65,6 +65,9 @@
                 <div *ngIf="workflow">
                     Template: <a [routerLink]="['/', this.namespace, 'workflow-templates', workflow.workflowTemplate.uid]">{{workflow.workflowTemplate.name}}</a>
                 </div>
+                <div *ngIf="workflow?.workflowTemplate" class="ml-2">
+                    (Version: <app-date [dateTime]="workflow.workflowTemplate.version | dateFromUtc:9"></app-date>)
+                </div>
                 <div class="ml-5">
                     Started:
                     <app-date *ngIf="workflow" [dateTime]="startedAt"></app-date>
