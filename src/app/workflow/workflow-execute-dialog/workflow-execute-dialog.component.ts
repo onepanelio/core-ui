@@ -76,6 +76,7 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
         } else if (data.workflowTemplate) {
             this.workflowTemplates = [data.workflowTemplate];
             this.selectedTemplate = data.workflowTemplate;
+            this.state = 'ready';
         } else {
             this.workflowTemplateService.listWorkflowTemplates(data.namespace)
                 .subscribe(res => {
