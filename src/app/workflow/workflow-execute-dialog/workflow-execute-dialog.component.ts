@@ -7,7 +7,6 @@ import { CronWorkflowFormatter } from '../../cron-workflow/models';
 import { Alert } from '../../alert/alert';
 import { AppRouter } from '../../router/app-router.service';
 import { ParameterUtils } from '../../parameters/models';
-import { combineLatest } from 'rxjs';
 import * as yaml from 'js-yaml';
 
 export interface WorkflowExecuteDialogData {
@@ -27,16 +26,18 @@ type WorkflowExecutionState = 'loading' | 'ready' | 'creating';
     templateUrl: './workflow-execute-dialog.component.html',
     styleUrls: ['./workflow-execute-dialog.component.scss']
 })
-export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
+export class WorkflowExecuteDialogComponent implements OnInit {
+    @ViewChild(FormComponent, {static: false}) form: FormComponent;
+
     state: WorkflowExecutionState = 'loading';
 
     alert: Alert;
     namespace = '';
+
     workflowTemplates: WorkflowTemplate[] = [];
-
+    workflowTemplateVersions: WorkflowTemplate[] = [];
     selectedWorkflowTemplateUid = '';
-
-    @ViewChild(FormComponent, {static: false}) form: FormComponent;
+    selectedWorkflowTemplateVersionVersion = '';
 
     showCron = false;
     parameters: Array<Parameter> = [];
@@ -45,18 +46,28 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
 
     // tslint:disable-next-line:variable-name
     private _selectedTemplate: WorkflowTemplate;
-    set selectedTemplate(value: WorkflowTemplate) {
-        this.selectedWorkflowTemplateUid = value.uid;
-        this._selectedTemplate = value;
+    get selectedTemplate(): WorkflowTemplate {
+        return this._selectedTemplate;
+    }
+
+    // tslint:disable-next-line:variable-name
+    _selectedWorkflowTemplateVersion: WorkflowTemplate;
+    set selectedWorkflowTemplateVersion(value: WorkflowTemplate) {
+        this._selectedWorkflowTemplateVersion = value;
+        this.selectedWorkflowTemplateVersionVersion = value.version;
 
         if (value.parameters) {
             this.parameters = value.parameters;
         } else {
             this.parameters = [];
         }
+
+        if (this.data.parameters) {
+            this.parameters = ParameterUtils.combineValueAndTemplate(this.data.parameters, this.parameters);
+        }
     }
-    get selectedTemplate(): WorkflowTemplate {
-        return this._selectedTemplate;
+    get selectedWorkflowTemplateVersion(): WorkflowTemplate {
+        return this._selectedWorkflowTemplateVersion;
     }
 
     constructor(
@@ -64,6 +75,8 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
         private workflowTemplateService: WorkflowTemplateServiceService,
         public dialogRef: MatDialogRef<WorkflowExecuteDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: WorkflowExecuteDialogData) {
+        this.namespace = data.namespace;
+
         if (data.labels) {
             this.labels = data.labels;
         }
@@ -71,23 +84,15 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
             this.showCron = true;
         }
 
-        if (data.workflowTemplate && data.loadWorkflowTemplate) {
-            this.loadWorkflowTemplate(data.namespace, data.workflowTemplate.uid, data.workflowTemplate.version, data.parameters);
-        } else if (data.workflowTemplate) {
+        if (data.workflowTemplate) {
             this.workflowTemplates = [data.workflowTemplate];
-            this.selectedTemplate = data.workflowTemplate;
-            this.state = 'ready';
+            this.setSelectedTemplate(data.workflowTemplate, data.workflowTemplate.version);
         } else {
             this.workflowTemplateService.listWorkflowTemplates(data.namespace)
                 .subscribe(res => {
                     this.workflowTemplates = res.workflowTemplates;
                     this.state = 'ready';
                 });
-        }
-
-        // Parameters are set after setting workflow template to override any parameters it has
-        if (data.parameters) {
-            this.updateParameterValues(data.parameters);
         }
     }
 
@@ -106,8 +111,11 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
         return parameters;
     }
 
-    updateParameterValues(parameters: Parameter[]) {
-        this.parameters = ParameterUtils.combineValueAndTemplate(parameters, this.parameters);
+    setSelectedTemplate(value: WorkflowTemplate, version?: string) {
+        this._selectedTemplate = value;
+        this.selectedWorkflowTemplateUid = value.uid;
+
+        this.getWorkflowTemplateVersions(this.namespace, value.uid, version);
     }
 
     ngOnInit() {
@@ -126,13 +134,16 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
             formattedParameters.push(parameter);
         }
 
+        const finalTemplate = this.selectedWorkflowTemplateVersion;
+        finalTemplate.uid = this.selectedTemplate.uid;
+
         const data = {
             workflowExecution: {
                 parameters: formattedParameters,
                 labels: this.labels,
-                workflowTemplate: this.selectedTemplate,
+                workflowTemplate: finalTemplate,
             },
-            workflowTemplate: this.selectedTemplate,
+            workflowTemplate: finalTemplate,
             cron: undefined,
         };
 
@@ -170,53 +181,56 @@ export class WorkflowExecuteDialogComponent implements OnInit, OnDestroy {
         this.dialogRef.close();
     }
 
-    ngOnDestroy(): void {
-    }
-
     onCronCheck(value: MatCheckboxChange) {
         this.showCron = value.checked;
     }
 
-    getWorkflowTemplate(namespace: string, uid: string) {
-        this.state = 'loading';
-        this.parameters = [];
-        this.workflowTemplateService.getWorkflowTemplate(namespace, uid).subscribe(res => {
-            this.selectedTemplate = res;
-            this.state = 'ready';
-        }, err => {
-            this.state = 'ready';
-            this.alert = new Alert({
-                type: 'danger',
-                title: `Unable to get workflow template ${uid}`,
-            });
-        });
-    }
-
     onSelectWorkflowTemplateUid(uid: string) {
-        this.selectedWorkflowTemplateUid = uid;
-        this.getWorkflowTemplate(this.data.namespace, uid);
+        this.workflowTemplateVersions = [];
+        this.parameters = [];
+
+        const foundTemplate = this.workflowTemplates.find(wt => wt.uid === uid);
+        if (foundTemplate) {
+            this.setSelectedTemplate(foundTemplate);
+        }
     }
 
     goToWorkflowTemplates() {
         this.appRouter.navigateToWorkflowTemplates(this.namespace);
     }
 
-    loadWorkflowTemplate(namespace: string, uid: string, version: string, parameters?: Parameter[]) {
+    onSelectWorkflowTemplateVersion(version: string) {
+        const foundVersion = this.workflowTemplateVersions.find(res => res.version === version);
+        if (foundVersion) {
+            this.selectedWorkflowTemplateVersion = foundVersion;
+        }
+    }
+
+    getWorkflowTemplateVersions(namespace: string, workflowTemplateUid: string, version?: string) {
         this.state = 'loading';
 
-        const listRequest = this.workflowTemplateService.listWorkflowTemplates(namespace);
-        const getRequest = this.workflowTemplateService.getWorkflowTemplate(namespace, uid, version);
+        this.parameters = [];
+        this.workflowTemplateService.listWorkflowTemplateVersions(namespace, workflowTemplateUid)
+            .subscribe(res => {
+                this.workflowTemplateVersions = res.workflowTemplates;
 
-        combineLatest(listRequest, getRequest)
-            .subscribe(([workflowTemplates, selectedWorkflowTemplate]) => {
-            this.workflowTemplates = workflowTemplates.workflowTemplates;
-            this.selectedTemplate = selectedWorkflowTemplate;
+                if (!res.workflowTemplates || res.workflowTemplates.length === 0) {
+                    this.state = 'ready';
+                    return;
+                }
 
-            if (parameters) {
-                this.updateParameterValues(parameters);
-            }
+                if (!version) {
+                    this.selectedWorkflowTemplateVersion = res.workflowTemplates[0];
+                } else {
+                    const foundVersion = res.workflowTemplates.find(wtv => wtv.version === version);
+                    if (foundVersion) {
+                        this.selectedWorkflowTemplateVersion = foundVersion;
+                    }
+                }
 
-            this.state = 'ready';
-        });
+                this.state = 'ready';
+            }, err => {
+                this.state = 'ready';
+            });
     }
 }

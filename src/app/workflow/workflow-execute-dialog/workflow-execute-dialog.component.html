@@ -19,6 +19,14 @@
             </mat-option>
         </mat-select>
     </mat-form-field>
+    <mat-form-field *ngIf="state !== 'ready' || workflowTemplateVersions" class="fix-mat-overflow w-100" appearance="outline">
+        <mat-label>Version</mat-label>
+        <mat-select [value]="selectedWorkflowTemplateVersionVersion" (valueChange)="onSelectWorkflowTemplateVersion($event)">
+            <mat-option *ngFor="let version of workflowTemplateVersions" value="{{version.version}}">
+                <app-date [dateTime]="version.createdAt"></app-date>
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
     <div *ngIf="state === 'ready' && !workflowTemplates" class="mt-7 font-roboto color-medium-gray">
         You have no templates, <a class="action underline pointer-hover color-medium-gray" (click)="goToWorkflowTemplates()">Create a workflow template</a>
     </div>

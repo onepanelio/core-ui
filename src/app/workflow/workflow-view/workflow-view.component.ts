@@ -570,8 +570,8 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
       this.cloning = true;
 
       const request: CreateWorkflowExecutionBody = {
-        workflowTemplateUid: this.workflow.workflowTemplate.uid,
-        workflowTemplateVersion: this.workflow.workflowTemplate.version,
+        workflowTemplateUid: result.workflowExecution.workflowTemplate.uid,
+        workflowTemplateVersion: result.workflowExecution.workflowTemplate.version,
         parameters: result.workflowExecution.parameters,
         labels: result.workflowExecution.labels,
       };

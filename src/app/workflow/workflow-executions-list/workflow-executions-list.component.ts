@@ -107,8 +107,8 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
             }
 
             const request: CreateWorkflowExecutionBody = {
-                workflowTemplateUid: workflowExecution.workflowTemplate.uid,
-                workflowTemplateVersion: workflowExecution.workflowTemplate.version,
+                workflowTemplateUid: result.workflowExecution.workflowTemplate.uid,
+                workflowTemplateVersion: result.workflowExecution.workflowTemplate.version,
                 parameters: result.workflowExecution.parameters,
                 labels: result.workflowExecution.labels,
             };
