@@ -65,7 +65,6 @@ export class WorkflowTemplateViewComponent implements OnInit {
 
         this.updateShowWorkflowExecutionCallToAction();
     }
-
     get hasWorkflowExecutions(): boolean {
         return this._hasWorkflowExecutions;
     }
