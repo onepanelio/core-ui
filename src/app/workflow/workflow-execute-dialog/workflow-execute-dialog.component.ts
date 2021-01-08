@@ -29,6 +29,8 @@ type WorkflowExecutionState = 'loading' | 'ready' | 'creating';
 export class WorkflowExecuteDialogComponent implements OnInit {
     @ViewChild(FormComponent, {static: false}) form: FormComponent;
 
+    disableTemplates = false;
+
     state: WorkflowExecutionState = 'loading';
 
     alert: Alert;
@@ -85,6 +87,7 @@ export class WorkflowExecuteDialogComponent implements OnInit {
         }
 
         if (data.workflowTemplate) {
+            this.disableTemplates = true;
             this.workflowTemplates = [data.workflowTemplate];
             this.setSelectedTemplate(data.workflowTemplate, data.workflowTemplate.version);
         } else {
