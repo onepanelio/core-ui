@@ -4,7 +4,7 @@ import {
 } from '../workflow.service';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material/snack-bar';
-import { AuthServiceService, WorkflowExecution, WorkflowServiceService } from '../../../api';
+import { AuthServiceService, CreateWorkflowExecutionBody, WorkflowExecution, WorkflowServiceService } from '../../../api';
 import { ConfirmationDialogComponent } from '../../confirmation-dialog/confirmation-dialog.component';
 import { WorkflowExecutionConstants } from '../models';
 import { MatDialog } from '@angular/material/dialog';
@@ -15,6 +15,7 @@ import { Alert } from '../../alert/alert';
 import { Sort } from '@angular/material';
 import { SortDirection } from '@angular/material/typings/sort';
 import { PermissionService } from '../../permissions/permission.service';
+import { WorkflowExecuteDialogComponent } from '../workflow-execute-dialog/workflow-execute-dialog.component';
 
 @Component({
     selector: 'app-workflow-executions-list',
@@ -88,20 +89,40 @@ export class WorkflowExecutionsListComponent implements OnInit, OnDestroy {
     }
 
     onRerun(workflowExecution: WorkflowExecution) {
-        this.alertService.storeAlert(new Alert({
-            message: `Cloning ${workflowExecution.name}`,
-            type: 'info'
-        }));
+        const dialogRef = this.dialog.open(WorkflowExecuteDialogComponent, {
+            width: '60vw',
+            maxHeight: '100vh',
+            data: {
+                namespace: this.namespace,
+                parameters: workflowExecution.parameters,
+                labels: workflowExecution.labels,
+                loadWorkflowTemplate: true,
+                workflowTemplate: workflowExecution.workflowTemplate,
+            }
+        });
 
-        this.workflowServiceService.cloneWorkflowExecution(this.namespace, workflowExecution.uid)
-            .subscribe(res => {
-                this.appRouter.navigateToWorkflowExecution(this.namespace, res.uid);
-            }, err => {
-                this.alertService.storeAlert(new Alert({
-                    message: `Unable to run ${workflowExecution.name} again`,
-                    type: 'danger'
-                }));
-            });
+        dialogRef.afterClosed().subscribe(result => {
+            if (!result) {
+                return;
+            }
+
+            const request: CreateWorkflowExecutionBody = {
+                workflowTemplateUid: result.workflowExecution.workflowTemplate.uid,
+                workflowTemplateVersion: result.workflowExecution.workflowTemplate.version,
+                parameters: result.workflowExecution.parameters,
+                labels: result.workflowExecution.labels,
+            };
+
+            this.workflowServiceService.createWorkflowExecution(this.namespace, request)
+                .subscribe(res => {
+                    this.appRouter.navigateToWorkflowExecution(this.namespace, res.name);
+                }, err => {
+                    this.alertService.storeAlert(new Alert({
+                        message: 'Unable to clone workflow',
+                        type: 'danger'
+                    }));
+                });
+        });
     }
 
     /**

@@ -1,163 +1,167 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from "@angular/material/snack-bar";
-import { ActivatedRoute, Router } from "@angular/router";
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { MatSnackBar, MatSnackBarRef, SimpleSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
-  CreateWorkflowExecutionBody,
-  CronWorkflow,
-  CronWorkflowServiceService,
-  WorkflowExecution,
-  WorkflowServiceService,
-  WorkflowTemplate
-} from "../../../api";
-import { MatDialog, MatDialogRef } from "@angular/material/dialog";
+    CreateWorkflowExecutionBody,
+    CronWorkflow,
+    CronWorkflowServiceService,
+    WorkflowServiceService,
+    WorkflowTemplate
+} from '../../../api';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import {
-  CronWorkflowEditData,
-  CronWorkflowEditDialogComponent
-} from "../cron-workflow-edit-dialog/cron-workflow-edit-dialog.component";
-import { WorkflowExecuteDialogComponent } from "../../workflow/workflow-execute-dialog/workflow-execute-dialog.component";
+    CronWorkflowEditData,
+    CronWorkflowEditDialogComponent
+} from '../cron-workflow-edit-dialog/cron-workflow-edit-dialog.component';
+import { WorkflowExecuteDialogComponent } from '../../workflow/workflow-execute-dialog/workflow-execute-dialog.component';
 import * as yaml from 'js-yaml';
 import {
-  ConfirmationDialogComponent,
-  ConfirmationDialogData
-} from "../../confirmation-dialog/confirmation-dialog.component";
+    ConfirmationDialogComponent,
+    ConfirmationDialogData
+} from '../../confirmation-dialog/confirmation-dialog.component';
+import { AppRouter } from '../../router/app-router.service';
 
 @Component({
-  selector: 'app-cron-workflow-list',
-  templateUrl: './cron-workflow-list.component.html',
-  styleUrls: ['./cron-workflow-list.component.scss']
+    selector: 'app-cron-workflow-list',
+    templateUrl: './cron-workflow-list.component.html',
+    styleUrls: ['./cron-workflow-list.component.scss']
 })
-export class CronWorkflowListComponent implements OnInit {
-  private snackbarRef: MatSnackBarRef<SimpleSnackBar>;
+export class CronWorkflowListComponent implements OnInit, OnDestroy {
+    private snackbarRef: MatSnackBarRef<SimpleSnackBar>;
 
-  displayedColumns = ['name','schedule', 'spacer', 'actions'];
+    displayedColumns = ['name', 'schedule', 'spacer', 'actions'];
 
-  // Maps a CronWorkflow by it's name to it's parsed manifest, providing access to scheduled, etc.
-  parsedCronManifestsMap = new Map<string, object>();
-  _cronWorkflows: CronWorkflow[] = [];
+    // Maps a CronWorkflow by it's name to it's parsed manifest, providing access to scheduled, etc.
+    parsedCronManifestsMap = new Map<string, object>();
 
-  @Input() namespace: string;
-  @Input() set cronWorkflows(value: CronWorkflow[]) {
-    this._cronWorkflows = value;
+    // tslint:disable-next-line:variable-name
+    _cronWorkflows: CronWorkflow[] = [];
 
-    this.parsedCronManifestsMap.clear();
-    for(const workflow of value) {
-      this.parsedCronManifestsMap[workflow.name] = yaml.safeLoad(workflow.manifest);
+    @Input() namespace: string;
+
+    @Input() set cronWorkflows(value: CronWorkflow[]) {
+        this._cronWorkflows = value;
+
+        this.parsedCronManifestsMap.clear();
+        for (const workflow of value) {
+            this.parsedCronManifestsMap[workflow.name] = yaml.safeLoad(workflow.manifest);
+        }
     }
-  }
-  get cronWorkflows(): CronWorkflow[] {
-    return this._cronWorkflows;
-  }
-  @Input() template: WorkflowTemplate;
-
-  // This is fired whenever we add or remove a row from the list.
-  @Output() listRowsModified = new EventEmitter();
-
-  dialogRef: MatDialogRef<CronWorkflowEditDialogComponent>;
-
-  constructor(
-      private activatedRoute: ActivatedRoute,
-      private cronWorkflowServiceService: CronWorkflowServiceService,
-      private workflowServiceService: WorkflowServiceService,
-      private dialog: MatDialog,
-      private snackbar: MatSnackBar,
-      private router: Router) { }
-
-  ngOnInit(): void {
-
-  }
-
-  ngOnDestroy(): void {
-    if (this.snackbarRef) {
-      this.snackbarRef.dismiss();
+    get cronWorkflows(): CronWorkflow[] {
+        return this._cronWorkflows;
     }
-  }
 
-  onEdit(workflow: CronWorkflow) {
-    const data: CronWorkflowEditData = {
-      cronWorkflow: workflow,
-      manifest: this.template.manifest
-    };
+    @Input() template: WorkflowTemplate;
 
-    this.dialogRef = this.dialog.open(CronWorkflowEditDialogComponent, {
-      width: '60vw',
-      maxHeight: '100vh',
-      data: data,
-    });
+    // This is fired whenever we add or remove a row from the list.
+    @Output() listRowsModified = new EventEmitter();
 
-    this.dialogRef.afterClosed().subscribe(res => {
-      if(!res) {
-        return;
-      }
+    dialogRef: MatDialogRef<CronWorkflowEditDialogComponent>;
 
-      let updatedData: CronWorkflow = {
-        ...res.cron,
-        workflowExecution: res.workflowExecution,
-        labels: res.labels
-      };
-      updatedData.workflowExecution.workflowTemplate = this.template;
+    constructor(
+        private activatedRoute: ActivatedRoute,
+        private cronWorkflowServiceService: CronWorkflowServiceService,
+        private workflowServiceService: WorkflowServiceService,
+        private dialog: MatDialog,
+        private snackbar: MatSnackBar,
+        private appRouter: AppRouter) {
+    }
 
-      //TODO update labels
+    ngOnInit(): void {
 
-      this.cronWorkflowServiceService.updateCronWorkflow(this.namespace, workflow.name, updatedData)
-          .subscribe(res => {
-            for(let key in res) {
-              workflow[key] = res[key];
+    }
+
+    ngOnDestroy(): void {
+        if (this.snackbarRef) {
+            this.snackbarRef.dismiss();
+        }
+    }
+
+    onEdit(workflow: CronWorkflow) {
+        const data: CronWorkflowEditData = {
+            cronWorkflow: workflow,
+            manifest: this.template.manifest
+        };
+
+        this.dialogRef = this.dialog.open(CronWorkflowEditDialogComponent, {
+            width: '60vw',
+            maxHeight: '100vh',
+            data,
+        });
+
+        this.dialogRef.afterClosed().subscribe(res => {
+            if (!res) {
+                return;
             }
 
-            this.listRowsModified.emit();
-          }, err => {
-            // Do nothing
-          })
-    })
-  }
+            const updatedData: CronWorkflow = {
+                ...res.cron,
+                workflowExecution: res.workflowExecution,
+                labels: res.labels
+            };
+            updatedData.workflowExecution.workflowTemplate = this.template;
 
-  onExecute(workflow: CronWorkflow) {
-    let data: CreateWorkflowExecutionBody = {
-      workflowTemplateUid: this.template.uid,
-      workflowTemplateVersion: this.template.version,
-    };
+            // TODO update labels
 
-    if (workflow.workflowExecution) {
-      data.parameters = workflow.workflowExecution.parameters;
-    } else {
-      data.parameters = WorkflowExecuteDialogComponent.pluckParameters(this.template.manifest);
-    }
+            this.cronWorkflowServiceService.updateCronWorkflow(this.namespace, workflow.name, updatedData)
+                .subscribe(res => {
+                    for (const key in res) {
+                        workflow[key] = res[key];
+                    }
 
-    if (!data.parameters) {
-      data.parameters = [];
-    }
-
-    this.workflowServiceService.createWorkflowExecution(this.namespace, data)
-        .subscribe(res => {
-          // @todo appRouter
-          this.router.navigate(['/', this.namespace, 'workflows', res.name]);
+                    this.listRowsModified.emit();
+                }, err => {
+                    // Do nothing
+                });
         });
-  }
-
-
-  onDelete(workflow: CronWorkflow) {
-    const data: ConfirmationDialogData = {
-      title: `Are you sure you want to delete "${workflow.name}"?`,
-      confirmText: 'DELETE',
-      type: 'delete',
     }
-    const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
-      data: data
-    })
 
-    dialogRef.afterClosed().subscribe(res => {
-      if(!res) {
-        return;
-      }
+    onExecute(workflow: CronWorkflow) {
+        const data: CreateWorkflowExecutionBody = {
+            workflowTemplateUid: this.template.uid,
+            workflowTemplateVersion: this.template.version,
+        };
 
-      this.cronWorkflowServiceService.deleteCronWorkflow(this.namespace, workflow.uid)
-          .subscribe(res => {
-            this.listRowsModified.emit();
-            this.snackbarRef = this.snackbar.open('Scheduled workflow deleted', 'OK');
-          }, err => {
-            this.snackbarRef = this.snackbar.open('Unable to stop workflow', 'OK');
-          })
-      ;
-    })
-  }
+        if (workflow.workflowExecution) {
+            data.parameters = workflow.workflowExecution.parameters;
+        } else {
+            data.parameters = WorkflowExecuteDialogComponent.pluckParameters(this.template.manifest);
+        }
+
+        if (!data.parameters) {
+            data.parameters = [];
+        }
+
+        this.workflowServiceService.createWorkflowExecution(this.namespace, data)
+            .subscribe(res => {
+                this.appRouter.navigateToWorkflowExecution(this.namespace, res.name);
+            });
+    }
+
+
+    onDelete(workflow: CronWorkflow) {
+        const data: ConfirmationDialogData = {
+            title: `Are you sure you want to delete "${workflow.name}"?`,
+            confirmText: 'DELETE',
+            type: 'delete',
+        };
+        const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
+            data
+        });
+
+        dialogRef.afterClosed().subscribe(res => {
+            if (!res) {
+                return;
+            }
+
+            this.cronWorkflowServiceService.deleteCronWorkflow(this.namespace, workflow.uid)
+                .subscribe(res => {
+                    this.listRowsModified.emit();
+                    this.snackbarRef = this.snackbar.open('Scheduled workflow deleted', 'OK');
+                }, err => {
+                    this.snackbarRef = this.snackbar.open('Unable to stop workflow', 'OK');
+                })
+            ;
+        });
+    }
 }

@@ -175,6 +175,12 @@ export class ManifestDagEditorComponent implements OnInit {
       });
     } catch (e) {
       setTimeout(() => {
+        // Based on the text, the graph may not be creatable. E.g. if you start typing: "abc..."
+        // In this case, it's not clear what the error is, so we don't show it in UI.
+        if (e.message === 'Could not generate graph. Provided Pipeline had no components.') {
+          return;
+        }
+
         this.error = {
           message: e.reason,
           type: 'danger'

@@ -1,13 +1,29 @@
-<div class="workflow-execution-title op-h1">Execute Workflow</div>
+<div class="workflow-execution-title op-h1">
+    <mat-spinner
+            *ngIf="state === 'loading'"
+            class="d-inline-block mr-2 color-primary"
+            [diameter]="20"
+            [mode]="'indeterminate'">
+    </mat-spinner>
+    Execute Workflow
+</div>
 
 <div class="mr-12">
     <app-alert [alert]="alert" [autoDismiss]="false" class="d-block mt-3"></app-alert>
 
     <mat-form-field *ngIf="state !== 'ready' || workflowTemplates" class="mt-7 fix-mat-overflow w-100" appearance="outline">
         <mat-label>Template</mat-label>
-        <mat-select [value]="selectedWorkflowTemplateUid" (valueChange)="onSelectWorkflowTemplateUid($event)">
+        <mat-select [value]="selectedWorkflowTemplateUid" (valueChange)="onSelectWorkflowTemplateUid($event)" [disabled]="disableTemplates">
             <mat-option *ngFor="let workflowTemplate of workflowTemplates" value="{{workflowTemplate.uid}}">
                 {{workflowTemplate.name}}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field *ngIf="state !== 'ready' || workflowTemplateVersions" class="fix-mat-overflow w-100" appearance="outline">
+        <mat-label>Version</mat-label>
+        <mat-select [value]="selectedWorkflowTemplateVersionVersion" (valueChange)="onSelectWorkflowTemplateVersion($event)">
+            <mat-option *ngFor="let version of workflowTemplateVersions" value="{{version.version}}">
+                <app-date [dateTime]="version.version|dateFromUtc:9"></app-date>
             </mat-option>
         </mat-select>
     </mat-form-field>

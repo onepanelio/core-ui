@@ -144,7 +144,7 @@
         <div *ngIf="workflowExecutionPermissions.has(workflow.uid)">
             <button *ngIf="workflowExecutionPermissions.get(workflow.uid).create" mat-menu-item (click)="onRerun(workflow)">
                 <i class="far fa-play-circle mr-1 workflow-menu-icon"></i>
-                Rerun
+                Run again
             </button>
             <button *ngIf="workflowExecutionPermissions.get(workflow.uid).update" mat-menu-item (click)="onDelete(workflow)" [disabled]="!(workflow | workflowIsActive)">
                 <i class="fas fa-trash mr-1 workflow-menu-icon"></i>

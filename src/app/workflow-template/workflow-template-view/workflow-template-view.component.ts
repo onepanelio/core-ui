@@ -65,7 +65,6 @@ export class WorkflowTemplateViewComponent implements OnInit {
 
         this.updateShowWorkflowExecutionCallToAction();
     }
-
     get hasWorkflowExecutions(): boolean {
         return this._hasWorkflowExecutions;
     }
@@ -179,6 +178,7 @@ export class WorkflowTemplateViewComponent implements OnInit {
                     workflowTemplateUid: this.workflowTemplate.uid,
                     parameters: result.workflowExecution.parameters,
                     labels: result.workflowExecution.labels,
+                    workflowTemplateVersion: result.workflowExecution.workflowTemplate.version,
                 };
 
                 this.executeWorkflowRequest(request);
