@@ -194,6 +194,10 @@ export class ManifestDagEditorComponent implements OnInit {
       this.aceEditor.getEditor().session.removeMarker(this.errorMarkerId);
       this.errorMarkerId = undefined;
     }
+
+    setTimeout(() => {
+      this.error = null;
+    });
   }
 
   private updateParameters(manifest: string) {
