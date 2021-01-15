@@ -86,7 +86,6 @@ import { CronWorkflowEditDialogComponent } from './cron-workflow/cron-workflow-e
 import { WorkflowParameterComponent } from './workflow/workflow-parameter/workflow-parameter.component';
 import { NamespaceManagerComponent } from './namespace/namespace-manager/namespace-manager.component';
 import { CreateNamespaceDialogComponent } from './namespace/create-namespace-dialog/create-namespace-dialog.component';
-import { WorkflowTemplateCloneComponent } from './workflow-template/workflow-template-clone/workflow-template-clone.component';
 import { ManifestDagEditorComponent } from './manifest-dag-editor/manifest-dag-editor.component';
 import { WorkflowTemplateStatusComponent } from './workflow-template/workflow-template-status/workflow-template-status.component';
 import { WorkspaceComponent } from './workspace/workspace.component';
@@ -192,7 +191,6 @@ import { DateFromUtcPipe } from './pipes/date-from-utc/date-from-utc.pipe';
         WorkflowParameterComponent,
         NamespaceManagerComponent,
         CreateNamespaceDialogComponent,
-        WorkflowTemplateCloneComponent,
         ManifestDagEditorComponent,
         WorkflowTemplateStatusComponent,
         WorkspaceComponent,
