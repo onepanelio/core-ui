@@ -9,7 +9,7 @@ export class AlertService {
   constructor() {
   }
 
-  public alertReceived = new EventEmitter;
+  public alertReceived = new EventEmitter();
 
   public storeAlert(alert: Alert) {
     const alerts = this.peekLocalAlerts();
