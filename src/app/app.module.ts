@@ -133,6 +133,7 @@ import { ErrorComponent } from './error/error.component';
 import { MetricsEditComponent } from './metrics/metrics-edit/metrics-edit.component';
 import { MetricsEditDialogComponent } from './metrics/metrics-edit-dialog/metrics-edit-dialog.component';
 import { DateFromUtcPipe } from './pipes/date-from-utc/date-from-utc.pipe';
+import { FileSyncComponent } from './file-sync/file-sync.component';
 
 @NgModule({
     declarations: [
@@ -236,6 +237,7 @@ import { DateFromUtcPipe } from './pipes/date-from-utc/date-from-utc.pipe';
         ErrorComponent,
         MetricsEditComponent,
         DateFromUtcPipe,
+        FileSyncComponent,
     ],
     entryComponents: [
         WorkflowExecuteDialogComponent,

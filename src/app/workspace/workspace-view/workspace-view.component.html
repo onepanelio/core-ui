@@ -37,11 +37,16 @@
                 </app-workspace-identifier>
 
                 <app-workspace-view-parameters
+                        class="border-right pl-6 pr-6"
                         [workspace]="workspace"
                         [state]="state"
-                        (updateWorkspace)="onUpdateWorkspace($event)"
-                        class="pl-6">
+                        (updateWorkspace)="onUpdateWorkspace($event)">
                 </app-workspace-view-parameters>
+
+                <app-file-sync
+                        class="pl-6">
+
+                </app-file-sync>
             </div>
         </div>
     </div>

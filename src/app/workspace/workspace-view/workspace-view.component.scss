@@ -44,4 +44,7 @@ app-workspace-identifier {
 }
 
 .workspace-info {
+  .border-right {
+    border-right: 1px solid $gray;
+  }
 }

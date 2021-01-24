@@ -1,0 +1,9 @@
+@import '../../styles/colors';
+
+.file-sync {
+  .primary-border {
+    &.mat-stroked-button:not([disabled]) {
+      border-color: $primary;
+    }
+  }
+}
