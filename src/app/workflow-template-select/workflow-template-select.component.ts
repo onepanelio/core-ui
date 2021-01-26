@@ -40,7 +40,10 @@ export class WorkflowTemplateSelectComponent implements OnInit {
   private static workflowTemplateSamples: WorkflowTemplateSelected[] = [
     {
       name: 'CVAT training',
-      manifest: `# Only change the fields marked with [CHANGE]
+      manifest: `# Workflow Template for building object detection or semantic segmentation 
+# model training Workflow that can be executed from CVAT
+#
+# Only change the fields marked with [CHANGE]
 arguments:
   parameters:
     # This is the path to data and annotation files, keep this intact so CVAT knows to populate this
@@ -190,8 +193,123 @@ volumeClaimTemplates:
       ]
     },
     {
-      name: 'Data augmentation + training',
-      manifest: ``,
+      name: 'Data augmentation',
+      manifest: `# Workflow Template for data augmentation using Albumentations
+# This can be used standalone or added to the CVAT training template
+arguments:
+  parameters:
+    # This is the path to data and annotation files, keep this intact so CVAT knows to populate this
+    - name: cvat-annotation-path
+      # Default value, this will be automatically populated by CVAT
+      value: 'artifacts/{{workflow.namespace}}/annotations/'
+      # Friendly name to be displayed to user
+      displayName: Dataset path
+      # Hint to be displayed to user
+      hint: Path to annotated data in default object storage. In CVAT, this parameter will be pre-populated.
+      # For information on 'visibility', see https://docs.onepanel.ai/docs/reference/workflows/templates/#parameters
+      visibility: internal
+      
+    - name: val-split
+      value: 20
+      displayName: Validation split size
+      type: input.number
+      visibility: public
+      hint: Enter validation set size in percentage of full dataset. (0 - 100)
+      
+    - name: num-augmentation-cycles
+      value: 1
+      displayName: Number of augmentation cycles
+      type: input.number
+      visibility: public
+      hint: Number of augmentation cycles, zero means no data augmentation
+
+    - name: preprocessing-parameters
+      value: |-
+        RandomBrightnessContrast:
+            p: 0.2
+        GaussianBlur:
+            p: 0.3
+        GaussNoise:
+            p: 0.4
+        HorizontalFlip:
+            p: 0.5
+        VerticalFlip:
+            p: 0.3
+      displayName: Preprocessing parameters
+      visibility: public
+      type: textarea.textarea
+      hint: 'See <a href="https://albumentations.ai/docs/api_reference/augmentations/transforms/" target="_blank">documentation</a> for more information on parameters.'
+
+    - displayName: Node pool
+      hint: Name of node pool or group to run this workflow task
+      name: preprocessing-node-pool
+      value: default
+      visibility: internal
+      required: true
+
+entrypoint: main
+templates:
+  - dag:
+      tasks:
+        - name: preprocessing-phase
+          template: preprocessing
+    name: main
+  - container:
+      args:
+        - |
+          pip install pycocotools && \\
+          cd /mnt/src/preprocessing/workflows/albumentations-preprocessing && \\
+          python main.py \\
+            --data_aug_params="{{workflow.parameters.preprocessing-parameters}}" \\
+            --val_split={{workflow.parameters.val-split}} \\
+            --aug_steps={{workflow.parameters.num-augmentation-cycles}}
+      command:
+        - sh
+        - -c
+      image: '{{workflow.parameters.preprocessing-image}}'
+      volumeMounts:
+        - mountPath: /mnt/data
+          name: data
+        - mountPath: /mnt/output
+          name: output
+      workingDir: /mnt/src
+    nodeSelector:
+      node.kubernetes.io/instance-type: '{{workflow.parameters.preprocessing-node-pool}}'
+    inputs:
+      artifacts:
+        - name: data
+          path: /mnt/data/datasets/
+          s3:
+            key: '{{workflow.namespace}}/{{workflow.parameters.cvat-annotation-path}}'
+        - git:
+            repo: https://github.com/onepanelio/templates.git
+          name: src
+          path: /mnt/src/preprocessing
+    name: preprocessing
+    outputs:
+      artifacts:
+        - name: processed-data
+          optional: true
+          path: /mnt/output
+          s3:
+            key: '{{workflow.namespace}}/{{workflow.parameters.cvat-output-path}}/{{workflow.name}}'
+volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 200Gi
+  - metadata:
+      name: output
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 200Gi`,
       labels: [
         {key: 'used-by', value: 'cvat'}
       ]
