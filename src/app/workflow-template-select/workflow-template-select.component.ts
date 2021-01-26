@@ -313,6 +313,146 @@ volumeClaimTemplates:
       labels: [
         {key: 'used-by', value: 'cvat'}
       ]
+    },
+    {
+      name: 'Hyperparameter tuning',
+      manifest: `# Workflow Template example for hyperparameter tuning
+# Documentation: https://docs.onepanel.ai/docs/reference/workflows/hyperparameter-tuning
+#
+# Only change the fields marked with [CHANGE]
+entrypoint: main
+arguments:
+  parameters:
+    # [CHANGE] Path to your training/model architecture code repository
+    # Change this value and revision value to your code repository and branch respectively
+    - name: source
+      value: https://github.com/onepanelio/templates
+    # Revision is the branch or tag that you want to use
+    - name: revision
+      value: master
+    - name: config
+      displayName: Configuration
+      required: true
+      hint: NNI configuration
+      type: textarea.textarea
+      value: |-
+        authorName: Onepanel, Inc.
+        experimentName: MNIST TF v2.x
+        trialConcurrency: 1
+        maxExecDuration: 1h
+        maxTrialNum: 10
+        trainingServicePlatform: local
+        searchSpacePath: search_space.json
+        useAnnotation: false
+        tuner:
+          # gpuIndices: '0'           # uncomment and update to the GPU indices to assign this tuner
+          builtinTunerName: TPE       # choices: TPE, Random, Anneal, Evolution, BatchTuner, MetisTuner, GPTuner
+          classArgs:
+            optimize_mode: maximize   # choices: maximize, minimize
+        trial:
+          command: python main.py --output /mnt/output
+          codeDir: .
+          # gpuNum: 1                 # uncomment and update to number of GPUs
+    - name: search-space
+      displayName: Search space configuration
+      required: true
+      type: textarea.textarea
+      value: |-
+        {
+          "dropout_rate": { "_type": "uniform", "_value": [0.5, 0.9] },
+          "conv_size": { "_type": "choice", "_value": [2, 3, 5, 7] },
+          "hidden_size": { "_type": "choice", "_value": [124, 512, 1024] },
+          "batch_size": { "_type": "choice", "_value": [16, 32] },
+          "learning_rate": { "_type": "choice", "_value": [0.0001, 0.001, 0.01, 0.1] },
+          "epochs": { "_type": "choice", "_value": [10] }
+        }
+    - displayName: Node pool
+      hint: Name of node pool or group to run this workflow task
+      type: select.nodepool
+      name: sys-node-pool
+      value: default
+      required: true
+
+volumeClaimTemplates:
+  - metadata:
+      name: hyperparamtuning-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 20Gi
+  - metadata:
+      name: hyperparamtuning-output
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 20Gi
+
+templates:
+  - name: main
+    dag:
+      tasks:
+        - name: hyperparameter-tuning
+          template: hyperparameter-tuning
+  - name: hyperparameter-tuning
+    inputs:
+      artifacts:
+        - name: src
+          git:
+            repo: '{{workflow.parameters.source}}'
+            revision: '{{workflow.parameters.revision}}'
+          path: /mnt/data/src
+        - name: config
+          path: /mnt/data/src/workflows/hyperparameter-tuning/mnist/config.yaml
+          raw:
+            data: '{{workflow.parameters.config}}'
+        - name: search-space
+          path: /mnt/data/src/workflows/hyperparameter-tuning/mnist/search_space.json
+          raw:
+            data: '{{workflow.parameters.search-space}}'
+    outputs:
+      artifacts:
+        - name: output
+          path: /mnt/output
+          optional: true
+    container:
+      image: onepanel/dl:0.17.0
+      args:
+        - --config
+        - /mnt/data/src/workflows/hyperparameter-tuning/mnist/config.yaml
+      workingDir: /mnt
+      volumeMounts:
+        - name: hyperparamtuning-data
+          mountPath: /mnt/data
+        - name: hyperparamtuning-output
+          mountPath: /mnt/output
+    nodeSelector:
+      beta.kubernetes.io/instance-type: '{{workflow.parameters.sys-node-pool}}'
+    sidecars:
+      - name: nni-web-ui
+        image: onepanel/nni-web-ui:0.17.0
+        env:
+          - name: ONEPANEL_INTERACTIVE_SIDECAR
+            value: 'true'
+        ports:
+          - containerPort: 9000
+            name: nni
+      - name: tensorboard
+        image: onepanel/dl:0.17.0
+        command:
+          - sh
+          - '-c'
+        env:
+          - name: ONEPANEL_INTERACTIVE_SIDECAR
+            value: 'true'
+        args:
+          # Read logs from /mnt/output/tensorboard - /mnt/output is auto-mounted from volumeMounts
+          - tensorboard --logdir /mnt/output/tensorboard
+        ports:
+          - containerPort: 6006
+            name: tensorboard`,
+      labels: []
     }
   ];
   @Output() templateSelected = new EventEmitter<WorkflowTemplateSelected>();
