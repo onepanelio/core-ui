@@ -171,6 +171,9 @@ templates:
       - name: model
         optional: true
         path: /mnt/output
+# [CHANGE] Volumes that will mount to /mnt/data (annotated data) and /mnt/output (models, checkpoints, logs)
+# Update this depending on your annotation data, model, checkpoint, logs, etc. sizes
+# Example values: 250Mi, 500Gi, 1Ti
 volumeClaimTemplates:
   - metadata:
       name: data
@@ -196,6 +199,8 @@ volumeClaimTemplates:
       name: 'Data augmentation',
       manifest: `# Workflow Template for data augmentation using Albumentations
 # This can be used standalone or added to the CVAT training template
+#
+# Only change the fields marked with [CHANGE]
 arguments:
   parameters:
     # This is the path to data and annotation files, keep this intact so CVAT knows to populate this
@@ -291,6 +296,10 @@ templates:
         - name: processed-data
           optional: true
           path: /mnt/output
+
+# [CHANGE] Volumes that will mount to /mnt/data (annotated data) and /mnt/output (models, checkpoints, logs)
+# Update this depending on your annotation data, model, checkpoint, logs, etc. sizes
+# Example values: 250Mi, 500Gi, 1Ti
 volumeClaimTemplates:
   - metadata:
       name: data
@@ -371,22 +380,6 @@ arguments:
       value: default
       required: true
 
-volumeClaimTemplates:
-  - metadata:
-      name: hyperparamtuning-data
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 20Gi
-  - metadata:
-      name: hyperparamtuning-output
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 20Gi
-
 templates:
   - name: main
     dag:
@@ -449,7 +442,26 @@ templates:
           - tensorboard --logdir /mnt/output/tensorboard
         ports:
           - containerPort: 6006
-            name: tensorboard`,
+            name: tensorboard
+
+# [CHANGE] Volumes that will mount to /mnt/data (annotated data) and /mnt/output (models, checkpoints, logs)
+# Update this depending on your annotation data, model, checkpoint, logs, etc. sizes
+# Example values: 250Mi, 500Gi, 1Ti
+volumeClaimTemplates:
+  - metadata:
+      name: hyperparamtuning-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 20Gi
+  - metadata:
+      name: hyperparamtuning-output
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 20Gi`,
       labels: []
     }
   ];
