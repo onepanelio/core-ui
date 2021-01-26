@@ -280,7 +280,7 @@ templates:
         - name: data
           path: /mnt/data/datasets/
           s3:
-            key: '{{workflow.namespace}}/{{workflow.parameters.cvat-annotation-path}}'
+            key: '{{workflow.parameters.cvat-annotation-path}}'
         - git:
             repo: https://github.com/onepanelio/templates.git
           name: src
@@ -291,8 +291,6 @@ templates:
         - name: processed-data
           optional: true
           path: /mnt/output
-          s3:
-            key: '{{workflow.namespace}}/{{workflow.parameters.cvat-output-path}}/{{workflow.name}}'
 volumeClaimTemplates:
   - metadata:
       name: data
