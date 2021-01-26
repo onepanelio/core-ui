@@ -46,6 +46,7 @@ export class WorkflowTemplateSelectComponent implements OnInit {
 # Only change the fields marked with [CHANGE]
 arguments:
   parameters:
+
     # This is the path to data and annotation files, keep this intact so CVAT knows to populate this
     - name: cvat-annotation-path
       # Default value, this will be automatically populated by CVAT
@@ -171,6 +172,7 @@ templates:
       - name: model
         optional: true
         path: /mnt/output
+
 # [CHANGE] Volumes that will mount to /mnt/data (annotated data) and /mnt/output (models, checkpoints, logs)
 # Update this depending on your annotation data, model, checkpoint, logs, etc. sizes
 # Example values: 250Mi, 500Gi, 1Ti
@@ -203,6 +205,7 @@ volumeClaimTemplates:
 # Only change the fields marked with [CHANGE]
 arguments:
   parameters:
+
     # This is the path to data and annotation files, keep this intact so CVAT knows to populate this
     - name: cvat-annotation-path
       # Default value, this will be automatically populated by CVAT
@@ -245,6 +248,8 @@ arguments:
       type: textarea.textarea
       hint: 'See <a href="https://albumentations.ai/docs/api_reference/augmentations/transforms/" target="_blank">documentation</a> for more information on parameters.'
 
+    # Node pool dropdown (Node group in EKS)
+    # You can add more of these if you have additional tasks that can run on different node pools
     - displayName: Node pool
       hint: Name of node pool or group to run this workflow task
       name: preprocessing-node-pool
@@ -330,13 +335,19 @@ volumeClaimTemplates:
 entrypoint: main
 arguments:
   parameters:
+
     # [CHANGE] Path to your training/model architecture code repository
     # Change this value and revision value to your code repository and branch respectively
     - name: source
       value: https://github.com/onepanelio/templates
-    # Revision is the branch or tag that you want to use
+
+    # [CHANGE] Revision is the branch or tag that you want to use
+    # Change this to something other than master if you have different main branch or tag
     - name: revision
       value: master
+
+    # [CHANGE] Default configuration for the NNI tuner
+    # See https://docs.onepanel.ai/docs/reference/workflows/hyperparameter-tuning#understanding-the-configurations
     - name: config
       displayName: Configuration
       required: true
@@ -360,6 +371,9 @@ arguments:
           command: python main.py --output /mnt/output
           codeDir: .
           # gpuNum: 1                 # uncomment and update to number of GPUs
+
+    # [CHANGE] Search space configuration
+    # Change according to your hyperparameters and ranges
     - name: search-space
       displayName: Search space configuration
       required: true
@@ -373,6 +387,9 @@ arguments:
           "learning_rate": { "_type": "choice", "_value": [0.0001, 0.001, 0.01, 0.1] },
           "epochs": { "_type": "choice", "_value": [10] }
         }
+
+    # Node pool dropdown (Node group in EKS)
+    # You can add more of these if you have additional tasks that can run on different node pools
     - displayName: Node pool
       hint: Name of node pool or group to run this workflow task
       type: select.nodepool
@@ -394,10 +411,16 @@ templates:
             repo: '{{workflow.parameters.source}}'
             revision: '{{workflow.parameters.revision}}'
           path: /mnt/data/src
+        # [CHANGE] Path where config.yaml will be generated or already exists
+        # Update the path below so that config.yaml is written to the same directory as your main.py file
+        # Note that your source code is cloned to /mnt/data/src
         - name: config
           path: /mnt/data/src/workflows/hyperparameter-tuning/mnist/config.yaml
           raw:
             data: '{{workflow.parameters.config}}'
+        # [CHANGE] Path where search_space.json will be generated or already exists
+        # Update the path below so that search_space.json is written to the same directory as your main.py file
+        # Note that your source code is cloned to /mnt/data/src
         - name: search-space
           path: /mnt/data/src/workflows/hyperparameter-tuning/mnist/search_space.json
           raw:
@@ -409,6 +432,7 @@ templates:
           optional: true
     container:
       image: onepanel/dl:0.17.0
+      # [CHANGE] Update the path below to point to config.yaml path as described above
       args:
         - --config
         - /mnt/data/src/workflows/hyperparameter-tuning/mnist/config.yaml
