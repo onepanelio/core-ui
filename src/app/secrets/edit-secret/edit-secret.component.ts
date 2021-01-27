@@ -1,88 +1,104 @@
 import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { ActivatedRoute, Router } from "@angular/router";
-import { Alert } from "../../alert/alert";
-import { AlertService } from "../../alert/alert.service";
-import { SecretServiceService } from "../../../api";
+import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Alert } from '../../alert/alert';
+import { AlertService } from '../../alert/alert.service';
+import { SecretServiceService } from '../../../api';
+import { HttpErrorResponse } from '@angular/common/http';
+import { AppRouter } from '../../router/app-router.service';
 
 @Component({
-  selector: 'app-edit-secret',
-  templateUrl: './edit-secret.component.html',
-  styleUrls: ['./edit-secret.component.scss']
+    selector: 'app-edit-secret',
+    templateUrl: './edit-secret.component.html',
+    styleUrls: ['./edit-secret.component.scss']
 })
 export class EditSecretComponent implements OnInit {
-  namespace: string = '';
-  secretName: string = '';
-  secretKey: string = '';
+    namespace = '';
+    secretName = '';
+    secretKey = '';
 
-  form: FormGroup;
-  keyName: AbstractControl;
-  value: AbstractControl;
+    form: FormGroup;
+    keyName: AbstractControl;
+    value: AbstractControl;
 
-  constructor(
-      private activatedRoute: ActivatedRoute,
-      private formBuilder: FormBuilder,
-      private router: Router,
-      private secretService: SecretServiceService,
-      private alertService: AlertService,
-  ) { }
+    constructor(
+        private activatedRoute: ActivatedRoute,
+        private formBuilder: FormBuilder,
+        private appRouter: AppRouter,
+        private secretService: SecretServiceService,
+        private alertService: AlertService,
+    ) {
+    }
 
-  ngOnInit() {
-    this.activatedRoute.paramMap.subscribe(next => {
-      this.namespace = next.get('namespace');
-      this.secretName = next.get('secret-name');
-      this.secretKey = next.get('secret-key');
+    ngOnInit() {
+        this.activatedRoute.paramMap.subscribe(next => {
+            this.namespace = next.get('namespace');
+            this.secretName = next.get('secret-name');
+            this.secretKey = next.get('secret-key');
 
-      this.form = this.formBuilder.group({
-        keyName: ['', Validators.compose([
-          Validators.required,
-          Validators.pattern(/^[A-Za-z_-][A-Za-z0-9_-]*$/),
-        ])],
-        value: ['', Validators.required],
-      });
+            this.form = this.formBuilder.group({
+                keyName: ['', Validators.compose([
+                    Validators.required,
+                    Validators.pattern(/^[A-Za-z_-][A-Za-z0-9_-]*$/),
+                ])],
+                value: ['', Validators.required],
+            });
 
-      this.keyName = this.form.get('keyName');
-      this.keyName.disable();
+            this.keyName = this.form.get('keyName');
+            this.keyName.disable();
 
-      this.keyName.setValue(this.secretKey);
+            this.keyName.setValue(this.secretKey);
 
-      this.value = this.form.get('value');
+            this.value = this.form.get('value');
 
-      this.getSecret();
-    });
-  }
+            this.getSecret();
+        });
+    }
 
-  getSecret() {
-    this.secretService.getSecret(this.namespace, this.secretName)
-        .subscribe(apiSecret =>{
-          if(apiSecret.data[this.secretKey]) {
-            const secretValue = atob(apiSecret.data[this.secretKey]);
-            this.value.setValue(secretValue);
-          }
-        })
-  }
+    getSecret() {
+        this.secretService.getSecret(this.namespace, this.secretName)
+            .subscribe(apiSecret => {
+                if (apiSecret.data[this.secretKey]) {
+                    const secretValue = atob(apiSecret.data[this.secretKey]);
+                    this.value.setValue(secretValue);
+                }
+            }, (err: HttpErrorResponse) => {
+                const alert = new Alert({
+                    type: 'danger',
+                    message: 'Unable to get secret'
+                });
 
-  cancel() {
-    this.router.navigate(['/', this.namespace, 'secrets']);
-  }
+                if (err.status === 403) {
+                    alert.message = 'Unauthorized';
+                }
 
-  save() {
-    const data = {
-      name: this.secretName,
-      data: {}
-    };
-    data.data[this.secretKey] = this.value.value;
+                this.alertService.storeAlert(alert);
+            });
+    }
 
+    cancel() {
+        this.appRouter.navigateToEnvironmentVariables(this.namespace);
+    }
 
-    this.secretService.updateSecretKeyValue(this.namespace, this.secretName, data)
-        .subscribe(res => {
-          this.router.navigate(['/', this.namespace, 'secrets']);
-          this.alertService.storeAlert(new Alert({
-            message: `Secret '${this.secretKey}' updated`,
-            type: 'success',
-          }))
-        }, err => {
-          console.error(err);
-        })
-  }
+    save() {
+        const data = {
+            name: this.secretName,
+            data: {}
+        };
+        data.data[this.secretKey] = this.value.value;
+
+        this.secretService.updateSecretKeyValue(this.namespace, this.secretName, data)
+            .subscribe(res => {
+                this.appRouter.navigateToEnvironmentVariables(this.namespace);
+                this.alertService.storeAlert(new Alert({
+                    message: `Secret '${this.secretKey}' updated`,
+                    type: 'success',
+                }));
+            }, err => {
+                this.alertService.storeAlert(new Alert({
+                    message: `Unable to update secret`,
+                    type: 'danger',
+                }));
+            });
+    }
 }

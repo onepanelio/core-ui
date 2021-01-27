@@ -215,4 +215,12 @@ export class AppRouter {
     public navigateToError(namespace: string, code: string) {
         return this.router.navigate(['/', namespace, 'error', code]);
     }
+
+    public navigateToEnvironmentVariables(namespace: string) {
+        return this.router.navigate(['/', namespace, 'secrets']);
+    }
+
+    public navigateToCreateEnvironmentVariable(namespace: string) {
+        return this.router.navigate(['/', namespace, 'secrets', 'onepanel-default-env', 'create']);
+    }
 }

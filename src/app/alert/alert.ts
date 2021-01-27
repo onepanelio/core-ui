@@ -7,22 +7,6 @@ export interface AlertInterface {
 }
 
 export class Alert {
-    static fromJSON(json: any): Alert {
-        let type = json.type || json._type;
-        let title = json.title || json._title;
-        let message = json.message || json._message;
-
-        return new Alert({
-            type: type,
-            title: title,
-            message: message
-        });
-    }
-
-    title?: string;
-    message?: string;
-    type?: AlertType;
-
     constructor(data: AlertInterface) {
         if (data && !data.type) {
             data.type = 'success';
@@ -31,5 +15,20 @@ export class Alert {
         this.title = data.title;
         this.message = data.message;
         this.type = data.type;
+    }
+
+    title?: string;
+    message?: string;
+    type?: AlertType;
+    static fromJSON(json: any): Alert {
+        const type = json.type || json._type;
+        const title = json.title || json._title;
+        const message = json.message || json._message;
+
+        return new Alert({
+            type,
+            title,
+            message
+        });
     }
 }

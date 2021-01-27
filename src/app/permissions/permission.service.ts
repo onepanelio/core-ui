@@ -94,4 +94,22 @@ export class PermissionService {
 
         return this.getPermissionsRequest(requests, verbs);
     }
+
+    getSecretPermissions(namespace: string, resourceName: string, ...verbs: PermissionVerb[]) {
+        const requests = [];
+
+        for (const verb of verbs) {
+            requests.push(
+                this.authServiceService.isAuthorized({
+                    namespace,
+                    verb,
+                    resource: 'secrets',
+                    resourceName,
+                    group: '',
+                })
+            );
+        }
+
+        return this.getPermissionsRequest(requests, verbs);
+    }
 }
