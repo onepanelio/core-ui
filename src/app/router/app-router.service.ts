@@ -162,8 +162,14 @@ export class AppRouter {
         return this.router.navigate(['/', namespace, 'workflow-templates', workflowTemplateUid, 'edit']);
     }
 
-    public navigateToWorkflowTemplateClone(namespace: string, workflowTemplateUid: string) {
-        return this.router.navigate(['/', namespace, 'workflow-templates', workflowTemplateUid, 'clone']);
+    public navigateToWorkflowTemplateClone(namespace: string, workflowTemplateUid: string, version: string = '0') {
+        return this.router.navigate(['/', namespace, 'workflow-templates', 'create'], {
+            queryParams: {
+                cloneNamespace: namespace,
+                cloneUid: workflowTemplateUid,
+                cloneVersion: version
+            }
+        });
     }
 
     public navigateToWorkflowExecution(namespace: string, name: string) {
