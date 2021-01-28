@@ -39,384 +39,461 @@ export class WorkflowTemplateSelectComponent implements OnInit {
 
   private static workflowTemplateSamples: WorkflowTemplateSelected[] = [
     {
-      name: 'Model training',
-      manifest: `arguments:
+      name: 'CVAT training',
+      manifest: `# Workflow Template for building object detection or semantic segmentation 
+# model training Workflow that can be executed from CVAT
+#
+# Only change the fields marked with [CHANGE]
+arguments:
   parameters:
-  
-  # following are a list of parameters that might change based on user response.
-  # some of these parameters are prefixed with cvat- to denote that they are special parameters and will be automatically populated by CVAT.
-  # you can change the names, but changing names of special parameters might break the workflow.
 
-  # Github url for source code
-  # This will be mounted to the container
-  # Setting visibility to private ensures that it does not appear in CVAT as the source code is fixed
-  # You can, in fact, remove this from parameters and fix it in the artifacts below. This is just for demo.
-  - name: source
-    value: https://github.com/onepanelio/Mask_RCNN.git
-    displayName: Model source code
-    type: hidden
-    visibility: private
+    # This is the path to data and annotation files, keep this intact so CVAT knows to populate this
+    - name: cvat-annotation-path
+      # Default value, this will be automatically populated by CVAT
+      value: 'artifacts/{{workflow.namespace}}/annotations/'
+      # Friendly name to be displayed to user
+      displayName: Dataset path
+      # Hint to be displayed to user
+      hint: Path to annotated data in default object storage. In CVAT, this parameter will be pre-populated.
+      # For information on 'visibility', see https://docs.onepanel.ai/docs/reference/workflows/templates/#parameters
+      visibility: internal
 
-  # Input path for this workflow
-  # The value will be automatically populated by CVAT, if you will run this from CVAT.
-  - name: cvat-annotation-path
-    value: annotation-dump/sample_dataset
-    hint: Path to annotated data in default object storage (i.e S3). In CVAT, this parameter will be pre-populated.
-    displayName: Dataset path
-    visibility: internal
+    # This is the path to a checkpoint, you can set this in CVAT to a previously trained model
+    - name: cvat-finetune-checkpoint
+      value: ''
+      hint: Path to the last fine-tune checkpoint for this model in default object storage. Leave empty if this is the first time you're training this model.
+      displayName: Checkpoint path
+      visibility: public
 
-  # Output path for this workflow
-  # The value will be automatically populated by CVAT, if you will run this from CVAT.
-  - name: cvat-output-path
-    value: workflow-data/output/sample_output
-    hint: Path to store output artifacts in default object storage (i.e s3). In CVAT, this parameter will be pre-populated.
-    displayName: Workflow output path
-    visibility: internal
+    # Number of classes
+    - name: cvat-num-classes
+      displayName: Number of classes
+      hint: Number of classes. In CVAT, this parameter will be pre-populated.
+      value: '10'
+      visibility: internal
 
-  # Path to checkpoint
-  # Since Onepanel has a filesyncer, all possible values will be displayed in the CVAT
-  - name: cvat-finetune-checkpoint
-    value: ''
-    hint: Select the last fine-tune checkpoint for this model. It may take up to 5 minutes for a recent checkpoint show here. Leave empty if this is the first time you're training this model.
-    displayName: Checkpoint path
-    visibility: public
+    # [CHANGE] Hyperparameters for your model
+    # Note that this will come in as multiline text that you will need to parse in your code
+    - name: hyperparameters
+      displayName: Hyperparameters
+      visibility: public
+      type: textarea.textarea
+      value: |-
+        stage-1-epochs: 1    #  Epochs for network heads
+        stage-2-epochs: 2    #  Epochs for finetune layers
+        stage-3-epochs: 3    #  Epochs for all layers
+        num_steps: 1000     #   Num steps per epoch
+      hint: List of available hyperparameters
 
-  # Number of classes
-  # If you run this from CVAT, it will automatically populate this field based on number of labels in the given CVAT task.
-  # Note: MaskRCNN requires an extra class for background, so CVAT adds that one whenever workflow's name == "maskrcnn-training".
-  # You workflow name will be different, so this won't work out of the box.
-  # Most probably you will have your own source code, so this won't be a problem.
-  - name: cvat-num-classes
-    displayName: Number of classes
-    hint: Number of classes (i.e in CVAT taks) + 1 for background
-    value: '81'
-    visibility: internal
+    # [CHANGE] Dump format that your model expects from CVAT
+    # Valid values are: cvat_coco, cvat_voc, cvat_tfrecord, cvat_yolo, cvat_mot, cvat_label_me
+    - name: dump-format
+      value: cvat_coco
+      displayName: CVAT dump format
+      visibility: private
 
-  # A set of hyperparameters used by the source code
-  - name: hyperparameters
-    displayName: Hyperparameters
-    visibility: public
-    type: textarea.textarea
-    value: |-
-      stage-1-epochs=1    #  Epochs for network heads
-      stage-2-epochs=2    #  Epochs for finetune layers
-      stage-3-epochs=3    #  Epochs for all layers
-    hint: "Please refer to our <a href='https://docs.onepanel.ai/docs/getting-started/use-cases/computervision/annotation/cvat/cvat_annotation_model#arguments-optional' target='_blank'>documentation</a> for more information on parameters. Number of classes will be automatically populated if you had 'sys-num-classes' parameter in a workflow."
-
-  # This helps CVAT determine in which format it should dump the data.
-  # Common ones are: cvat_coco, cvat_tfrecord, cvat_yolo
-  - name: dump-format
-    value: cvat_coco
-    displayName: CVAT dump format
-    visibility: public
-
-  # Docker image to use for this workflow
-  # You can use any public image here (i.e PyTorch)
-  # The jupyterlab image from Onepanel has latest TensorFlow, PyTorch and many dependencies pre-installed
-  - name: docker-image
-    visibility: public
-    value: tensorflow/tensorflow:1.13.1-py3
-    type: select.select
-    displayName: Select TensorFlow image
-    hint: Select the GPU image if you are running on a GPU node pool
-    options:
-    - name: 'TensorFlow 1.13.1 CPU Image'
-      value: 'tensorflow/tensorflow:1.13.1-py3'
-    - name: 'TensorFlow 1.13.1 GPU Image'
-      value: 'tensorflow/tensorflow:1.13.1-gpu-py3'
-    - name: 'Onepanel JupyterLab'
-      value: 'onepanel/jupyterlab:1.0.1'
-
-  # Select a node for the workflow execution
-  # In CVAT as well as Onepanel, it will be automatically populated based on your cluster settings.
-  - displayName: Node pool
-    hint: Name of node pool or group to run this workflow task
-    type: select.select
-    visibility: public
-    name: sys-node-pool
-    value: Standard_D4s_v3
-    required: true
-    options:
-    - name: 'CPU: 2, RAM: 8GB'
-      value: Standard_D2s_v3
-    - name: 'CPU: 4, RAM: 16GB'
-      value: Standard_D4s_v3
-    - name: 'GPU: 1xK80, CPU: 6, RAM: 56GB'
-      value: Standard_NC6
+    # Node pool dropdown (Node group in EKS)
+    # You can add more of these if you have additional tasks that can run on different node pools
+    - displayName: Node pool
+      hint: Name of node pool or group to run this workflow task
+      type: select.nodepool
+      visibility: public
+      name: sys-node-pool
+      value: default
+      required: true
 
 entrypoint: main
 templates:
 - dag:
     tasks:
-    - name: train-model
-      template: tensorflow
+      - name: train-model
+        template: train-model
   name: main
 - container:
-
-    # A set of arguments you want to execute in the container to start training/inference.
+    # [CHANGE] Bash command to run your code
+    # Note that your code will be cloned into /mnt/src/train, so you will need to change to the appropriate directory
     args:
-    - |
-      apt-get update \\
-      && apt-get install -y git wget libglib2.0-0 libsm6 libxext6 libxrender-dev \\
-      && pip install -r requirements.txt \\
-      && pip install boto3 pyyaml google-cloud-storage \\
-      && git clone https://github.com/waleedka/coco \\
-      && cd coco/PythonAPI \\
-      && python setup.py build_ext install \\
-      && rm -rf build \\
-      && cd ../../ \\
-      && wget https://github.com/matterport/Mask_RCNN/releases/download/v2.0/mask_rcnn_coco.h5 \\
-      && python setup.py install && ls \\
-      && python samples/coco/cvat.py train --dataset=/mnt/data/datasets \\
-        --model=workflow_maskrcnn \\
-        --extras="{{workflow.parameters.hyperparameters}}"  \\
-        --ref_model_path="{{workflow.parameters.cvat-finetune-checkpoint}}"  \\
-        --num_classes="{{workflow.parameters.cvat-num-classes}}" \\
-      && cd /mnt/src/ \\
-      && python prepare_dataset.py /mnt/data/datasets/annotations/instances_default.json
+      - |
+        cd /mnt/src/train/workflows/maskrcnn-training && \\
+          python -u main.py train --dataset=/mnt/data/datasets \\
+          --model=workflow_maskrcnn \\
+          --extras="{{workflow.parameters.hyperparameters}}" \\
+          --ref_model_path="{{workflow.parameters.cvat-finetune-checkpoint}}" \\
+          --num_classes="{{workflow.parameters.cvat-num-classes}}" \\
+          --logs=/mnt/output
     command:
-    - sh
-    - -c
-    image: '{{workflow.parameters.docker-image}}'
+      - sh
+      - -c
+    # [CHANGE] Docker image to use to run your code
+    # You can keep this as is if your code uses TensorFlow 2.3 or PyTorch 1.5
+    # For private Docker repositories use imagePullSecrets: https://github.com/argoproj/argo/blob/master/examples/image-pull-secrets.yaml#L10-L11
+    image: 'onepanel/dl:0.17.0'
     volumeMounts:
-    - mountPath: /mnt/data
-      name: data
-    - mountPath: /mnt/output
-      name: output
+      - mountPath: /mnt/data
+        name: data
+      - mountPath: /mnt/output
+        name: output
     workingDir: /mnt/src
+  sidecars:
+    - name: tensorboard
+      image: 'onepanel/dl:0.17.0'
+      command: [ sh, -c ]
+      env:
+        - name: ONEPANEL_INTERACTIVE_SIDECAR
+          value: 'true'
+      # [CHANGE] Path to your TensorBoard logs
+      # Note that we recommend not changing this and updating your code to write the logs to /mnt/output/tensorboard
+      args: [ "tensorboard --logdir /mnt/output/" ]
+      ports:
+        - containerPort: 6006
+          name: tensorboard
   nodeSelector:
-    beta.kubernetes.io/instance-type: '{{workflow.parameters.sys-node-pool}}'
+    node.kubernetes.io/instance-type: '{{workflow.parameters.sys-node-pool}}'
   inputs:
     artifacts:
-    - name: data
-      path: /mnt/data/datasets/
-      s3:
-        key: '{{workflow.namespace}}/{{workflow.parameters.cvat-annotation-path}}'
-    - git:
-        repo: '{{workflow.parameters.source}}'
-        revision: "no-boto"
-      name: src
-      path: /mnt/src
-  name: tensorflow
+      - name: data
+        path: /mnt/data/datasets/
+        s3:
+          key: '{{workflow.parameters.cvat-annotation-path}}'
+      - name: models
+        path: /mnt/data/models/
+        optional: true
+        s3:
+          key: '{{workflow.parameters.cvat-finetune-checkpoint}}'
+      - git:
+          # [CHANGE] Point this to your code repository
+          # For private repositories see: https://docs.onepanel.ai/docs/reference/workflows/artifacts#git
+          repo: https://github.com/onepanelio/templates.git
+        name: src
+        path: /mnt/src/train
+  name: train-model
   outputs:
     artifacts:
-    - name: model
-      optional: true
-      path: /mnt/output
-      s3:
-        key: '{{workflow.namespace}}/{{workflow.parameters.cvat-output-path}}/{{workflow.name}}'
+      - name: model
+        optional: true
+        path: /mnt/output
 
+# [CHANGE] Volumes that will mount to /mnt/data (annotated data) and /mnt/output (models, checkpoints, logs)
+# Update this depending on your annotation data, model, checkpoint, logs, etc. sizes
+# Example values: 250Mi, 500Gi, 1Ti
 volumeClaimTemplates:
-- metadata:
-    creationTimestamp: null
-    name: data
-  spec:
-    accessModes:
-    - ReadWriteOnce
-    resources:
-      requests:
-        storage: 200Gi
-- metadata:
-    creationTimestamp: null
-    name: output
-  spec:
-    accessModes:
-    - ReadWriteOnce
-    resources:
-      requests:
-        storage: 200Gi`,
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 200Gi
+  - metadata:
+      name: output
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 200Gi`,
       labels: [
         {key: 'used-by', value: 'cvat'}
       ]
     },
     {
-      name: 'Ensemble inference',
-      manifest: `arguments:
+      name: 'Data augmentation',
+      manifest: `# Workflow Template for data augmentation using Albumentations
+# This can be used standalone or added to the CVAT training template
+#
+# Only change the fields marked with [CHANGE]
+arguments:
   parameters:
-  
-  # Following are a list of parameters that might change based on user response.
-  # some of these parameters are prefixed with cvat- to denote that they are special parameters and will be automatically populated by CVAT.
-  # you can change the names, but changing names of special parameters might break the workflow.
 
-  # Path to input data for this workflow
-  - name: cvat-annotation-path
-    value: annotation-dump/test-workflow-4/test/
-    displayName: Path to dataset
-    visibility: internal
+    # This is the path to data and annotation files, keep this intact so CVAT knows to populate this
+    - name: cvat-annotation-path
+      # Default value, this will be automatically populated by CVAT
+      value: 'artifacts/{{workflow.namespace}}/annotations/'
+      # Friendly name to be displayed to user
+      displayName: Dataset path
+      # Hint to be displayed to user
+      hint: Path to annotated data in default object storage. In CVAT, this parameter will be pre-populated.
+      # For information on 'visibility', see https://docs.onepanel.ai/docs/reference/workflows/templates/#parameters
+      visibility: internal
+      
+    - name: val-split
+      value: 20
+      displayName: Validation split size
+      type: input.number
+      visibility: public
+      hint: Enter validation set size in percentage of full dataset. (0 - 100)
+      
+    - name: num-augmentation-cycles
+      value: 1
+      displayName: Number of augmentation cycles
+      type: input.number
+      visibility: public
+      hint: Number of augmentation cycles, zero means no data augmentation
 
-  # Which ensemble strategy to use
-  - name: ensemble-option
-    value: unanimous
-    visibility: public
-    type: select.select
-    displayName: Ensemble strategy
-    hint: Select the ensemble strategy to use
-    options:
-    - name: 'Consensus'
-      value: 'consensus'
-    - name: 'Unanimous'
-      value: 'unanimous'
-    - name: 'Affirmative'
-      value: 'affirmative'
+    - name: preprocessing-parameters
+      value: |-
+        RandomBrightnessContrast:
+            p: 0.2
+        GaussianBlur:
+            p: 0.3
+        GaussNoise:
+            p: 0.4
+        HorizontalFlip:
+            p: 0.5
+        VerticalFlip:
+            p: 0.3
+      displayName: Preprocessing parameters
+      visibility: public
+      type: textarea.textarea
+      hint: 'See <a href="https://albumentations.ai/docs/api_reference/augmentations/transforms/" target="_blank">documentation</a> for more information on parameters.'
 
-  # Where to store the output files
-  - name: cvat-output-path
-    value: workflow-data/output/test-workflow-4/model-comparison66/
-    visibility: internal
+    # [CHANGE] Dump format that your model expects from CVAT
+    # Valid values are: cvat_coco, cvat_voc, cvat_tfrecord, cvat_yolo, cvat_mot, cvat_label_me
+    - name: dump-format
+      value: cvat_coco
+      displayName: CVAT dump format
+      visibility: private
 
-  # Dump format for CVAT. The code has been written to accept data in COCO format, so select cvat_coco.
-  # Having a correct dump-format in a template ensures that you don't have to select in the CVAT.
-  - name: dump-format
-    value: cvat_coco
-    displayName: CVAT dump format
-    visibility: public
+    # Node pool dropdown (Node group in EKS)
+    # You can add more of these if you have additional tasks that can run on different node pools
+    - displayName: Node pool
+      hint: Name of node pool or group to run this workflow task
+      name: preprocessing-node-pool
+      value: default
+      visibility: internal
+      required: true
 
 entrypoint: main
+templates:
+  - dag:
+      tasks:
+        - name: preprocessing-phase
+          template: preprocessing
+    name: main
+  - container:
+      args:
+        - |
+          pip install pycocotools && \\
+          cd /mnt/src/preprocessing/workflows/albumentations-preprocessing && \\
+          python main.py \\
+            --data_aug_params="{{workflow.parameters.preprocessing-parameters}}" \\
+            --val_split={{workflow.parameters.val-split}} \\
+            --aug_steps={{workflow.parameters.num-augmentation-cycles}}
+      command:
+        - sh
+        - -c
+      image: '{{workflow.parameters.preprocessing-image}}'
+      volumeMounts:
+        - mountPath: /mnt/data
+          name: data
+        - mountPath: /mnt/output
+          name: output
+      workingDir: /mnt/src
+    nodeSelector:
+      node.kubernetes.io/instance-type: '{{workflow.parameters.preprocessing-node-pool}}'
+    inputs:
+      artifacts:
+        - name: data
+          path: /mnt/data/datasets/
+          s3:
+            key: '{{workflow.parameters.cvat-annotation-path}}'
+        - git:
+            repo: https://github.com/onepanelio/templates.git
+          name: src
+          path: /mnt/src/preprocessing
+    name: preprocessing
+    outputs:
+      artifacts:
+        - name: processed-data
+          optional: true
+          path: /mnt/output
+
+# [CHANGE] Volumes that will mount to /mnt/data (annotated data) and /mnt/output (models, checkpoints, logs)
+# Update this depending on your annotation data, model, checkpoint, logs, etc. sizes
+# Example values: 250Mi, 500Gi, 1Ti
+volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 200Gi
+  - metadata:
+      name: output
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 200Gi`,
+      labels: [
+        {key: 'used-by', value: 'cvat'}
+      ]
+    },
+    {
+      name: 'Hyperparameter tuning',
+      manifest: `# Workflow Template example for hyperparameter tuning
+# Documentation: https://docs.onepanel.ai/docs/reference/workflows/hyperparameter-tuning
+#
+# Only change the fields marked with [CHANGE]
+entrypoint: main
+arguments:
+  parameters:
+
+    # [CHANGE] Path to your training/model architecture code repository
+    # Change this value and revision value to your code repository and branch respectively
+    - name: source
+      value: https://github.com/onepanelio/templates
+
+    # [CHANGE] Revision is the branch or tag that you want to use
+    # Change this to something other than master if you have different main branch or tag
+    - name: revision
+      value: master
+
+    # [CHANGE] Default configuration for the NNI tuner
+    # See https://docs.onepanel.ai/docs/reference/workflows/hyperparameter-tuning#understanding-the-configurations
+    - name: config
+      displayName: Configuration
+      required: true
+      hint: NNI configuration
+      type: textarea.textarea
+      value: |-
+        authorName: Onepanel, Inc.
+        experimentName: MNIST TF v2.x
+        trialConcurrency: 1
+        maxExecDuration: 1h
+        maxTrialNum: 10
+        trainingServicePlatform: local
+        searchSpacePath: search_space.json
+        useAnnotation: false
+        tuner:
+          # gpuIndices: '0'           # uncomment and update to the GPU indices to assign this tuner
+          builtinTunerName: TPE       # choices: TPE, Random, Anneal, Evolution, BatchTuner, MetisTuner, GPTuner
+          classArgs:
+            optimize_mode: maximize   # choices: maximize, minimize
+        trial:
+          command: python main.py --output /mnt/output
+          codeDir: .
+          # gpuNum: 1                 # uncomment and update to number of GPUs
+
+    # [CHANGE] Search space configuration
+    # Change according to your hyperparameters and ranges
+    - name: search-space
+      displayName: Search space configuration
+      required: true
+      type: textarea.textarea
+      value: |-
+        {
+          "dropout_rate": { "_type": "uniform", "_value": [0.5, 0.9] },
+          "conv_size": { "_type": "choice", "_value": [2, 3, 5, 7] },
+          "hidden_size": { "_type": "choice", "_value": [124, 512, 1024] },
+          "batch_size": { "_type": "choice", "_value": [16, 32] },
+          "learning_rate": { "_type": "choice", "_value": [0.0001, 0.001, 0.01, 0.1] },
+          "epochs": { "_type": "choice", "_value": [10] }
+        }
+
+    # Node pool dropdown (Node group in EKS)
+    # You can add more of these if you have additional tasks that can run on different node pools
+    - displayName: Node pool
+      hint: Name of node pool or group to run this workflow task
+      type: select.nodepool
+      name: sys-node-pool
+      value: default
+      required: true
+
 templates:
   - name: main
     dag:
       tasks:
-
-      # A sample preprocessing container where you preprocess your data.
-      # This does not do anything, but you can add your script to this container.
-      - name: process-input-data
-        template: bash
-
-      # First container to run prediction using YOLO.
-      - name: predict-yolo-model
-        dependencies: [process-input-data]
-        template: yolo
-
-      # Second container to run the inference.
-      - name: predict-retinanet-model
-        dependencies: [process-input-data]
-        template: retinanet
-
-      # Container which performs the ensembling.
-      - name: ensemble
-        dependencies: [predict-yolo-model, predict-retinanet-model]
-        template: ensemble
-
-   # Retinanet container
-  - name: retinanet
+        - name: hyperparameter-tuning
+          template: hyperparameter-tuning
+  - name: hyperparameter-tuning
     inputs:
       artifacts:
-      - name: src
-        path: /mnt/src
-        git:
-          repo: "https://github.com/onepanelio/ensembleObjectDetection.git"
-      - name: data
-        path: /mnt/data/datasets/
-        s3:
-          key: '{{workflow.namespace}}/{{workflow.parameters.cvat-annotation-path}}'
+        - name: src
+          git:
+            repo: '{{workflow.parameters.source}}'
+            revision: '{{workflow.parameters.revision}}'
+          path: /mnt/data/src
+        # [CHANGE] Path where config.yaml will be generated or already exists
+        # Update the path below so that config.yaml is written to the same directory as your main.py file
+        # Note that your source code is cloned to /mnt/data/src
+        - name: config
+          path: /mnt/data/src/workflows/hyperparameter-tuning/mnist/config.yaml
+          raw:
+            data: '{{workflow.parameters.config}}'
+        # [CHANGE] Path where search_space.json will be generated or already exists
+        # Update the path below so that search_space.json is written to the same directory as your main.py file
+        # Note that your source code is cloned to /mnt/data/src
+        - name: search-space
+          path: /mnt/data/src/workflows/hyperparameter-tuning/mnist/search_space.json
+          raw:
+            data: '{{workflow.parameters.search-space}}'
     outputs:
       artifacts:
-      - name: model
-        path: /mnt/output
-        optional: true
-        s3:
-          key: '{{workflow.namespace}}/{{workflow.parameters.cvat-output-path}}/{{workflow.name}}'
+        - name: output
+          path: /mnt/output
+          optional: true
     container:
-      image: onepanel/jupyterlab:1.0.1
-      command: [sh,-c]
+      image: onepanel/dl:0.17.0
+      # [CHANGE] Update the path below to point to config.yaml path as described above
       args:
-      - |
-        apt update \\
-        && apt install libgl1-mesa-glx ffmpeg libsm6 libxext6 libglib2.0-0 libxext6 libxrender-dev wget unzip git -y \\
-        && bash setup.sh \\
-        && pip install ./keras-retinanet/ --user \\
-        && python TestTimeAugmentation/run.py --images_path=/mnt/data/datasets/images --models=retinanet --option={{workflow.parameters.ensemble-option}} --combine=False \\
-      workingDir: /mnt/src
-
-  # YOLO container
-  - name: yolo
-    inputs:
-      artifacts:
-      - name: src
-        path: /mnt/src
-        git:
-          repo: "https://github.com/onepanelio/ensembleObjectDetection.git"
-      - name: data
-        path: /mnt/data/datasets/
-        s3:
-          key: '{{workflow.namespace}}/{{workflow.parameters.cvat-annotation-path}}'
-    outputs:
-      artifacts:
-      - name: model
-        path: /mnt/output
-        optional: true
-        s3:
-          key: '{{workflow.namespace}}/{{workflow.parameters.cvat-output-path}}/{{workflow.name}}'
-    container:
-      image: onepanel/jupyterlab:1.0.1
-      command: [sh,-c]
-      args:
-       - |
-        apt update \\
-        && apt install libgl1-mesa-glx ffmpeg libsm6 libxext6 libglib2.0-0 libxext6 libxrender-dev wget unzip -y \\
-        && bash setup.sh \\
-        && python TestTimeAugmentation/run.py --images_path=/mnt/data/datasets/images --models=yolo_darknet --option={{workflow.parameters.ensemble-option}} --combine=False \\
-      workingDir: /mnt/src
+        - --config
+        - /mnt/data/src/workflows/hyperparameter-tuning/mnist/config.yaml
+      workingDir: /mnt
       volumeMounts:
-      - name: output
-        mountPath: /mnt/output
+        - name: hyperparamtuning-data
+          mountPath: /mnt/data
+        - name: hyperparamtuning-output
+          mountPath: /mnt/output
+    nodeSelector:
+      beta.kubernetes.io/instance-type: '{{workflow.parameters.sys-node-pool}}'
+    sidecars:
+      - name: nni-web-ui
+        image: onepanel/nni-web-ui:0.17.0
+        env:
+          - name: ONEPANEL_INTERACTIVE_SIDECAR
+            value: 'true'
+        ports:
+          - containerPort: 9000
+            name: nni
+      - name: tensorboard
+        image: onepanel/dl:0.17.0
+        command:
+          - sh
+          - '-c'
+        env:
+          - name: ONEPANEL_INTERACTIVE_SIDECAR
+            value: 'true'
+        args:
+          # Read logs from /mnt/output/tensorboard - /mnt/output is auto-mounted from volumeMounts
+          - tensorboard --logdir /mnt/output/tensorboard
+        ports:
+          - containerPort: 6006
+            name: tensorboard
 
-  # Ensemble container
-  - name: ensemble
-    inputs:
-      artifacts:
-      - name: src
-        path: /mnt/src
-        git:
-          repo:  "https://github.com/onepanelio/ensembleObjectDetection.git"
-      - name: data
-        path: /mnt/data/datasets/
-        s3:
-          key: '{{workflow.namespace}}/{{workflow.parameters.cvat-output-path}}{{workflow.name}}'
-      - name: dataorig
-        path: /mnt/data/dataorig/
-        s3:
-          key: '{{workflow.namespace}}/{{workflow.parameters.cvat-annotation-path}}'
-    outputs:
-      artifacts:
-      - name: model
-        path: /mnt/output
-        optional: true
-        # if you want to store output on cloud storage, you should replace following lines with
-        # s3 or gcs as shown above.
-        archive:
-          none: {}
-    container:
-      image: onepanel/jupyterlab:1.0.1
-      command: [sh, -c]
-      args:
-       - |
-        apt update \\
-        && apt install libgl1-mesa-glx ffmpeg libsm6 libxext6 libglib2.0-0 libxext6 libxrender-dev wget unzip -y \\
-        && bash setup.sh \\
-        && python TestTimeAugmentation/run.py --images_path=/mnt/data/datasets/ --models=yolo_darknet,retinanet --option={{workflow.parameters.ensemble-option}} --combine=True \\
-      workingDir: /mnt/src
-
-  - name: bash
-    container:
-      args:
-      - sleep 15
-      command:
-      - bash
-      - -c
-      image: bash
-
+# [CHANGE] Volumes that will mount to /mnt/data (annotated data) and /mnt/output (models, checkpoints, logs)
+# Update this depending on your annotation data, model, checkpoint, logs, etc. sizes
+# Example values: 250Mi, 500Gi, 1Ti
 volumeClaimTemplates:
   - metadata:
-      name: output
+      name: hyperparamtuning-data
     spec:
       accessModes: [ "ReadWriteOnce" ]
       resources:
         requests:
-          storage: 10Gi`,
-      labels: [
-        {key: 'used-by', value: 'cvat'}
-      ]
+          storage: 20Gi
+  - metadata:
+      name: hyperparamtuning-output
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 20Gi`,
+      labels: []
     }
   ];
   @Output() templateSelected = new EventEmitter<WorkflowTemplateSelected>();
