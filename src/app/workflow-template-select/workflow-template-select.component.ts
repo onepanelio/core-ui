@@ -86,7 +86,7 @@ arguments:
       hint: List of available hyperparameters
 
     # [CHANGE] Dump format that your model expects from CVAT
-    # Valid values are: cvat_coco, cvat_voc, cvat_tfrecord, cvat_yolo, cvat_mot, cvat_label_me 
+    # Valid values are: cvat_coco, cvat_voc, cvat_tfrecord, cvat_yolo, cvat_mot, cvat_label_me
     - name: dump-format
       value: cvat_coco
       displayName: CVAT dump format
@@ -247,6 +247,13 @@ arguments:
       visibility: public
       type: textarea.textarea
       hint: 'See <a href="https://albumentations.ai/docs/api_reference/augmentations/transforms/" target="_blank">documentation</a> for more information on parameters.'
+
+    # [CHANGE] Dump format that your model expects from CVAT
+    # Valid values are: cvat_coco, cvat_voc, cvat_tfrecord, cvat_yolo, cvat_mot, cvat_label_me
+    - name: dump-format
+      value: cvat_coco
+      displayName: CVAT dump format
+      visibility: private
 
     # Node pool dropdown (Node group in EKS)
     # You can add more of these if you have additional tasks that can run on different node pools
