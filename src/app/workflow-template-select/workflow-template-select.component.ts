@@ -114,13 +114,12 @@ templates:
     # Note that your code will be cloned into /mnt/src/train, so you will need to change to the appropriate directory
     args:
       - |
-        cd /mnt/src/train/workflows/maskrcnn-training && \\
-          python -u main.py train --dataset=/mnt/data/datasets \\
-          --model=workflow_maskrcnn \\
-          --extras="{{workflow.parameters.hyperparameters}}" \\
-          --ref_model_path="{{workflow.parameters.cvat-finetune-checkpoint}}" \\
-          --num_classes="{{workflow.parameters.cvat-num-classes}}" \\
-          --logs=/mnt/output
+        cd /mnt/src/train/workflows/maskrcnn-training && \
+        python -u main.py train --dataset=/mnt/data/datasets \
+          --model=workflow_maskrcnn \
+          --extras="{{workflow.parameters.hyperparameters}}"  \
+          --ref_model_path="{{workflow.parameters.cvat-finetune-checkpoint}}"  \
+          --num_classes="{{workflow.parameters.cvat-num-classes}}"
     command:
       - sh
       - -c
@@ -164,6 +163,7 @@ templates:
           # [CHANGE] Point this to your code repository
           # For private repositories see: https://docs.onepanel.ai/docs/reference/workflows/artifacts#git
           repo: https://github.com/onepanelio/templates.git
+          revision: v0.18.0
         name: src
         path: /mnt/src/train
   name: train-model
