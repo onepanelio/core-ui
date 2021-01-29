@@ -410,6 +410,15 @@ templates:
       tasks:
         - name: hyperparameter-tuning
           template: hyperparameter-tuning
+        - name: metrics-writer
+          template: metrics-writer
+          dependencies: [hyperparameter-tuning]
+          arguments:
+            # Use sys-metrics artifact output from hyperparameter-tuning Task
+            # This writes the best metrics to the Workflow
+            artifacts:
+              - name: sys-metrics
+                from: "{{tasks.hyperparameter-tuning.outputs.artifacts.sys-metrics}}"
   - name: hyperparameter-tuning
     inputs:
       artifacts:
@@ -476,6 +485,25 @@ templates:
         ports:
           - containerPort: 6006
             name: tensorboard
+  # Use the metrics-writer tasks to write best metrics to Workflow
+  - name: metrics-writer
+    inputs:
+      artifacts:
+      - name: sys-metrics
+        path: /tmp/sys-metrics.json
+      - git:
+          repo: https://github.com/onepanelio/templates.git
+          revision: v0.18.0
+        name: src
+        path: /mnt/src
+    container:
+      image: onepanel/python-sdk:v0.16.0
+      command:
+        - python
+        - -u
+      args:
+        - /mnt/src/tasks/metrics-writer/main.py
+        - --from_file=/tmp/sys-metrics.json
 
 # [CHANGE] Volumes that will mount to /mnt/data (annotated data) and /mnt/output (models, checkpoints, logs)
 # Update this depending on your annotation data, model, checkpoint, logs, etc. sizes
