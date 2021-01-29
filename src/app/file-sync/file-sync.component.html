@@ -12,7 +12,7 @@
                 <input matInput class="ml-2" [formControl]="mountPathInput" />
             </mat-form-field>
         </div>
-        <div class="d-flex align-items-center mt-3">
+        <div class="d-flex flex-wrap align-items-center mt-3">
             <label class="font-weight-bold font-size-regular">Object storage:</label>
             <div class="ml-2">{{objectStoragePath.value}}</div>
             <button mat-stroked-button color="primary" class="primary-border ml-2" (click)="handleBrowse()">Browse</button>

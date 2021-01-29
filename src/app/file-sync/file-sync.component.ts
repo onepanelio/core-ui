@@ -93,20 +93,14 @@ export class FileSyncComponent implements OnInit {
     if (!path) {
       path = '/';
     }
-    //
-    // if (path !== '/' && path.endsWith('/')) {
-    //   path = path.substring(0, path.length - 2);
-    // }
 
     if (path !== '/' && path.startsWith('/')) {
       path = path.substring(1);
     }
 
-    console.log(path);
-
     const data: FileBrowserDialogData = {
       namespace: this.namespace,
-      path
+      path,
     };
 
     const dialog = this.dialog.open(FileBrowserDialogComponent, {
@@ -159,26 +153,34 @@ export class FileSyncComponent implements OnInit {
   }
 
   handleSyncToObjectStorage() {
+    const now = new Date();
+
     const body = this.getPostData('upload');
     this.syncRequest(body).subscribe(res => {
-      this.watchLogs();
+      this.watchLogs(now);
     }, err => {
       console.error(err);
     });
   }
 
   handleSyncToWorkspace() {
+    const now = new Date();
+
     const body = this.getPostData('download');
     this.syncRequest(body).subscribe(res => {
-      this.watchLogs();
+      this.watchLogs(now);
     }, err => {
       console.error(err);
     });
   }
 
-  watchLogs() {
+  /**
+   * @param sinceTime timestamp indicating from what point the logs should be watched.
+   */
+  watchLogs(sinceTime: Date) {
     this.showLogs = true;
-    const url = `${environment.baseWsUrl}/apis/v1beta1/${this.namespace}/workspaces/${this.workspace.uid}/containers/sys-filesyncer/logs`;
+    const sinceEpochSeconds = Math.floor(sinceTime.getTime() / 1000);
+    const url = `${environment.baseWsUrl}/apis/v1beta1/${this.namespace}/workspaces/${this.workspace.uid}/containers/sys-filesyncer/logs?sinceTime=${sinceEpochSeconds}`;
     this.log.start(url);
   }
 

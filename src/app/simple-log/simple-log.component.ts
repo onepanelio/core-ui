@@ -91,7 +91,7 @@ export class SimpleLogComponent implements OnInit, OnDestroy {
     this.logText = '';
     this.lines = 0;
     this.totalLines = 0;
-
+    this.aceEditor.setText('');
     this.onLogsUpdated();
   }
 
@@ -191,9 +191,6 @@ export class SimpleLogComponent implements OnInit, OnDestroy {
 
     this.socket.onclose = () => {
       this.loading = false;
-      if (this.logText === '') {
-        this.information = 'No logs generated';
-      }
     };
   }
 

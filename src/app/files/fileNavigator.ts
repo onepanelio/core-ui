@@ -77,6 +77,7 @@ export class SlowValue<T> {
 export interface FileNavigatorArgs {
     workflowService: WorkflowServiceService;
     rootPath: string;
+    path?: string;
     displayRootPath?: string;
     directory?: boolean;
     namespace: string;
@@ -109,7 +110,9 @@ export class FileNavigator {
             this.displayRootPath = args.rootPath;
         }
 
-        this.path = new SlowValue<string>(args.rootPath);
+        const initialPath = args.path ? args.path : args.rootPath;
+
+        this.path = new SlowValue<string>(initialPath);
         this.file = new SlowValue<ModelFile>({
            path: args.rootPath,
            directory: args.directory ? args.directory : false,

@@ -29,7 +29,8 @@ export class FileBrowserDialogComponent implements OnInit {
         this.namespace = data.namespace;
 
         this.fileNavigator = new FileNavigator({
-            rootPath: data.path,
+            rootPath: '/',
+            path: data.path,
             namespace: data.namespace,
             name: 'dialog',
             workflowService: this.workflowServiceService,

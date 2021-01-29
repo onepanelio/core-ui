@@ -26,8 +26,6 @@ export class FileNavigatorComponent implements OnInit {
             return;
         }
 
-        console.log('setting fileNavigator in FileNavigatorComponent');
-
         this._fileNavigator = fileNavigator;
         this._fileNavigator.loadFiles();
     }
