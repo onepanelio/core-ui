@@ -114,6 +114,7 @@ templates:
     # Note that your code will be cloned into /mnt/src/train, so you will need to change to the appropriate directory
     args:
       - |
+        pip install pycocotools scikit-image==0.16.2 && \\
         cd /mnt/src/train/workflows/maskrcnn-training && \\
         python -u main.py train --dataset=/mnt/data/datasets \\
           --model=workflow_maskrcnn \\
