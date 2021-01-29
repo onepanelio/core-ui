@@ -134,6 +134,8 @@ import { MetricsEditComponent } from './metrics/metrics-edit/metrics-edit.compon
 import { MetricsEditDialogComponent } from './metrics/metrics-edit-dialog/metrics-edit-dialog.component';
 import { DateFromUtcPipe } from './pipes/date-from-utc/date-from-utc.pipe';
 import { FileSyncComponent } from './file-sync/file-sync.component';
+import { FileBrowserDialogComponent } from './files/file-browser-dialog/file-browser-dialog.component';
+import { SimpleLogComponent } from './simple-log/simple-log.component';
 
 @NgModule({
     declarations: [
@@ -238,6 +240,8 @@ import { FileSyncComponent } from './file-sync/file-sync.component';
         MetricsEditComponent,
         DateFromUtcPipe,
         FileSyncComponent,
+        FileBrowserDialogComponent,
+        SimpleLogComponent
     ],
     entryComponents: [
         WorkflowExecuteDialogComponent,
@@ -247,7 +251,8 @@ import { FileSyncComponent } from './file-sync/file-sync.component';
         LabelEditDialogComponent,
         MetricsEditDialogComponent,
         CreateNamespaceDialogComponent,
-        WorkspaceExecuteDialogComponent
+        WorkspaceExecuteDialogComponent,
+        FileBrowserDialogComponent
     ],
     imports: [
         BrowserModule,

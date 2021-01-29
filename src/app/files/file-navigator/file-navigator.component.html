@@ -24,7 +24,7 @@
     <ng-container cdkColumnDef="size">
         <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
         <cdk-cell *cdkCellDef="let file">
-            <div *ngIf="file.size">{{file.size | fileSize}}</div>
+            <div *ngIf="!file.directory">{{file.size | fileSize}}</div>
         </cdk-cell>
     </ng-container>
 

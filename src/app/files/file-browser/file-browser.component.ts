@@ -13,6 +13,7 @@ import { GenericFileViewComponent } from '../file-viewer/generic-file-view/gener
 export class FileBrowserComponent implements OnInit, OnDestroy {
   private filePathChangedSubscriber;
   private fileChangedSubscriber;
+  private changingFilesSubscriber;
 
   // tslint:disable-next-line:variable-name
   private _fileNavigator: FileNavigator;
@@ -30,6 +31,26 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
     if (this.filePathChangedSubscriber) {
       this.filePathChangedSubscriber.unsubscribe();
     }
+
+    this.changingFilesSubscriber = value.changingFiles.valueChanged.subscribe((change: SlowValueUpdate<Array<ModelFile>>) => {
+      if (change.state === LongRunningTaskState.Started) {
+        setTimeout(() => {
+          this.loading = true;
+        });
+      }
+
+      if (change.state === LongRunningTaskState.Succeeded) {
+        setTimeout(() => {
+          this.loading = false;
+        });
+      }
+
+      if (change.state === LongRunningTaskState.Failed) {
+        setTimeout(() => {
+          this.loading = false;
+        });
+      }
+    });
 
     this.filePathChangedSubscriber = value.path.valueChanged.subscribe((change: SlowValueUpdate<string>)  => {
       if (change.state === LongRunningTaskState.Succeeded) {
@@ -78,7 +99,11 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
   }
 
   updatePathParts(path: string) {
-    const subPath = path.substring(this.fileNavigator.rootPath.length);
+    let subPath = path;
+    if (this.fileNavigator.rootPath !== '/') {
+      subPath = path.substring(this.fileNavigator.rootPath.length);
+    }
+
     const newParts = subPath.split('/');
     this.pathParts = newParts.filter( value => value !== '');
   }
@@ -110,11 +135,17 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
 
   private getPathFromBreadcrumbIndex(index: number): string {
     const path = this.fileNavigator.path.value;
-    const subPath = path.substring(this.fileNavigator.rootPath.length);
+    let subPath = path;
+    if (this.fileNavigator.rootPath !== '/') {
+      subPath = path.substring(this.fileNavigator.rootPath.length);
+    }
 
-    const parts = subPath.split('/').filter(value => value.length != 0);
-
+    const parts = subPath.split('/').filter(value => value.length !== 0);
     const partUntil = parts.slice(0, index + 1).join('/');
+
+    if (this.fileNavigator.rootPath === '/') {
+      return partUntil;
+    }
 
     return this.fileNavigator.rootPath + '/' + partUntil;
   }

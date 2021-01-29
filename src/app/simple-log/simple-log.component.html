@@ -1,0 +1,25 @@
+<div class="logs-root">
+    <div class="d-flex align-items-center toolbar font-roboto">
+        <img *ngIf="loading" class="loading" src="/assets/images/spinner.svg"/>
+        <div class="title font-white">
+            <strong>LOGS: </strong>
+        </div>
+        <div class="flex-grow-1"></div>
+        <span class="information font-white ml-2">{{information}}</span>
+        <div class="flex-grow-1"></div>
+        <button mat-icon-button class="close-button font-white" aria-label="close icon" (click)="onCloseClick()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    <ace-editor
+            class="h-100 w-100"
+            [mode]="'text'"
+            [readOnly]="true"
+            [options]="{
+                        showInvisibles: false,
+                        showPrintMargin: false,
+                        showLineNumbers: true,
+                        scrollPastEnd: 0.1
+                      }"
+    ></ace-editor>
+</div>

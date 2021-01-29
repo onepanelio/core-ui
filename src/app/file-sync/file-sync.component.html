@@ -1,19 +1,33 @@
-<div class="file-sync font-roboto">
-    <div class="font-weight-bold font-size-large">Sync files</div>
-    <div class="mt-3">
-        <label class="font-weight-bold font-size-regular">Local path:</label>
-        <input class="ml-2" />
-    </div>
-    <div class="d-flex align-items-center mt-3">
-        <label class="font-weight-bold font-size-regular">Object storage:</label>
-        <div class="ml-2">path</div>
-        <button mat-stroked-button color="primary" class="primary-border ml-2">Browse</button>
-    </div>
-    <div class="mt-3">
-        <mat-checkbox>Delete files in destination if they don't exist in origin</mat-checkbox>
-    </div>
-    <div class="mt-3">
-        <button mat-stroked-button color="primary" class="primary-border">From object storage</button>
-        <button mat-stroked-button color="primary" class="primary-border ml-2">To object storage</button>
-    </div>
+<div class="file-sync">
+    <form [formGroup]="form" class="font-roboto">
+        <div class="font-weight-bold font-size-large">Sync files to Workspace</div>
+        <div class="mt-3">
+            <label class="font-weight-bold font-size-regular d-block">Workspace path:</label>
+            <mat-form-field appearance="outline" class="mount-path">
+                <mat-select [formControl]="mountPath">
+                    <mat-option *ngFor="let path of mountPaths" [value]="path">{{path}}/</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <input matInput class="ml-2" [formControl]="mountPathInput" />
+            </mat-form-field>
+        </div>
+        <div class="d-flex align-items-center mt-3">
+            <label class="font-weight-bold font-size-regular">Object storage:</label>
+            <div class="ml-2">{{objectStoragePath.value}}</div>
+            <button mat-stroked-button color="primary" class="primary-border ml-2" (click)="handleBrowse()">Browse</button>
+        </div>
+        <div class="mt-3">
+            <mat-checkbox [formControl]="deleteFilesInDestination">Delete files in destination if they don't exist in origin</mat-checkbox>
+        </div>
+        <div class="mt-3">
+            <button mat-stroked-button color="primary" class="primary-border" (click)="handleSyncToObjectStorage()">Sync to object storage</button>
+            <button mat-stroked-button color="primary" class="primary-border ml-2" (click)="handleSyncToWorkspace()">Sync to workspace</button>
+        </div>
+    </form>
+
+    <app-simple-log
+        [class.d-none]="!showLogs"
+        (closeClicked)="handleLogsClose()">
+    </app-simple-log>
 </div>

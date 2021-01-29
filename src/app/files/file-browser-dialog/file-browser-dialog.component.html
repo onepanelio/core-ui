@@ -1,0 +1,15 @@
+<div>
+    <div class="font-roboto font-size-large font-weight-bold">Select folder</div>
+    <app-alert-panel class="d-block mt-3"></app-alert-panel>
+    <app-file-browser class="d-block mt-3"
+                      [displayedColumns]="['icon', 'name', 'size', 'actions']"
+                      [rootName]="fileNavigator.displayRootPath"
+                      [fileNavigator]="fileNavigator"
+                      [namespace]="namespace"
+                      [name]="fileNavigator.name">
+    </app-file-browser>
+    <div class="d-flex justify-content-between w-100 mt-5">
+        <button mat-button class="font-medium-gray cancel-button" (click)="handleCancel()">CANCEL</button>
+        <app-button color="primary" (click)="handleConfirm()">Confirm</app-button>
+    </div>
+</div>

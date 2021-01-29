@@ -6,4 +6,16 @@
       border-color: $primary;
     }
   }
+
+  .mount-path {
+    width: 100px;
+  }
+
+  app-simple-log {
+    position: fixed;
+    width: 60vw;
+    right: 0;
+    top: 0;
+    height: 100vh;
+  }
 }
