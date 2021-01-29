@@ -351,7 +351,7 @@ arguments:
     # [CHANGE] Revision is the branch or tag that you want to use
     # Change this to something other than master if you have different main branch or tag
     - name: revision
-      value: master
+      value: v0.18.0
 
     # [CHANGE] Default configuration for the NNI tuner
     # See https://docs.onepanel.ai/docs/reference/workflows/hyperparameter-tuning#understanding-the-configurations
