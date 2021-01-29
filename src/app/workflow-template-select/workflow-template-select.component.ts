@@ -414,6 +414,8 @@ templates:
     inputs:
       artifacts:
         - name: src
+          # Clone the above repository into '/mnt/data/src'
+          # See https://docs.onepanel.ai/docs/reference/workflows/artifacts#git for private repositories
           git:
             repo: '{{workflow.parameters.source}}'
             revision: '{{workflow.parameters.revision}}'
@@ -439,9 +441,9 @@ templates:
           optional: true
     container:
       image: onepanel/dl:0.17.0
-      # [CHANGE] Update the path below to point to config.yaml path as described above
       args:
         - --config
+        # [CHANGE] Update the path below to point to config.yaml path as described above
         - /mnt/data/src/workflows/hyperparameter-tuning/mnist/config.yaml
       workingDir: /mnt
       volumeMounts:
