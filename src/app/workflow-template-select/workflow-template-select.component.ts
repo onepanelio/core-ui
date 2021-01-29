@@ -114,13 +114,12 @@ templates:
     # Note that your code will be cloned into /mnt/src/train, so you will need to change to the appropriate directory
     args:
       - |
-        cd /mnt/src/train/workflows/maskrcnn-training && \\
-          python -u main.py train --dataset=/mnt/data/datasets \\
-          --model=workflow_maskrcnn \\
-          --extras="{{workflow.parameters.hyperparameters}}" \\
-          --ref_model_path="{{workflow.parameters.cvat-finetune-checkpoint}}" \\
-          --num_classes="{{workflow.parameters.cvat-num-classes}}" \\
-          --logs=/mnt/output
+        cd /mnt/src/train/workflows/maskrcnn-training && \
+        python -u main.py train --dataset=/mnt/data/datasets \
+          --model=workflow_maskrcnn \
+          --extras="{{workflow.parameters.hyperparameters}}"  \
+          --ref_model_path="{{workflow.parameters.cvat-finetune-checkpoint}}"  \
+          --num_classes="{{workflow.parameters.cvat-num-classes}}"
     command:
       - sh
       - -c
@@ -164,6 +163,7 @@ templates:
           # [CHANGE] Point this to your code repository
           # For private repositories see: https://docs.onepanel.ai/docs/reference/workflows/artifacts#git
           repo: https://github.com/onepanelio/templates.git
+          revision: v0.18.0
         name: src
         path: /mnt/src/train
   name: train-model
@@ -349,9 +349,9 @@ arguments:
       value: https://github.com/onepanelio/templates
 
     # [CHANGE] Revision is the branch or tag that you want to use
-    # Change this to something other than master if you have different main branch or tag
+    # You can change this to any tag or branch name in your repository
     - name: revision
-      value: master
+      value: v0.18.0
 
     # [CHANGE] Default configuration for the NNI tuner
     # See https://docs.onepanel.ai/docs/reference/workflows/hyperparameter-tuning#understanding-the-configurations
@@ -410,10 +410,21 @@ templates:
       tasks:
         - name: hyperparameter-tuning
           template: hyperparameter-tuning
+        - name: metrics-writer
+          template: metrics-writer
+          dependencies: [hyperparameter-tuning]
+          arguments:
+            # Use sys-metrics artifact output from hyperparameter-tuning Task
+            # This writes the best metrics to the Workflow
+            artifacts:
+              - name: sys-metrics
+                from: "{{tasks.hyperparameter-tuning.outputs.artifacts.sys-metrics}}"
   - name: hyperparameter-tuning
     inputs:
       artifacts:
         - name: src
+          # Clone the above repository into '/mnt/data/src'
+          # See https://docs.onepanel.ai/docs/reference/workflows/artifacts#git for private repositories
           git:
             repo: '{{workflow.parameters.source}}'
             revision: '{{workflow.parameters.revision}}'
@@ -439,9 +450,9 @@ templates:
           optional: true
     container:
       image: onepanel/dl:0.17.0
-      # [CHANGE] Update the path below to point to config.yaml path as described above
       args:
         - --config
+        # [CHANGE] Update the path below to point to config.yaml path as described above
         - /mnt/data/src/workflows/hyperparameter-tuning/mnist/config.yaml
       workingDir: /mnt
       volumeMounts:
@@ -450,7 +461,7 @@ templates:
         - name: hyperparamtuning-output
           mountPath: /mnt/output
     nodeSelector:
-      beta.kubernetes.io/instance-type: '{{workflow.parameters.sys-node-pool}}'
+      node.kubernetes.io/instance-type: '{{workflow.parameters.sys-node-pool}}'
     sidecars:
       - name: nni-web-ui
         image: onepanel/nni-web-ui:0.17.0
@@ -474,6 +485,25 @@ templates:
         ports:
           - containerPort: 6006
             name: tensorboard
+  # Use the metrics-writer tasks to write best metrics to Workflow
+  - name: metrics-writer
+    inputs:
+      artifacts:
+      - name: sys-metrics
+        path: /tmp/sys-metrics.json
+      - git:
+          repo: https://github.com/onepanelio/templates.git
+          revision: v0.18.0
+        name: src
+        path: /mnt/src
+    container:
+      image: onepanel/python-sdk:v0.16.0
+      command:
+        - python
+        - -u
+      args:
+        - /mnt/src/tasks/metrics-writer/main.py
+        - --from_file=/tmp/sys-metrics.json
 
 # [CHANGE] Volumes that will mount to /mnt/data (annotated data) and /mnt/output (models, checkpoints, logs)
 # Update this depending on your annotation data, model, checkpoint, logs, etc. sizes
