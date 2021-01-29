@@ -349,7 +349,7 @@ arguments:
       value: https://github.com/onepanelio/templates
 
     # [CHANGE] Revision is the branch or tag that you want to use
-    # Change this to something other than master if you have different main branch or tag
+    # You can change this to any tag or branch name in your repository
     - name: revision
       value: v0.18.0
 
