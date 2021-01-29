@@ -452,7 +452,7 @@ templates:
         - name: hyperparamtuning-output
           mountPath: /mnt/output
     nodeSelector:
-      beta.kubernetes.io/instance-type: '{{workflow.parameters.sys-node-pool}}'
+      node.kubernetes.io/instance-type: '{{workflow.parameters.sys-node-pool}}'
     sidecars:
       - name: nni-web-ui
         image: onepanel/nni-web-ui:0.17.0
