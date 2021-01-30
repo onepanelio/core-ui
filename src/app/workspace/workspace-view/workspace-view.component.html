@@ -30,14 +30,15 @@
                 (pause)="onPause($event)"
                 (delete)="onDelete($event)">
             </app-workspace-status-bar>
-            <div class="p-4 bg-background-color d-flex w-100">
+            <div class="p-4 bg-background-color d-flex">
                 <app-workspace-identifier
+                    class="flex-grow-1"
                     [namespace]="namespace"
                     [workspace]="workspace">
                 </app-workspace-identifier>
 
                 <app-workspace-view-parameters
-                        class="border-right pl-6 pr-6"
+                        class="border-right pl-6 pr-6 flex-grow-1"
                         [workspace]="workspace"
                         [state]="state"
                         (updateWorkspace)="onUpdateWorkspace($event)">
@@ -46,7 +47,7 @@
                 <app-file-sync
                         [namespace]="namespace"
                         [workspace]="workspace"
-                        class="pl-6">
+                        class="pl-6 flex-grow-1">
 
                 </app-file-sync>
             </div>
