@@ -32,22 +32,22 @@
             </app-workspace-status-bar>
             <div class="p-4 bg-background-color d-flex">
                 <app-workspace-identifier
-                    class="flex-grow-1"
+                    class="third"
                     [namespace]="namespace"
                     [workspace]="workspace">
                 </app-workspace-identifier>
 
                 <app-workspace-view-parameters
-                        class="border-right pl-6 pr-6 flex-grow-1"
+                        class="border-right pl-6 pr-6 third"
                         [workspace]="workspace"
                         [state]="state"
                         (updateWorkspace)="onUpdateWorkspace($event)">
                 </app-workspace-view-parameters>
 
                 <app-file-sync
+                        class="pl-6 flex-grow-1 third"
                         [namespace]="namespace"
-                        [workspace]="workspace"
-                        class="pl-6 flex-grow-1">
+                        [workspace]="workspace">
 
                 </app-file-sync>
             </div>
