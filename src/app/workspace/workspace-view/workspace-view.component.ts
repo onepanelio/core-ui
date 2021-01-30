@@ -79,7 +79,6 @@ export class WorkspaceViewComponent implements OnInit, OnDestroy {
                 this.title.setTitle(`Onepanel - ${res.name}`);
             }
             this.workspace = res;
-            console.log(res);
             // We add a 't' query parameter is so we avoid caching the response.
             this.workspaceUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(res.url + '?t=' + Date.now());
 

@@ -49,7 +49,12 @@ export class FileBrowserDialogComponent implements OnInit {
     handleConfirm() {
         const file = this.fileNavigator.file.value;
 
-        if (!file.directory) {
+        // If you do not change the directory while in the browser, the root is not considered a directory
+        // but it is, so we need to return the result as just the root.
+        if (file.path === '/') {
+            this.dialogRef.close( '/');
+            return;
+        } else if (!file.directory) {
             this.alertService.storeAlert(new Alert({
                 type: 'danger',
                 message: 'Current selection is a file, not a folder'

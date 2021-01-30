@@ -207,7 +207,7 @@ export class FileSyncComponent implements OnInit {
     const path: string = this.objectStoragePath.value;
     if (!path) {
       this.objectStoragePath.setValue('/');
-    } else if (path && !path.endsWith('/')) {
+    } else if (!path.endsWith('/')) {
       this.objectStoragePath.setValue(path + '/');
     }
   }
