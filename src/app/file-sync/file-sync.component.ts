@@ -51,6 +51,7 @@ export class FileSyncComponent implements OnInit {
     }
 
     this.mountPaths = mountPaths;
+    this.mountPaths = [mountPaths[0]];
 
     this.form = this.formBuilder.group({
       objectStoragePath: [],
