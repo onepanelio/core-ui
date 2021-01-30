@@ -21,7 +21,16 @@
         <div>
             <label class="font-weight-bold d-block font-size-regular">Object storage location</label>
             <div class="d-flex flex-wrap justify-content-between align-items-center">
-                <div class="ml-2">{{objectStoragePath.value}}</div>
+                <div *ngIf="!editingObjectStorage" class="ml-2">
+                    {{objectStoragePath.value}}
+                    <i class="fas fa-folder-plus color-primary pointer-hover"
+                       (click)="handleEditObjectStoragePath()"
+                        matTooltip="Choose or create new path">
+                    </i>
+                </div>
+                <mat-form-field appearance="outline" [class.d-none]="!editingObjectStorage" (focusout)="handleStopEditObjectStoragePath()">
+                    <input #objectStorageInput matInput [formControl]="objectStoragePath"/>
+                </mat-form-field>
                 <button mat-stroked-button color="primary" class="primary-border ml-2" (click)="handleBrowse()">Browse</button>
             </div>
         </div>

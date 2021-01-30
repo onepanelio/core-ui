@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { Workspace, WorkspaceComponent, WorkspaceServiceService } from '../../api';
 import * as yaml from 'js-yaml';
 import { MatDialog } from '@angular/material/dialog';
@@ -27,6 +27,7 @@ export class FileSyncComponent implements OnInit {
   @Input() namespace: string;
   @Input() workspace: Workspace;
   @ViewChild(SimpleLogComponent, {static: false}) log: SimpleLogComponent;
+  @ViewChild('objectStorageInput', {static: true}) objectStorageInput: ElementRef;
 
   form: FormGroup;
   objectStoragePath: AbstractControl;
@@ -36,6 +37,8 @@ export class FileSyncComponent implements OnInit {
 
   mountPaths: string[] = [];
   showLogs = false;
+
+  editingObjectStorage = false;
 
   constructor(
       private authService: AuthService,
@@ -189,5 +192,23 @@ export class FileSyncComponent implements OnInit {
     setTimeout(() => {
       this.showLogs = false;
     }, 100);
+  }
+
+  handleEditObjectStoragePath() {
+    this.editingObjectStorage = true;
+    setTimeout(() => {
+      this.objectStorageInput.nativeElement.focus();
+    }, 100);
+  }
+
+  handleStopEditObjectStoragePath() {
+    this.editingObjectStorage = false;
+
+    const path: string = this.objectStoragePath.value;
+    if (!path) {
+      this.objectStoragePath.setValue('/');
+    } else if (path && !path.endsWith('/')) {
+      this.objectStoragePath.setValue(path + '/');
+    }
   }
 }
