@@ -9,9 +9,12 @@
                         <mat-option *ngFor="let path of mountPaths" [value]="path">{{path}}/</mat-option>
                     </mat-select>
                 </mat-form-field>
-                <label *ngIf="mountPaths.length === 1" class="mr-2">{{mountPath.value}}/</label>
-                <mat-form-field appearance="outline" class="flex-grow-1 no-left">
-                    <input matInput class="ml-2" [formControl]="mountPathInput" />
+
+                <mat-form-field appearance="outline" class="flex-grow-1" [class.no-left]="mountPaths.length > 1">
+                    <div class="d-flex align-items-baseline">
+                        <label *ngIf="mountPaths.length === 1">{{mountPath.value}}/</label>
+                        <input matInput [formControl]="mountPathInput" />
+                    </div>
                 </mat-form-field>
             </div>
         </div>
