@@ -1,6 +1,6 @@
-<div *ngIf="machineType" class="d-flex align-items-baseline">
+<div *ngIf="machineType" class="d-flex align-items-baseline workspace-view-parameters">
     <app-form [disabled]="state !== 'Running'" [fieldData]="[machineType]"></app-form>
-    <button *ngIf="canUpdate" mat-flat-button color="accent" class="op-rounded op-button ml-10"
+    <button *ngIf="canUpdate" mat-flat-button color="accent" class="op-rounded op-button ml-10 fix-position-bottom"
             (click)="update()"
             [disabled]="state !== 'Running'">
         <mat-spinner *ngIf="state === 'Updating'"
