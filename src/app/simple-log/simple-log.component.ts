@@ -9,6 +9,8 @@ import { strings } from '../../utility/strings';
   styleUrls: ['./simple-log.component.scss']
 })
 export class SimpleLogComponent implements OnInit, OnDestroy {
+  @Input() noLoading = false;
+
   private socket: WebSocket;
   private biggestScrollDown = 0;
   private biggestScrollUp = 0;

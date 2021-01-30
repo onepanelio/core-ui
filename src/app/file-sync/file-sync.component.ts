@@ -185,7 +185,9 @@ export class FileSyncComponent implements OnInit {
   }
 
   handleLogsClose() {
-    this.showLogs = false;
     this.log.clear();
+    setTimeout(() => {
+      this.showLogs = false;
+    }, 100);
   }
 }

@@ -19,4 +19,12 @@
     height: 100vh;
     z-index: 1000;
   }
+
+  .no-left {
+    /deep/ .mat-form-field-outline-start {
+      display: none;
+    }
+
+    left: -3px;
+  }
 }

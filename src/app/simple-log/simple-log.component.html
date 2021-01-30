@@ -1,8 +1,8 @@
 <div class="logs-root">
     <div class="d-flex align-items-center toolbar font-roboto">
-        <img *ngIf="loading" class="loading" src="/assets/images/spinner.svg"/>
+        <img *ngIf="loading && !noLoading" class="loading" src="/assets/images/spinner.svg"/>
         <div class="title font-white">
-            <strong>LOGS: </strong>
+            <strong>LOGS</strong>
         </div>
         <div class="flex-grow-1"></div>
         <span class="information font-white ml-2">{{information}}</span>
