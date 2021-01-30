@@ -28,9 +28,9 @@
         <div class="mt-3">
             <mat-checkbox [formControl]="deleteFilesInDestination">Delete files in destination if they don't exist in origin</mat-checkbox>
         </div>
-        <div class="mt-3 d-flex">
-            <button mat-stroked-button color="primary" class="primary-border flex-grow-1" (click)="handleSyncToObjectStorage()">Sync to object storage</button>
-            <button mat-stroked-button color="primary" class="primary-border ml-2 flex-grow-1" (click)="handleSyncToWorkspace()">Sync to workspace</button>
+        <div class="mt-3">
+            <button mat-stroked-button color="primary" class="primary-border" (click)="handleSyncToObjectStorage()">Sync to object storage</button>
+            <button mat-stroked-button color="primary" class="primary-border ml-2" (click)="handleSyncToWorkspace()">Sync to Workspace</button>
         </div>
     </form>
 
