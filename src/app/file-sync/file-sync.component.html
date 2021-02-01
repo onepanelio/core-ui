@@ -1,0 +1,45 @@
+<div class="file-sync">
+    <form [formGroup]="form" class="font-roboto">
+        <div class="font-weight-bold font-size-large color-primary">Sync files</div>
+        <div class="mt-3">
+            <label class="font-weight-bold font-size-regular d-block">Workspace path</label>
+            <div class="d-flex align-items-baseline">
+                <mat-form-field *ngIf="mountPaths.length > 1" appearance="outline" class="mount-path">
+                    <mat-select  [formControl]="mountPath">
+                        <mat-option *ngFor="let path of mountPaths" [value]="path">{{path}}/</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline" class="flex-grow-1" [class.no-left]="mountPaths.length > 1">
+                    <div class="d-flex align-items-baseline">
+                        <label *ngIf="mountPaths.length === 1">{{mountPath.value}}/</label>
+                        <input matInput [formControl]="mountPathInput" />
+                    </div>
+                </mat-form-field>
+            </div>
+        </div>
+        <div>
+            <label class="font-weight-bold d-block font-size-regular">Object storage location</label>
+            <div class="d-flex flex-wrap justify-content-between align-items-baseline">
+                <mat-form-field appearance="outline" class="flex-grow-1">
+                    <input #objectStorageInput matInput [formControl]="objectStoragePath" (focusout)="handleStopEditObjectStoragePath()"/>
+                </mat-form-field>
+                <button mat-stroked-button color="primary" class="op-rounded op-button ml-2 fix-bottom" (click)="handleBrowse()">Browse</button>
+            </div>
+        </div>
+        <div class="mt-3">
+            <mat-checkbox [formControl]="deleteFilesInDestination">Delete files in destination if they don't exist in origin</mat-checkbox>
+        </div>
+        <div class="mt-3">
+            <button mat-stroked-button color="primary" class="op-rounded op-button" (click)="handleSyncToObjectStorage()">Sync to object storage</button>
+            <button mat-stroked-button color="primary" class="op-rounded op-button ml-2" (click)="handleSyncToWorkspace()">Sync to Workspace</button>
+        </div>
+    </form>
+
+    <app-simple-log
+        class="app-simple-log"
+        [class.d-none]="!showLogs"
+        [noLoading]="true"
+        (closeClicked)="handleLogsClose()">
+    </app-simple-log>
+</div>

@@ -77,6 +77,7 @@ export class SlowValue<T> {
 export interface FileNavigatorArgs {
     workflowService: WorkflowServiceService;
     rootPath: string;
+    path?: string;
     displayRootPath?: string;
     directory?: boolean;
     namespace: string;
@@ -95,6 +96,7 @@ export class FileNavigator {
     displayRootPath: string;
     path: SlowValue<string>;
     file: SlowValue<ModelFile>;
+    changingFiles: SlowValue<Array<ModelFile>>;
     files?: Array<ModelFile>;
 
     @Output() filesChanged = new EventEmitter();
@@ -108,12 +110,15 @@ export class FileNavigator {
             this.displayRootPath = args.rootPath;
         }
 
-        this.path = new SlowValue<string>(args.rootPath);
+        const initialPath = args.path ? args.path : args.rootPath;
+
+        this.path = new SlowValue<string>(initialPath);
         this.file = new SlowValue<ModelFile>({
            path: args.rootPath,
            directory: args.directory ? args.directory : false,
         });
 
+        this.changingFiles = new SlowValue<Array<ModelFile>>([]);
 
         this.namespace = args.namespace;
         this.name = args.name;
@@ -179,6 +184,8 @@ export class FileNavigator {
     loadFiles(file?: ModelFile) {
         if (file) {
             this.file.requestValueChange();
+        } else {
+            this.changingFiles.requestValueChange();
         }
 
         this.workflowService.listFiles(this.namespace, this.name, this.path.value)
@@ -215,6 +222,7 @@ export class FileNavigator {
                 }
 
                 this.files = response.files;
+                this.changingFiles.reportValueChange(response.files);
                 this.filesChanged.emit();
 
                 if (file) {
@@ -222,7 +230,6 @@ export class FileNavigator {
                 }
             });
     }
-
 
     cleanUp() {
     }

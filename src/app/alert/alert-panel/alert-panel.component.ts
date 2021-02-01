@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Subscription } from "rxjs";
-import { AlertService } from "../alert.service";
-import { Alert } from "../alert";
-import { AlertActionEvent } from "../alert/alert.component";
+import { Subscription } from 'rxjs';
+import { AlertService } from '../alert.service';
+import { Alert } from '../alert';
+import { AlertActionEvent } from '../alert/alert.component';
 
 interface AlertDisplayConfig {
   autoDismiss?: boolean;
@@ -25,19 +25,43 @@ interface AlertWrapper {
   styleUrls: ['./alert-panel.component.scss']
 })
 export class AlertPanelComponent implements OnInit {
+  extraClasses = {};
+
   @Input() autoDismiss = false;
   @Input() autoDismissDelay = 5000;
   @Input() showCloseButton = true;
   @Input() showIcon = false;
   @Input() wipeOld = true;
+  @Input() classOnVisible = '';
+
+  constructor(
+      private alertService: AlertService,
+  ) {
+  }
 
   private subscribeReference: Subscription = null;
 
   alerts = Array<AlertWrapper>();
 
-  constructor(
-      private alertService: AlertService,
-  ) {
+  static fillInDefaultConfig(config?: AlertDisplayConfig): AlertDisplayConfig {
+    const finalConfig = {
+      autoDismiss: false,
+      autoDismissDelay: 5000,
+      showCloseButton: true,
+      showIcon: true,
+    };
+
+    if (config) {
+      finalConfig.autoDismiss = finalConfig.autoDismiss || config.autoDismiss;
+      finalConfig.showCloseButton = finalConfig.showCloseButton || config.showCloseButton;
+      finalConfig.showIcon = finalConfig.showIcon || config.showIcon;
+
+      if (config.autoDismissDelay) {
+        finalConfig.autoDismissDelay = config.autoDismissDelay;
+      }
+    }
+
+    return finalConfig;
   }
 
   ngOnInit() {
@@ -49,6 +73,12 @@ export class AlertPanelComponent implements OnInit {
 
           if (!this.wipeOld) {
             newAlerts.unshift(...this.alerts);
+          }
+
+          if (newAlerts.length !== 0) {
+            this.extraClasses = this.classOnVisible;
+          } else {
+            this.extraClasses = '';
           }
 
           this.alerts = newAlerts;
@@ -86,7 +116,7 @@ export class AlertPanelComponent implements OnInit {
     const newAlerts = this.alerts.slice();
 
     const wrapper = {
-      alert: alert,
+      alert,
       config: AlertPanelComponent.fillInDefaultConfig(config)
     };
 
@@ -99,7 +129,7 @@ export class AlertPanelComponent implements OnInit {
     const newAlerts = this.alerts.slice();
 
     const wrapper = {
-      alert: alert,
+      alert,
       config: AlertPanelComponent.fillInDefaultConfig(config)
     };
 
@@ -112,7 +142,7 @@ export class AlertPanelComponent implements OnInit {
     const newAlerts = this.alerts.slice();
 
     const wrapper = {
-      alert: alert,
+      alert,
       config: AlertPanelComponent.fillInDefaultConfig(config)
     };
 
@@ -127,7 +157,7 @@ export class AlertPanelComponent implements OnInit {
 
     for (const alert of alerts) {
       const wrapper = {
-        alert: alert,
+        alert,
         config: {
           autoDismiss: this.autoDismiss,
           autoDismissDelay: this.autoDismissDelay,
@@ -140,26 +170,5 @@ export class AlertPanelComponent implements OnInit {
     }
 
     return wrapped;
-  }
-
-  static fillInDefaultConfig(config?: AlertDisplayConfig): AlertDisplayConfig {
-    let finalConfig = {
-      autoDismiss: false,
-      autoDismissDelay: 5000,
-      showCloseButton: true,
-      showIcon: true,
-    };
-
-    if(config) {
-      finalConfig.autoDismiss = finalConfig.autoDismiss || config.autoDismiss;
-      finalConfig.showCloseButton = finalConfig.showCloseButton || config.showCloseButton;
-      finalConfig.showIcon = finalConfig.showIcon || config.showIcon;
-
-      if(config.autoDismissDelay) {
-        finalConfig.autoDismissDelay = config.autoDismissDelay;
-      }
-    }
-
-    return finalConfig;
   }
 }

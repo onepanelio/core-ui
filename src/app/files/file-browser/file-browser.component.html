@@ -1,19 +1,22 @@
-<div class="op-border hide-overflow">
-    <div class="bg-light-gray toolbar d-flex flex-wrap align-items-baseline font-roboto font-size-small">
-        <div class="font-weight-bold lh-36">Location: </div>
-        <div (click)="goToRoot()" class="pointer-hover ml-1">
-            <span [class.active-link]="pathParts.length != 0">{{rootName}}</span>
-            <span *ngIf="pathParts.length > 0" class="path-separator">/</span>
+<div>
+    <div class="toolbar-wrapper">
+        <div class="bg-light-gray toolbar d-flex flex-wrap align-items-baseline font-roboto font-size-small">
+            <div class="font-weight-bold lh-36">Location: </div>
+            <div (click)="goToRoot()" class="pointer-hover ml-1">
+                <span [class.active-link]="pathParts.length != 0 && rootName !== '/'">{{rootName}}</span>
+                <span *ngIf="rootName !== '/' && pathParts.length > 0" class="path-separator">/</span>
+            </div>
+            <app-breadcrumbs [parts]="pathParts" (breadcrumbClick)="onBreadcrumbClicked($event)"></app-breadcrumbs>
+            <mat-spinner *ngIf="loading"
+                    color="primary"
+                    [diameter]="20"
+                    [mode]="'indeterminate'">
+            </mat-spinner>
         </div>
-        <app-breadcrumbs [parts]="pathParts" (breadcrumbClick)="onBreadcrumbClicked($event)"></app-breadcrumbs>
-        <mat-spinner *ngIf="loading"
-                color="primary"
-                [diameter]="20"
-                [mode]="'indeterminate'">
-        </mat-spinner>
     </div>
     <app-file-navigator
             *ngIf="!showingFile"
+            class="file-navigator"
             [displayedColumns]="displayedColumns"
             [fileNavigator]="fileNavigator"
             (fileAction)="onFileEvent($event)">

@@ -1,0 +1,35 @@
+.logs-root {
+  background-color: rgb(47, 49, 41);
+  height: 100%;
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+
+  .toolbar {
+    padding-left: 27px;
+  }
+
+  .title {
+    strong {
+      font-weight: bold;
+    }
+  }
+
+  .loading {
+    width: 20px;
+    height: 20px;
+    padding-top: 3px;
+    margin-right: 10px;
+    margin-left: -10px;
+  }
+
+  [ace-editor] {
+    height: 100%;
+  }
+
+  /deep/ .ace-monokai {
+    // remove the error background color as we want to display the log as plain text, no special colors.
+    .ace_invalid {
+      background-color: unset;
+    }
+  }
+}

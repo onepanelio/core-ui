@@ -1,0 +1,35 @@
+@import '../../styles/colors';
+
+.file-sync {
+  .primary-border {
+    &.mat-stroked-button:not([disabled]) {
+      border-color: $primary;
+    }
+  }
+
+  .mount-path {
+    width: 100px;
+  }
+
+  .app-simple-log {
+    position: fixed;
+    width: 60vw;
+    right: 0;
+    top: 0;
+    height: 100vh;
+    z-index: 1000;
+  }
+
+  .no-left {
+    /deep/ .mat-form-field-outline-start {
+      display: none;
+    }
+
+    left: -3px;
+  }
+
+  .fix-bottom {
+    position: relative;
+    bottom: 5px;
+  }
+}

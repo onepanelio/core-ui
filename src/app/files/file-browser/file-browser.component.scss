@@ -1,8 +1,20 @@
 @import "../../../styles/colors";
 
+$borderColor: #c1c1c1;
+
+// We add this to allow "hiding" any overflowing content
+// e.g. if parent makes .toolbar sticky, the borders will show scrolling up
+// this wrapper will hide them
+.toolbar-wrapper {
+  background: white;
+}
+
 .toolbar {
   padding: 5px 20px;
   min-height: 36px;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  border: solid 1px $borderColor;
 }
 
 .lh-36 {
@@ -51,4 +63,13 @@ mat-spinner {
   border-top: 1px solid;
   border-color: $light-white;
   padding: 0 20px;
+  border-left: solid 1px $borderColor;
+  border-right: solid 1px $borderColor;
+}
+
+.file-navigator {
+  /deep/ .file-list-item {
+    border-left: solid 1px $borderColor;
+    border-right: solid 1px $borderColor;
+  }
 }

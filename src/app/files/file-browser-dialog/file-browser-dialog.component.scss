@@ -1,0 +1,10 @@
+.mat-dialog-content-height {
+  height: 65vh;
+}
+
+.file-sync-file-browser {
+  /deep/ .toolbar-wrapper {
+    position: sticky;
+    top: 0;
+  }
+}

@@ -24,7 +24,7 @@
     <ng-container cdkColumnDef="size">
         <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
         <cdk-cell *cdkCellDef="let file">
-            <div *ngIf="file.size">{{file.size | fileSize}}</div>
+            <div *ngIf="!file.directory">{{file.size | fileSize}}</div>
         </cdk-cell>
     </ng-container>
 
@@ -38,6 +38,6 @@
     <!-- Header and Row Declarations -->
     <cdk-header-row *cdkHeaderRowDef="displayedColumns" class="op-table-header"></cdk-header-row>
     <cdk-row *cdkRowDef="let row; columns: displayedColumns"
-             class="d-flex align-items-center font-size-regular font-roboto">
+             class="d-flex align-items-center font-size-regular font-roboto file-list-item">
     </cdk-row>
 </cdk-table>

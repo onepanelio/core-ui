@@ -59,6 +59,7 @@ export * from './workflowExecutionStatus';
 export * from './workflowExecutionsMetricsResponse';
 export * from './workflowTemplate';
 export * from './workspace';
+export * from './workspaceComponent';
 export * from './workspaceStatisticReport';
 export * from './workspaceStatus';
 export * from './workspaceTemplate';
