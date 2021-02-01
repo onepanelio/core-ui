@@ -38,8 +38,6 @@ export class FileSyncComponent implements OnInit {
   mountPaths: string[] = [];
   showLogs = false;
 
-  editingObjectStorage = false;
-
   constructor(
       private authService: AuthService,
       private dialog: MatDialog,
@@ -194,16 +192,7 @@ export class FileSyncComponent implements OnInit {
     }, 100);
   }
 
-  handleEditObjectStoragePath() {
-    this.editingObjectStorage = true;
-    setTimeout(() => {
-      this.objectStorageInput.nativeElement.focus();
-    }, 100);
-  }
-
   handleStopEditObjectStoragePath() {
-    this.editingObjectStorage = false;
-
     const path: string = this.objectStoragePath.value;
     if (!path) {
       this.objectStoragePath.setValue('/');

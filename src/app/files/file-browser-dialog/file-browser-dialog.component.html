@@ -1,7 +1,7 @@
 <div matDialogTitle class="font-roboto font-size-large font-weight-bold">Select folder</div>
 <mat-dialog-content class="mat-dialog-content-height">
-    <app-alert-panel class="d-block mt-3"></app-alert-panel>
-    <app-file-browser class="d-block mt-3"
+    <app-alert-panel class="d-block" [classOnVisible]="'mb-3'"></app-alert-panel>
+    <app-file-browser class="d-block file-sync-file-browser"
                       [displayedColumns]="['icon', 'name', 'size', 'actions']"
                       [rootName]="fileNavigator.displayRootPath"
                       [fileNavigator]="fileNavigator"
