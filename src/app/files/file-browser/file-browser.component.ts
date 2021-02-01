@@ -4,6 +4,7 @@ import { BreadcrumbEvent } from '../../breadcrumbs/breadcrumbs.component';
 import { FileActionEvent } from '../file-navigator/file-navigator.component';
 import { ModelFile, WorkflowServiceService } from '../../../api';
 import { GenericFileViewComponent } from '../file-viewer/generic-file-view/generic-file-view.component';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-file-browser',
@@ -24,6 +25,7 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
 
   loading = false;
 
+  @Input() copyLocation = false;
   @Input() rootName = '';
   @Input() set fileNavigator(value: FileNavigator) {
     this._fileNavigator = value;
@@ -93,7 +95,9 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
 
   pathParts = [];
 
-  constructor(private workflowService: WorkflowServiceService) { }
+  constructor(
+      private workflowService: WorkflowServiceService,
+      private snackBar: MatSnackBar) { }
 
   ngOnInit() {
   }
@@ -191,5 +195,25 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
     return !file.directory &&
             parseInt(file.size, 10) < GenericFileViewComponent.MAX_DOWNLOAD_SIZE
     ;
+  }
+
+  copyLocationToClipboard() {
+    const path = '/' + this._fileNavigator.file.value.path;
+
+    const selBox = document.createElement('textarea');
+    selBox.style.position = 'fixed';
+    selBox.style.left = '0';
+    selBox.style.top = '0';
+    selBox.style.opacity = '0';
+    selBox.value = path;
+    document.body.appendChild(selBox);
+    selBox.focus();
+    selBox.select();
+    document.execCommand('copy');
+    document.body.removeChild(selBox);
+
+    this.snackBar.open('Copied to clipboard', 'OK', {
+      duration: 2000
+    });
   }
 }
