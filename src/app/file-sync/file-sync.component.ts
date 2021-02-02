@@ -70,7 +70,7 @@ export class FileSyncComponent implements OnInit {
       this.mountPath.setValue(mountPaths[0]);
     }
 
-    this.objectStoragePath.setValue('/');
+    this.objectStoragePath.setValue('');
   }
 
   parseVolumeMountsFromManifest(manifest: string): Array<{name: string, mountPath: string}> {
@@ -90,15 +90,7 @@ export class FileSyncComponent implements OnInit {
   }
 
   handleBrowse() {
-    let path: string = this.objectStoragePath.value;
-    if (!path) {
-      path = '/';
-    }
-
-    if (path !== '/' && path.startsWith('/')) {
-      path = path.substring(1);
-    }
-
+    const path: string = this.objectStoragePath.value;
     const data: FileBrowserDialogData = {
       namespace: this.namespace,
       path,
@@ -119,11 +111,6 @@ export class FileSyncComponent implements OnInit {
     });
   }
 
-  private getFinalObjectStoragePath() {
-    // Skip the first character because it will be a '/' and API doesn't want that.
-    return this.objectStoragePath.value.substring(1);
-  }
-
   private getPostData(action: syncAction): SyncBody {
     let path = this.mountPath.value + '/';
     if (this.mountPathInput.value) {
@@ -134,7 +121,7 @@ export class FileSyncComponent implements OnInit {
       action,
       path,
       delete: this.deleteFilesInDestination.value,
-      prefix: this.getFinalObjectStoragePath()
+      prefix: this.objectStoragePath.value
     };
   }
 
@@ -157,6 +144,7 @@ export class FileSyncComponent implements OnInit {
     const now = new Date();
 
     const body = this.getPostData('upload');
+
     this.syncRequest(body).subscribe(res => {
       this.watchLogs(now);
     }, err => {
@@ -168,6 +156,7 @@ export class FileSyncComponent implements OnInit {
     const now = new Date();
 
     const body = this.getPostData('download');
+
     this.syncRequest(body).subscribe(res => {
       this.watchLogs(now);
     }, err => {
