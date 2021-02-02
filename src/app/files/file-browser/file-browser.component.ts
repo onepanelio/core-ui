@@ -197,7 +197,7 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
   }
 
   copyLocationToClipboard() {
-    const path = '/' + this._fileNavigator.file.value.path;
+    const path = this._fileNavigator.file.value.path;
 
     const selBox = document.createElement('textarea');
     selBox.style.position = 'fixed';
