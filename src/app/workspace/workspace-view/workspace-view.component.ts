@@ -8,6 +8,7 @@ import {
     ConfirmationDialogData
 } from '../../confirmation-dialog/confirmation-dialog.component';
 import { AppRouter } from '../../router/app-router.service';
+import * as yaml from 'js-yaml';
 
 export type WorkspaceState = 'Launching' | 'Updating' | 'Pausing' | 'Paused' | 'Resuming' | 'Running' | 'Deleting';
 
@@ -30,6 +31,9 @@ export class WorkspaceViewComponent implements OnInit, OnDestroy {
     showWorkspaceDetails = false;
 
     parameters: Array<Parameter> = [];
+
+    hasFileSyncer = false;
+    workspaceInfoComponentClass = {};
 
     constructor(
         private appRouter: AppRouter,
@@ -79,6 +83,16 @@ export class WorkspaceViewComponent implements OnInit, OnDestroy {
                 this.title.setTitle(`Onepanel - ${res.name}`);
             }
             this.workspace = res;
+
+            const data = yaml.safeLoad(res.workspaceTemplate.manifest);
+            const fileSyncerContainer = data.containers.find(container => container.name === 'sys-filesyncer');
+            this.hasFileSyncer = !!fileSyncerContainer;
+
+            this.workspaceInfoComponentClass = {
+                third: this.hasFileSyncer,
+                half: !this.hasFileSyncer
+            };
+
             // We add a 't' query parameter is so we avoid caching the response.
             this.workspaceUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(res.url + '?t=' + Date.now());
 

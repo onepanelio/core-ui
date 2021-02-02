@@ -32,23 +32,26 @@
             </app-workspace-status-bar>
             <div class="p-4 bg-background-color d-flex">
                 <app-workspace-identifier
-                    class="third"
+                    [ngClass]="workspaceInfoComponentClass"
                     [namespace]="namespace"
                     [workspace]="workspace">
                 </app-workspace-identifier>
 
                 <app-workspace-view-parameters
-                        class="border-right pl-6 pr-6 third"
+                        class="pl-6 pr-6"
+                        [class.border-right]="hasFileSyncer"
+                        [ngClass]="workspaceInfoComponentClass"
                         [workspace]="workspace"
                         [state]="state"
                         (updateWorkspace)="onUpdateWorkspace($event)">
                 </app-workspace-view-parameters>
 
                 <app-file-sync
-                        class="pl-6 flex-grow-1 third"
+                        *ngIf="hasFileSyncer"
+                        class="pl-6 flex-grow-1"
+                        [ngClass]="workspaceInfoComponentClass"
                         [namespace]="namespace"
                         [workspace]="workspace">
-
                 </app-file-sync>
             </div>
         </div>
