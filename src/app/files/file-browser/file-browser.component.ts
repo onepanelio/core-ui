@@ -25,7 +25,6 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
 
   loading = false;
 
-  @Input() copyLocation = false;
   @Input() rootName = '';
   @Input() set fileNavigator(value: FileNavigator) {
     this._fileNavigator = value;
