@@ -22,7 +22,6 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
   @Input() displayedColumns = [];
 
   showingFile = false;
-
   loading = false;
 
   @Input() rootName = '';
@@ -197,7 +196,10 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
   }
 
   copyLocationToClipboard() {
-    const path = '/' + this._fileNavigator.file.value.path;
+    let path = this._fileNavigator.file.value.path;
+    if (!path) {
+      path = ' ';
+    }
 
     const selBox = document.createElement('textarea');
     selBox.style.position = 'fixed';

@@ -5,7 +5,7 @@
 
             <div (click)="goToRoot()" class="pointer-hover ml-1">
                 <span [class.active-link]="pathParts.length != 0 && rootName !== '/'">{{rootName}}</span>
-                <span *ngIf="rootName !== '/' && pathParts.length > 0" class="path-separator">/</span>
+                <span *ngIf="rootName !== '/' && rootName != '' && pathParts.length > 0" class="path-separator">/</span>
             </div>
 
             <app-breadcrumbs [parts]="pathParts" (breadcrumbClick)="onBreadcrumbClicked($event)"></app-breadcrumbs>
