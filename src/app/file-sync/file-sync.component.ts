@@ -69,8 +69,6 @@ export class FileSyncComponent implements OnInit {
     }
 
     this.mountPaths = mountPaths;
-
-
   }
 
   parseVolumeMountsFromManifest(manifest: string): Array<{name: string, mountPath: string}> {
