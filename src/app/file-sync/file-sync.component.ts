@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { Workspace, WorkspaceComponent, WorkspaceServiceService } from '../../api';
+import { ConfigServiceService, Workspace, WorkspaceComponent, WorkspaceServiceService } from '../../api';
 import * as yaml from 'js-yaml';
 import { MatDialog } from '@angular/material/dialog';
 import { FileBrowserDialogComponent, FileBrowserDialogData } from '../files/file-browser-dialog/file-browser-dialog.component';
@@ -36,14 +36,20 @@ export class FileSyncComponent implements OnInit {
 
   mountPaths: string[] = [];
   showLogs = false;
+  bucket = '';
 
   constructor(
       private authService: AuthService,
       private dialog: MatDialog,
       private formBuilder: FormBuilder,
-      private httpClient: HttpClient) { }
+      private httpClient: HttpClient,
+      private configService: ConfigServiceService) { }
 
   ngOnInit() {
+    this.configService.getNamespaceConfig(this.namespace).subscribe(res => {
+      this.bucket = res.bucket;
+    });
+
     this.form = this.formBuilder.group({
       objectStoragePath: [],
       workspacePath: [],
@@ -63,6 +69,8 @@ export class FileSyncComponent implements OnInit {
     }
 
     this.mountPaths = mountPaths;
+
+
   }
 
   parseVolumeMountsFromManifest(manifest: string): Array<{name: string, mountPath: string}> {
@@ -86,6 +94,7 @@ export class FileSyncComponent implements OnInit {
     const data: FileBrowserDialogData = {
       namespace: this.namespace,
       path,
+      displayRootPath: this.bucket
     };
 
     const dialog = this.dialog.open(FileBrowserDialogComponent, {

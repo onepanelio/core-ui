@@ -277,13 +277,14 @@ export class WorkspaceServiceService {
      * @param namespace 
      * @param uid 
      * @param containerName 
+     * @param sinceTime 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getWorkspaceContainerLogs(namespace: string, uid: string, containerName: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<StreamResultOfLogStreamResponse>;
-    public getWorkspaceContainerLogs(namespace: string, uid: string, containerName: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpResponse<StreamResultOfLogStreamResponse>>;
-    public getWorkspaceContainerLogs(namespace: string, uid: string, containerName: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpEvent<StreamResultOfLogStreamResponse>>;
-    public getWorkspaceContainerLogs(namespace: string, uid: string, containerName: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<any> {
+    public getWorkspaceContainerLogs(namespace: string, uid: string, containerName: string, sinceTime?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<StreamResultOfLogStreamResponse>;
+    public getWorkspaceContainerLogs(namespace: string, uid: string, containerName: string, sinceTime?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpResponse<StreamResultOfLogStreamResponse>>;
+    public getWorkspaceContainerLogs(namespace: string, uid: string, containerName: string, sinceTime?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpEvent<StreamResultOfLogStreamResponse>>;
+    public getWorkspaceContainerLogs(namespace: string, uid: string, containerName: string, sinceTime?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
             throw new Error('Required parameter namespace was null or undefined when calling getWorkspaceContainerLogs.');
         }
@@ -292,6 +293,12 @@ export class WorkspaceServiceService {
         }
         if (containerName === null || containerName === undefined) {
             throw new Error('Required parameter containerName was null or undefined when calling getWorkspaceContainerLogs.');
+        }
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (sinceTime !== undefined && sinceTime !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>sinceTime, 'sinceTime');
         }
 
         let headers = this.defaultHeaders;
@@ -325,6 +332,7 @@ export class WorkspaceServiceService {
 
         return this.httpClient.get<StreamResultOfLogStreamResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workspaces/${encodeURIComponent(String(uid))}/containers/${encodeURIComponent(String(containerName))}/logs`,
             {
+                params: queryParameters,
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

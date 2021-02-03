@@ -9,6 +9,7 @@
             </div>
 
             <app-breadcrumbs [parts]="pathParts" (breadcrumbClick)="onBreadcrumbClicked($event)"></app-breadcrumbs>
+            <span *ngIf="!showingFile" class="path-separator color-medium-gray">/</span>
             <i class="far fa-copy mr-1 workspace-template-menu-icon ml-2 color-primary pointer-hover" matTooltip="Copy location" (click)="copyLocationToClipboard()"></i>
             <mat-spinner *ngIf="loading"
                     color="primary"
