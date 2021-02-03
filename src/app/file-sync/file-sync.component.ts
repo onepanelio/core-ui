@@ -3,7 +3,7 @@ import { Workspace, WorkspaceComponent, WorkspaceServiceService } from '../../ap
 import * as yaml from 'js-yaml';
 import { MatDialog } from '@angular/material/dialog';
 import { FileBrowserDialogComponent, FileBrowserDialogData } from '../files/file-browser-dialog/file-browser-dialog.component';
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../auth/auth.service';
 import { SimpleLogComponent } from '../simple-log/simple-log.component';
@@ -31,8 +31,7 @@ export class FileSyncComponent implements OnInit {
 
   form: FormGroup;
   objectStoragePath: AbstractControl;
-  mountPath: AbstractControl;
-  mountPathInput: AbstractControl;
+  workspacePath: AbstractControl;
   deleteFilesInDestination: AbstractControl;
 
   mountPaths: string[] = [];
@@ -45,6 +44,18 @@ export class FileSyncComponent implements OnInit {
       private httpClient: HttpClient) { }
 
   ngOnInit() {
+    this.form = this.formBuilder.group({
+      objectStoragePath: [],
+      workspacePath: [],
+      deleteFilesInDestination: [],
+    });
+
+    this.objectStoragePath = this.form.get('objectStoragePath');
+    this.workspacePath = this.form.get('workspacePath');
+    this.deleteFilesInDestination = this.form.get('deleteFilesInDestination');
+    this.deleteFilesInDestination.setValue(false);
+    this.objectStoragePath.setValue('');
+
     const volumeMounts = this.parseVolumeMountsFromManifest(this.workspace.workspaceTemplate.manifest);
     const mountPaths = [];
     for (const volumeMount of volumeMounts) {
@@ -52,25 +63,6 @@ export class FileSyncComponent implements OnInit {
     }
 
     this.mountPaths = mountPaths;
-
-    this.form = this.formBuilder.group({
-      objectStoragePath: [],
-      mountPath: [],
-      mountPathInput: [],
-      deleteFilesInDestination: [],
-    });
-
-    this.objectStoragePath = this.form.get('objectStoragePath');
-    this.mountPath = this.form.get('mountPath');
-    this.mountPathInput = this.form.get('mountPathInput');
-    this.deleteFilesInDestination = this.form.get('deleteFilesInDestination');
-    this.deleteFilesInDestination.setValue(false);
-
-    if (mountPaths.length !== 0) {
-      this.mountPath.setValue(mountPaths[0]);
-    }
-
-    this.objectStoragePath.setValue('');
   }
 
   parseVolumeMountsFromManifest(manifest: string): Array<{name: string, mountPath: string}> {
@@ -112,14 +104,9 @@ export class FileSyncComponent implements OnInit {
   }
 
   private getPostData(action: syncAction): SyncBody {
-    let path = this.mountPath.value + '/';
-    if (this.mountPathInput.value) {
-      path += this.mountPathInput.value;
-    }
-
     return {
       action,
-      path,
+      path: this.workspacePath.value,
       delete: this.deleteFilesInDestination.value,
       prefix: this.objectStoragePath.value
     };
@@ -184,7 +171,7 @@ export class FileSyncComponent implements OnInit {
   handleStopEditObjectStoragePath() {
     const path: string = this.objectStoragePath.value;
     if (!path) {
-      this.objectStoragePath.setValue('/');
+      this.objectStoragePath.setValue('');
     } else if (!path.endsWith('/')) {
       this.objectStoragePath.setValue(path + '/');
     }

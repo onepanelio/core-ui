@@ -3,4 +3,10 @@
     position: relative;
     bottom: 5px;
   }
+
+  // Without this, the button "jumps" when the spinner is added.
+  .hacky-fix {
+    width: 0;
+    height: 20px; // This must match the spinner diameter
+  }
 }
