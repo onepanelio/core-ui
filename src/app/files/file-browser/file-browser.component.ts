@@ -146,7 +146,7 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
     const parts = subPath.split('/').filter(value => value.length !== 0);
     const partUntil = parts.slice(0, index + 1).join('/');
 
-    if (this.fileNavigator.rootPath === '') {
+    if (this.fileNavigator.rootPath === '/') {
       return partUntil;
     }
 

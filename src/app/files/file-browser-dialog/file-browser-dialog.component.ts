@@ -29,7 +29,8 @@ export class FileBrowserDialogComponent implements OnInit {
         this.namespace = data.namespace;
 
         this.fileNavigator = new FileNavigator({
-            rootPath: '',
+            rootPath: '/',
+            displayRootPath: '/',
             path: data.path,
             namespace: data.namespace,
             name: 'dialog',
@@ -50,7 +51,7 @@ export class FileBrowserDialogComponent implements OnInit {
 
         // If you do not change the directory while in the browser, the root is not considered a directory
         // but it is, so we need to return the result as just the root.
-        if (file.path === '') {
+        if (file.path === '/') {
             this.dialogRef.close( '');
             return;
         } else if (!file.directory) {
