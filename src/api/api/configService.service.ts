@@ -87,13 +87,17 @@ export class ConfigServiceService {
     }
 
     /**
+     * @param namespace 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getConfig(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<GetConfigResponse>;
-    public getConfig(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpResponse<GetConfigResponse>>;
-    public getConfig(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpEvent<GetConfigResponse>>;
-    public getConfig(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<any> {
+    public getConfig(namespace: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<GetConfigResponse>;
+    public getConfig(namespace: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpResponse<GetConfigResponse>>;
+    public getConfig(namespace: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpEvent<GetConfigResponse>>;
+    public getConfig(namespace: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<any> {
+        if (namespace === null || namespace === undefined) {
+            throw new Error('Required parameter namespace was null or undefined when calling getConfig.');
+        }
 
         let headers = this.defaultHeaders;
 
@@ -124,7 +128,7 @@ export class ConfigServiceService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<GetConfigResponse>(`${this.configuration.basePath}/apis/v1beta1/config`,
+        return this.httpClient.get<GetConfigResponse>(`${this.configuration.basePath}/apis/v1beta1/config/${encodeURIComponent(String(namespace))}`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,

@@ -17,5 +17,6 @@ export interface GetConfigResponse {
     domain?: string;
     fqdn?: string;
     nodePool?: NodePool;
+    bucket?: string;
 }
 

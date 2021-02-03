@@ -21,8 +21,8 @@ export class BreadcrumbsComponent implements OnInit {
 
   onClick(index: number, part: string) {
     this.breadcrumbClick.emit({
-      index: index,
-      part: part
-    })
+      index,
+      part
+    });
   }
 }

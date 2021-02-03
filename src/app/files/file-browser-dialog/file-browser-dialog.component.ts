@@ -30,7 +30,7 @@ export class FileBrowserDialogComponent implements OnInit {
 
         this.fileNavigator = new FileNavigator({
             rootPath: '/',
-            displayRootPath: '/',
+            displayRootPath: data.displayRootPath,
             path: data.path,
             namespace: data.namespace,
             name: 'dialog',
