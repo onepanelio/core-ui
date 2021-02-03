@@ -240,7 +240,7 @@ import { PrefixFileInputComponent } from './files/prefix-file-input/prefix-file-
         DateFromUtcPipe,
         FileSyncComponent,
         FileBrowserDialogComponent,
-        SimpleLogComponent
+        SimpleLogComponent,
         PrefixFileInputComponent,
     ],
     entryComponents: [
