@@ -1,0 +1,9 @@
+.prefix-file-input {
+  .no-left {
+    /deep/ .mat-form-field-outline-start {
+      display: none;
+    }
+
+    left: -3px;
+  }
+}

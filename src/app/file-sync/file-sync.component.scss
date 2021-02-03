@@ -32,4 +32,16 @@
     position: relative;
     bottom: 5px;
   }
+
+  /deep/ .prefix-file-input {
+    display: flex;
+
+    .prefix-select {
+      width: 100px;
+    }
+
+    .prefix-input-container {
+      flex-grow: 1;
+    }
+  }
 }

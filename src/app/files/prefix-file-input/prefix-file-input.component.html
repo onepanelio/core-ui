@@ -1,0 +1,14 @@
+<div class="prefix-file-input">
+    <mat-form-field *ngIf="prefixes.length > 1" appearance="outline" class="prefix-select">
+        <mat-select  [formControl]="prefixSelect">
+            <mat-option *ngFor="let prefix of prefixes" [value]="prefix">{{prefix}}/</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="prefix-input-container" [class.no-left]="prefixes.length > 1">
+        <div class="d-flex align-items-baseline">
+            <label *ngIf="prefixes.length === 1">{{prefixes[0]}}/</label>
+            <input matInput [formControl]="pathInput" />
+        </div>
+    </mat-form-field>
+</div>

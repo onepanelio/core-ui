@@ -135,6 +135,7 @@ import { DateFromUtcPipe } from './pipes/date-from-utc/date-from-utc.pipe';
 import { FileSyncComponent } from './file-sync/file-sync.component';
 import { FileBrowserDialogComponent } from './files/file-browser-dialog/file-browser-dialog.component';
 import { SimpleLogComponent } from './simple-log/simple-log.component';
+import { PrefixFileInputComponent } from './files/prefix-file-input/prefix-file-input.component';
 
 @NgModule({
     declarations: [
@@ -240,6 +241,7 @@ import { SimpleLogComponent } from './simple-log/simple-log.component';
         FileSyncComponent,
         FileBrowserDialogComponent,
         SimpleLogComponent
+        PrefixFileInputComponent,
     ],
     entryComponents: [
         WorkflowExecuteDialogComponent,
