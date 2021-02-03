@@ -46,7 +46,7 @@ export class FileSyncComponent implements OnInit {
       private configService: ConfigServiceService) { }
 
   ngOnInit() {
-    this.configService.getConfig(this.namespace).subscribe(res => {
+    this.configService.getNamespaceConfig(this.namespace).subscribe(res => {
       this.bucket = res.bucket;
     });
 

@@ -18,6 +18,7 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 import { GetConfigResponse } from '../model/models';
+import { GetNamespaceConfigResponse } from '../model/models';
 import { GoogleRpcStatus } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -87,16 +88,65 @@ export class ConfigServiceService {
     }
 
     /**
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getConfig(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<GetConfigResponse>;
+    public getConfig(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpResponse<GetConfigResponse>>;
+    public getConfig(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpEvent<GetConfigResponse>>;
+    public getConfig(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<any> {
+
+        let headers = this.defaultHeaders;
+
+        // authentication (Bearer) required
+        if (this.configuration.apiKeys) {
+            const key: string | undefined = this.configuration.apiKeys["Bearer"] || this.configuration.apiKeys["authorization"];
+            if (key) {
+                headers = headers.set('authorization', key);
+            }
+        }
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json',
+                'application/octet-stream'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<GetConfigResponse>(`${this.configuration.basePath}/apis/v1beta1/config`,
+            {
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
      * @param namespace 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getConfig(namespace: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<GetConfigResponse>;
-    public getConfig(namespace: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpResponse<GetConfigResponse>>;
-    public getConfig(namespace: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpEvent<GetConfigResponse>>;
-    public getConfig(namespace: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<any> {
+    public getNamespaceConfig(namespace: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<GetNamespaceConfigResponse>;
+    public getNamespaceConfig(namespace: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpResponse<GetNamespaceConfigResponse>>;
+    public getNamespaceConfig(namespace: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpEvent<GetNamespaceConfigResponse>>;
+    public getNamespaceConfig(namespace: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
-            throw new Error('Required parameter namespace was null or undefined when calling getConfig.');
+            throw new Error('Required parameter namespace was null or undefined when calling getNamespaceConfig.');
         }
 
         let headers = this.defaultHeaders;
@@ -128,7 +178,7 @@ export class ConfigServiceService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<GetConfigResponse>(`${this.configuration.basePath}/apis/v1beta1/config/${encodeURIComponent(String(namespace))}`,
+        return this.httpClient.get<GetNamespaceConfigResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/config`,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
