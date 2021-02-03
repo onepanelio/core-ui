@@ -148,7 +148,6 @@ export class FileSyncComponent implements OnInit {
 
   handleSyncToWorkspace() {
     const now = new Date();
-
     const body = this.getPostData('download');
 
     this.syncRequest(body).subscribe(res => {
@@ -164,6 +163,8 @@ export class FileSyncComponent implements OnInit {
   watchLogs(sinceTime: Date) {
     this.showLogs = true;
     const sinceEpochSeconds = Math.floor(sinceTime.getTime() / 1000);
+
+    console.log(sinceEpochSeconds);
     const url = `${environment.baseWsUrl}/apis/v1beta1/${this.namespace}/workspaces/${this.workspace.uid}/containers/sys-filesyncer/logs?sinceTime=${sinceEpochSeconds}`;
     this.log.start(url);
   }
