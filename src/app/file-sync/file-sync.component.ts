@@ -156,10 +156,9 @@ export class FileSyncComponent implements OnInit {
   /**
    * @param sinceTime timestamp indicating from what point the logs should be watched.
    */
-  watchLogs(sinceTime: Date) {
+  watchLogs(sinceTime: any) {
     this.showLogs = true;
-    const sinceEpochSeconds = Math.floor(sinceTime.getTime() / 1000);
-    const url = `${environment.baseWsUrl}/apis/v1beta1/${this.namespace}/workspaces/${this.workspace.uid}/containers/sys-filesyncer/logs?sinceTime=${sinceEpochSeconds}`;
+    const url = `${environment.baseWsUrl}/apis/v1beta1/${this.namespace}/workspaces/${this.workspace.uid}/containers/sys-filesyncer/logs?sinceTime=${sinceTime}`;
     this.log.start(url);
   }
 
