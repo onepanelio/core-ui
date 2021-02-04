@@ -135,23 +135,20 @@ export class FileSyncComponent implements OnInit {
   }
 
   handleSyncToObjectStorage() {
-    const now = new Date();
-
     const body = this.getPostData('upload');
 
-    this.syncRequest(body).subscribe(res => {
-      this.watchLogs(now);
+    this.syncRequest(body).subscribe((res: any) => {
+      this.watchLogs(res.Start);
     }, err => {
       console.error(err);
     });
   }
 
   handleSyncToWorkspace() {
-    const now = new Date();
     const body = this.getPostData('download');
 
-    this.syncRequest(body).subscribe(res => {
-      this.watchLogs(now);
+    this.syncRequest(body).subscribe((res: any) => {
+      this.watchLogs(res.Start);
     }, err => {
       console.error(err);
     });
@@ -160,12 +157,12 @@ export class FileSyncComponent implements OnInit {
   /**
    * @param sinceTime timestamp indicating from what point the logs should be watched.
    */
-  watchLogs(sinceTime: Date) {
+  watchLogs(sinceTime: any) {
     this.showLogs = true;
-    const sinceEpochSeconds = Math.floor(sinceTime.getTime() / 1000);
+    // const sinceEpochSeconds = Math.floor(sinceTime.getTime() / 1000);
 
-    console.log(sinceEpochSeconds);
-    const url = `${environment.baseWsUrl}/apis/v1beta1/${this.namespace}/workspaces/${this.workspace.uid}/containers/sys-filesyncer/logs?sinceTime=${sinceEpochSeconds}`;
+    console.log(sinceTime);
+    const url = `${environment.baseWsUrl}/apis/v1beta1/${this.namespace}/workspaces/${this.workspace.uid}/containers/sys-filesyncer/logs?sinceTime=${sinceTime}`;
     this.log.start(url);
   }
 
