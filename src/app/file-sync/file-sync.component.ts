@@ -135,24 +135,19 @@ export class FileSyncComponent implements OnInit {
   }
 
   handleSyncToObjectStorage() {
-    const now = new Date();
-
     const body = this.getPostData('upload');
-
-    this.syncRequest(body).subscribe(res => {
-      this.watchLogs(now);
+    this.syncRequest(body).subscribe((res: any) => {
+      this.watchLogs(res.start);
     }, err => {
       console.error(err);
     });
   }
 
   handleSyncToWorkspace() {
-    const now = new Date();
-
     const body = this.getPostData('download');
 
-    this.syncRequest(body).subscribe(res => {
-      this.watchLogs(now);
+    this.syncRequest(body).subscribe((res: any) => {
+      this.watchLogs(res.start);
     }, err => {
       console.error(err);
     });
