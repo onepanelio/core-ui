@@ -42,6 +42,8 @@ export class PrefixFileInputComponent implements OnInit {
     this.pathInput.valueChanges.subscribe(() => {
       this.updateFormControl();
     });
+
+    this.updateFormControl();
   }
 
   private updateFormControl() {
