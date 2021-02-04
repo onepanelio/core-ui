@@ -137,7 +137,7 @@ export class FileSyncComponent implements OnInit {
   handleSyncToObjectStorage() {
     const body = this.getPostData('upload');
     this.syncRequest(body).subscribe((res: any) => {
-      this.watchLogs(res.start);
+      this.watchLogs(res.timestamp);
     }, err => {
       console.error(err);
     });
@@ -147,7 +147,7 @@ export class FileSyncComponent implements OnInit {
     const body = this.getPostData('download');
 
     this.syncRequest(body).subscribe((res: any) => {
-      this.watchLogs(res.start);
+      this.watchLogs(res.timestamp);
     }, err => {
       console.error(err);
     });
