@@ -458,7 +458,7 @@ templates:
         # [CHANGE] Update the config path below to point to config.yaml path as described above
         # Note that you can "pip install" additional tools here if necessary
         - |
-          python -u /opt/onepanel/nni/start.py \
+          python -u /opt/onepanel/nni/start.py \\
             --config /mnt/data/src/workflows/hyperparameter-tuning/mnist/config.yaml
       workingDir: /mnt
       volumeMounts:
