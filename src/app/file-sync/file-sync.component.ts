@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { ConfigServiceService, Workspace, WorkspaceComponent, WorkspaceServiceService } from '../../api';
+import { ConfigServiceService, WorkflowServiceService, Workspace, WorkspaceComponent, WorkspaceServiceService } from '../../api';
 import * as yaml from 'js-yaml';
 import { MatDialog } from '@angular/material/dialog';
 import { FileBrowserDialogComponent, FileBrowserDialogData } from '../files/file-browser-dialog/file-browser-dialog.component';
@@ -8,6 +8,9 @@ import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../auth/auth.service';
 import { SimpleLogComponent } from '../simple-log/simple-log.component';
 import { environment } from '../../environments/environment';
+import { WorkflowFileApiWrapper } from '../files/WorkflowFileApiWrapper';
+import { FileSyncerFileApi } from '../files/file-api';
+import { PrefixFileInputComponent } from '../files/prefix-file-input/prefix-file-input.component';
 
 type syncAction = 'upload' | 'download';
 
@@ -27,6 +30,7 @@ export class FileSyncComponent implements OnInit {
   @Input() namespace: string;
   @Input() workspace: Workspace;
   @ViewChild(SimpleLogComponent, {static: false}) log: SimpleLogComponent;
+  @ViewChild(PrefixFileInputComponent, {static: false}) prefixFileInput: PrefixFileInputComponent;
   @ViewChild('objectStorageInput', {static: true}) objectStorageInput: ElementRef;
 
   form: FormGroup;
@@ -39,6 +43,7 @@ export class FileSyncComponent implements OnInit {
   bucket = '';
 
   constructor(
+      private workflowService: WorkflowServiceService,
       private authService: AuthService,
       private dialog: MatDialog,
       private formBuilder: FormBuilder,
@@ -87,12 +92,18 @@ export class FileSyncComponent implements OnInit {
     return volumeMounts;
   }
 
+  private getWorkflowFileApiService() {
+    return new WorkflowFileApiWrapper(this.namespace, 'dialog', this.workflowService);
+  }
+
   handleBrowse() {
     const path: string = this.objectStoragePath.value;
     const data: FileBrowserDialogData = {
       namespace: this.namespace,
+      name: this.workspace.name,
       path,
-      displayRootPath: this.bucket
+      displayRootPath: this.bucket,
+      apiService: this.getWorkflowFileApiService(),
     };
 
     const dialog = this.dialog.open(FileBrowserDialogComponent, {
@@ -107,6 +118,48 @@ export class FileSyncComponent implements OnInit {
       }
 
       this.objectStoragePath.setValue(res);
+    });
+  }
+
+  handleBrowseWorkspaceFiles() {
+    const filesyncer = this.workspace.workspaceComponents.find((workspace: WorkspaceComponent) => {
+      return workspace.name === 'sys-filesyncer';
+    });
+
+    const url = filesyncer.url;
+
+    const prefixValue = this.prefixFileInput.prefixSelect.value;
+    let rootPath = prefixValue;
+    if (!rootPath.endsWith('/')) {
+      rootPath += '/';
+    }
+
+    const path: string = this.workspacePath.value;
+    const data: FileBrowserDialogData = {
+      namespace: this.namespace,
+      name: this.workspace.name,
+      displayRootPath: prefixValue,
+      rootPath,
+      path,
+      apiService: new FileSyncerFileApi(this.authService.getAuthToken(), this.httpClient, url)
+    };
+
+    const dialog = this.dialog.open(FileBrowserDialogComponent, {
+      width: '60vw',
+      maxHeight: '100vh',
+      data
+    });
+
+    dialog.afterClosed().subscribe((res: string|undefined) => {
+      if (!res) {
+        return;
+      }
+
+      if (!res.endsWith('/')) {
+        res += '/';
+      }
+
+      this.workspacePath.setValue(res);
     });
   }
 

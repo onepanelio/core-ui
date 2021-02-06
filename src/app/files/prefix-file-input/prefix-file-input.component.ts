@@ -44,10 +44,26 @@ export class PrefixFileInputComponent implements OnInit {
     });
 
     this.updateFormControl();
+
+    this.control.valueChanges.subscribe( (res: string) => {
+      let prefix: string = this.prefixSelect.value;
+      if (!prefix.endsWith('/')) {
+        prefix += '/';
+      }
+
+      const remainingPath = res.substring(prefix.length);
+
+      this.pathInput.setValue(remainingPath);
+    });
   }
 
   private updateFormControl() {
     const path = this.prefixSelect.value + '/' + this.pathInput.value;
+    const controlValue = this.control.value;
+
+    if (path === controlValue) {
+      return;
+    }
 
     if (this.control) {
       this.control.setValue(path);
