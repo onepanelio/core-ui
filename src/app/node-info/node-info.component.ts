@@ -6,6 +6,7 @@ import { TemplateDefinition } from '../workflow-template/workflow-template.servi
 import { FileNavigator } from '../files/fileNavigator';
 import { WorkflowServiceService } from '../../api';
 import { Metric, MetricsService } from './metrics/metrics.service';
+import { WorkflowFileApiWrapper } from '../files/WorkflowFileApiWrapper';
 
 interface SideCar {
   name: string;
@@ -126,7 +127,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
     // some of the names have dashes like 'tensor-first'.
     // change it to be 'tensor first' instead to look nicer for the button
     name = name.replace(/-/g, ' ');
-    let url = `//${parameter.value}`;
+    const url = `//${parameter.value}`;
 
     return {
       name,
@@ -261,12 +262,14 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
     this.fileNavigators = [];
     const directories = NodeInfoComponent.outputArtifactsToDirectories(this.outputArtifacts);
 
+    const service = new WorkflowFileApiWrapper(this.namespace, 'dialog', this.workflowServiceService);
+
     for (const directory of directories) {
       const fileNavigator = new FileNavigator({
         rootPath: directory,
         namespace: this.namespace,
         name: this.name,
-        workflowService: this.workflowServiceService,
+        apiService: service
       });
 
       // Check if there are any files at all. If there isn't, don't display the file browser.

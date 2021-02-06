@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ModelFile, WorkflowServiceService } from '../../../../api';
+import { ModelFile } from '../../../../api';
 import 'brace/mode/json';
+import { FileApi } from '../../file-api';
 
 @Component({
   selector: 'app-text-file-view',
@@ -8,16 +9,15 @@ import 'brace/mode/json';
   styleUrls: ['./text-file-view.component.scss']
 })
 export class TextFileViewComponent implements OnInit {
-  @Input() namespace: string;
-  @Input() name: string;
   @Input() file: ModelFile;
+  @Input() fileApi: FileApi;
   @Output() loading = new EventEmitter<boolean>();
 
   displayContent: string;
   renderMode = 'text';
   formattedExtension  = 'text';
 
-  constructor(private workflowService: WorkflowServiceService) {
+  constructor() {
   }
 
   ngOnInit() {
@@ -37,14 +37,16 @@ export class TextFileViewComponent implements OnInit {
         break;
     }
 
-    this.workflowService.getArtifact(this.namespace, this.name, this.file.path)
-        .subscribe(res => {
-          this.setBase64Content(res.data);
-        }, err => {
-          console.error(err);
-        }, () => {
-          this.loading.emit(false);
-        });
+    if (this.fileApi) {
+      this.fileApi.getContent(this.file.path)
+          .subscribe(res => {
+            this.setBase64Content(res.data);
+          }, err => {
+            console.error(err);
+          }, () => {
+            this.loading.emit(false);
+          });
+    }
   }
 
   public static CanEdit(): boolean {

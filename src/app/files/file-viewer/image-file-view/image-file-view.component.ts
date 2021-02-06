@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { ModelFile, WorkflowServiceService } from "../../../../api";
+import { ModelFile } from '../../../../api';
+import { FileApi } from '../../file-api';
 
 @Component({
   selector: 'app-image-file-view',
@@ -7,27 +8,28 @@ import { ModelFile, WorkflowServiceService } from "../../../../api";
   styleUrls: ['./image-file-view.scss'],
 })
 export class ImageFileViewComponent implements OnInit {
-  @Input() namespace: string;
-  @Input() name: string;
   @Input() file: ModelFile;
   @Output() loading = new EventEmitter<boolean>();
+  @Input() fileApi: FileApi;
 
   displayContent: string;
 
-  constructor(private workflowService: WorkflowServiceService) {
+  constructor() {
   }
 
   ngOnInit() {
     this.loading.emit(true);
 
-    this.workflowService.getArtifact(this.namespace, this.name, this.file.path)
-        .subscribe(res => {
-          this.setBase64Content(res.data);
-        }, err => {
-          console.error(err);
-        }, () => {
-          this.loading.emit(false);
-        })
+    if (this.fileApi) {
+      this.fileApi.getContent(this.file.path)
+          .subscribe(res => {
+            this.setBase64Content(res.data);
+          }, err => {
+            console.error(err);
+          }, () => {
+            this.loading.emit(false);
+          });
+    }
   }
 
   public static CanEdit(): boolean {
@@ -44,7 +46,7 @@ export class ImageFileViewComponent implements OnInit {
 
   private setBase64Content(content: any) {
     let extension = this.file.extension;
-    if(!extension) {
+    if (!extension) {
       extension = 'png';
     }
 

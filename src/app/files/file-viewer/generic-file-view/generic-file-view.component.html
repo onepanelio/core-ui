@@ -5,15 +5,13 @@
             (fileAction)="onFileAction($event)"
             [file]="_file"></app-big-file-view>
     <app-image-file-view *ngSwitchCase="'image'"
-                     [namespace]="namespace"
-                     [name]="name"
                      [file]="_file"
+                     [fileApi]="fileApi"
                      (loading)="onLoadingChange($event)">
     </app-image-file-view>
     <app-text-file-view
       *ngSwitchCase="'text'"
-      [namespace]="namespace"
-      [name]="name"
+      [fileApi]="fileApi"
       [file]="_file"
       (loading)="onLoadingChange($event)"
     ></app-text-file-view>

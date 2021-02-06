@@ -4,6 +4,7 @@ import { ImageFileViewComponent } from '../image-file-view/image-file-view.compo
 import { ModelFile } from '../../../../api';
 import { FileActionEvent } from '../../file-navigator/file-navigator.component';
 import { TextFileViewComponent } from '../text-file-view/text-file-view.component';
+import { FileApi } from '../../file-api';
 
 @Component({
     selector: 'app-generic-file-view',
@@ -21,6 +22,7 @@ export class GenericFileViewComponent {
     _file: ModelFile = null;
 
     @Input() showDownload = true;
+    @Input() fileApi: FileApi;
     @Output() actionClick = new EventEmitter<FileActionEvent>();
 
     public static IsFileTooBigToDisplay(file: ModelFile): boolean {

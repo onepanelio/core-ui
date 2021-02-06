@@ -1,6 +1,7 @@
 import { EventEmitter, Output } from '@angular/core';
 import { ListFilesResponse, ModelFile, WorkflowServiceService } from '../../api';
 import { map } from 'rxjs/operators';
+import { FileApi } from './file-api';
 
 export enum LongRunningTaskState {
     Started = 0,
@@ -75,7 +76,7 @@ export class SlowValue<T> {
 }
 
 export interface FileNavigatorArgs {
-    workflowService: WorkflowServiceService;
+    apiService: FileApi;
     rootPath: string;
     path?: string;
     displayRootPath?: string;
@@ -88,7 +89,7 @@ export class FileNavigator {
     private namespace: string;
     public name: string;
     private pathValueChangedSubscription;
-    private workflowService: WorkflowServiceService;
+    apiService: FileApi;
 
     // tslint:disable-next-line:variable-name
     private _rootPath: string;
@@ -102,7 +103,7 @@ export class FileNavigator {
     @Output() filesChanged = new EventEmitter();
 
     constructor(args: FileNavigatorArgs) {
-        this.workflowService = args.workflowService;
+        this.apiService = args.apiService;
         this._rootPath = args.rootPath;
         if (args.displayRootPath) {
             this.displayRootPath = args.displayRootPath;
@@ -146,7 +147,12 @@ export class FileNavigator {
     }
 
     selectFile(file: ModelFile) {
-        this.path.value = file.path;
+        let path = file.path;
+        if (file.directory && !file.path.endsWith('/')) {
+            path += '/';
+        }
+
+        this.path.value = path;
 
         if (file.directory) {
             this.loadFiles(file);
@@ -188,7 +194,7 @@ export class FileNavigator {
             this.changingFiles.requestValueChange();
         }
 
-        this.workflowService.listFiles(this.namespace, this.name, this.path.value)
+        this.apiService.listFiles(this.path.value)
             .pipe(
                 map(value => {
                     if (!value.files) {
@@ -203,7 +209,8 @@ export class FileNavigator {
                         }
                     }
 
-                    if (this.path.value !== this.rootPath) {
+                    if (this.path.value !== this.rootPath &&
+                        this.path.value !== (this.rootPath + '/')) {
                         const fileUp = {
                             path: value.parentPath,
                             directory: true,
@@ -228,7 +235,12 @@ export class FileNavigator {
                 if (file) {
                     this.file.value = file;
                 }
-            });
+            })
+        ;
+    }
+
+    public getFileContent(path: string) {
+        return this.apiService.getContent(path);
     }
 
     cleanUp() {

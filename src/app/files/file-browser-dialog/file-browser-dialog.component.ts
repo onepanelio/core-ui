@@ -1,14 +1,17 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FileNavigator } from '../fileNavigator';
-import { WorkflowServiceService } from '../../../api';
 import { AlertService } from '../../alert/alert.service';
 import { Alert } from '../../alert/alert';
+import { FileApi } from '../file-api';
 
 export interface FileBrowserDialogData {
     namespace: string;
+    name: string;
     path: string;
     displayRootPath?: string;
+    apiService: FileApi;
+    rootPath?: string;
 }
 
 @Component({
@@ -19,22 +22,24 @@ export interface FileBrowserDialogData {
 export class FileBrowserDialogComponent implements OnInit {
     fileNavigator: FileNavigator;
     namespace: string;
+    allowRoot: boolean;
 
     constructor(
         private alertService: AlertService,
-        private workflowServiceService: WorkflowServiceService,
         public dialogRef: MatDialogRef<FileBrowserDialogComponent>,
         @Inject(MAT_DIALOG_DATA) public data: FileBrowserDialogData
     ) {
         this.namespace = data.namespace;
 
+        const rootPath = data.rootPath ? data.rootPath : '/';
+
         this.fileNavigator = new FileNavigator({
-            rootPath: '/',
+            rootPath,
             displayRootPath: data.displayRootPath,
             path: data.path,
             namespace: data.namespace,
-            name: 'dialog',
-            workflowService: this.workflowServiceService,
+            name: data.name,
+            apiService: data.apiService
         });
     }
 

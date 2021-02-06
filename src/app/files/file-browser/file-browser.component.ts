@@ -24,7 +24,30 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
   showingFile = false;
   loading = false;
 
-  @Input() rootName = '';
+  // tslint:disable-next-line:variable-name
+  _preRootName = '';
+
+  // tslint:disable-next-line:variable-name
+  _rootNameValue = '';
+
+  // tslint:disable-next-line:variable-name
+  _rootName = '';
+
+  @Input() set rootName(value: string) {
+    this._rootName = value;
+
+    if (value.startsWith('/')) {
+      this._preRootName = '/';
+      this._rootNameValue = value.substring(1);
+    } else {
+      this._preRootName = undefined;
+      this._rootNameValue = value;
+    }
+  }
+  get rootName(): string {
+    return this._rootName;
+  }
+
   @Input() set fileNavigator(value: FileNavigator) {
     this._fileNavigator = value;
 
@@ -147,10 +170,10 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
     const partUntil = parts.slice(0, index + 1).join('/');
 
     if (this.fileNavigator.rootPath === '/') {
-      return partUntil;
+      return partUntil + '/';
     }
 
-    return this.fileNavigator.rootPath + '/' + partUntil;
+    return this.fileNavigator.rootPath + '/' + partUntil  + '/';
   }
 
   onFileEvent(e: FileActionEvent) {
@@ -164,10 +187,11 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
       throw new Error('Unable to download a directory');
     }
 
-    this.workflowService.getArtifact(this.namespace, this.name, file.path)
+    // this.workflowService.getArtifact(this.namespace, this.name, file.path)
+    this.fileNavigator.getFileContent(file.path)
         .subscribe((res: any) => {
           const link = document.createElement('a') as HTMLAnchorElement;
-          let downloadName = `${this.namespace}-${this.name}-${file.name}`;
+          let downloadName = file.name;
           if (file.extension) {
             downloadName += `.${file.extension}`;
           }
