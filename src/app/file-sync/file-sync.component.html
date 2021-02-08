@@ -14,7 +14,10 @@
             <label class="font-weight-bold d-block font-size-regular">Object storage location</label>
             <div class="d-flex flex-wrap justify-content-between align-items-baseline">
                 <mat-form-field appearance="outline" class="flex-grow-1">
-                    <input #objectStorageInput matInput [formControl]="objectStoragePath" (focusout)="handleStopEditObjectStoragePath()"/>
+                    <div class="d-flex align-items-baseline">
+                        <label *ngIf="bucket">{{bucket}}/</label>
+                        <input #objectStorageInput matInput [formControl]="objectStoragePath" (focusout)="handleStopEditObjectStoragePath()"/>
+                    </div>
                 </mat-form-field>
                 <button mat-stroked-button color="primary" class="op-rounded op-button ml-2 fix-bottom" (click)="handleBrowse()">Browse</button>
             </div>
