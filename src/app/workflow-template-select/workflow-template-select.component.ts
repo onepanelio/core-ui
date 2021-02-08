@@ -150,7 +150,7 @@ templates:
     workingDir: /mnt/src
   sidecars:
     - name: tensorboard
-      image: tensorflow/tensorflow:2.4
+      image: tensorflow/tensorflow:2.4.1
       command: [ sh, -c ]
       env:
         - name: ONEPANEL_INTERACTIVE_SIDECAR
