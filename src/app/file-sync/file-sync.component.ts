@@ -117,6 +117,10 @@ export class FileSyncComponent implements OnInit {
         return;
       }
 
+      if (res === '/') {
+        res = '';
+      }
+
       this.objectStoragePath.setValue(res);
     });
   }
@@ -157,11 +161,6 @@ export class FileSyncComponent implements OnInit {
 
       if (!res.endsWith('/')) {
         res += '/';
-      }
-
-      if (res === this.prefixFileInput.prefixSelect.value ||
-          res === this.prefixFileInput.prefixSelect.value + '/' ) {
-        return;
       }
 
       this.workspacePath.setValue(res);
