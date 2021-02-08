@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import 'brace';
 import 'brace/mode/yaml';
+import 'brace/mode/xml';
 import 'brace/ext/searchbox';
 import { NamespaceTracker } from './namespace/namespace-tracker.service';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';

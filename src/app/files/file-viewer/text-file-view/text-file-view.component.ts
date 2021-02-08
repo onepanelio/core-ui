@@ -29,6 +29,9 @@ export class TextFileViewComponent implements OnInit {
       case 'json':
         this.renderMode = 'json';
         break;
+      case 'xml':
+        this.renderMode = 'xml';
+        break;
       case 'yaml':
         this.renderMode = 'yaml';
         break;
@@ -58,7 +61,7 @@ export class TextFileViewComponent implements OnInit {
   }
 
   public static IsTextExtension(extension: string){
-    return (/(txt|text|log|config|json|yaml)$/i).test(extension);
+    return (/(txt|text|log|config|json|xml|yaml)$/i).test(extension);
   }
 
   private setBase64Content(content: string) {
