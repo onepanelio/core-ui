@@ -49,11 +49,11 @@ arguments:
     # [CHANGE] This is the path to your training code repository that will be cloned
     # For private repositories see: https://docs.onepanel.ai/docs/reference/workflows/artifacts#git
     - name: code
-      value: https://github.com/onepanelio/detr.git
+      value: https://github.com/onepanelio/templates.git
       displayName: Model training code repository
       type: hidden
       visibility: private
-    
+
     # [CHANGE] This is the name of branch or tag in your repository that will be used to clone your code
     - name: revision
       value: v0.18.0
@@ -89,8 +89,8 @@ arguments:
       visibility: internal
 
     # [CHANGE] Hyperparameters for your model
-    # Note that this will come in as multiline text that you will need to parse in your code
-    # You may also create a separate parameter for each hyperparameter and pass it as a flag
+    # Note that this will come in as multiline YAML that you will need to parse in your code
+    # You can also remove this and create a separate parameter for each hyperparameter and pass them as an argument to your script
     - name: hyperparameters
       displayName: Hyperparameters
       visibility: public
@@ -150,7 +150,7 @@ templates:
     workingDir: /mnt/src
   sidecars:
     - name: tensorboard
-      image: onepanel/dl:0.17.0
+      image: tensorflow/tensorflow:2.4
       command: [ sh, -c ]
       env:
         - name: ONEPANEL_INTERACTIVE_SIDECAR
