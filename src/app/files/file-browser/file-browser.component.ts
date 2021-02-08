@@ -173,6 +173,10 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
       return partUntil + '/';
     }
 
+    if (this.fileNavigator.rootPath.endsWith('/')) {
+      return this.fileNavigator.rootPath + partUntil  + '/';
+    }
+
     return this.fileNavigator.rootPath + '/' + partUntil  + '/';
   }
 

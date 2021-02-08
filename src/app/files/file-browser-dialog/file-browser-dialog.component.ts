@@ -52,14 +52,11 @@ export class FileBrowserDialogComponent implements OnInit {
     }
 
     handleConfirm() {
-        const file = this.fileNavigator.file.value;
+        const path = this.fileNavigator.path.value;
 
-        // If you do not change the directory while in the browser, the root is not considered a directory
-        // but it is, so we need to return the result as just the root.
-        if (file.path === '/') {
-            this.dialogRef.close( '');
-            return;
-        } else if (!file.directory) {
+        const isDirectory = path.endsWith('/');
+
+        if (!isDirectory) {
             this.alertService.storeAlert(new Alert({
                 type: 'danger',
                 message: 'Current selection is a file, not a folder'
@@ -68,6 +65,6 @@ export class FileBrowserDialogComponent implements OnInit {
             return;
         }
 
-        this.dialogRef.close(file.path);
+        this.dialogRef.close(path);
     }
 }

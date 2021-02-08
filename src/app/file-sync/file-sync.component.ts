@@ -113,8 +113,12 @@ export class FileSyncComponent implements OnInit {
     });
 
     dialog.afterClosed().subscribe((res: string|undefined) => {
-      if (!res) {
+      if (res === undefined) {
         return;
+      }
+
+      if (res === '/') {
+        res = '';
       }
 
       this.objectStoragePath.setValue(res);
