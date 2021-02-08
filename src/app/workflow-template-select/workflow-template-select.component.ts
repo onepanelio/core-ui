@@ -175,8 +175,8 @@ templates:
         s3:
           key: '{{workflow.parameters.cvat-finetune-checkpoint}}'
       - git:
-          repo: {{workflow.parameters.code}}
-          revision: {{workflow.parameters.revision}}
+          repo: '{{workflow.parameters.code}}'
+          revision: '{{workflow.parameters.revision}}'
         name: src
         path: /mnt/src/train
   name: train-model
