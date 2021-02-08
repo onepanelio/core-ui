@@ -69,4 +69,10 @@ export class PrefixFileInputComponent implements OnInit {
       this.control.setValue(path);
     }
   }
+
+  handleFocusOut() {
+    if (this.pathInput.value && !this.pathInput.value.endsWith('/')) {
+      this.pathInput.setValue(this.pathInput.value + '/');
+    }
+  }
 }

@@ -113,7 +113,7 @@ export class FileSyncComponent implements OnInit {
     });
 
     dialog.afterClosed().subscribe((res: string|undefined) => {
-      if (!res) {
+      if (res === undefined) {
         return;
       }
 
@@ -157,6 +157,11 @@ export class FileSyncComponent implements OnInit {
 
       if (!res.endsWith('/')) {
         res += '/';
+      }
+
+      if (res === this.prefixFileInput.prefixSelect.value ||
+          res === this.prefixFileInput.prefixSelect.value + '/' ) {
+        return;
       }
 
       this.workspacePath.setValue(res);
