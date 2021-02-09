@@ -46,8 +46,23 @@ export class WorkflowTemplateSelectComponent implements OnInit {
 # Only change the fields marked with [CHANGE]
 arguments:
   parameters:
+    # [CHANGE] This is the path to your training code repository that will be cloned
+    # For private repositories see: https://docs.onepanel.ai/docs/reference/workflows/artifacts#git
+    - name: code
+      value: https://github.com/onepanelio/templates.git
+      displayName: Model training code repository
+      type: hidden
+      visibility: private
 
-    # This is the path to data and annotation files, keep this intact so CVAT knows to populate this
+    # [CHANGE] This is the name of branch or tag in your repository that will be used to clone your code
+    - name: revision
+      value: v0.18.0
+      displayName: Model training code repository branch or tag name
+      type: hidden
+      visibility: private
+
+    # This is the path to data and annotation files
+    # Any parameter prefixed with 'cvat-' is automatically populated
     - name: cvat-annotation-path
       # Default value, this will be automatically populated by CVAT
       value: 'artifacts/{{workflow.namespace}}/annotations/'
@@ -65,7 +80,8 @@ arguments:
       displayName: Checkpoint path
       visibility: public
 
-    # Number of classes
+    # [CHANGE] Number of classes
+    # You can remove this if your code can deduce classes from annotation data
     - name: cvat-num-classes
       displayName: Number of classes
       hint: Number of classes. In CVAT, this parameter will be pre-populated.
@@ -73,15 +89,13 @@ arguments:
       visibility: internal
 
     # [CHANGE] Hyperparameters for your model
-    # Note that this will come in as multiline text that you will need to parse in your code
+    # Note that this will come in as multiline YAML that you will need to parse in your code
+    # You can also remove this and create a separate parameter for each hyperparameter and pass them as an argument to your script
     - name: hyperparameters
       displayName: Hyperparameters
       visibility: public
       type: textarea.textarea
       value: |-
-        stage-1-epochs: 1    #  Epochs for network heads
-        stage-2-epochs: 2    #  Epochs for finetune layers
-        stage-3-epochs: 3    #  Epochs for all layers
         num_steps: 1000     #   Num steps per epoch
       hint: List of available hyperparameters
 
@@ -127,7 +141,7 @@ templates:
     # [CHANGE] Docker image to use to run your code
     # You can keep this as is if your code uses TensorFlow 2.3 or PyTorch 1.5
     # For private Docker repositories use imagePullSecrets: https://github.com/argoproj/argo/blob/master/examples/image-pull-secrets.yaml#L10-L11
-    image: 'onepanel/dl:0.17.0'
+    image: onepanel/dl:0.17.0
     volumeMounts:
       - mountPath: /mnt/data
         name: data
@@ -136,7 +150,7 @@ templates:
     workingDir: /mnt/src
   sidecars:
     - name: tensorboard
-      image: 'onepanel/dl:0.17.0'
+      image: tensorflow/tensorflow:2.4.1
       command: [ sh, -c ]
       env:
         - name: ONEPANEL_INTERACTIVE_SIDECAR
@@ -161,10 +175,8 @@ templates:
         s3:
           key: '{{workflow.parameters.cvat-finetune-checkpoint}}'
       - git:
-          # [CHANGE] Point this to your code repository
-          # For private repositories see: https://docs.onepanel.ai/docs/reference/workflows/artifacts#git
-          repo: https://github.com/onepanelio/templates.git
-          revision: v0.18.0
+          repo: '{{workflow.parameters.code}}'
+          revision: '{{workflow.parameters.revision}}'
         name: src
         path: /mnt/src/train
   name: train-model
