@@ -83,6 +83,7 @@ export interface FileNavigatorArgs {
     directory?: boolean;
     namespace: string;
     name: string;
+    timer?: boolean;
 }
 
 export class FileNavigator {
@@ -101,6 +102,8 @@ export class FileNavigator {
     files?: Array<ModelFile>;
 
     @Output() filesChanged = new EventEmitter();
+
+    timer: any;
 
     constructor(args: FileNavigatorArgs) {
         this.apiService = args.apiService;
@@ -123,6 +126,12 @@ export class FileNavigator {
 
         this.namespace = args.namespace;
         this.name = args.name;
+
+        if (args.timer) {
+            this.timer = setInterval(() => {
+                this.loadFiles();
+            }, 5000);
+        }
     }
 
     get hasFiles(): boolean {
@@ -244,5 +253,8 @@ export class FileNavigator {
     }
 
     cleanUp() {
+        if (this.timer) {
+            clearInterval(this.timer);
+        }
     }
 }

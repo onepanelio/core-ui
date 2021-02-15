@@ -147,6 +147,8 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
       this.filePathChangedSubscriber.unsubscribe();
       this.filePathChangedSubscriber = null;
     }
+
+    this.fileNavigator.cleanUp();
   }
 
   onBreadcrumbClicked(e: BreadcrumbEvent) {

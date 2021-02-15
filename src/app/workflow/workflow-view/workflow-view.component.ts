@@ -654,28 +654,4 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
         });
     }
   }
-
-  onFileBrowserClicked(url: string) {
-    url += '/sys/filesyncer';
-
-    const data: FileBrowserDialogData = {
-      namespace: this.namespace,
-      name: 'test',
-      path: '/',
-      displayRootPath: '/',
-      apiService: new FileSyncerFileApi(this.appAuthService.getAuthToken(), this.httpClient, url)
-    };
-
-    const dialog = this.dialog.open(FileBrowserDialogComponent, {
-      width: '60vw',
-      maxHeight: '100vh',
-      data
-    });
-
-    dialog.afterClosed().subscribe(res => {
-      if (!res) {
-        return;
-      }
-    });
-  }
 }

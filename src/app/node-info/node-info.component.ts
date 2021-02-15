@@ -7,10 +7,15 @@ import { FileNavigator } from '../files/fileNavigator';
 import { WorkflowServiceService } from '../../api';
 import { Metric, MetricsService } from './metrics/metrics.service';
 import { WorkflowFileApiWrapper } from '../files/WorkflowFileApiWrapper';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { FileSyncerFileApi } from '../files/file-api';
+import { AuthService } from '../auth/auth.service';
+import { HttpClient } from '@angular/common/http';
 
 interface SideCar {
   name: string;
   url: string;
+  display: boolean;
 }
 
 @Component({
@@ -23,7 +28,10 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
   constructor(private workflowService: WorkflowService,
               private workflowServiceService: WorkflowServiceService,
-              private metricsService: MetricsService) { }
+              private metricsService: MetricsService,
+              private snackBar: MatSnackBar,
+              private appAuthService: AuthService,
+              private httpClient: HttpClient) { }
 
   private static sysSideCarUrlPrefixLength = 17;
   @Input() namespace: string;
@@ -34,7 +42,6 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   @Output() yamlClicked = new EventEmitter();
   @Output() closeClicked = new EventEmitter();
   @Output() logsClicked = new EventEmitter();
-  @Output() fileBrowserClicked = new EventEmitter<string>();
 
   node: NodeStatus;
   previousNodeStatus: NodeStatus;
@@ -56,11 +63,14 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   template: TemplateDefinition;
 
   hasFiles = false;
+  hasLocalFiles = false;
   metrics: Metric[] = [];
 
   fileNavigators = [];
   fileLoaderSubscriptions = {};
   sidecars = new Array<SideCar>();
+
+  localFileNavigator: FileNavigator;
 
   static outputArtifactsToDirectories(outputArtifacts: any[]): Array<string> {
     const directoriesSet = new Map<string, boolean>();
@@ -129,10 +139,12 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
     // change it to be 'tensor first' instead to look nicer for the button
     name = name.replace(/-/g, ' ');
     const url = `//${parameter.value}`;
+    const display = name !== 'sys filesyncer';
 
     return {
       name,
-      url
+      url,
+      display
     };
   }
 
@@ -140,6 +152,9 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    if (this.localFileNavigator) {
+      this.localFileNavigator.cleanUp();
+    }
   }
 
   updateNodeStatus(node: NodeStatus) {
@@ -237,14 +252,6 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
     this.logsClicked.emit();
   }
 
-  openFileBrowser() {
-    for (const sidecar of this.sidecars) {
-      if (sidecar.name === 'sys filesyncer') {
-        this.fileBrowserClicked.emit(sidecar.url);
-      }
-    }
-  }
-
   onParametersExpandChange(expanded: boolean) {
     this.parametersExpanded = expanded;
   }
@@ -329,9 +336,33 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
     const sidecars = [];
     const outputParameters = [];
 
+    this.hasLocalFiles = false;
+
     for (const param of parameters) {
       if (param.name.startsWith('sys-sidecar-url')) {
-        sidecars.push(NodeInfoComponent.paramToSideCar(param));
+        const newSideCar = NodeInfoComponent.paramToSideCar(param);
+        sidecars.push(newSideCar);
+
+        if (newSideCar.name === 'sys filesyncer') {
+          this.hasLocalFiles = this.node.phase === 'Running';
+
+          const url = newSideCar.url + '/sys/filesyncer';
+
+          if (this.localFileNavigator) {
+            this.localFileNavigator.cleanUp();
+          }
+
+          this.localFileNavigator = new FileNavigator({
+            rootPath: '/mnt/output/',
+            displayRootPath: '/mnt/output',
+            path: '/mnt/output/',
+            namespace: this.namespace,
+            name: 'test',
+            apiService: new FileSyncerFileApi(this.appAuthService.getAuthToken(), this.httpClient, url),
+            timer: true
+          });
+
+        }
       } else {
         outputParameters.push(param);
       }
