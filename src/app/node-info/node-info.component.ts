@@ -20,6 +20,12 @@ interface SideCar {
   providers: [WorkflowService, MetricsService]
 })
 export class NodeInfoComponent implements OnInit, OnDestroy {
+
+  constructor(private workflowService: WorkflowService,
+              private workflowServiceService: WorkflowServiceService,
+              private metricsService: MetricsService) { }
+
+  private static sysSideCarUrlPrefixLength = 17;
   @Input() namespace: string;
   @Input() name: string;
 
@@ -28,6 +34,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   @Output() yamlClicked = new EventEmitter();
   @Output() closeClicked = new EventEmitter();
   @Output() logsClicked = new EventEmitter();
+  @Output() fileBrowserClicked = new EventEmitter<string>();
 
   node: NodeStatus;
   previousNodeStatus: NodeStatus;
@@ -54,10 +61,6 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   fileNavigators = [];
   fileLoaderSubscriptions = {};
   sidecars = new Array<SideCar>();
-
-  constructor(private workflowService: WorkflowService,
-              private workflowServiceService: WorkflowServiceService,
-              private metricsService: MetricsService) { }
 
   static outputArtifactsToDirectories(outputArtifacts: any[]): Array<string> {
     const directoriesSet = new Map<string, boolean>();
@@ -119,8 +122,6 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
     return directories;
   }
-
-  private static sysSideCarUrlPrefixLength = 17;
 
   private static paramToSideCar(parameter: NodeParameter): SideCar {
     let name = parameter.name.substring(NodeInfoComponent.sysSideCarUrlPrefixLength);
@@ -213,7 +214,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
     }
 
     if (node.type !== 'DAG' && node.type !== 'Steps' && node.outputs) {
-      if(node.outputs.parameters) {
+      if (node.outputs.parameters) {
         this.updateOutputParameters(node.outputs.parameters);
       }
 
@@ -234,6 +235,14 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
   openLogs() {
     this.logsClicked.emit();
+  }
+
+  openFileBrowser() {
+    for (const sidecar of this.sidecars) {
+      if (sidecar.name === 'sys filesyncer') {
+        this.fileBrowserClicked.emit(sidecar.url);
+      }
+    }
   }
 
   onParametersExpandChange(expanded: boolean) {
@@ -317,11 +326,11 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   }
 
   updateOutputParameters(parameters: NodeParameter[]) {
-    let sidecars = [];
-    let outputParameters = [];
+    const sidecars = [];
+    const outputParameters = [];
 
-    for(const param of parameters) {
-      if(param.name.startsWith('sys-sidecar-url')) {
+    for (const param of parameters) {
+      if (param.name.startsWith('sys-sidecar-url')) {
         sidecars.push(NodeInfoComponent.paramToSideCar(param));
       } else {
         outputParameters.push(param);

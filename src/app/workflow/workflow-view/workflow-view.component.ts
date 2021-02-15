@@ -32,6 +32,11 @@ import { AlertService } from '../../alert/alert.service';
 import { PermissionService } from '../../permissions/permission.service';
 import { MetricsEditDialogComponent } from '../../metrics/metrics-edit-dialog/metrics-edit-dialog.component';
 import { Subscription } from 'rxjs';
+import { FileBrowserDialogComponent, FileBrowserDialogData } from '../../files/file-browser-dialog/file-browser-dialog.component';
+import { WorkflowFileApiWrapper } from '../../files/WorkflowFileApiWrapper';
+import { FileSyncerFileApi } from '../../files/file-api';
+import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../../auth/auth.service';
 
 const aceRange = ace.acequire('ace/range').Range;
 
@@ -118,6 +123,7 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
       private activatedRoute: ActivatedRoute,
       private alertService: AlertService,
       private authService: AuthServiceService,
+      private appAuthService: AuthService,
       private permissionService: PermissionService,
       private workflowService: WorkflowService,
       private workflowServiceService: WorkflowServiceService,
@@ -127,6 +133,7 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
       private appRouter: AppRouter,
       private snackbar: MatSnackBar,
       private router: Router,
+      private httpClient: HttpClient
   ) {
   }
 
@@ -646,5 +653,29 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
           this.metrics = res.metrics;
         });
     }
+  }
+
+  onFileBrowserClicked(url: string) {
+    url += '/sys/filesyncer';
+
+    const data: FileBrowserDialogData = {
+      namespace: this.namespace,
+      name: 'test',
+      path: '/',
+      displayRootPath: '/',
+      apiService: new FileSyncerFileApi(this.appAuthService.getAuthToken(), this.httpClient, url)
+    };
+
+    const dialog = this.dialog.open(FileBrowserDialogComponent, {
+      width: '60vw',
+      maxHeight: '100vh',
+      data
+    });
+
+    dialog.afterClosed().subscribe(res => {
+      if (!res) {
+        return;
+      }
+    });
   }
 }

@@ -150,7 +150,8 @@
                 [workflow]="workflow"
                 (closeClicked)="onNodeInfoClosed()"
                 (yamlClicked)="onYamlClicked()"
-                (logsClicked)="onLogsClicked()">
+                (logsClicked)="onLogsClicked()"
+                (fileBrowserClicked)="onFileBrowserClicked($event)">
         </app-node-info>
     </div>
     <app-logs
