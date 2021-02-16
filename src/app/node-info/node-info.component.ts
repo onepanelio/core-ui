@@ -345,6 +345,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
         if (newSideCar.name === 'sys filesyncer') {
           this.hasLocalFiles = this.node.phase === 'Running';
+          const timer = this.hasLocalFiles;
 
           const url = newSideCar.url + '/sys/filesyncer';
 
@@ -359,9 +360,8 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
             namespace: this.namespace,
             name: 'test',
             apiService: new FileSyncerFileApi(this.appAuthService.getAuthToken(), this.httpClient, url),
-            timer: true
+            timer
           });
-
         }
       } else {
         outputParameters.push(param);
