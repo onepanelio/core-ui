@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { NodeParameter, NodeStatus } from '../node/node.service';
 import { SimpleWorkflowDetail, WorkflowPhase, WorkflowService, } from '../workflow/workflow.service';
 import * as yaml from 'js-yaml';
-import { TemplateDefinition } from '../workflow-template/workflow-template.service';
+import { TemplateDefinition, VolumeMount } from '../workflow-template/workflow-template.service';
 import { FileNavigator } from '../files/fileNavigator';
 import { WorkflowServiceService } from '../../api';
 import { Metric, MetricsService } from './metrics/metrics.service';
@@ -54,6 +54,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   statusClass = {};
   inputParameters = [];
   outputParameters = [];
+  rawParameters = new Array<NodeParameter>();
   inputArtifacts = [];
   outputArtifacts = [];
 
@@ -63,14 +64,13 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   template: TemplateDefinition;
 
   hasFiles = false;
-  hasLocalFiles = false;
   metrics: Metric[] = [];
 
   fileNavigators = [];
   fileLoaderSubscriptions = {};
   sidecars = new Array<SideCar>();
 
-  localFileNavigator: FileNavigator;
+  localFileNavigators = new Array<FileNavigator>();
 
   static outputArtifactsToDirectories(outputArtifacts: any[]): Array<string> {
     const directoriesSet = new Map<string, boolean>();
@@ -152,9 +152,11 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.localFileNavigator) {
-      this.localFileNavigator.cleanUp();
-    }
+    FileNavigator.cleanUp(this.localFileNavigators);
+    this.localFileNavigators = [];
+
+    FileNavigator.cleanUp(this.fileNavigators);
+    this.fileNavigators = [];
   }
 
   updateNodeStatus(node: NodeStatus) {
@@ -166,7 +168,6 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
     this.inputParameters = [];
     this.inputArtifacts = [];
-    this.outputParameters = [];
     this.outputArtifacts = [];
 
     this.previousNodeStatus = this.node;
@@ -238,6 +239,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
     this.updateFiles();
     this.updateMetrics();
+    this.refreshOutputParameters();
   }
 
   onCloseClick() {
@@ -271,11 +273,9 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
     this.hasFiles = false;
 
-    for (const fileNavigator of this.fileNavigators) {
-      fileNavigator.cleanUp();
-    }
-
+    FileNavigator.cleanUp(this.fileNavigators);
     this.fileNavigators = [];
+
     const directories = NodeInfoComponent.outputArtifactsToDirectories(this.outputArtifacts);
 
     const service = new WorkflowFileApiWrapper(this.namespace, 'dialog', this.workflowServiceService);
@@ -333,35 +333,15 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   }
 
   updateOutputParameters(parameters: NodeParameter[]) {
+    this.rawParameters = parameters;
     const sidecars = [];
     const outputParameters = [];
-
-    this.hasLocalFiles = false;
 
     for (const param of parameters) {
       if (param.name.startsWith('sys-sidecar-url')) {
         const newSideCar = NodeInfoComponent.paramToSideCar(param);
-        sidecars.push(newSideCar);
-
-        if (newSideCar.name === 'sys filesyncer') {
-          this.hasLocalFiles = this.node.phase === 'Running';
-          const timer = this.hasLocalFiles;
-
-          const url = newSideCar.url + '/sys/filesyncer';
-
-          if (this.localFileNavigator) {
-            this.localFileNavigator.cleanUp();
-          }
-
-          this.localFileNavigator = new FileNavigator({
-            rootPath: '/mnt/output/',
-            displayRootPath: '/mnt/output',
-            path: '/mnt/output/',
-            namespace: this.namespace,
-            name: 'test',
-            apiService: new FileSyncerFileApi(this.appAuthService.getAuthToken(), this.httpClient, url),
-            timer
-          });
+        if (newSideCar.name !== 'sys filesyncer') {
+          sidecars.push(newSideCar);
         }
       } else {
         outputParameters.push(param);
@@ -370,9 +350,57 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
     this.sidecars = sidecars;
     this.outputParameters = outputParameters;
+
+    this.refreshOutputParameters();
+  }
+
+  private refreshOutputParameters() {
+      const volumeMounts = this.getVolumeMounts(this.template);
+      const localFileNavigators = [];
+
+      for (const param of this.rawParameters) {
+        if (!param.name.startsWith('sys-sidecar-url')) {
+          continue;
+        }
+
+        const newSideCar = NodeInfoComponent.paramToSideCar(param);
+        if (newSideCar.name === 'sys filesyncer' && this.node.phase === 'Running') {
+            const url = newSideCar.url + '/sys/filesyncer';
+
+            for (const volumeMount of volumeMounts) {
+              const fileNavigator = new FileNavigator({
+                rootPath: volumeMount.mountPath,
+                displayRootPath: volumeMount.mountPath,
+                path: volumeMount.mountPath,
+                namespace: this.namespace,
+                name: volumeMount.name,
+                apiService: new FileSyncerFileApi(this.appAuthService.getAuthToken(), this.httpClient, url),
+                timer: true
+              });
+
+              localFileNavigators.push(fileNavigator);
+            }
+        }
+      }
+
+      FileNavigator.cleanUp(this.localFileNavigators);
+      this.localFileNavigators = localFileNavigators;
   }
 
   openSidecar(url: string) {
     window.open(url);
+  }
+
+  private getVolumeMounts(template: TemplateDefinition) {
+    let potentialVolumeMounts = new Array<VolumeMount>();
+    if (template.script && template.script.volumeMounts) {
+      potentialVolumeMounts = template.script.volumeMounts;
+    } else if (template.container && template.container.volumeMounts) {
+      potentialVolumeMounts = template.container.volumeMounts;
+    }
+
+    return potentialVolumeMounts.filter((volumeMount) => {
+      return !volumeMount.name.startsWith('sys-');
+    });
   }
 }

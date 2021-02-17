@@ -177,15 +177,15 @@
       </div>
 
 
-      <div *ngIf="hasFiles || hasLocalFiles" class="mt-4">
+      <div *ngIf="hasFiles || localFileNavigators.length !== 0" class="mt-4">
         <div class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold">ARTIFACTS</div>
-          <app-file-browser *ngIf="hasLocalFiles"
+          <app-file-browser *ngFor="let fileNavigator of this.localFileNavigators"
                             class="d-block mt-3"
                             [displayedColumns]="['icon', 'name', 'size', 'actions']"
-                            [rootName]="localFileNavigator.displayRootPath"
-                            [fileNavigator]="localFileNavigator"
+                            [rootName]="fileNavigator.displayRootPath"
+                            [fileNavigator]="fileNavigator"
                             [namespace]="this.namespace"
-                            [name]="localFileNavigator.name">
+                            [name]="fileNavigator.name">
           </app-file-browser>
 
           <app-file-browser *ngFor="let fileNavigator of fileNavigators"
@@ -198,7 +198,7 @@
           </app-file-browser>
       </div>
 
-      <div *ngIf="!outputParameters?.length && !metrics.length && !sidecars.length && !hasFiles" class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold">
+      <div *ngIf="!outputParameters?.length && !metrics.length && !sidecars.length && !hasFiles" class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold mt-2">
         No outputs
       </div>
 

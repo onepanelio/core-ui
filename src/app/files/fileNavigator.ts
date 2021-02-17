@@ -134,6 +134,12 @@ export class FileNavigator {
         }
     }
 
+    public static cleanUp(fileNavigators: FileNavigator[]) {
+        for (const fileNavigator of fileNavigators) {
+            fileNavigator.cleanUp();
+        }
+    }
+
     get hasFiles(): boolean {
         return this.files && this.files.length && this.files.length > 0;
     }
