@@ -2,6 +2,7 @@ import { EventEmitter, Output } from '@angular/core';
 import { ListFilesResponse, ModelFile, WorkflowServiceService } from '../../api';
 import { map } from 'rxjs/operators';
 import { FileApi } from './file-api';
+import { BreadcrumbGenerator } from './file-browser/file-browser.component';
 
 export enum LongRunningTaskState {
     Started = 0,
@@ -84,6 +85,7 @@ export interface FileNavigatorArgs {
     namespace: string;
     name: string;
     timer?: boolean;
+    generator: BreadcrumbGenerator;
 }
 
 export class FileNavigator {
@@ -95,7 +97,6 @@ export class FileNavigator {
     // tslint:disable-next-line:variable-name
     private _rootPath: string;
 
-    displayRootPath: string;
     path: SlowValue<string>;
     file: SlowValue<ModelFile>;
     changingFiles: SlowValue<Array<ModelFile>>;
@@ -104,15 +105,12 @@ export class FileNavigator {
     @Output() filesChanged = new EventEmitter();
 
     timer: any;
+    breadcrumbGenerator: BreadcrumbGenerator;
 
     constructor(args: FileNavigatorArgs) {
         this.apiService = args.apiService;
         this._rootPath = args.rootPath;
-        if (args.displayRootPath) {
-            this.displayRootPath = args.displayRootPath;
-        } else {
-            this.displayRootPath = args.rootPath;
-        }
+        this.breadcrumbGenerator = args.generator;
 
         const initialPath = args.path ? args.path : args.rootPath;
 

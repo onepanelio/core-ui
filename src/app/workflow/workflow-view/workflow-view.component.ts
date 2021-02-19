@@ -32,9 +32,6 @@ import { AlertService } from '../../alert/alert.service';
 import { PermissionService } from '../../permissions/permission.service';
 import { MetricsEditDialogComponent } from '../../metrics/metrics-edit-dialog/metrics-edit-dialog.component';
 import { Subscription } from 'rxjs';
-import { FileBrowserDialogComponent, FileBrowserDialogData } from '../../files/file-browser-dialog/file-browser-dialog.component';
-import { WorkflowFileApiWrapper } from '../../files/WorkflowFileApiWrapper';
-import { FileSyncerFileApi } from '../../files/file-api';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../auth/auth.service';
 

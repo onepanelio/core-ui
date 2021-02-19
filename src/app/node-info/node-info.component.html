@@ -182,7 +182,6 @@
           <app-file-browser *ngFor="let fileNavigator of this.localFileNavigators"
                             class="d-block mt-3"
                             [displayedColumns]="['icon', 'name', 'size', 'actions']"
-                            [rootName]="fileNavigator.displayRootPath"
                             [fileNavigator]="fileNavigator"
                             [namespace]="this.namespace"
                             [name]="fileNavigator.name">
@@ -191,14 +190,13 @@
           <app-file-browser *ngFor="let fileNavigator of fileNavigators"
                             class="d-block mt-3"
                             [displayedColumns]="['icon', 'name', 'size', 'actions']"
-                            [rootName]="fileNavigator.displayRootPath"
                             [fileNavigator]="fileNavigator"
                             [namespace]="this.namespace"
                             [name]="fileNavigator.name">
           </app-file-browser>
       </div>
 
-      <div *ngIf="!outputParameters?.length && !metrics.length && !sidecars.length && !hasFiles" class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold mt-2">
+      <div *ngIf="!outputParameters?.length && !metrics.length && !sidecars.length && !hasFiles && localFileNavigators.length === 0" class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold mt-2">
         No outputs
       </div>
 

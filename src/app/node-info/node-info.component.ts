@@ -3,7 +3,7 @@ import { NodeParameter, NodeStatus } from '../node/node.service';
 import { SimpleWorkflowDetail, WorkflowPhase, WorkflowService, } from '../workflow/workflow.service';
 import * as yaml from 'js-yaml';
 import { TemplateDefinition, VolumeMount } from '../workflow-template/workflow-template.service';
-import { FileNavigator } from '../files/fileNavigator';
+import { FileNavigator, LongRunningTaskState, SlowValueUpdate } from '../files/fileNavigator';
 import { WorkflowServiceService } from '../../api';
 import { Metric, MetricsService } from './metrics/metrics.service';
 import { WorkflowFileApiWrapper } from '../files/WorkflowFileApiWrapper';
@@ -11,6 +11,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { FileSyncerFileApi } from '../files/file-api';
 import { AuthService } from '../auth/auth.service';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
+import { BreadcrumbPath, PathPart } from '../files/file-browser/file-browser.component';
 
 interface SideCar {
   name: string;
@@ -285,7 +287,10 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
         rootPath: directory,
         namespace: this.namespace,
         name: this.name,
-        apiService: service
+        apiService: service,
+        generator: (path: string): BreadcrumbPath => {
+          return this.makeCloudBreadcrumbs(directory, path);
+        }
       });
 
       // Check if there are any files at all. If there isn't, don't display the file browser.
@@ -365,17 +370,19 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
         const newSideCar = NodeInfoComponent.paramToSideCar(param);
         if (newSideCar.name === 'sys filesyncer' && this.node.phase === 'Running') {
-            const url = newSideCar.url + '/sys/filesyncer';
+            const url = 'https://' + newSideCar.url + '/sys/filesyncer';
 
             for (const volumeMount of volumeMounts) {
+
               const fileNavigator = new FileNavigator({
                 rootPath: volumeMount.mountPath,
-                displayRootPath: volumeMount.mountPath,
+                displayRootPath: '/mnt',
                 path: volumeMount.mountPath,
                 namespace: this.namespace,
                 name: volumeMount.name,
                 apiService: new FileSyncerFileApi(this.appAuthService.getAuthToken(), this.httpClient, url),
-                timer: true
+                timer: true,
+                generator: this.makeLocalBreadcrumbs
               });
 
               localFileNavigators.push(fileNavigator);
@@ -402,5 +409,77 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
     return potentialVolumeMounts.filter((volumeMount) => {
       return !volumeMount.name.startsWith('sys-');
     });
+  }
+
+  public makeCloudBreadcrumbs(prePath: string, path: string): BreadcrumbPath {
+    if (path.startsWith(prePath) ) {
+      path = path.substring(prePath.length);
+    }
+    console.log('make cloud breadcrumbs', path);
+
+    const preParts = prePath.split('/').filter(value => value !== '');
+    const parts = path.split('/').filter(value => value !== '');
+    let pathSum = '';
+
+
+    const pathParts: PathPart[] = [];
+    for (const part of preParts) {
+      pathParts.push({
+        display: part,
+        value: part,
+        partialPath: prePath,
+      });
+    }
+
+    pathParts[pathParts.length - 1].clickable = parts.length > 0;
+
+    for (const part of parts) {
+      pathSum += '/' + part;
+
+      pathParts.push({
+        display: part,
+        value: part,
+        partialPath: pathSum,
+        clickable: true,
+      });
+    }
+
+    const lastPathPart = pathParts[pathParts.length - 1];
+    lastPathPart.clickable = false;
+
+    const isFile = lastPathPart.value.indexOf('.') > -1;
+
+    return {
+      pathParts,
+      postfix: isFile ? undefined : '/'
+    };
+  }
+
+  public makeLocalBreadcrumbs(path: string): BreadcrumbPath {
+    const parts = path.split('/').filter(value => value !== '');
+    let pathSum = '';
+
+
+    const pathParts: PathPart[] = [];
+
+    for (const part of parts) {
+      const clickable = parts.length > 1 && pathParts.length > 0;
+
+      pathSum += '/' + part;
+
+      pathParts.push({
+        display: part,
+        value: part,
+        partialPath: pathSum,
+        clickable,
+      });
+    }
+
+    pathParts[pathParts.length - 1].clickable = false;
+
+    return {
+      prefix: '/',
+      pathParts
+    };
   }
 }

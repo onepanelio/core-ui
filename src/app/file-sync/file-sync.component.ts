@@ -102,7 +102,7 @@ export class FileSyncComponent implements OnInit {
       namespace: this.namespace,
       name: this.workspace.name,
       path,
-      displayRootPath: this.bucket,
+      preParts: [this.bucket],
       apiService: this.getWorkflowFileApiService(),
     };
 
@@ -138,11 +138,17 @@ export class FileSyncComponent implements OnInit {
       rootPath += '/';
     }
 
+    let prePart = prefixValue;
+    if (prePart.startsWith('/')) {
+      prePart = prePart.substring(1);
+    }
+
     const path: string = this.workspacePath.value;
     const data: FileBrowserDialogData = {
       namespace: this.namespace,
       name: this.workspace.name,
-      displayRootPath: prefixValue,
+      prefix: '/',
+      preParts: [],
       rootPath,
       path,
       apiService: new FileSyncerFileApi(this.authService.getAuthToken(), this.httpClient, url)

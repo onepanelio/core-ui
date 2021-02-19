@@ -26,33 +26,6 @@ $borderColor: #c1c1c1;
   text-decoration: underline;
 }
 
-
-.first-path-separator {
-  padding-right: 1px;
-}
-
-.path-separator {
-  padding-left: 3px;
-  padding-right: 3px;
-}
-
-/deep/ app-breadcrumbs {
-  .clickable {
-    color: $primary;
-    text-decoration: underline;
-  }
-
-  .separator {
-    padding-left: 3px;
-    padding-right: 3px;
-  }
-
-  .last {
-    color: $medium-gray;
-  }
-}
-
-
 mat-spinner {
   display: inline-block;
   margin-left: 6px;
@@ -76,5 +49,39 @@ mat-spinner {
   /deep/ .file-list-item {
     border-left: solid 1px $borderColor;
     border-right: solid 1px $borderColor;
+  }
+}
+
+.breadcrumbs {
+  .first-path-separator {
+    padding-right: 1px;
+  }
+
+  .separator {
+    padding-left: 2px;
+    padding-right: 2px;
+  }
+
+  .part {
+
+    &.clickable {
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+
+  .clickable {
+    color: $primary;
+    text-decoration: underline;
+  }
+
+  .separator {
+    padding-left: 3px;
+    padding-right: 3px;
+  }
+
+  .last {
+    color: $medium-gray;
   }
 }
