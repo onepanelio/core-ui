@@ -56,14 +56,8 @@ mat-spinner {
   .first-path-separator {
     padding-right: 1px;
   }
-
-  .separator {
-    padding-left: 2px;
-    padding-right: 2px;
-  }
-
+  
   .part {
-
     &.clickable {
       &:hover {
         cursor: pointer;
