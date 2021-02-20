@@ -3,10 +3,16 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
+export interface VolumeMount {
+  name: string;
+  mountPath: string;
+}
+
 export interface ContainerDefinition {
   image: string;
   command: Array<string>;
   args: Array<string>;
+  volumeMounts: Array<VolumeMount>;
 }
 
 export interface ScriptDefinition {
@@ -14,6 +20,7 @@ export interface ScriptDefinition {
   command: Array<string>;
   args: Array<string>;
   source: string;
+  volumeMounts: Array<VolumeMount>;
 }
 
 export interface ResourceDefinition {

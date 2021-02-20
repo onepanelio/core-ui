@@ -153,12 +153,14 @@
       <div *ngIf="sidecars.length">
         <div class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold mt-2">SIDECARS</div>
         <div class="d-inline-flex w-100 mt-5">
-          <button *ngFor="let sidecar of sidecars" mat-stroked-button color="primary"
-                  [disabled]="node.phase !== 'Running'"
-                  class="op-rounded op-button op-button-disableable ml-1"
-                  (click)="this.openSidecar(sidecar.url)">
-              <span class="ml-1">OPEN {{sidecar.name}}</span>
-          </button>
+          <ng-container *ngFor="let sidecar of sidecars">
+            <button *ngIf="sidecar.display" mat-stroked-button color="primary"
+                    [disabled]="node.phase !== 'Running'"
+                    class="op-rounded op-button op-button-disableable ml-1"
+                    (click)="this.openSidecar(sidecar.url)">
+                <span class="ml-1">OPEN {{sidecar.name}}</span>
+            </button>
+          </ng-container>
         </div>
       </div>
 
@@ -174,19 +176,27 @@
         </app-parameter>
       </div>
 
-      <div *ngIf="hasFiles" class="mt-4">
+
+      <div *ngIf="hasFiles || localFileNavigators.length !== 0" class="mt-4">
         <div class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold">ARTIFACTS</div>
+          <app-file-browser *ngFor="let fileNavigator of this.localFileNavigators"
+                            class="d-block mt-3"
+                            [displayedColumns]="['icon', 'name', 'size', 'actions']"
+                            [fileNavigator]="fileNavigator"
+                            [namespace]="this.namespace"
+                            [name]="fileNavigator.name">
+          </app-file-browser>
+
           <app-file-browser *ngFor="let fileNavigator of fileNavigators"
                             class="d-block mt-3"
                             [displayedColumns]="['icon', 'name', 'size', 'actions']"
-                            [rootName]="fileNavigator.displayRootPath"
                             [fileNavigator]="fileNavigator"
                             [namespace]="this.namespace"
                             [name]="fileNavigator.name">
           </app-file-browser>
       </div>
 
-      <div *ngIf="!outputParameters?.length && !metrics.length && !sidecars.length && !hasFiles" class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold">
+      <div *ngIf="!outputParameters?.length && !metrics.length && !sidecars.length && !hasFiles && localFileNavigators.length === 0" class="font-roboto-bold font-size-regular font-medium-gray font-weight-bold mt-2">
         No outputs
       </div>
 

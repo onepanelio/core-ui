@@ -2,15 +2,22 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { NodeParameter, NodeStatus } from '../node/node.service';
 import { SimpleWorkflowDetail, WorkflowPhase, WorkflowService, } from '../workflow/workflow.service';
 import * as yaml from 'js-yaml';
-import { TemplateDefinition } from '../workflow-template/workflow-template.service';
-import { FileNavigator } from '../files/fileNavigator';
+import { TemplateDefinition, VolumeMount } from '../workflow-template/workflow-template.service';
+import { FileNavigator, LongRunningTaskState, SlowValueUpdate } from '../files/fileNavigator';
 import { WorkflowServiceService } from '../../api';
 import { Metric, MetricsService } from './metrics/metrics.service';
 import { WorkflowFileApiWrapper } from '../files/WorkflowFileApiWrapper';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { FileSyncerFileApi } from '../files/file-api';
+import { AuthService } from '../auth/auth.service';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
+import { BreadcrumbPath, PathPart } from '../files/file-browser/file-browser.component';
 
 interface SideCar {
   name: string;
   url: string;
+  display: boolean;
 }
 
 @Component({
@@ -20,6 +27,15 @@ interface SideCar {
   providers: [WorkflowService, MetricsService]
 })
 export class NodeInfoComponent implements OnInit, OnDestroy {
+
+  constructor(private workflowService: WorkflowService,
+              private workflowServiceService: WorkflowServiceService,
+              private metricsService: MetricsService,
+              private snackBar: MatSnackBar,
+              private appAuthService: AuthService,
+              private httpClient: HttpClient) { }
+
+  private static sysSideCarUrlPrefixLength = 17;
   @Input() namespace: string;
   @Input() name: string;
 
@@ -40,6 +56,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   statusClass = {};
   inputParameters = [];
   outputParameters = [];
+  rawParameters = new Array<NodeParameter>();
   inputArtifacts = [];
   outputArtifacts = [];
 
@@ -55,9 +72,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   fileLoaderSubscriptions = {};
   sidecars = new Array<SideCar>();
 
-  constructor(private workflowService: WorkflowService,
-              private workflowServiceService: WorkflowServiceService,
-              private metricsService: MetricsService) { }
+  localFileNavigators = new Array<FileNavigator>();
 
   static outputArtifactsToDirectories(outputArtifacts: any[]): Array<string> {
     const directoriesSet = new Map<string, boolean>();
@@ -120,18 +135,18 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
     return directories;
   }
 
-  private static sysSideCarUrlPrefixLength = 17;
-
   private static paramToSideCar(parameter: NodeParameter): SideCar {
     let name = parameter.name.substring(NodeInfoComponent.sysSideCarUrlPrefixLength);
     // some of the names have dashes like 'tensor-first'.
     // change it to be 'tensor first' instead to look nicer for the button
     name = name.replace(/-/g, ' ');
     const url = `//${parameter.value}`;
+    const display = name !== 'sys filesyncer';
 
     return {
       name,
-      url
+      url,
+      display
     };
   }
 
@@ -139,6 +154,11 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    FileNavigator.cleanUp(this.localFileNavigators);
+    this.localFileNavigators = [];
+
+    FileNavigator.cleanUp(this.fileNavigators);
+    this.fileNavigators = [];
   }
 
   updateNodeStatus(node: NodeStatus) {
@@ -150,7 +170,6 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
     this.inputParameters = [];
     this.inputArtifacts = [];
-    this.outputParameters = [];
     this.outputArtifacts = [];
 
     this.previousNodeStatus = this.node;
@@ -213,7 +232,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
     }
 
     if (node.type !== 'DAG' && node.type !== 'Steps' && node.outputs) {
-      if(node.outputs.parameters) {
+      if (node.outputs.parameters) {
         this.updateOutputParameters(node.outputs.parameters);
       }
 
@@ -222,6 +241,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
     this.updateFiles();
     this.updateMetrics();
+    this.refreshOutputParameters();
   }
 
   onCloseClick() {
@@ -255,11 +275,9 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
     this.hasFiles = false;
 
-    for (const fileNavigator of this.fileNavigators) {
-      fileNavigator.cleanUp();
-    }
-
+    FileNavigator.cleanUp(this.fileNavigators);
     this.fileNavigators = [];
+
     const directories = NodeInfoComponent.outputArtifactsToDirectories(this.outputArtifacts);
 
     const service = new WorkflowFileApiWrapper(this.namespace, 'dialog', this.workflowServiceService);
@@ -269,7 +287,10 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
         rootPath: directory,
         namespace: this.namespace,
         name: this.name,
-        apiService: service
+        apiService: service,
+        generator: (path: string): BreadcrumbPath => {
+          return this.makeCloudBreadcrumbs(directory, path);
+        }
       });
 
       // Check if there are any files at all. If there isn't, don't display the file browser.
@@ -317,12 +338,16 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   }
 
   updateOutputParameters(parameters: NodeParameter[]) {
-    let sidecars = [];
-    let outputParameters = [];
+    this.rawParameters = parameters;
+    const sidecars = [];
+    const outputParameters = [];
 
-    for(const param of parameters) {
-      if(param.name.startsWith('sys-sidecar-url')) {
-        sidecars.push(NodeInfoComponent.paramToSideCar(param));
+    for (const param of parameters) {
+      if (param.name.startsWith('sys-sidecar-url')) {
+        const newSideCar = NodeInfoComponent.paramToSideCar(param);
+        if (newSideCar.name !== 'sys filesyncer') {
+          sidecars.push(newSideCar);
+        }
       } else {
         outputParameters.push(param);
       }
@@ -330,9 +355,131 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
     this.sidecars = sidecars;
     this.outputParameters = outputParameters;
+
+    this.refreshOutputParameters();
+  }
+
+  private refreshOutputParameters() {
+      const volumeMounts = this.getVolumeMounts(this.template);
+      const localFileNavigators = [];
+
+      for (const param of this.rawParameters) {
+        if (!param.name.startsWith('sys-sidecar-url')) {
+          continue;
+        }
+
+        const newSideCar = NodeInfoComponent.paramToSideCar(param);
+        if (newSideCar.name === 'sys filesyncer' && this.node.phase === 'Running') {
+            const url = 'https://' + newSideCar.url + '/sys/filesyncer';
+
+            for (const volumeMount of volumeMounts) {
+
+              const fileNavigator = new FileNavigator({
+                rootPath: volumeMount.mountPath,
+                displayRootPath: '/mnt',
+                path: volumeMount.mountPath,
+                namespace: this.namespace,
+                name: volumeMount.name,
+                apiService: new FileSyncerFileApi(this.appAuthService.getAuthToken(), this.httpClient, url),
+                timer: true,
+                generator: this.makeLocalBreadcrumbs
+              });
+
+              localFileNavigators.push(fileNavigator);
+            }
+        }
+      }
+
+      FileNavigator.cleanUp(this.localFileNavigators);
+      this.localFileNavigators = localFileNavigators;
   }
 
   openSidecar(url: string) {
     window.open(url);
+  }
+
+  private getVolumeMounts(template: TemplateDefinition) {
+    let potentialVolumeMounts = new Array<VolumeMount>();
+    if (template.script && template.script.volumeMounts) {
+      potentialVolumeMounts = template.script.volumeMounts;
+    } else if (template.container && template.container.volumeMounts) {
+      potentialVolumeMounts = template.container.volumeMounts;
+    }
+
+    return potentialVolumeMounts.filter((volumeMount) => {
+      return !volumeMount.name.startsWith('sys-');
+    });
+  }
+
+  public makeCloudBreadcrumbs(prePath: string, path: string): BreadcrumbPath {
+    if (path.startsWith(prePath) ) {
+      path = path.substring(prePath.length);
+    }
+    console.log('make cloud breadcrumbs', path);
+
+    const preParts = prePath.split('/').filter(value => value !== '');
+    const parts = path.split('/').filter(value => value !== '');
+    let pathSum = '';
+
+
+    const pathParts: PathPart[] = [];
+    for (const part of preParts) {
+      pathParts.push({
+        display: part,
+        value: part,
+        partialPath: prePath,
+      });
+    }
+
+    pathParts[pathParts.length - 1].clickable = parts.length > 0;
+
+    for (const part of parts) {
+      pathSum += '/' + part;
+
+      pathParts.push({
+        display: part,
+        value: part,
+        partialPath: pathSum,
+        clickable: true,
+      });
+    }
+
+    const lastPathPart = pathParts[pathParts.length - 1];
+    lastPathPart.clickable = false;
+
+    const isFile = lastPathPart.value.indexOf('.') > -1;
+
+    return {
+      pathParts,
+      postfix: isFile ? undefined : '/'
+    };
+  }
+
+  public makeLocalBreadcrumbs(path: string): BreadcrumbPath {
+    const parts = path.split('/').filter(value => value !== '');
+    let pathSum = '';
+
+
+    const pathParts: PathPart[] = [];
+
+    for (const part of parts) {
+      const clickable = parts.length > 1 && pathParts.length > 0;
+
+      pathSum += '/' + part;
+
+      pathParts.push({
+        display: part,
+        value: part,
+        partialPath: pathSum,
+        clickable,
+      });
+    }
+
+    pathParts[pathParts.length - 1].clickable = false;
+
+    return {
+      prefix: '/',
+      pathParts
+    };
   }
 }

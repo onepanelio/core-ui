@@ -32,6 +32,8 @@ import { AlertService } from '../../alert/alert.service';
 import { PermissionService } from '../../permissions/permission.service';
 import { MetricsEditDialogComponent } from '../../metrics/metrics-edit-dialog/metrics-edit-dialog.component';
 import { Subscription } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { AuthService } from '../../auth/auth.service';
 
 const aceRange = ace.acequire('ace/range').Range;
 
@@ -118,6 +120,7 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
       private activatedRoute: ActivatedRoute,
       private alertService: AlertService,
       private authService: AuthServiceService,
+      private appAuthService: AuthService,
       private permissionService: PermissionService,
       private workflowService: WorkflowService,
       private workflowServiceService: WorkflowServiceService,
@@ -127,6 +130,7 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
       private appRouter: AppRouter,
       private snackbar: MatSnackBar,
       private router: Router,
+      private httpClient: HttpClient
   ) {
   }
 

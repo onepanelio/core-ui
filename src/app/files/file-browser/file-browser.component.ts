@@ -1,10 +1,25 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FileNavigator, LongRunningTaskState, SlowValueUpdate } from '../fileNavigator';
-import { BreadcrumbEvent } from '../../breadcrumbs/breadcrumbs.component';
 import { FileActionEvent } from '../file-navigator/file-navigator.component';
 import { ModelFile, WorkflowServiceService } from '../../../api';
 import { GenericFileViewComponent } from '../file-viewer/generic-file-view/generic-file-view.component';
 import { MatSnackBar } from '@angular/material';
+
+export type BreadcrumbGenerator = (path: string) => BreadcrumbPath;
+
+export interface PathPart {
+  display: string; // display value like 'mount'
+  value: string; // internal value for the path part like 'mnt'
+  partialPath: string; // full path up to this part like, '/mnt/data/test'
+  clickable?: boolean; // if true, allow interaction.
+  extraClass?: string;
+}
+
+export interface BreadcrumbPath {
+  prefix?: string;
+  postfix?: string;
+  pathParts: PathPart[];
+}
 
 @Component({
   selector: 'app-file-browser',
@@ -15,6 +30,9 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
   private filePathChangedSubscriber;
   private fileChangedSubscriber;
   private changingFilesSubscriber;
+
+  breadcrumbs: BreadcrumbPath;
+  // @Input() breadcrumbGenerator: BreadcrumbGenerator;
 
   // tslint:disable-next-line:variable-name
   private _fileNavigator: FileNavigator;
@@ -55,6 +73,8 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
       this.filePathChangedSubscriber.unsubscribe();
     }
 
+    this.breadcrumbs = this.fileNavigator.breadcrumbGenerator(value.path.value);
+
     this.changingFilesSubscriber = value.changingFiles.valueChanged.subscribe((change: SlowValueUpdate<Array<ModelFile>>) => {
       if (change.state === LongRunningTaskState.Started) {
         setTimeout(() => {
@@ -77,7 +97,7 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
 
     this.filePathChangedSubscriber = value.path.valueChanged.subscribe((change: SlowValueUpdate<string>)  => {
       if (change.state === LongRunningTaskState.Succeeded) {
-        this.updatePathParts(change.value);
+        this.breadcrumbs = this.fileNavigator.breadcrumbGenerator(change.value);
       }
     });
 
@@ -147,37 +167,8 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
       this.filePathChangedSubscriber.unsubscribe();
       this.filePathChangedSubscriber = null;
     }
-  }
 
-  onBreadcrumbClicked(e: BreadcrumbEvent) {
-    const path = this.getPathFromBreadcrumbIndex(e.index);
-
-    this.fileNavigator.goToDirectory(path);
-  }
-
-  goToRoot() {
-    this.fileNavigator.goToRoot();
-  }
-
-  private getPathFromBreadcrumbIndex(index: number): string {
-    const path = this.fileNavigator.path.value;
-    let subPath = path;
-    if (this.fileNavigator.rootPath !== '/') {
-      subPath = path.substring(this.fileNavigator.rootPath.length);
-    }
-
-    const parts = subPath.split('/').filter(value => value.length !== 0);
-    const partUntil = parts.slice(0, index + 1).join('/');
-
-    if (this.fileNavigator.rootPath === '/') {
-      return partUntil + '/';
-    }
-
-    if (this.fileNavigator.rootPath.endsWith('/')) {
-      return this.fileNavigator.rootPath + partUntil  + '/';
-    }
-
-    return this.fileNavigator.rootPath + '/' + partUntil  + '/';
+    this.fileNavigator.cleanUp();
   }
 
   onFileEvent(e: FileActionEvent) {
@@ -245,5 +236,11 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
     this.snackBar.open('Copied to clipboard', 'OK', {
       duration: 2000
     });
+  }
+
+  handlePathPartClick(part: PathPart) {
+    if (part.clickable) {
+      this.fileNavigator.goToDirectory(part.partialPath);
+    }
   }
 }
