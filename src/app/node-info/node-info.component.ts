@@ -370,7 +370,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
         const newSideCar = NodeInfoComponent.paramToSideCar(param);
         if (newSideCar.name === 'sys filesyncer' && this.node.phase === 'Running') {
-            const url = 'https://' + newSideCar.url + '/sys/filesyncer';
+            const url = '//' + newSideCar.url + '/sys/filesyncer';
 
             for (const volumeMount of volumeMounts) {
 
