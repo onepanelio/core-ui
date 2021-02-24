@@ -11,8 +11,8 @@
  */
 
 
-export interface Statistics { 
-    workflowStatus?: string;
-    workflowTemplateId?: string;
+export interface MachineType { 
+    name?: string;
+    value?: string;
 }
 

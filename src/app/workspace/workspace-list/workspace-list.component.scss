@@ -11,6 +11,11 @@
     max-width: 200px;
   }
 
+  .cdk-column-machine-type {
+    width: 220px;
+    margin-right: 10px;
+  }
+
   .cdk-column-template {
     width: 140px;
     margin-right: 10px;
@@ -47,13 +52,13 @@
     }
   }
 
-  @media screen and (max-width: 1200px) {
+  @media screen and (max-width: 1450px) {
     /deep/ .cdk-column-timestamp-status {
       display: none;
     }
   }
 
-  @media screen and (max-width: 950px) {
+  @media screen and (max-width: 1180px) {
     /deep/ .cdk-column-createdAt {
       display: none;
     }

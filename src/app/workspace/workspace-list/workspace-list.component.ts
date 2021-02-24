@@ -25,7 +25,7 @@ export class WorkspaceListComponent implements OnInit {
     @Input() sort = 'createdAt';
     @Input() sortDirection: SortDirection = 'desc';
     @Input() workspaces: Workspace[] = [];
-    @Input() displayedColumns = ['name', 'status', 'template', 'createdAt', 'timestamp-status', 'spacer', 'actions', 'labels'];
+    @Input() displayedColumns = ['name', 'status', 'node-pool', 'template', 'createdAt', 'timestamp-status', 'spacer', 'actions', 'labels'];
     @Output() sortChange = new EventEmitter<Sort>();
     @Output() workspaceAction = new EventEmitter<WorkspaceEvent>();
 

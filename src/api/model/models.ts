@@ -37,6 +37,7 @@ export * from './listWorkspaceTemplateVersionsResponse';
 export * from './listWorkspaceTemplatesResponse';
 export * from './logEntry';
 export * from './logStreamResponse';
+export * from './machineType';
 export * from './metric';
 export * from './file';
 export * from './namespace';

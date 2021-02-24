@@ -72,32 +72,26 @@
     }
   }
 
-  @media screen and (max-width: 1570px) {
+  @media screen and (max-width: 1800px) {
     /deep/ .cdk-column-timestamp-status {
       display: none;
     }
   }
 
-  @media screen and (max-width: 1600px) {
-    /deep/ .cdk-column-end {
-      display: none;
-    }
-  }
-
-  @media screen and (max-width: 1400px) {
-    /deep/ .cdk-column-start {
-      display: none;
-    }
-  }
-
-  @media screen and (max-width: 1320px) {
+  @media screen and (max-width: 1545px) {
     /deep/ .cdk-column-createdAt {
       display: none;
     }
   }
 
-  @media screen and (max-width: 1060px) {
+  @media screen and (max-width: 1290px) {
     /deep/ .cdk-column-template {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: 1150px) {
+    /deep/ .cdk-column-node-pool {
       display: none;
     }
   }
