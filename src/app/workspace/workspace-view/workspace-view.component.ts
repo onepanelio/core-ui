@@ -9,6 +9,7 @@ import {
 } from '../../confirmation-dialog/confirmation-dialog.component';
 import { AppRouter } from '../../router/app-router.service';
 import * as yaml from 'js-yaml';
+import { WorkspaceResumeEvent } from '../workspace-status/workspace-paused/workspace-paused.component';
 
 export type WorkspaceState = 'Launching' | 'Updating' | 'Pausing' | 'Paused' | 'Resuming' | 'Running' | 'Deleting';
 
@@ -147,10 +148,11 @@ export class WorkspaceViewComponent implements OnInit, OnDestroy {
 
     }
 
-    onResume(workspace: Workspace) {
+    onResume(workspaceResumeEvent: WorkspaceResumeEvent) {
         this.state = 'Resuming';
-        this.workspaceService.resumeWorkspace(this.namespace, workspace.uid)
-            .subscribe(res => {
+        this.workspaceService.resumeWorkspace(this.namespace, workspaceResumeEvent.workspace.uid, {
+            parameters: [workspaceResumeEvent.machineType]
+        }).subscribe(res => {
                 this.startWorkspaceChecker(true);
             });
     }
