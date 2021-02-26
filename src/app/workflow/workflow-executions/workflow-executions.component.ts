@@ -101,7 +101,7 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
 
     private getExtraLabels() {
         const workflowNames = this.workflowService.listWorkflowExecutionsField(this.namespace, 'name');
-        const workflowTemplateNames = this.workflowTemplateService.listWorkflowTemplatesField(this.namespace, 'name', false);
+        const workflowTemplateNames = this.workflowService.listWorkflowExecutionsField(this.namespace, 'templateName');
 
         combineLatest(workflowTemplateNames, workflowNames)
             .subscribe(res => {

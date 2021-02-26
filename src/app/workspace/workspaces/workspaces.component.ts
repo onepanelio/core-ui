@@ -96,7 +96,7 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
     }
 
     private getExtraLabels() {
-        const workspaceTemplateNames = this.workspaceTemplateService.listWorkspaceTemplatesField(this.namespace, 'name');
+        const workspaceTemplateNames = this.workspaceService.listWorkspacesField(this.namespace, 'templateName');
         const workspaceNames = this.workspaceService.listWorkspacesField(this.namespace, 'name');
 
         combineLatest(workspaceTemplateNames, workspaceNames)
