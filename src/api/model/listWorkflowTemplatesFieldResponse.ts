@@ -11,8 +11,7 @@
  */
 
 
-export interface Statistics { 
-    workflowStatus?: string;
-    workflowTemplateId?: string;
+export interface ListWorkflowTemplatesFieldResponse { 
+    values?: Array<string>;
 }
 

@@ -1,12 +1,13 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ListWorkspaceResponse, Workspace, WorkspaceServiceService } from '../../../api';
+import { KeyValue, ListWorkspaceResponse, Workspace, WorkspaceServiceService, WorkspaceTemplateServiceService } from '../../../api';
 import { ConfirmationDialogComponent, ConfirmationDialogData } from '../../confirmation-dialog/confirmation-dialog.component';
 import { PageEvent } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
 import { Sort } from '@angular/material';
 import { WorkspaceEvent, WorkspacePhase } from '../workspace-list/workspace-list.component';
 import { FilterChangedEvent } from '../../list-filter/list-filter.component';
+import { combineLatest } from 'rxjs';
 
 type WorkspaceState = 'initialization' | 'new' | 'loading';
 
@@ -59,13 +60,17 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
     private labelFilter?: string;
     private previousListUpdate = (new Date()).getTime();
 
+    extraLabelSearches = new Array<KeyValue>();
+
     constructor(
         public activatedRoute: ActivatedRoute,
         public workspaceService: WorkspaceServiceService,
+        public workspaceTemplateService: WorkspaceTemplateServiceService,
         private dialog: MatDialog) {
     }
 
     ngOnInit() {
+
         this.activatedRoute.paramMap.subscribe(next => {
             this.getWorkspaces();
 
@@ -76,7 +81,11 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
             this.workspacesInterval = setInterval(() => {
                 this.getWorkspaces();
             }, 5000);
+
+            this.getExtraLabels();
         });
+
+
     }
 
     ngOnDestroy() {
@@ -84,6 +93,25 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
             clearInterval(this.workspacesInterval);
             this.workspacesInterval = null;
         }
+    }
+
+    private getExtraLabels() {
+        const workspaceTemplateNames = this.workspaceTemplateService.listWorkspaceTemplatesField(this.namespace, 'name');
+        const workspaceNames = this.workspaceService.listWorkspacesField(this.namespace, 'name');
+
+        combineLatest(workspaceTemplateNames, workspaceNames)
+            .subscribe(res => {
+                const combinedResult = [];
+                for (const workspaceTemplateName of res[0].values) {
+                    combinedResult.push({key: 'template', value: workspaceTemplateName});
+                }
+
+                for (const workspaceName of res[1].values) {
+                    combinedResult.push({key: 'name', value: workspaceName});
+                }
+
+                this.extraLabelSearches = combinedResult;
+            });
     }
 
     /**

@@ -12,6 +12,7 @@
         <input
                 #filterInput
                 class="ml-2"
+                (keyup)="onKeyUp($event)"
                 [placeholder]="placeholder"
                 [formControl]="filterCtrl"
                 [matChipInputFor]="chipList"
@@ -22,4 +23,7 @@
             {{option}}
         </mat-option>
     </mat-autocomplete>
+    <mat-hint>
+        Syntax is &lt;name&gt;:&lt;value&gt; with multiple pairs separated by space, examples: name:&lt;name&gt; template:&lt;template-name&gt;
+    </mat-hint>
 </mat-form-field>

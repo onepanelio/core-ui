@@ -1,9 +1,18 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { PageEvent } from '@angular/material/paginator';
-import { ListWorkflowExecutionsResponse, WorkflowExecution, WorkflowServiceService, Workspace } from '../../../api';
+import {
+    KeyValue,
+    ListWorkflowExecutionsResponse,
+    WorkflowExecution,
+    WorkflowServiceService,
+    WorkflowTemplateServiceService,
+    Workspace
+} from '../../../api';
 import { ActivatedRoute } from '@angular/router';
 import { Sort } from '@angular/material';
 import { FilterChangedEvent } from '../../list-filter/list-filter.component';
+import { combineLatest } from 'rxjs';
+import { WorkflowTemplateService } from '../../workflow-template/workflow-template.service';
 
 type WorkflowExecutionsState = 'initialization' | 'new' | 'loading';
 export type WorkflowExecutionPhase = 'running' | 'completed' | 'failed' | 'stopped';
@@ -55,6 +64,7 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
     lastUpdateRequestFinished?: Date;
 
     hasAnyWorkflowExecutions = false;
+    extraLabelSearches = new Array<KeyValue>();
 
     private labelFilter?: string;
     private previousListUpdate = (new Date()).getTime();
@@ -62,6 +72,7 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
     constructor(
         public activatedRoute: ActivatedRoute,
         public workflowService: WorkflowServiceService,
+        public workflowTemplateService: WorkflowTemplateServiceService
     ) {
     }
 
@@ -76,6 +87,8 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
             this.workflowsInterval = setInterval(() => {
                 this.getWorkflows();
             }, 5000);
+
+            this.getExtraLabels();
         });
     }
 
@@ -84,6 +97,25 @@ export class WorkflowExecutionsComponent implements OnInit, OnDestroy {
             clearInterval(this.workflowsInterval);
             this.workflowsInterval = null;
         }
+    }
+
+    private getExtraLabels() {
+        const workflowNames = this.workflowService.listWorkflowExecutionsField(this.namespace, 'name');
+        const workflowTemplateNames = this.workflowTemplateService.listWorkflowTemplatesField(this.namespace, 'name', false);
+
+        combineLatest(workflowTemplateNames, workflowNames)
+            .subscribe(res => {
+                const combinedResult = [];
+                for (const workspaceTemplateName of res[0].values) {
+                    combinedResult.push({key: 'template', value: workspaceTemplateName});
+                }
+
+                for (const workspaceName of res[1].values) {
+                    combinedResult.push({key: 'name', value: workspaceName});
+                }
+
+                this.extraLabelSearches = combinedResult;
+            });
     }
 
     /**
