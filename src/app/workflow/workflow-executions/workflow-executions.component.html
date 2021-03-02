@@ -4,6 +4,7 @@
 <app-list-filter
         *ngIf="hasAnyWorkflowExecutions && this.showFilter"
         [namespace]="namespace"
+        [extraSearchLabels]="extraLabelSearches"
         [resource]="'workflow_execution'"
         (labelsChanged)="labelsChanged($event)">
 </app-list-filter>

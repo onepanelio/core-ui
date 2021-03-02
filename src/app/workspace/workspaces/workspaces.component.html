@@ -4,6 +4,7 @@
 <app-list-filter
         *ngIf="hasAnyWorkspaces && this.showFilter"
         [namespace]="namespace"
+        [extraSearchLabels]="extraLabelSearches"
         [resource]="'workspace'"
         (labelsChanged)="labelsChanged($event)">
 </app-list-filter>

@@ -20,6 +20,7 @@ import { Observable }                                        from 'rxjs';
 import { ArchiveWorkflowTemplateResponse } from '../model/models';
 import { GoogleRpcStatus } from '../model/models';
 import { ListWorkflowTemplateVersionsResponse } from '../model/models';
+import { ListWorkflowTemplatesFieldResponse } from '../model/models';
 import { ListWorkflowTemplatesResponse } from '../model/models';
 import { WorkflowTemplate } from '../model/models';
 
@@ -734,6 +735,71 @@ export class WorkflowTemplateServiceService {
         }
 
         return this.httpClient.get<ListWorkflowTemplatesResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflow_templates`,
+            {
+                params: queryParameters,
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * @param namespace 
+     * @param fieldName 
+     * @param isSystem 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public listWorkflowTemplatesField(namespace: string, fieldName: string, isSystem?: boolean, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<ListWorkflowTemplatesFieldResponse>;
+    public listWorkflowTemplatesField(namespace: string, fieldName: string, isSystem?: boolean, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpResponse<ListWorkflowTemplatesFieldResponse>>;
+    public listWorkflowTemplatesField(namespace: string, fieldName: string, isSystem?: boolean, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpEvent<ListWorkflowTemplatesFieldResponse>>;
+    public listWorkflowTemplatesField(namespace: string, fieldName: string, isSystem?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<any> {
+        if (namespace === null || namespace === undefined) {
+            throw new Error('Required parameter namespace was null or undefined when calling listWorkflowTemplatesField.');
+        }
+        if (fieldName === null || fieldName === undefined) {
+            throw new Error('Required parameter fieldName was null or undefined when calling listWorkflowTemplatesField.');
+        }
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (isSystem !== undefined && isSystem !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>isSystem, 'isSystem');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // authentication (Bearer) required
+        if (this.configuration.apiKeys) {
+            const key: string | undefined = this.configuration.apiKeys["Bearer"] || this.configuration.apiKeys["authorization"];
+            if (key) {
+                headers = headers.set('authorization', key);
+            }
+        }
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json',
+                'application/octet-stream'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<ListWorkflowTemplatesFieldResponse>(`${this.configuration.basePath}/apis/v1beta/${encodeURIComponent(String(namespace))}/field/workflow_templates/${encodeURIComponent(String(fieldName))}`,
             {
                 params: queryParameters,
                 responseType: <any>responseType,

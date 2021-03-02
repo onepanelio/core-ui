@@ -9,9 +9,9 @@ import { AceEditorComponent } from 'ng2-ace-editor';
 import * as yaml from 'js-yaml';
 import * as ace from 'brace';
 import {
-  AuthServiceService, CreateWorkflowExecutionBody,
+  AuthServiceService, ConfigServiceService, CreateWorkflowExecutionBody,
   KeyValue,
-  LabelServiceService, Metric,
+  LabelServiceService, Metric, NodePoolOption,
   Parameter,
   WorkflowExecution,
   WorkflowServiceService
@@ -34,6 +34,7 @@ import { MetricsEditDialogComponent } from '../../metrics/metrics-edit-dialog/me
 import { Subscription } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../auth/auth.service';
+import { ConfigService } from '../../config/config.service';
 
 const aceRange = ace.acequire('ace/range').Range;
 
@@ -85,6 +86,8 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
 
   metrics: Metric[] = [];
 
+  machineType: NodePoolOption;
+
   private socketClosedCount = 0;
   private socketErrorCount = 0;
   private markerId;
@@ -130,7 +133,7 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
       private appRouter: AppRouter,
       private snackbar: MatSnackBar,
       private router: Router,
-      private httpClient: HttpClient
+      private configService: ConfigService
   ) {
   }
 
@@ -194,13 +197,20 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
           this.metrics = res.metrics;
 
           this.workflow = new SimpleWorkflowDetail(res);
-
           this.getPermissions(res);
 
           this.labels = res.labels;
 
           const templateParameters = this.getWorkflowTemplateParametersFromWorkflow(res);
           this.parameters = ParameterUtils.combineValueAndTemplate(res.parameters, templateParameters);
+
+          for (const parameter of this.parameters) {
+            if (parameter.name === 'sys-node-pool') {
+              this.configService.getMachineTypeByValue(parameter.value).subscribe(res => {
+                this.machineType = res;
+              });
+            }
+          }
 
           if (res.phase === 'Terminated') {
             this.workflow.phase = 'Terminated';
