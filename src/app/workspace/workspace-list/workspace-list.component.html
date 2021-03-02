@@ -25,6 +25,14 @@
             </cdk-cell>
         </ng-container>
 
+        <ng-container cdkColumnDef="node-pool">
+            <cdk-header-cell *cdkHeaderCellDef>Node pool</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let workspace">
+                <div class="font-size-small">{{ workspace.machineType.name }}</div>
+                <div class="font-medium-gray font-size-smaller">{{ workspace.machineType.value }}</div>
+            </cdk-cell>
+        </ng-container>
+
         <ng-container cdkColumnDef="template">
             <cdk-header-cell *cdkHeaderCellDef>Template</cdk-header-cell>
             <cdk-cell *cdkCellDef="let workspace">
@@ -83,7 +91,7 @@
 
         <!-- Header and Row Declarations -->
         <cdk-header-row *cdkHeaderRowDef="displayedColumns" class="d-flex align-items-baseline op-table-header"></cdk-header-row>
-        <cdk-row *cdkRowDef="let workflowTemplate; columns: displayedColumns"
+        <cdk-row *cdkRowDef="let workspace; columns: displayedColumns"
                  class="d-flex flex-wrap op-table-row align-items-baseline">
         </cdk-row>
     </cdk-table>

@@ -11,6 +11,7 @@
  */
 import { KeyValue } from './keyValue';
 import { WorkspaceTemplate } from './workspaceTemplate';
+import { MachineType } from './machineType';
 import { Parameter } from './parameter';
 import { WorkspaceStatus } from './workspaceStatus';
 import { WorkspaceComponent } from './workspaceComponent';
@@ -28,5 +29,6 @@ export interface Workspace {
     url?: string;
     templateParameters?: Array<Parameter>;
     workspaceComponents?: Array<WorkspaceComponent>;
+    machineType?: MachineType;
 }
 
