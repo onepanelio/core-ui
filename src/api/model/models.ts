@@ -41,7 +41,6 @@ export * from './listWorkspaceTemplatesResponse';
 export * from './listWorkspacesFieldResponse';
 export * from './logEntry';
 export * from './logStreamResponse';
-export * from './machineType';
 export * from './metric';
 export * from './file';
 export * from './namespace';
