@@ -1,8 +1,19 @@
 <div class="workspace-paused m-auto font-proxima d-flex flex-column align-items-center">
     <img src="/assets/images/workspace-paused.png" width="198"/>
     <div class="mt-8 color-primary font-size-XXL">Workspace paused</div>
-    <button class="mt-8 op-rounded op-button border-secondary" mat-flat-button color="accent" (click)="onResumeClick()" [disabled]="disabled">
-        <mat-icon class="workspace-paused-icon" [fontSet]="'far'" [fontIcon]="'fa-play-circle'"></mat-icon>
-        <span class="ml-1">Resume</span>
-    </button>
+    <div *ngIf="machineType" class="d-flex align-items-baseline workspace-view-parameters mt-1">
+        <app-form [fieldData]="[machineType]"></app-form>
+        <button mat-flat-button color="accent" class="bigger-button op-rounded op-button ml-3"
+            [disabled]="resuming"
+            (click)="onResumeClick()">
+            <mat-spinner *ngIf="resuming"
+                         color="primary"
+                         class="color-medium-gray mr-3"
+                         [diameter]="20"
+                         [mode]="'indeterminate'">
+            </mat-spinner>
+            <div class="hacky-fix"></div>
+            <span>Resume</span>
+        </button>
+    </div>
 </div>

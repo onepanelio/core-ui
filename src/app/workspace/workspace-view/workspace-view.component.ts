@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Parameter, UpdateWorkspaceBody, Workspace, WorkspaceServiceService } from '../../../api';
 import { DomSanitizer, SafeResourceUrl, Title } from '@angular/platform-browser';
@@ -9,6 +9,9 @@ import {
 } from '../../confirmation-dialog/confirmation-dialog.component';
 import { AppRouter } from '../../router/app-router.service';
 import * as yaml from 'js-yaml';
+import { WorkspaceResumeEvent } from '../workspace-status/workspace-paused/workspace-paused.component';
+import { WorkspaceUtils } from '../workspace-utils';
+import { WorkspaceViewParametersComponent } from './workspace-view-parameters/workspace-view-parameters.component';
 
 export type WorkspaceState = 'Launching' | 'Updating' | 'Pausing' | 'Paused' | 'Resuming' | 'Running' | 'Deleting';
 
@@ -18,6 +21,8 @@ export type WorkspaceState = 'Launching' | 'Updating' | 'Pausing' | 'Paused' | '
     styleUrls: ['./workspace-view.component.scss']
 })
 export class WorkspaceViewComponent implements OnInit, OnDestroy {
+    @ViewChild(WorkspaceViewParametersComponent, { static: false }) workspaceViewParameters: WorkspaceViewParametersComponent;
+
     position = 'fixed';
 
     hideNavigationBar = true;
@@ -147,12 +152,26 @@ export class WorkspaceViewComponent implements OnInit, OnDestroy {
 
     }
 
-    onResume(workspace: Workspace) {
+    onResume(workspaceResumeEvent: WorkspaceResumeEvent) {
+        const originalNodePool = WorkspaceUtils.getParameterValue(this.workspace, 'sys-node-pool');
+
+        WorkspaceUtils.setParameter(this.workspace, 'sys-node-pool', workspaceResumeEvent.machineType.value);
+
+        if (this.workspaceViewParameters) {
+            this.workspaceViewParameters.reloadParameters(this.workspace);
+        }
+
         this.state = 'Resuming';
-        this.workspaceService.resumeWorkspace(this.namespace, workspace.uid)
-            .subscribe(res => {
-                this.startWorkspaceChecker(true);
-            });
+        this.workspaceService.resumeWorkspace(this.namespace, workspaceResumeEvent.workspace.uid, {
+            parameters: [workspaceResumeEvent.machineType]
+        }).subscribe(res => {
+            this.startWorkspaceChecker(true);
+        }, err => {
+            WorkspaceUtils.setParameter(this.workspace, 'sys-node-pool', originalNodePool);
+            if (this.workspaceViewParameters) {
+                this.workspaceViewParameters.reloadParameters(this.workspace);
+            }
+        });
     }
 
     onToggleWorkspaceDetails() {

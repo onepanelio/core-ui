@@ -29,7 +29,6 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
     @Input() showPaginator = true;
 
     previousSortOrder = 'createdAt,desc';
-    
 
     // tslint:disable-next-line:variable-name
     private _phase?: WorkspacePhase;
@@ -206,12 +205,13 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
     onResume(workspace: Workspace) {
         this.markWorkspaceUpdating(workspace);
         workspace.status.phase = 'Launching';
-        this.workspaceService.resumeWorkspace(this.namespace, workspace.uid)
-            .subscribe(res => {
-                this.markWorkspaceDoneUpdating(workspace);
-            }, err => {
-                this.markWorkspaceDoneUpdating(workspace);
-            });
+        this.workspaceService.resumeWorkspace(this.namespace, workspace.uid, {
+            parameters: []
+        }).subscribe(res => {
+            this.markWorkspaceDoneUpdating(workspace);
+        }, err => {
+            this.markWorkspaceDoneUpdating(workspace);
+        });
     }
 
     onDelete(workspace: Workspace) {
