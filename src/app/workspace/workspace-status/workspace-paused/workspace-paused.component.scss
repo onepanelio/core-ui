@@ -19,4 +19,10 @@
     width: 0;
     height: 20px; // This must match the spinner diameter
   }
+
+  /deep/ .app-form {
+    .onepanel-dynamic-select {
+      width: 348px;
+    }
+  }
 }

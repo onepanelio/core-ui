@@ -3,7 +3,7 @@
     <div class="mt-8 color-primary font-size-XXL">Workspace paused</div>
     <div *ngIf="machineType" class="d-flex align-items-baseline workspace-view-parameters mt-1">
         <app-form [fieldData]="[machineType]"></app-form>
-        <button mat-flat-button color="accent" class="bigger-button op-rounded op-button ml-10"
+        <button mat-flat-button color="accent" class="bigger-button op-rounded op-button ml-3"
             [disabled]="resuming"
             (click)="onResumeClick()">
             <mat-spinner *ngIf="resuming"

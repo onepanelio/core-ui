@@ -1,19 +1,19 @@
-<form [formGroup]="form">
-    <ng-container *ngFor="let fieldDataum of fieldData; let last = last">
-        <ng-container *ngIf="!(fieldDataum.visibility == 'private')" [ngSwitch]="fieldDataum.type">
-            <app-textarea class="form-item fix-mat-overflow" *ngSwitchCase="'textarea.textarea'" [data]="fieldDataum" [form]="form" [class.extraBottomSpace]="!last && !!fieldDataum.hint"></app-textarea>
-            <app-select class="form-item fix-mat-overflow" *ngSwitchCase="'select.select'" [data]="fieldDataum" [form]="form" [disabled]="disabled" [class.extraBottomSpace]="!last && !!fieldDataum.hint"></app-select>
-            <app-select class="form-item fix-mat-overflow" *ngSwitchCase="'select.nodepool'" [data]="fieldDataum" [form]="form" [disabled]="disabled" [class.extraBottomSpace]="!last && !!fieldDataum.hint"></app-select>
-            <app-radio class="form-item fix-mat-overflow" *ngSwitchCase="'input.radio'" [data]="fieldDataum" [form]="form" [class.extraBottomSpace]="!last && !!fieldDataum.hint"></app-radio>
+<form [formGroup]="form" class="app-form">
+    <ng-container *ngFor="let fieldDatum of _fieldData; let last = last">
+        <ng-container *ngIf="!(fieldDatum.visibility == 'private')" [ngSwitch]="fieldDatum.type">
+            <app-textarea class="form-item fix-mat-overflow" *ngSwitchCase="'textarea.textarea'" [data]="fieldDatum" [form]="form" [class.extraBottomSpace]="!last && !!fieldDatum.hint"></app-textarea>
+            <app-select class="form-item fix-mat-overflow" *ngSwitchCase="'select.select'" [data]="fieldDatum" [form]="form" [disabled]="disabled" [class.extraBottomSpace]="!last && !!fieldDatum.hint"></app-select>
+            <app-radio class="form-item fix-mat-overflow" *ngSwitchCase="'input.radio'" [data]="fieldDatum" [form]="form" [class.extraBottomSpace]="!last && !!fieldDatum.hint"></app-radio>
+            <app-select class="form-item fix-mat-overflow" *ngSwitchCase="'select.nodepool'" [data]="fieldDatum" [form]="form" [disabled]="disabled" [class.extraBottomSpace]="!last && !!fieldDatum.hint"></app-select>
             <ng-container *ngSwitchDefault>
                 <app-input
-                        *ngIf="isFieldInput(fieldDataum)"
+                        *ngIf="isFieldInput(fieldDatum)"
                         class="form-item fix-mat-overflow"
-                        [data]="fieldDataum"
-                        [inputType]="getInputType(fieldDataum.type)"
+                        [data]="fieldDatum"
+                        [inputType]="getInputType(fieldDatum.type)"
                         [form]="form"
                         [errors]="errors"
-                        [class.extraBottomSpace]="!last && !!fieldDataum.hint">
+                        [class.extraBottomSpace]="!last && !!fieldDatum.hint">
                 </app-input>
             </ng-container>
         </ng-container>

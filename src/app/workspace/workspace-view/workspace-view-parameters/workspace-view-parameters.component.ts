@@ -1,8 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { AuthServiceService, Parameter, Workspace } from '../../../../api';
 import { WorkspaceState } from '../workspace-view.component';
 import { NamespaceTracker } from '../../../namespace/namespace-tracker.service';
 import { PermissionService } from '../../../permissions/permission.service';
+import { FormComponent } from '../../../fields/form/form.component';
 
 @Component({
     selector: 'app-workspace-view-parameters',
@@ -10,6 +11,8 @@ import { PermissionService } from '../../../permissions/permission.service';
     styleUrls: ['./workspace-view-parameters.component.scss']
 })
 export class WorkspaceViewParametersComponent implements OnInit {
+    @ViewChild(FormComponent, { static: false }) formComponent: FormComponent;
+
     // tslint:disable-next-line:variable-name
     _workspace: Workspace;
     machineType: Parameter;
@@ -90,5 +93,15 @@ export class WorkspaceViewParametersComponent implements OnInit {
         }
 
         this.updateWorkspace.emit(submittedParameters);
+    }
+
+    reloadParameters(workspace: Workspace) {
+        this.workspace = workspace;
+        this.populateParameters();
+
+        const machineFormControl = this.formComponent.form.get(this.machineType.name);
+        if (machineFormControl) {
+            machineFormControl.setValue(this.machineType.value);
+        }
     }
 }

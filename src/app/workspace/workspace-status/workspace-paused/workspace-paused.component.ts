@@ -1,5 +1,6 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { Parameter, Workspace } from '../../../../api';
+import { FormComponent } from '../../../fields/form/form.component';
 
 export interface WorkspaceResumeEvent {
   workspace: Workspace;
@@ -12,6 +13,8 @@ export interface WorkspaceResumeEvent {
   styleUrls: ['./workspace-paused.component.scss']
 })
 export class WorkspacePausedComponent implements OnInit {
+  @ViewChild(FormComponent, { static: false }) formComponent: FormComponent;
+
   @Input() workspace: Workspace;
   @Input() disabled = false;
   @Output() onResume = new EventEmitter<WorkspaceResumeEvent>();
@@ -26,6 +29,7 @@ export class WorkspacePausedComponent implements OnInit {
   }
 
   onResumeClick() {
+    this.machineType.value = this.formComponent.form.get(this.machineType.name).value;
     this.resuming = true;
     this.onResume.emit({
       workspace: this.workspace,

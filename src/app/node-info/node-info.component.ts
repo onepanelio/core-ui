@@ -415,7 +415,6 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
     if (path.startsWith(prePath) ) {
       path = path.substring(prePath.length);
     }
-    console.log('make cloud breadcrumbs', path);
 
     const preParts = prePath.split('/').filter(value => value !== '');
     const parts = path.split('/').filter(value => value !== '');
