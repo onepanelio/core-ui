@@ -95,7 +95,7 @@ export class FileBrowserDialogComponent implements OnInit {
         for (const part of parts) {
             const clickable = parts.length > 1 || this.preParts.length > 0;
 
-            pathSum += part;
+            pathSum += '/' + part;
 
             pathParts.push({
                 display: part,
