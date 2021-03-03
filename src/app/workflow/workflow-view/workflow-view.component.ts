@@ -9,7 +9,7 @@ import { AceEditorComponent } from 'ng2-ace-editor';
 import * as yaml from 'js-yaml';
 import * as ace from 'brace';
 import {
-  AuthServiceService, ConfigServiceService, CreateWorkflowExecutionBody,
+  AuthServiceService, CreateWorkflowExecutionBody,
   KeyValue,
   LabelServiceService, Metric, NodePoolOption,
   Parameter,
@@ -32,7 +32,6 @@ import { AlertService } from '../../alert/alert.service';
 import { PermissionService } from '../../permissions/permission.service';
 import { MetricsEditDialogComponent } from '../../metrics/metrics-edit-dialog/metrics-edit-dialog.component';
 import { Subscription } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../../auth/auth.service';
 import { ConfigService } from '../../config/config.service';
 
