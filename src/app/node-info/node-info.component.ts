@@ -3,16 +3,16 @@ import { NodeParameter, NodeStatus } from '../node/node.service';
 import { SimpleWorkflowDetail, WorkflowPhase, WorkflowService, } from '../workflow/workflow.service';
 import * as yaml from 'js-yaml';
 import { TemplateDefinition, VolumeMount } from '../workflow-template/workflow-template.service';
-import { FileNavigator, LongRunningTaskState, SlowValueUpdate } from '../files/fileNavigator';
-import { WorkflowServiceService } from '../../api';
+import { FileNavigator } from '../files/fileNavigator';
+import { Parameter, WorkflowServiceService } from '../../api';
 import { Metric, MetricsService } from './metrics/metrics.service';
 import { WorkflowFileApiWrapper } from '../files/WorkflowFileApiWrapper';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FileSyncerFileApi } from '../files/file-api';
 import { AuthService } from '../auth/auth.service';
 import { HttpClient } from '@angular/common/http';
-import { environment } from '../../environments/environment';
 import { BreadcrumbPath, PathPart } from '../files/file-browser/file-browser.component';
+import { ConfigService } from '../config/config.service';
 
 interface SideCar {
   name: string;
@@ -33,7 +33,8 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
               private metricsService: MetricsService,
               private snackBar: MatSnackBar,
               private appAuthService: AuthService,
-              private httpClient: HttpClient) { }
+              private httpClient: HttpClient,
+              private configService: ConfigService) { }
 
   private static sysSideCarUrlPrefixLength = 17;
   @Input() namespace: string;
@@ -41,6 +42,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
   @Input() visible = true;
   @Input() workflow: SimpleWorkflowDetail;
+  @Input() nodePoolLabel: string;
   @Output() yamlClicked = new EventEmitter();
   @Output() closeClicked = new EventEmitter();
   @Output() logsClicked = new EventEmitter();
@@ -73,6 +75,8 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
   sidecars = new Array<SideCar>();
 
   localFileNavigators = new Array<FileNavigator>();
+  nodePool: Parameter;
+  nodePoolRequestedAt: Date;
 
   static outputArtifactsToDirectories(outputArtifacts: any[]): Array<string> {
     const directoriesSet = new Map<string, boolean>();
@@ -242,6 +246,9 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
     this.updateFiles();
     this.updateMetrics();
     this.refreshOutputParameters();
+
+    this.nodePool = null;
+    this.getNodePool();
   }
 
   onCloseClick() {
@@ -480,5 +487,41 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
       prefix: '/',
       pathParts
     };
+  }
+
+  parseNodePool(): string {
+    if (!this.template || !this.template.nodeSelector) {
+      return null;
+    }
+
+    let nodePoolKey = this.template.nodeSelector[this.nodePoolLabel];
+    nodePoolKey = nodePoolKey.replace(/[{}\s]/g, '');
+
+    const parts = nodePoolKey.split('.');
+    nodePoolKey = parts[parts.length - 1];
+
+    const jsonManifest = this.workflow.getJsonManifest();
+
+    const value = jsonManifest.spec.arguments.parameters;
+
+    for (const param of value) {
+      if (param.name === nodePoolKey) {
+        return param.value;
+      }
+    }
+  }
+
+  getNodePool() {
+    this.nodePoolRequestedAt = new Date();
+    const requestStartedAt = new Date();
+
+    const value = this.parseNodePool();
+
+    this.configService.getMachineTypeByValue(value).subscribe(res => {
+      const timeDifference = requestStartedAt.getTime() - this.nodePoolRequestedAt.getTime();
+      if (timeDifference >= 0) {
+        this.nodePool = res;
+      }
+    });
   }
 }

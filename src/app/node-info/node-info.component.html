@@ -36,12 +36,14 @@
       <tr class="text-left">
         <th>Name</th>
         <th>Type</th>
+        <th *ngIf="nodePool">Node pool</th>
       </tr>
       </thead>
       <tbody>
       <tr>
-        <td *ngIf="node" class="w-50">{{node.id}}</td>
-        <td *ngIf="node" class="w-50">{{node.type}}</td>
+        <td *ngIf="node" [class.w-33]="nodePool" [class.w-50]="!nodePool">{{node.id}}</td>
+        <td *ngIf="node" [class.w-33]="nodePool" [class.w-50]="!nodePool">{{node.type}}</td>
+        <td *ngIf="nodePool" class="w-33">{{nodePool.name}} ({{nodePool.value}})</td>
       </tr>
       </tbody>
     </table>

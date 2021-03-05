@@ -86,6 +86,7 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
   metrics: Metric[] = [];
 
   machineType: NodePoolOption;
+  nodePoolLabel = 'beta.kubernetes.io/instance-type';
 
   private socketClosedCount = 0;
   private socketErrorCount = 0;
@@ -139,6 +140,11 @@ export class WorkflowViewComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.activatedRoute.paramMap.subscribe(next => {
       const namespace = next.get('namespace');
+
+      this.configService.getNodePoolLabel().subscribe(res => {
+        this.nodePoolLabel = res;
+      });
+
       this.setNamespaceUid(namespace, next.get('uid'));
       if (this.clock) {
         this.clock.reset(true);
