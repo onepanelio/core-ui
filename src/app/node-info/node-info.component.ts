@@ -494,11 +494,6 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
       return null;
     }
 
-    console.log({
-      templateNodeSelector: this.template.nodeSelector,
-      label: this.nodePoolLabel
-    });
-
     let originalNodePoolKey = '';
     if (this.nodePoolLabel in this.template.nodeSelector) {
       originalNodePoolKey = this.template.nodeSelector[this.nodePoolLabel];
