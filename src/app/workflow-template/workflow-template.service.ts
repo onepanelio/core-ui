@@ -35,6 +35,7 @@ export interface TemplateDefinition {
   container?: ContainerDefinition;
   script?: ScriptDefinition;
   resource?: ResourceDefinition;
+  nodeSelector?: { [key: string]: string };
 }
 
 export interface WorkflowTemplateBase {

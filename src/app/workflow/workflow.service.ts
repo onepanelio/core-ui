@@ -141,7 +141,7 @@ export class SimpleWorkflowDetail {
         for (const template of templates) {
             if (template.name === name) {
                 // output parameters may be undefined
-                if (template.outputs.parameters) {
+                if (template.outputs && template.outputs.parameters) {
                     return template.outputs.parameters;
                 }
 
@@ -150,6 +150,10 @@ export class SimpleWorkflowDetail {
         }
 
         return [];
+    }
+
+    getJsonManifest(): WorkflowManifest|null {
+        return this.jsonManifest;
     }
 }
 
