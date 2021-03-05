@@ -494,8 +494,28 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
       return null;
     }
 
-    let nodePoolKey = this.template.nodeSelector[this.nodePoolLabel];
-    nodePoolKey = nodePoolKey.replace(/[{}\s]/g, '');
+    console.log({
+      templateNodeSelector: this.template.nodeSelector,
+      label: this.nodePoolLabel
+    });
+
+    let originalNodePoolKey = '';
+    if (this.nodePoolLabel in this.template.nodeSelector) {
+      originalNodePoolKey = this.template.nodeSelector[this.nodePoolLabel];
+    } else {
+      // Grab the first key
+      // tslint:disable-next-line:forin
+      for (const key in this.template.nodeSelector) {
+        return this.template.nodeSelector[key];
+      }
+    }
+
+    let nodePoolKey = originalNodePoolKey.replace(/[{}\s]/g, '');
+
+    // If we don't remove any curly braces, then it is not a parameter.
+    if (originalNodePoolKey === nodePoolKey) {
+      return nodePoolKey;
+    }
 
     const parts = nodePoolKey.split('.');
     nodePoolKey = parts[parts.length - 1];
