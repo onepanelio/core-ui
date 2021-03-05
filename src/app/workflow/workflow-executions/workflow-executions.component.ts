@@ -6,13 +6,11 @@ import {
     WorkflowExecution,
     WorkflowServiceService,
     WorkflowTemplateServiceService,
-    Workspace
 } from '../../../api';
 import { ActivatedRoute } from '@angular/router';
 import { Sort } from '@angular/material';
 import { FilterChangedEvent } from '../../list-filter/list-filter.component';
 import { combineLatest } from 'rxjs';
-import { WorkflowTemplateService } from '../../workflow-template/workflow-template.service';
 
 type WorkflowExecutionsState = 'initialization' | 'new' | 'loading';
 export type WorkflowExecutionPhase = 'running' | 'completed' | 'failed' | 'stopped';
