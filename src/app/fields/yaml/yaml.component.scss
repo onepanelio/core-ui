@@ -2,7 +2,8 @@
 @import '../../../styles/font-variables';
 
 .form-yaml {
-  label, .hint {
+  label,
+  .hint {
     font-size: 12px;
     color: $medium-gray;
     font-family: $fontRoboto;
