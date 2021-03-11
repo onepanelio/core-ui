@@ -1,0 +1,25 @@
+<div class="form-yaml">
+    <textarea class="d-none" [formControl]="textAreaControl"></textarea>
+    <label *ngIf="data.displayName">
+        {{data.displayName}}
+    </label>
+    <label *ngIf="!data.displayName">
+        {{data.name}}
+    </label>
+    <ace-editor
+            style="width: 400px; height: 400px;"
+            class="h-100 w-100 custom mt-2"
+            [mode]="'yaml'"
+            [readOnly]="false"
+            [text]="textAreaControl.value"
+            (textChange)="onTextChange($event)"
+            [options]="{
+                showInvisibles: false,
+                showPrintMargin: false,
+                scrollPastEnd: 0.1,
+                showLineNumbers: true
+              }"
+    >
+    </ace-editor>
+    <mat-hint class="hint mt-2 space-from-left d-block" *ngIf="data.hint" [innerHtml]="data.hint"></mat-hint>
+</div>

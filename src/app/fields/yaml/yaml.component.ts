@@ -3,11 +3,11 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Parameter } from '../../../api';
 
 @Component({
-    selector: 'app-textarea',
-    templateUrl: './textarea.component.html',
-    styleUrls: ['./textarea.component.scss']
+    selector: 'app-yaml',
+    templateUrl: './yaml.component.html',
+    styleUrls: ['./yaml.component.scss']
 })
-export class TextareaComponent implements OnInit {
+export class YamlComponent implements OnInit {
     @Input() form: FormGroup;
     textAreaControl: FormControl;
 
@@ -39,5 +39,9 @@ export class TextareaComponent implements OnInit {
         }
 
         this.form.addControl(this.data.name, this.textAreaControl);
+    }
+
+    onTextChange(data: string) {
+        this.textAreaControl.setValue(data);
     }
 }

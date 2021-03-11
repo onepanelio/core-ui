@@ -136,6 +136,7 @@ import { FileSyncComponent } from './file-sync/file-sync.component';
 import { FileBrowserDialogComponent } from './files/file-browser-dialog/file-browser-dialog.component';
 import { SimpleLogComponent } from './simple-log/simple-log.component';
 import { PrefixFileInputComponent } from './files/prefix-file-input/prefix-file-input.component';
+import { YamlComponent } from './fields/yaml/yaml.component';
 
 @NgModule({
     declarations: [
@@ -242,6 +243,7 @@ import { PrefixFileInputComponent } from './files/prefix-file-input/prefix-file-
         FileBrowserDialogComponent,
         SimpleLogComponent,
         PrefixFileInputComponent,
+        YamlComponent,
     ],
     entryComponents: [
         WorkflowExecuteDialogComponent,

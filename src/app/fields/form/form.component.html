@@ -2,6 +2,7 @@
     <ng-container *ngFor="let fieldDatum of _fieldData; let last = last">
         <ng-container *ngIf="!(fieldDatum.visibility == 'private')" [ngSwitch]="fieldDatum.type">
             <app-textarea class="form-item fix-mat-overflow" *ngSwitchCase="'textarea.textarea'" [data]="fieldDatum" [form]="form" [class.extraBottomSpace]="!last && !!fieldDatum.hint"></app-textarea>
+            <app-yaml class="form-item fix-mat-overflow" *ngSwitchCase="'editor.yaml'" [data]="fieldDatum" [form]="form" [class.extraBottomSpace]="!last && !!fieldDatum.hint"></app-yaml>
             <app-select class="form-item fix-mat-overflow" *ngSwitchCase="'select.select'" [data]="fieldDatum" [form]="form" [disabled]="disabled" [class.extraBottomSpace]="!last && !!fieldDatum.hint"></app-select>
             <app-radio class="form-item fix-mat-overflow" *ngSwitchCase="'input.radio'" [data]="fieldDatum" [form]="form" [class.extraBottomSpace]="!last && !!fieldDatum.hint"></app-radio>
             <app-select class="form-item fix-mat-overflow" *ngSwitchCase="'select.nodepool'" [data]="fieldDatum" [form]="form" [disabled]="disabled" [class.extraBottomSpace]="!last && !!fieldDatum.hint"></app-select>

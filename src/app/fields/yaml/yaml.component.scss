@@ -1,0 +1,15 @@
+@import '../../../styles/colors';
+@import '../../../styles/font-variables';
+
+.form-yaml {
+  label,
+  .hint {
+    font-size: 12px;
+    color: $medium-gray;
+    font-family: $fontRoboto;
+  }
+
+  .space-from-left {
+    margin-left: 12px;
+  }
+}
