@@ -15,7 +15,8 @@
             </mat-select>
         </mat-form-field>
         <div *ngIf="state === 'no-templates'" class="mt-7 font-roboto color-medium-gray">
-            You have no templates, <a class="action underline pointer-hover color-medium-gray" (click)="goToWorkspaceTemplates()">Create a workspace template</a>
+            You have no templates, <a class="action underline pointer-hover color-medium-gray"
+                                      (click)="goToWorkspaceTemplates()">Create a workspace template</a>
         </div>
         <app-form
                 *ngIf="parameters"
@@ -45,7 +46,7 @@
 
 </form>
 
-<hr class="divider op-just-border-top border-gray mt-5" />
+<hr class="divider op-just-border-top border-gray mt-5"/>
 <div class="d-flex justify-content-between w-100 mt-5">
     <button mat-button class="font-medium-gray cancel-button" (click)="cancel()">CANCEL</button>
     <app-button (click)="createAndRun()" [loading]="state === 'creating'">
