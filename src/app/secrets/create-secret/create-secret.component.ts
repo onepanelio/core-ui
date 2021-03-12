@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AlertService } from '../../alert/alert.service';
 import { Alert } from '../../alert/alert';
@@ -74,7 +74,11 @@ export class CreateSecretComponent implements OnInit {
                     message: 'Unable to create secret'
                 });
 
-                if (err.status === 403) {
+                if (err.status === 400) {
+                    alert.message = err.error.message;
+                } else if (err.status === 409) {
+                    alert.message = err.error.message;
+                } else if (err.status === 403) {
                     alert.message = 'Unauthorized to create secret';
                 }
 

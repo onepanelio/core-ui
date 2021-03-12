@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { Alert } from '../../alert/alert';
 import { AlertService } from '../../alert/alert.service';
 import { SecretServiceService } from '../../../api';
@@ -95,10 +95,20 @@ export class EditSecretComponent implements OnInit {
                     type: 'success',
                 }));
             }, err => {
-                this.alertService.storeAlert(new Alert({
-                    message: `Unable to update secret`,
+                const alert = new Alert({
                     type: 'danger',
-                }));
+                    message: 'Unable to update secret'
+                });
+
+                if (err.status === 400) {
+                    alert.message = err.error.message;
+                } else if (err.status === 409) {
+                    alert.message = err.error.message;
+                } else if (err.status === 403) {
+                    alert.message = 'Unauthorized to update secret';
+                }
+
+                this.alertService.storeAlert(alert);
             });
     }
 }
