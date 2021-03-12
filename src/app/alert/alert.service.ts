@@ -21,6 +21,14 @@ export class AlertService {
     this.alertReceived.emit();
   }
 
+  public danger(message: string, title?: string) {
+    this.storeAlert(new Alert({
+      type: 'danger',
+      message,
+      title
+    }));
+  }
+
   public peekLocalAlerts(): Array<Alert> {
     let alertsRaw = localStorage.getItem(AlertService.identifier);
 
