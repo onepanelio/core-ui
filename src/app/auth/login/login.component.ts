@@ -5,6 +5,8 @@ import { AuthServiceService } from '../../../api';
 import { NamespaceTracker } from '../../namespace/namespace-tracker.service';
 import { AppRouter } from '../../router/app-router.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { HttpErrorResponse } from '@angular/common/http';
+import { AlertService } from '../../alert/alert.service';
 
 @Component({
     selector: 'app-login',
@@ -18,6 +20,7 @@ export class LoginComponent implements OnInit {
     loggingIn = false;
 
     constructor(
+        private alertService: AlertService,
         private snackBar: MatSnackBar,
         private formBuilder: FormBuilder,
         private authService: AuthService,
@@ -85,8 +88,17 @@ export class LoginComponent implements OnInit {
 
             this.appRouter.navigateToHomePage();
             this.loggingIn = false;
-        }, err => {
-            this.tokenInput.setErrors({error: 'Invalid token'});
+        }, (err: HttpErrorResponse) => {
+            if (err.status === 0) {
+                this.alertService.danger('Unable to connect to server');
+            } else if (err.status > 499) {
+                this.alertService.danger('Server error occurred');
+            } else if (err.status === 400) {
+                this.tokenInput.setErrors({error: 'Invalid token'});
+            } else {
+                this.alertService.danger('Unknown error');
+            }
+
             this.loggingIn = false;
         });
     }
