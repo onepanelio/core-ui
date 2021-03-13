@@ -11,7 +11,8 @@
             <cdk-cell *cdkCellDef="let workspace">
                 <div>
                     <div>
-                        <a class="name-link font-roboto-bold font-weight-bold" target="_blank" [routerLink]="['/', this.namespace, 'workspaces', workspace.uid]">{{workspace.name}}</a>
+                        <a class="name-link font-roboto-bold font-weight-bold" target="_blank"
+                           [routerLink]="['/', this.namespace, 'workspaces', workspace.uid]">{{workspace.name}}</a>
                     </div>
                     <span class="color-medium-gray font-size-small">uid: {{workspace.uid}}</span>
                 </div>
@@ -71,8 +72,10 @@
         <ng-container cdkColumnDef="actions">
             <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
             <cdk-cell *cdkCellDef="let workspace" class="flex align-items-center">
-                <a class="link-button op-edit-button" target="_blank" [routerLink]="['/', this.namespace, 'workspaces', workspace.uid]">View</a>
-                <button mat-icon-button color="primary" [matMenuTriggerFor]="appMenu" [matMenuTriggerData]="{'workspace' :workspace}" (click)="onMatMenuOpen(workspace)">
+                <a class="link-button op-edit-button" target="_blank"
+                   [routerLink]="['/', this.namespace, 'workspaces', workspace.uid]">View</a>
+                <button mat-icon-button color="primary" [matMenuTriggerFor]="appMenu"
+                        [matMenuTriggerData]="{'workspace' :workspace}" (click)="onMatMenuOpen(workspace)">
                     <mat-icon>more_vert</mat-icon>
                 </button>
             </cdk-cell>
@@ -90,7 +93,8 @@
         </ng-container>
 
         <!-- Header and Row Declarations -->
-        <cdk-header-row *cdkHeaderRowDef="displayedColumns" class="d-flex align-items-baseline op-table-header"></cdk-header-row>
+        <cdk-header-row *cdkHeaderRowDef="displayedColumns"
+                        class="d-flex align-items-baseline op-table-header"></cdk-header-row>
         <cdk-row *cdkRowDef="let workspace; columns: displayedColumns"
                  class="d-flex flex-wrap op-table-row align-items-baseline">
         </cdk-row>
@@ -110,19 +114,23 @@
             No Permissions
         </div>
         <div *ngIf="workspacePermissions.has(workspace.uid)">
-            <button *ngIf="workspace.status.phase === 'Running' && workspacePermissions.get(workspace.uid).update" mat-menu-item (click)="onPause(workspace)">
+            <button *ngIf="workspace.status.phase === 'Running' && workspacePermissions.get(workspace.uid).update"
+                    mat-menu-item (click)="onPause(workspace)">
                 <i class="far fa-pause-circle mr-1 workspace-menu-icon"></i>
                 Pause
             </button>
-            <button *ngIf="workspace.status.phase === 'Paused' && workspacePermissions.get(workspace.uid).update" mat-menu-item (click)="onResume(workspace)">
+            <button *ngIf="workspace.status.phase === 'Paused' && workspacePermissions.get(workspace.uid).update"
+                    mat-menu-item (click)="onResume(workspace)">
                 <i class="far fa-play-circle mr-1 workspace-menu-icon"></i>
                 Resume
             </button>
-            <button *ngIf="workspace.status.phase.toLowerCase().indexOf('fail') > -1" mat-menu-item (click)="onRetryLastAction(workspace)">
+            <button *ngIf="workspace.status.phase.toLowerCase().indexOf('fail') > -1" mat-menu-item
+                    (click)="onRetryLastAction(workspace)">
                 <i class="fas fa-redo mr-1 workspace-menu-icon"></i>
                 Retry
             </button>
-            <button *ngIf="workspacePermissions.get(workspace.uid).delete && workspace.status.phase.toLowerCase() != 'failed to terminate'" mat-menu-item (click)="onDelete(workspace)" [disabled]="workspace.status.phase === 'Terminating'">
+            <button *ngIf="workspacePermissions.get(workspace.uid).delete && workspace.status.phase.toLowerCase() != 'failed to terminate'"
+                    mat-menu-item (click)="onDelete(workspace)" [disabled]="workspace.status.phase === 'Terminating'">
                 <i class="fas fa-trash mr-1 workspace-menu-icon"></i>
                 Terminate
             </button>
