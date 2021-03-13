@@ -107,7 +107,8 @@ export class WorkspaceExecuteDialogComponent implements OnInit {
     this.workspaceService.createWorkspace(this.namespace, createWorkspace)
         .subscribe(res => {
           this.state = 'ready';
-          this.dialogRef.close('created');
+          res.status.phase = 'Launching';
+          this.dialogRef.close(res);
         }, (err: HttpErrorResponse) => {
           this.state = 'ready';
           if (err.status === 409) {

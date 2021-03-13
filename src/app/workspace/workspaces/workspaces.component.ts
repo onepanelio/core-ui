@@ -69,7 +69,6 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-
         this.activatedRoute.paramMap.subscribe(next => {
             this.getWorkspaces();
 
@@ -83,8 +82,6 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
 
             this.getExtraLabels();
         });
-
-
     }
 
     ngOnDestroy() {
@@ -329,5 +326,10 @@ export class WorkspacesComponent implements OnInit, OnDestroy {
         this.labelFilter = event.filterString;
 
         this.getWorkspaces();
+    }
+
+    addWorkspace(workspace: Workspace) {
+        this.workspaces = [workspace, ...this.workspaces];
+        this.hasAnyWorkspaces = true;
     }
 }

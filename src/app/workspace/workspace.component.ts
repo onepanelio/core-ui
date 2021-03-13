@@ -1,86 +1,89 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
-  AuthServiceService,
-  WorkspaceServiceService
+    AuthServiceService,
+    WorkspaceServiceService
 } from '../../api';
 import { WorkspaceExecuteDialogComponent } from './workspace-execute-dialog/workspace-execute-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { AppRouter } from '../router/app-router.service';
 import { Permissions } from '../auth/models';
-import { WorkspacesChangedEvent } from './workspaces/workspaces.component';
+import { WorkspacesChangedEvent, WorkspacesComponent } from './workspaces/workspaces.component';
 import { PermissionService } from '../permissions/permission.service';
 
 type WorkspaceState = 'loading-initial-data' | 'loading' | 'new';
 
 @Component({
-  selector: 'app-workspace',
-  templateUrl: './workspace.component.html',
-  styleUrls: ['./workspace.component.scss']
+    selector: 'app-workspace',
+    templateUrl: './workspace.component.html',
+    styleUrls: ['./workspace.component.scss']
 })
 export class WorkspaceComponent implements OnInit, OnDestroy {
-  namespace: string;
-  state: WorkspaceState = 'loading-initial-data';
+    @ViewChild(WorkspacesComponent, { static: false }) workspaces: WorkspacesComponent;
 
-  workspacePermissions = new Permissions();
-  workspaceTemplatePermissions = new Permissions();
+    namespace: string;
+    state: WorkspaceState = 'loading-initial-data';
 
-  showWorkspacesCallToAction = false;
+    workspacePermissions = new Permissions();
+    workspaceTemplatePermissions = new Permissions();
 
-  constructor(
-      private appRouter: AppRouter,
-      private activatedRoute: ActivatedRoute,
-      private authService: AuthServiceService,
-      private permissionService: PermissionService,
-      private workspaceService: WorkspaceServiceService,
-      private dialog: MatDialog
-  ) {
-    this.activatedRoute.paramMap.subscribe(next => {
-      this.namespace = next.get('namespace');
+    showWorkspacesCallToAction = false;
 
-      this.checkPermissions(this.namespace);
-    });
-  }
+    constructor(
+        private appRouter: AppRouter,
+        private activatedRoute: ActivatedRoute,
+        private authService: AuthServiceService,
+        private permissionService: PermissionService,
+        private workspaceService: WorkspaceServiceService,
+        private dialog: MatDialog
+    ) {
+        this.activatedRoute.paramMap.subscribe(next => {
+            this.namespace = next.get('namespace');
 
-  ngOnInit() {
-  }
+            this.checkPermissions(this.namespace);
+        });
+    }
 
-  ngOnDestroy() {
-  }
+    ngOnInit() {
+    }
 
-  createWorkspace() {
-    const dialogRef = this.dialog.open(WorkspaceExecuteDialogComponent, {
-      width: '60vw',
-      maxHeight: '100vh',
-      data: {
-        namespace: this.namespace,
-      }
-    });
+    ngOnDestroy() {
+    }
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (!result  || result === 'close') {
-        return;
-      }
-
-      this.appRouter.navigateToWorkspaces(this.namespace);
-    });
-  }
-
-  workspacesChanged(event: WorkspacesChangedEvent) {
-    this.showWorkspacesCallToAction = !event.hasAnyWorkspaces;
-  }
-
-  private checkPermissions(namespace: string) {
-    this.permissionService
-        .getWorkspaceTemplatePermissions(namespace, '', 'list')
-        .subscribe(res => {
-          this.workspaceTemplatePermissions = res;
+    createWorkspace() {
+        const dialogRef = this.dialog.open(WorkspaceExecuteDialogComponent, {
+            width: '60vw',
+            maxHeight: '100vh',
+            data: {
+                namespace: this.namespace,
+            }
         });
 
-    this.permissionService
-        .getWorkspacePermissions(namespace, '', 'create')
-        .subscribe(res => {
-          this.workspacePermissions = res;
+        dialogRef.afterClosed().subscribe(result => {
+            if (!result || result === 'cancel') {
+                return;
+            }
+
+            this.workspaces.addWorkspace(result);
+            this.showWorkspacesCallToAction = false;
         });
-  }
+    }
+
+    workspacesChanged(event: WorkspacesChangedEvent) {
+        this.showWorkspacesCallToAction = !event.hasAnyWorkspaces;
+    }
+
+    private checkPermissions(namespace: string) {
+        this.permissionService
+            .getWorkspaceTemplatePermissions(namespace, '', 'list')
+            .subscribe(res => {
+                this.workspaceTemplatePermissions = res;
+            });
+
+        this.permissionService
+            .getWorkspacePermissions(namespace, '', 'create')
+            .subscribe(res => {
+                this.workspacePermissions = res;
+            });
+    }
 }
