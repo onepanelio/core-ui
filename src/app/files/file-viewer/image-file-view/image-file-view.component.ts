@@ -23,7 +23,11 @@ export class ImageFileViewComponent implements OnInit {
     if (this.fileApi) {
       this.fileApi.getContent(this.file.path)
           .subscribe(res => {
-            this.setBase64Content(res.data);
+            if (typeof res === 'string' ) {
+              this.setLinkContent(res);
+            } else {
+              this.setBase64Content(res.data);
+            }
           }, err => {
             console.error(err);
           }, () => {
@@ -42,6 +46,10 @@ export class ImageFileViewComponent implements OnInit {
 
   public static IsImageExtension(extension: string){
     return (/(gif|jpg|jpeg|tiff|png)$/i).test(extension);
+  }
+
+  private setLinkContent(url: string) {
+    this.displayContent = url;
   }
 
   private setBase64Content(content: any) {

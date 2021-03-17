@@ -1,10 +1,10 @@
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { HttpClient, HttpResponse } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
 import { ArtifactResponse, ListFilesResponse } from '../../api';
 
 export interface FileApi {
     listFiles(path: string): Observable<ListFilesResponse>;
-    getContent(path: string): Observable<ArtifactResponse>;
+    getContent(path: string): Observable<ArtifactResponse|string>;
 }
 
 export class FileSyncerFileApi implements FileApi {
@@ -34,13 +34,13 @@ export class FileSyncerFileApi implements FileApi {
         return this.getRequest(url);
     }
 
-    public getContent(path: string): Observable<ArtifactResponse> {
+    public getContent(path: string): Observable<ArtifactResponse|string> {
         if (!path.startsWith('/')) {
             path = '/' + path;
         }
 
         const url = `${this.baseUrl}/api/files/content?path=${path}`;
 
-        return this.getRequest(url);
+        return of(url);
     }
 }

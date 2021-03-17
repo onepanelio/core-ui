@@ -13,7 +13,7 @@ export class WorkflowFileApiWrapper implements FileApi {
         return this.workflowService.listFiles(this.namespace, this.uid, path);
     }
 
-    getContent(path: string): Observable<ArtifactResponse> {
+    getContent(path: string): Observable<ArtifactResponse|string> {
         return this.workflowService.getArtifact(this.namespace, this.uid, path);
     }
 }

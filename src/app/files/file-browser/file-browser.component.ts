@@ -182,18 +182,21 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
       throw new Error('Unable to download a directory');
     }
 
-    // this.workflowService.getArtifact(this.namespace, this.name, file.path)
     this.fileNavigator.getFileContent(file.path)
-        .subscribe((res: any) => {
+        .subscribe((res) => {
           const link = document.createElement('a') as HTMLAnchorElement;
           let downloadName = file.name;
-          if (file.extension) {
+          if (file.name.indexOf('.') === -1 && file.extension) {
             downloadName += `.${file.extension}`;
           }
 
           link.download = downloadName;
 
-          link.href = 'data:application/octet-stream;charset=utf-16le;base64,' + res.data;
+          if (typeof res === 'string' ) {
+            link.href = res;
+          } else {
+            link.href = 'data:application/octet-stream;charset=utf-16le;base64,' + res.data;
+          }
 
           document.body.appendChild(link);
           link.click();
