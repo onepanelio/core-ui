@@ -43,7 +43,11 @@ export class TextFileViewComponent implements OnInit {
     if (this.fileApi) {
       this.fileApi.getContent(this.file.path)
           .subscribe(res => {
-            this.setBase64Content(res.data);
+            if (typeof res === 'string' ) {
+              this.displayContent = res;
+            } else {
+              this.setBase64Content(res.data);
+            }
           }, err => {
             console.error(err);
           }, () => {

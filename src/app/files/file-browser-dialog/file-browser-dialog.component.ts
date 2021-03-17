@@ -92,10 +92,15 @@ export class FileBrowserDialogComponent implements OnInit {
             });
         }
 
+        let i = 0;
         for (const part of parts) {
             const clickable = parts.length > 1 || this.preParts.length > 0;
 
-            pathSum += '/' + part;
+            if (i !== 0) {
+                pathSum += '/';
+            }
+
+            pathSum += part;
 
             pathParts.push({
                 display: part,
@@ -103,6 +108,8 @@ export class FileBrowserDialogComponent implements OnInit {
                 partialPath: pathSum,
                 clickable,
             });
+
+            i++;
         }
 
         const lastPathPart = pathParts[pathParts.length - 1];
