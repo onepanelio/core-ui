@@ -141,7 +141,7 @@ templates:
     # [CHANGE] Docker image to use to run your code
     # You can keep this as is if your code uses TensorFlow 2.3 or PyTorch 1.5
     # For private Docker repositories use imagePullSecrets: https://github.com/argoproj/argo/blob/master/examples/image-pull-secrets.yaml#L10-L11
-    image: onepanel/dl:0.17.0
+    image: onepanel/dl:v0.20.0
     volumeMounts:
       - mountPath: /mnt/data
         name: data
