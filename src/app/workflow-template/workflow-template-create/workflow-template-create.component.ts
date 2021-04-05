@@ -66,6 +66,7 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy, CanCo
     templateNameInput: AbstractControl;
     form: FormGroup;
     labels = new Array<KeyValue>();
+    description: string='';
 
     /**
      * manifestChanged keeps track if any changes have been made since the editor was opened.
@@ -172,7 +173,8 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy, CanCo
             .createWorkflowTemplate(this.namespace, {
                 name: templateName,
                 manifest: manifestText,
-                labels: this.labels
+                labels: this.labels,
+                description: this.description,
             })
             .subscribe(res => {
                 this.appRouter.navigateToWorkflowTemplateView(this.namespace, res.uid);

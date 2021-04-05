@@ -39,6 +39,23 @@
         </app-manifest-dag-editor>
       </div>
       <div class="mt-5">
+        <div class="op-h2">Description</div>
+        <div class="d-flex op-border mt-2 description-container">
+        <ace-editor
+         class="w-50 h-100"
+         [(text)]="description"
+         [mode]="'text'"
+         [options]="{
+                        showInvisibles: false,
+                        showPrintMargin: false,
+                        showLineNumbers: true,
+                        scrollPastEnd: 0.1
+                      }"
+    ></ace-editor>
+    <markdown class="w-50 pl-2 pr-2 scroll-overflow" [data]="description"></markdown>
+  </div>
+      </div>
+      <div class="mt-5">
         <div class="op-h2">Labels</div>
         <app-labels-edit class="d-inline-block w-50 mt-3" [labels]="labels" ></app-labels-edit>
       </div>

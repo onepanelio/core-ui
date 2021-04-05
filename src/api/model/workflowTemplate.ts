@@ -29,5 +29,6 @@ export interface WorkflowTemplate {
     stats?: WorkflowExecutionStatisticReport;
     cronStats?: CronWorkflowStatisticsReport;
     parameters?: Array<Parameter>;
+    description?: string;
 }
 
