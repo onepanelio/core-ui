@@ -66,7 +66,6 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy, CanCo
     templateNameInput: AbstractControl;
     form: FormGroup;
     labels = new Array<KeyValue>();
-    description: string='';
 
     /**
      * manifestChanged keeps track if any changes have been made since the editor was opened.
