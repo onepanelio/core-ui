@@ -55,6 +55,7 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy, CanCo
     previousManifestText: string;
     manifestText: string;
     state: WorkflowTemplateCreateState = 'new';
+    description: string='';
 
     /**
      * This is set when we are cloning an existing workflow template.
@@ -66,7 +67,6 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy, CanCo
     templateNameInput: AbstractControl;
     form: FormGroup;
     labels = new Array<KeyValue>();
-    description: string='';
 
     /**
      * manifestChanged keeps track if any changes have been made since the editor was opened.
@@ -168,7 +168,7 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy, CanCo
 
         this.state = 'creating';
         const manifestText = this.manifestDagEditor.rawManifest;
-
+        
         this.workflowTemplateServiceService
             .createWorkflowTemplate(this.namespace, {
                 name: templateName,
