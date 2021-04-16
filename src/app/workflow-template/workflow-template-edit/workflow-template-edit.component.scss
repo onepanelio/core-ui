@@ -39,6 +39,7 @@ app-workflow-template-select {
 
 .template-description {
   min-height: 400px;
+  
   /deep/ .mat-tab-list {
     background-color: $toolbar-white;
   }
