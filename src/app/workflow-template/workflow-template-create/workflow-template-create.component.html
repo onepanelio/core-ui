@@ -13,6 +13,20 @@
                     <mat-error *ngIf="templateNameInput.hasError('conflict')">That name is already taken</mat-error>
                 </mat-form-field>
             </div>
+            <div class="op-border mt-3">
+                <mat-tab-group class="template-description" animationDuration="0ms">
+                  <mat-tab label="Description">
+                    <textarea
+                      rows="24"
+                      class="w-100 h-100"
+                      formControlName="templateDescriptionInput">
+                    </textarea>
+                  </mat-tab>
+                  <mat-tab label="Preview">
+                    <markdown class="w-100 pl-2 pr-2 scroll-overflow" [data]="description"></markdown>
+                  </mat-tab>
+                </mat-tab-group>
+              </div>
             <div class="d-flex">
                 <app-workflow-template-select
                         (templateSelected)="onTemplateSelected($event)">
@@ -23,23 +37,6 @@
                         [manifestInterceptor]="apiManifestInterceptor"
                         (manifestTextModified)="onManifestTextModified($event)">
                 </app-manifest-dag-editor>
-            </div>
-            <div class="mt-5">
-                <div class="op-h2">Description</div>
-                <div class="d-flex op-border mt-2 description-container">
-                    <ace-editor
-                    class="w-50 h-100"
-                    [(text)]="description"
-                    [mode]="'text'"
-                    [options]="{
-                                    showInvisibles: false,
-                                    showPrintMargin: false,
-                                    showLineNumbers: true,
-                                    scrollPastEnd: 0.1
-                                }">
-                    </ace-editor>
-                    <markdown class="w-50 pl-2 pr-2 scroll-overflow" [data]="description"></markdown>
-                </div>
             </div>
             <div class="mt-5">
                 <div class="op-h2">Labels</div>

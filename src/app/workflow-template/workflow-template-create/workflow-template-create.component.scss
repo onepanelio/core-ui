@@ -1,3 +1,5 @@
+@import "../../../styles/colors";
+
 .op-info-box {
   padding-left: 50px;
   padding-right: 50px;
@@ -31,6 +33,15 @@ app-workflow-template-select {
   z-index:20
 }
 
-.description-container {
-  height: 400px;
+/deep/ .highlight-error {
+  position:absolute;
+  background: #d32345AA;
+  z-index:20
+}
+
+.template-description {
+  min-height: 400px;
+  /deep/ .mat-tab-list {
+    background-color: $toolbar-white;
+  }
 }

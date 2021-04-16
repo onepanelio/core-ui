@@ -37,6 +37,9 @@ app-workflow-template-select {
   z-index:20
 }
 
-.description-container {
-  height: 400px;
+.template-description {
+  min-height: 400px;
+  /deep/ .mat-tab-list {
+    background-color: $toolbar-white;
+  }
 }

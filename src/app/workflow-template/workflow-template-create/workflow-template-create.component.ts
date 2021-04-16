@@ -65,6 +65,7 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy, CanCo
 
 
     templateNameInput: AbstractControl;
+    templateDescriptionInput: AbstractControl;
     form: FormGroup;
     labels = new Array<KeyValue>();
 
@@ -102,7 +103,13 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy, CanCo
                 Validators.compose([
                     Validators.required,
                 ]),
-            ]
+            ],
+            templateDescriptionInput: ['']
+        });
+        this.templateNameInput = this.form.get('templateNameInput');
+        this.templateDescriptionInput = this.form.get('templateDescriptionInput');
+        this.templateDescriptionInput.valueChanges.subscribe(text => {
+        this.description = text;
         });
 
         this.templateNameInput = this.form.get('templateNameInput');
