@@ -33,14 +33,10 @@ app-workflow-template-select {
   z-index:20
 }
 
-/deep/ .highlight-error {
-  position:absolute;
-  background: #d32345AA;
-  z-index:20
-}
 
 .template-description {
   min-height: 400px;
+  
   /deep/ .mat-tab-list {
     background-color: $toolbar-white;
   }
