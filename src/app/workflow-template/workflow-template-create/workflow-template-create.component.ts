@@ -55,7 +55,7 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy, CanCo
     previousManifestText: string;
     manifestText: string;
     state: WorkflowTemplateCreateState = 'new';
-    description: string='';
+    description = '';
 
     /**
      * This is set when we are cloning an existing workflow template.
@@ -109,7 +109,7 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy, CanCo
         this.templateNameInput = this.form.get('templateNameInput');
         this.templateDescriptionInput = this.form.get('templateDescriptionInput');
         this.templateDescriptionInput.valueChanges.subscribe(text => {
-        this.description = text;
+            this.description = text;
         });
 
         this.templateNameInput = this.form.get('templateNameInput');
@@ -175,7 +175,7 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy, CanCo
 
         this.state = 'creating';
         const manifestText = this.manifestDagEditor.rawManifest;
-        
+
         this.workflowTemplateServiceService
             .createWorkflowTemplate(this.namespace, {
                 name: templateName,
