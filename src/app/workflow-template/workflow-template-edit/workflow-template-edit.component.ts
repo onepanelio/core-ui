@@ -44,7 +44,7 @@ export class WorkflowTemplateEditComponent implements OnInit, CanComponentDeacti
   labels = new Array<KeyValue>();
   workflowTemplateVersions: WorkflowTemplate[] = [];
   selectedWorkflowTemplateVersion: string;
-  description: string='';
+  description = '';
 
   // This is what we display in the side menu
   workflowTemplateListItems = new Array<WorkflowTemplateSelectItem>();
@@ -227,7 +227,7 @@ export class WorkflowTemplateEditComponent implements OnInit, CanComponentDeacti
       } else {
           this.labels = [];
       }
-      this.description = version.description
+      this.description = version.description;
   }
 
   onManifestTextModified(manifest: string) {
