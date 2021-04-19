@@ -44,6 +44,7 @@ export class WorkflowTemplateEditComponent implements OnInit, CanComponentDeacti
   labels = new Array<KeyValue>();
   workflowTemplateVersions: WorkflowTemplate[] = [];
   selectedWorkflowTemplateVersion: string;
+  description = '';
 
   // This is what we display in the side menu
   workflowTemplateListItems = new Array<WorkflowTemplateSelectItem>();
@@ -144,6 +145,8 @@ export class WorkflowTemplateEditComponent implements OnInit, CanComponentDeacti
           return;
         }
 
+        this.description = this.workflowTemplateVersions[0].description;
+
         const header: WorkflowTemplateSelectHeader = {
             title: 'Versions',
             image: '/assets/images/workflows-blank-icon.svg'
@@ -193,6 +196,7 @@ export class WorkflowTemplateEditComponent implements OnInit, CanComponentDeacti
           name: this.workflowTemplate.name,
           manifest: manifestText,
           labels: this.labels,
+          description: this.description,
         })
       .subscribe(res => {
           this.appRouter.navigateToWorkflowTemplateView(this.namespace, this.workflowTemplate.uid);
@@ -223,6 +227,7 @@ export class WorkflowTemplateEditComponent implements OnInit, CanComponentDeacti
       } else {
           this.labels = [];
       }
+      this.description = version.description;
   }
 
   onManifestTextModified(manifest: string) {

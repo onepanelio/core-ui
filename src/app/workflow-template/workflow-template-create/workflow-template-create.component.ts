@@ -55,6 +55,7 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy, CanCo
     previousManifestText: string;
     manifestText: string;
     state: WorkflowTemplateCreateState = 'new';
+    description = '';
 
     /**
      * This is set when we are cloning an existing workflow template.
@@ -64,6 +65,7 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy, CanCo
 
 
     templateNameInput: AbstractControl;
+    templateDescriptionInput: AbstractControl;
     form: FormGroup;
     labels = new Array<KeyValue>();
 
@@ -101,7 +103,13 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy, CanCo
                 Validators.compose([
                     Validators.required,
                 ]),
-            ]
+            ],
+            templateDescriptionInput: ['']
+        });
+        this.templateNameInput = this.form.get('templateNameInput');
+        this.templateDescriptionInput = this.form.get('templateDescriptionInput');
+        this.templateDescriptionInput.valueChanges.subscribe(text => {
+            this.description = text;
         });
 
         this.templateNameInput = this.form.get('templateNameInput');
@@ -172,7 +180,8 @@ export class WorkflowTemplateCreateComponent implements OnInit, OnDestroy, CanCo
             .createWorkflowTemplate(this.namespace, {
                 name: templateName,
                 manifest: manifestText,
-                labels: this.labels
+                labels: this.labels,
+                description: this.description,
             })
             .subscribe(res => {
                 this.appRouter.navigateToWorkflowTemplateView(this.namespace, res.uid);

@@ -137,6 +137,7 @@ import { FileBrowserDialogComponent } from './files/file-browser-dialog/file-bro
 import { SimpleLogComponent } from './simple-log/simple-log.component';
 import { PrefixFileInputComponent } from './files/prefix-file-input/prefix-file-input.component';
 import { YamlComponent } from './fields/yaml/yaml.component';
+import { MarkdownModule } from 'ngx-markdown';
 
 @NgModule({
     declarations: [
@@ -287,7 +288,8 @@ import { YamlComponent } from './fields/yaml/yaml.component';
         MatMenuModule,
         MatProgressBarModule,
         MatSortModule,
-        MatAutocompleteModule
+        MatAutocompleteModule,
+        MarkdownModule.forRoot(),
     ],
   providers: [
       NamespaceTracker,

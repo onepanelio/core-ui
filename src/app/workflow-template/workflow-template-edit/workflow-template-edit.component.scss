@@ -34,5 +34,27 @@ app-workflow-template-select {
 /deep/ .highlight-error {
   position:absolute;
   background: #d32345AA;
-  z-index:20
+  z-index: 20;
+}
+
+.template-description {
+  /deep/ .mat-tab-body {
+    min-height: 200px;
+  }
+
+  .template-description-content {
+    height: 100%;
+    margin: 0;
+    padding: 5px;
+    border: none;
+  }
+
+  .preview-content {
+    padding: 0 20px;
+    display: block;
+  }
+  
+  /deep/ .mat-tab-list {
+    background-color: $toolbar-white;
+  }
 }

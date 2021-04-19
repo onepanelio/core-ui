@@ -1,54 +1,72 @@
 <div class="page">
-  <div class="page-header">
-    <div class="page-title-text text-center d-flex align-items-center justify-content-center">
-      <mat-spinner
-              *ngIf="loading.workflowTemplateVersions || loading.workflowTemplate"
-              class="primary mr-2"
-              [diameter]="20"
-              [mode]="'indeterminate'">
-      </mat-spinner>
-      Edit workflow template
-    </div>
-  </div>
-
-  <div class="page-body">
-    <div class="op-info-box mt-8">
-      <div class="header">
-        <div>
-          <mat-form-field appearance="outline" class="wp-400 fix-mat-overflow">
-            <mat-label>Template name</mat-label>
-            <input matInput disabled value="{{workflowTemplate?.name}}"/>
-            <mat-hint>uid: {{workflowTemplate?.uid}}</mat-hint>
-          </mat-form-field>
-          <mat-form-field appearance="outline" class="wp-400 ml-5 fix-mat-overflow">
-            <mat-label>Version</mat-label>
-            <mat-select [(value)]="selectedWorkflowTemplateVersion" (valueChange)="onVersionSelected($event)">
-              <mat-option *ngFor="let version of workflowTemplateVersions" [value]="version.version">
-                <app-date [dateTime]="version.createdAt"></app-date>
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+    <div class="page-header">
+        <div class="page-title-text text-center d-flex align-items-center justify-content-center">
+            <mat-spinner
+                    *ngIf="loading.workflowTemplateVersions || loading.workflowTemplate"
+                    class="primary mr-2"
+                    [diameter]="20"
+                    [mode]="'indeterminate'">
+            </mat-spinner>
+            Edit workflow template
         </div>
-      </div>
-      <div class="d-flex mt-3">
-        <app-manifest-dag-editor
-                class="flex-grow-1"
-                [manifestText]="manifestText"
-                (manifestTextModified)="onManifestTextModified($event)"
-                [manifestInterceptor]="apiManifestInterceptor">
-        </app-manifest-dag-editor>
-      </div>
-      <div class="mt-5">
-        <div class="op-h2">Labels</div>
-        <app-labels-edit class="d-inline-block w-50 mt-3" [labels]="labels" ></app-labels-edit>
-      </div>
-      <div class="mt-5 d-flex justify-content-between">
-        <button mat-button class="font-medium-gray cancel-button" (click)="cancel()">CANCEL</button>
-        <app-button [loading]="saving" (click)="update()">
-          Save
-          <span class="loading">Saving</span>
-        </app-button>
-      </div>
     </div>
-  </div>
+
+    <div class="page-body">
+        <div class="op-info-box mt-8">
+            <div class="header">
+                <div>
+                    <mat-form-field appearance="outline" class="wp-400 fix-mat-overflow">
+                        <mat-label>Template name</mat-label>
+                        <input matInput disabled value="{{workflowTemplate?.name}}"/>
+                        <mat-hint>uid: {{workflowTemplate?.uid}}</mat-hint>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="wp-400 ml-5 fix-mat-overflow">
+                        <mat-label>Version</mat-label>
+                        <mat-select [(value)]="selectedWorkflowTemplateVersion"
+                                    (valueChange)="onVersionSelected($event)">
+                            <mat-option *ngFor="let version of workflowTemplateVersions" [value]="version.version">
+                                <app-date [dateTime]="version.createdAt"></app-date>
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="op-h2 mt-3">Description</div>
+            <div class="op-border hide-overflow mt-3">
+                <mat-tab-group class="template-description" animationDuration="0ms" dynamicHeight="true">
+                    <mat-tab label="Markdown">
+                        <textarea
+                                class="w-100 template-description-content"
+                                [(ngModel)]="description">
+                        </textarea>
+                    </mat-tab>
+                    <mat-tab label="Preview">
+                        <markdown class="w-100 scroll-overflow preview-content" [data]="description"></markdown>
+                    </mat-tab>
+                </mat-tab-group>
+            </div>
+
+            <div class="op-h2 mt-3">Manifest</div>
+            <div class="d-flex">
+                <app-manifest-dag-editor
+                        class="flex-grow-1"
+                        [manifestText]="manifestText"
+                        (manifestTextModified)="onManifestTextModified($event)"
+                        [manifestInterceptor]="apiManifestInterceptor">
+                </app-manifest-dag-editor>
+            </div>
+            <div class="mt-5">
+                <div class="op-h2">Labels</div>
+                <app-labels-edit class="d-inline-block w-50 mt-3" [labels]="labels"></app-labels-edit>
+            </div>
+            <div class="mt-5 d-flex justify-content-between">
+                <button mat-button class="font-medium-gray cancel-button" (click)="cancel()">CANCEL</button>
+                <app-button [loading]="saving" (click)="update()">
+                    Save
+                    <span class="loading">Saving</span>
+                </app-button>
+            </div>
+        </div>
+    </div>
 </div>
