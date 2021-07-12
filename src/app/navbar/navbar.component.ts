@@ -12,6 +12,7 @@ export class NavbarComponent implements OnInit {
   activeRoute = 'templates';
 
   @Input() version: string;
+  @Input() showModels = false;
 
   @Input() set activeUrl(value: string) {
     if (value === '') {
@@ -50,6 +51,11 @@ export class NavbarComponent implements OnInit {
       if (urlPart.indexOf('dashboard') >= 0) {
         this.title.setTitle('Onepanel - Dashboard');
         this.activeRoute = 'dashboard';
+        return;
+      }
+      if (urlPart.indexOf('models') >= 0) {
+        this.title.setTitle('Onepanel - Models');
+        this.activeRoute = 'models';
         return;
       }
     }

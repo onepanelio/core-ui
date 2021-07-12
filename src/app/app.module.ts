@@ -138,6 +138,7 @@ import { SimpleLogComponent } from './simple-log/simple-log.component';
 import { PrefixFileInputComponent } from './files/prefix-file-input/prefix-file-input.component';
 import { YamlComponent } from './fields/yaml/yaml.component';
 import { MarkdownModule } from 'ngx-markdown';
+import { ModelsComponent } from './models/models.component';
 
 @NgModule({
     declarations: [
@@ -245,6 +246,7 @@ import { MarkdownModule } from 'ngx-markdown';
         SimpleLogComponent,
         PrefixFileInputComponent,
         YamlComponent,
+        ModelsComponent,
     ],
     entryComponents: [
         WorkflowExecuteDialogComponent,

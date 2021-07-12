@@ -8,13 +8,14 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { filter } from 'rxjs/operators';
 import { MatSelect } from '@angular/material/select';
-import { Namespace, NamespaceServiceService } from '../api';
+import { Namespace, NamespaceServiceService, ServiceServiceService } from '../api';
 import { AuthService } from './auth/auth.service';
 import { environment } from '../environments/environment';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateNamespaceDialogComponent } from './namespace/create-namespace-dialog/create-namespace-dialog.component';
 import 'hammerjs';
 import { AppRouter } from './router/app-router.service';
+import { PermissionService } from './permissions/permission.service';
 
 @Component({
     selector: 'app-root',
@@ -31,11 +32,14 @@ export class AppComponent implements OnInit {
     version = '1.0.0';
     showNamespaceManager = false;
     showNavigationBar = true;
+    showModels = false;
 
     constructor(public namespaceTracker: NamespaceTracker,
                 private appRouter: AppRouter,
                 private authService: AuthService,
                 private namespaceService: NamespaceServiceService,
+                private serviceService: ServiceServiceService,
+                private permissionService: PermissionService,
                 private activatedRoute: ActivatedRoute,
                 private router: Router,
                 private dialog: MatDialog,
@@ -47,6 +51,7 @@ export class AppComponent implements OnInit {
 
             if (namespace) {
                 this.namespaceTracker.activeNamespace = namespace;
+                this.checkIfModelsAvailable(namespace);
             }
         });
 
@@ -69,6 +74,21 @@ export class AppComponent implements OnInit {
 
     ngOnInit(): void {
         this.namespaceTracker.getNamespaces();
+    }
+
+    private checkIfModelsAvailable(namespace: string) {
+        this.serviceService.hasService('kfserving-system').subscribe(res => {
+            if (res.hasService) {
+                this.permissionService.getModelsPermissions(namespace, '', 'list')
+                    .subscribe(() => {
+                        this.showModels = true;
+                    }, () => {
+                        this.showModels = false;
+                    });
+            } else {
+                this.showModels = false;
+            }
+        });
     }
 
     onNewNamespace() {
