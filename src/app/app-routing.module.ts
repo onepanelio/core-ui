@@ -21,6 +21,7 @@ import { ServiceViewComponent } from './services/service-view/service-view.compo
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { WorkflowComponent } from './workflow/workflow.component';
 import { ErrorComponent } from './error/error.component';
+import { ModelsComponent } from './models/models.component';
 
 const routes: Routes = [
   {
@@ -30,6 +31,11 @@ const routes: Routes = [
   {
     path: ':namespace/dashboard',
     component: DashboardComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: ':namespace/models',
+    component: ModelsComponent,
     canActivate: [AuthGuard],
   },
   {

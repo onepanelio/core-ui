@@ -11,7 +11,7 @@
  */
 
 
-export interface WorkflowExecutionStatus { 
-    phase?: string;
+export interface HasServiceResponse { 
+    hasService?: boolean;
 }
 

@@ -112,4 +112,22 @@ export class PermissionService {
 
         return this.getPermissionsRequest(requests, verbs);
     }
+
+    getModelsPermissions(namespace: string, resourceName: string, ...verbs: PermissionVerb[]) {
+        const requests = [];
+
+        for (const verb of verbs) {
+            requests.push(
+                this.authServiceService.isAuthorized({
+                    namespace,
+                    verb,
+                    resource: 'inferenceservices',
+                    resourceName,
+                    group: 'serving.kubeflow.org',
+                })
+            );
+        }
+
+        return this.getPermissionsRequest(requests, verbs);
+    }
 }

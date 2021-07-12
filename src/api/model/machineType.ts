@@ -11,7 +11,8 @@
  */
 
 
-export interface WorkflowExecutionStatus { 
-    phase?: string;
+export interface MachineType { 
+    name?: string;
+    value?: string;
 }
 
