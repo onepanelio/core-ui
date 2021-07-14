@@ -230,22 +230,23 @@ export class NodeRenderer {
               this.buildDag(graph, task.template, templates, alreadyVisited, nodeId);
             }
           } else if (
-            child.nodeType === 'Pod' ||
-            child.nodeType === 'Resource'
+              child.nodeType === 'Pod' ||
+              child.nodeType === 'Resource'
           ) {
             info.nodeType = child.nodeType;
             NodeRenderer.populateNodeInfoFromTemplate(info, child.template);
           } else {
             throw new Error(
-              `Unknown nodetype: ${child.nodeType} on workflow template: ${
-                child.template
-              }`
+                `Unknown nodetype: ${child.nodeType} on workflow template: ${
+                    child.template
+                }`
             );
           }
+
+          info.nodeType = child.nodeType;
+          task.type = child.nodeType;
         }
 
-        info.nodeType = child.nodeType;
-        task.type = child.nodeType;
         task.displayName = task.name;
         graph.setNode(nodeId, {
           labelType: 'html',
