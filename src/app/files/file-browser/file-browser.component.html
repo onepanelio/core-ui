@@ -29,6 +29,14 @@
             [fileNavigator]="fileNavigator"
             (fileAction)="onFileEvent($event)">
     </app-file-navigator>
+    <mat-paginator
+            class="paginator"
+            *ngIf="!showingFile"
+            [length]="fileNavigator.pagination.totalCount"
+            [pageSize]="fileNavigator.pagination.perPage"
+            [pageSizeOptions]="pageSizeOptions"
+            (page)="onPageEvent($event)">
+    </mat-paginator>
     <div *ngIf="showingFile" class="file-toolbar font-roboto font-size-small color-darker-gray d-flex justify-content-between">
         <div>
             <i class="far fa-file-alt"></i>

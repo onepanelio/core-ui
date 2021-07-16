@@ -3,8 +3,19 @@
 }
 
 .file-sync-file-browser {
-  /deep/ .toolbar-wrapper {
-    position: sticky;
-    top: 0;
+  /deep/ .file-navigator {
+    display: block;
+    max-height: calc(65vh - 105px);
+    overflow-y: scroll;
+
+    .file-list-item {
+      &:last-of-type {
+        border-bottom: none !important;
+      }
+    }
+  }
+
+  /deep/ .paginator {
+    border-top: 1px solid #c1c1c1;
   }
 }

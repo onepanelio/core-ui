@@ -132,16 +132,11 @@ export class FileSyncComponent implements OnInit {
 
     const url = filesyncer.url;
 
-    const prefixValue = this.prefixFileInput.prefixSelect.value;
-    let rootPath = prefixValue;
+    let rootPath = this.prefixFileInput.prefixSelect.value;
     if (!rootPath.endsWith('/')) {
       rootPath += '/';
     }
 
-    let prePart = prefixValue;
-    if (prePart.startsWith('/')) {
-      prePart = prePart.substring(1);
-    }
 
     const path: string = this.workspacePath.value;
     const data: FileBrowserDialogData = {

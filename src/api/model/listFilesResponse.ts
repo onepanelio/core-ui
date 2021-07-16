@@ -12,6 +12,10 @@
 
 
 export interface ListFilesResponse { 
+    count?: number;
+    totalCount?: number;
+    page?: number;
+    pages?: number;
     files?: Array<any>;
     parentPath?: string;
 }

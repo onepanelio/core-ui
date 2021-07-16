@@ -741,13 +741,15 @@ export class WorkflowServiceService {
      * @param namespace 
      * @param uid 
      * @param path 
+     * @param page 
+     * @param perPage 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listFiles(namespace: string, uid: string, path: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<ListFilesResponse>;
-    public listFiles(namespace: string, uid: string, path: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpResponse<ListFilesResponse>>;
-    public listFiles(namespace: string, uid: string, path: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpEvent<ListFilesResponse>>;
-    public listFiles(namespace: string, uid: string, path: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<any> {
+    public listFiles(namespace: string, uid: string, path: string, page?: number, perPage?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<ListFilesResponse>;
+    public listFiles(namespace: string, uid: string, path: string, page?: number, perPage?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpResponse<ListFilesResponse>>;
+    public listFiles(namespace: string, uid: string, path: string, page?: number, perPage?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpEvent<ListFilesResponse>>;
+    public listFiles(namespace: string, uid: string, path: string, page?: number, perPage?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
             throw new Error('Required parameter namespace was null or undefined when calling listFiles.');
         }
@@ -756,6 +758,16 @@ export class WorkflowServiceService {
         }
         if (path === null || path === undefined) {
             throw new Error('Required parameter path was null or undefined when calling listFiles.');
+        }
+
+        let queryParameters = new HttpParams({encoder: this.encoder});
+        if (page !== undefined && page !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>page, 'page');
+        }
+        if (perPage !== undefined && perPage !== null) {
+          queryParameters = this.addToHttpParams(queryParameters,
+            <any>perPage, 'perPage');
         }
 
         let headers = this.defaultHeaders;
@@ -789,6 +801,7 @@ export class WorkflowServiceService {
 
         return this.httpClient.get<ListFilesResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflow_executions/${encodeURIComponent(String(uid))}/files/${encodeURIComponent(String(path))}`,
             {
+                params: queryParameters,
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
