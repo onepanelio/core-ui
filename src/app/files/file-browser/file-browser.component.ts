@@ -4,6 +4,7 @@ import { FileActionEvent } from '../file-navigator/file-navigator.component';
 import { ModelFile, WorkflowServiceService } from '../../../api';
 import { GenericFileViewComponent } from '../file-viewer/generic-file-view/generic-file-view.component';
 import { MatSnackBar } from '@angular/material';
+import { PageEvent } from '@angular/material/paginator';
 
 export type BreadcrumbGenerator = (path: string) => BreadcrumbPath;
 
@@ -30,9 +31,9 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
   private filePathChangedSubscriber;
   private fileChangedSubscriber;
   private changingFilesSubscriber;
+  pageSizeOptions: number[] = [15, 50, 100];
 
   breadcrumbs: BreadcrumbPath;
-  // @Input() breadcrumbGenerator: BreadcrumbGenerator;
 
   // tslint:disable-next-line:variable-name
   private _fileNavigator: FileNavigator;
@@ -245,5 +246,13 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
     if (part.clickable) {
       this.fileNavigator.goToDirectory(part.partialPath);
     }
+  }
+
+  onPageEvent(event: PageEvent) {
+    this.fileNavigator.pagination.perPage = event.pageSize;
+    // We add one as API pagination starts at page 1, but UI starts at 0
+    this.fileNavigator.pagination.page = event.pageIndex + 1;
+
+    this.fileNavigator.loadFiles();
   }
 }

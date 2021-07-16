@@ -56,6 +56,6 @@ export class FileNavigatorComponent implements OnInit {
     canDownload(file: ModelFile) {
         return !file.directory &&
             parseInt(file.size, 10) < GenericFileViewComponent.MAX_DOWNLOAD_SIZE
-            ;
+        ;
     }
 }

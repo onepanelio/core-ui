@@ -1,7 +1,7 @@
 import { EventEmitter, Output } from '@angular/core';
 import { ListFilesResponse, ModelFile, WorkflowServiceService } from '../../api';
 import { map } from 'rxjs/operators';
-import { FileApi } from './file-api';
+import { FileApi, PaginatedListFilesResponse, PaginationOptions } from './file-api';
 import { BreadcrumbGenerator } from './file-browser/file-browser.component';
 
 export enum LongRunningTaskState {
@@ -88,6 +88,31 @@ export interface FileNavigatorArgs {
     generator: BreadcrumbGenerator;
 }
 
+class FilePagination {
+    page: number;
+    perPage: number;
+    pages?: number;
+    count?: number;
+    totalCount?: number;
+
+    constructor() {
+        this.page = 1;
+        this.perPage = 15;
+    }
+
+    hasMorePages(): boolean {
+        return this.pages && this.page < this.pages;
+    }
+
+    /**
+     * canPaginate returns true if there is enough content to paginate
+     * If you can view all items without going to another page, this will return false
+     */
+    canPaginate(): boolean {
+        return this.totalCount && this.count < this.totalCount;
+    }
+}
+
 export class FileNavigator {
     private namespace: string;
     public name: string;
@@ -106,6 +131,8 @@ export class FileNavigator {
 
     timer: any;
     breadcrumbGenerator: BreadcrumbGenerator;
+
+    pagination: FilePagination;
 
     constructor(args: FileNavigatorArgs) {
         this.apiService = args.apiService;
@@ -130,6 +157,8 @@ export class FileNavigator {
                 this.loadFiles();
             }, 5000);
         }
+
+        this.pagination = new FilePagination();
     }
 
     public static cleanUp(fileNavigators: FileNavigator[]) {
@@ -207,9 +236,14 @@ export class FileNavigator {
             this.changingFiles.requestValueChange();
         }
 
-        this.apiService.listFiles(this.path.value)
+        const pagination: PaginationOptions = {
+            page: this.pagination.page,
+            perPage: this.pagination.perPage,
+        };
+
+        this.apiService.listFiles(this.path.value, pagination)
             .pipe(
-                map(value => {
+                map((value: ListFilesResponse|PaginatedListFilesResponse) => {
                     if (!value.files) {
                         value.files = [];
                     }
@@ -224,21 +258,26 @@ export class FileNavigator {
 
                     if (this.path.value !== this.rootPath &&
                         this.path.value !== (this.rootPath + '/')) {
-                        const fileUp = {
-                            path: value.parentPath,
-                            directory: true,
-                            name: '..'
-                        };
-
-                        value.files.unshift(fileUp);
+                            value.files.unshift({
+                                path: value.parentPath,
+                                directory: true,
+                                name: '..'
+                            });
                     }
 
                     return value;
                 })
             )
-            .subscribe((response: ListFilesResponse) => {
+            .subscribe((response: ListFilesResponse|PaginatedListFilesResponse) => {
                 if (!response.files) {
                     response.files = [];
+                }
+
+                if ('totalCount' in response) {
+                    this.pagination.page = response.page;
+                    this.pagination.pages = response.pages;
+                    this.pagination.count = response.count;
+                    this.pagination.totalCount = response.totalCount;
                 }
 
                 this.files = response.files;
