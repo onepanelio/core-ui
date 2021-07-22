@@ -425,8 +425,6 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
     const preParts = prePath.split('/').filter(value => value !== '');
     const parts = path.split('/').filter(value => value !== '');
-    let pathSum = '';
-
 
     const pathParts: PathPart[] = [];
     for (const part of preParts) {
@@ -439,6 +437,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
     pathParts[pathParts.length - 1].clickable = parts.length > 0;
 
+    let pathSum = prePath;
     for (const part of parts) {
       pathSum += '/' + part;
 
