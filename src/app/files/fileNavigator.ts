@@ -134,6 +134,27 @@ export class FileNavigator {
 
     pagination: FilePagination;
 
+    private static normalizePath(path: string): string {
+        if (path.startsWith('/')) {
+            path = path.substring(1);
+        }
+
+        if (path.endsWith('/')) {
+            path = path.substr(0, path.length - 1);
+        }
+
+        return path;
+    }
+
+    // isSamePath checks if the two paths are the 'same', which means they point to the same location
+    // where leading and trailing slashes don't matter
+    private static isSamePath(lhs: string, rhs: string): boolean {
+        const lhsNormalized = FileNavigator.normalizePath(lhs);
+        const rhsNormalized = FileNavigator.normalizePath(rhs);
+
+        return lhsNormalized === rhsNormalized;
+    }
+
     constructor(args: FileNavigatorArgs) {
         this.apiService = args.apiService;
         this._rootPath = args.rootPath;
@@ -256,8 +277,8 @@ export class FileNavigator {
                         }
                     }
 
-                    if (this.path.value !== this.rootPath &&
-                        this.path.value !== (this.rootPath + '/')) {
+
+                    if (!FileNavigator.isSamePath(this.path.value, this.rootPath)) {
                             value.files.unshift({
                                 path: value.parentPath,
                                 directory: true,
