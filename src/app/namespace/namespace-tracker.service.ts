@@ -5,10 +5,22 @@ import { Namespace, NamespaceServiceService } from '../../api';
 export class NamespaceTracker {
     private gettingNamespaces = false;
 
-    activeNamespace = 'default';
+    // tslint:disable-next-line:variable-name
+    private _activeNamespace = 'default';
+    get activeNamespace(): string {
+        return this._activeNamespace;
+    }
+
+    set activeNamespace(value: string) {
+        this._activeNamespace = value;
+
+        this.activateNamespaceChanged.emit(value);
+    }
+
     namespaces = new Array<Namespace>();
 
     @Output() namespacesChanged = new EventEmitter();
+    @Output() activateNamespaceChanged = new EventEmitter<string>();
 
     constructor(private namespaceService: NamespaceServiceService) {
     }
