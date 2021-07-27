@@ -55,6 +55,10 @@ export class AppComponent implements OnInit {
             }
         });
 
+        this.namespaceTracker.activateNamespaceChanged.subscribe((newNamespace) => {
+            this.checkIfModelsAvailable(newNamespace);
+        });
+
         // Keep track of the current url so we know what part of the app we are in and highlight it in the
         // nav bar accordingly.
         this.router.events

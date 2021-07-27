@@ -17,7 +17,7 @@ interface KfservingMessage {
   styleUrls: ['./models.component.scss']
 })
 export class ModelsComponent implements OnInit {
-    static maxCommunicationAttempts = 10;
+    static maxCommunicationAttempts = 20;
     private communicationAttempts = 0;
 
     // baseUrl is the base path to the kfserving service
@@ -75,7 +75,6 @@ export class ModelsComponent implements OnInit {
         });
 
         window.addEventListener('message', (event) => {
-            console.log(event);
             const payload = event.data as KfservingMessage;
             if (!payload) {
                 return;
@@ -131,6 +130,7 @@ export class ModelsComponent implements OnInit {
 
             this.url = this.domSanitizer.bypassSecurityTrustResourceUrl(this.generateKfservingUrl());
 
+
             this.sendingNamespace = setInterval(() => {
                 if (!this.sendingNamespace) {
                     return;
@@ -141,10 +141,12 @@ export class ModelsComponent implements OnInit {
                     return;
                 }
 
-                const contentWindow = this.modelElement.nativeElement.contentWindow as Window;
-                contentWindow.postMessage(this.namespace, '*');
+                if (this.modelElement) {
+                    const contentWindow = this.modelElement.nativeElement.contentWindow as Window;
+                    contentWindow.postMessage(this.namespace, '*');
 
-                this.communicationAttempts++;
+                    this.communicationAttempts++;
+                }
             }, 350);
         });
     }

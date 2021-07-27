@@ -16,6 +16,7 @@ export class NamespaceSelectComponent implements OnInit {
         private appRouter: AppRouter,
         private namespaceService: NamespaceTracker,
         private namespaceApiService: NamespaceServiceService,
+        public namespaceTracker: NamespaceTracker,
         private router: Router,
         private snackbar: MatSnackBar) {
     }
@@ -46,6 +47,7 @@ export class NamespaceSelectComponent implements OnInit {
     }
 
     onNamespaceSelected(namespace: string) {
+        this.namespaceTracker.activeNamespace = namespace;
         return this.appRouter.navigateToNamespaceHomepage(namespace);
     }
 }
