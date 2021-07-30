@@ -59,7 +59,8 @@ export class TextFileViewComponent implements OnInit {
             if (typeof res === 'string' ) {
               this.displayContent = res;
             } else {
-              if ( parseInt(res.size, 10) >= GenericFileViewComponent.MAX_TEXT_FILE_SIZE) {
+              // 10 MB
+              if ( parseInt(res.size, 10) >= (10 * 1024 * 1024)) {
                 return;
               }
 

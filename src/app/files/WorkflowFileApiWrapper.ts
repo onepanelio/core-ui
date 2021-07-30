@@ -36,6 +36,6 @@ export class WorkflowFileApiWrapper implements FileApi {
     }
 
     getContent(path: string): Observable<GetPresignedUrlResponse|string> {
-        return this.fileService.getObjectDownloadPresignedUrl(this.namespace, path);
+        return this.fileService.getObjectDownloadPresignedURL(this.namespace, path);
     }
 }

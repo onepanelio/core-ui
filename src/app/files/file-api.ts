@@ -1,6 +1,6 @@
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { ArtifactResponse, GetPresignedUrlResponse, ListFilesResponse } from '../../api';
+import { GetPresignedUrlResponse } from '../../api';
 
 export interface PaginatedListFilesResponse {
     count: number;
