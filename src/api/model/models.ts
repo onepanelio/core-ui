@@ -13,6 +13,7 @@ export * from './getAccessTokenResponse';
 export * from './getConfigResponse';
 export * from './getLabelsResponse';
 export * from './getNamespaceConfigResponse';
+export * from './getPresignedUrlResponse';
 export * from './getWorkflowExecutionMetricsResponse';
 export * from './getWorkflowExecutionStatisticsForNamespaceResponse';
 export * from './getWorkspaceStatisticsForNamespaceResponse';

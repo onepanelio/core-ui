@@ -23,7 +23,6 @@ import { CreateWorkflowExecutionBody } from '../model/models';
 import { GetWorkflowExecutionMetricsResponse } from '../model/models';
 import { GetWorkflowExecutionStatisticsForNamespaceResponse } from '../model/models';
 import { GoogleRpcStatus } from '../model/models';
-import { ListFilesResponse } from '../model/models';
 import { ListWorkflowExecutionsFieldResponse } from '../model/models';
 import { ListWorkflowExecutionsResponse } from '../model/models';
 import { Statistics } from '../model/models';
@@ -728,80 +727,6 @@ export class WorkflowServiceService {
 
         return this.httpClient.get<GetWorkflowExecutionStatisticsForNamespaceResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflow_execution/statistics`,
             {
-                responseType: <any>responseType,
-                withCredentials: this.configuration.withCredentials,
-                headers: headers,
-                observe: observe,
-                reportProgress: reportProgress
-            }
-        );
-    }
-
-    /**
-     * @param namespace 
-     * @param uid 
-     * @param path 
-     * @param page 
-     * @param perPage 
-     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
-     * @param reportProgress flag to report request and response progress.
-     */
-    public listFiles(namespace: string, uid: string, path: string, page?: number, perPage?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<ListFilesResponse>;
-    public listFiles(namespace: string, uid: string, path: string, page?: number, perPage?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpResponse<ListFilesResponse>>;
-    public listFiles(namespace: string, uid: string, path: string, page?: number, perPage?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpEvent<ListFilesResponse>>;
-    public listFiles(namespace: string, uid: string, path: string, page?: number, perPage?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<any> {
-        if (namespace === null || namespace === undefined) {
-            throw new Error('Required parameter namespace was null or undefined when calling listFiles.');
-        }
-        if (uid === null || uid === undefined) {
-            throw new Error('Required parameter uid was null or undefined when calling listFiles.');
-        }
-        if (path === null || path === undefined) {
-            throw new Error('Required parameter path was null or undefined when calling listFiles.');
-        }
-
-        let queryParameters = new HttpParams({encoder: this.encoder});
-        if (page !== undefined && page !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>page, 'page');
-        }
-        if (perPage !== undefined && perPage !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>perPage, 'perPage');
-        }
-
-        let headers = this.defaultHeaders;
-
-        // authentication (Bearer) required
-        if (this.configuration.apiKeys) {
-            const key: string | undefined = this.configuration.apiKeys["Bearer"] || this.configuration.apiKeys["authorization"];
-            if (key) {
-                headers = headers.set('authorization', key);
-            }
-        }
-
-        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
-        if (httpHeaderAcceptSelected === undefined) {
-            // to determine the Accept header
-            const httpHeaderAccepts: string[] = [
-                'application/json',
-                'application/octet-stream'
-            ];
-            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
-        }
-        if (httpHeaderAcceptSelected !== undefined) {
-            headers = headers.set('Accept', httpHeaderAcceptSelected);
-        }
-
-
-        let responseType: 'text' | 'json' = 'json';
-        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
-            responseType = 'text';
-        }
-
-        return this.httpClient.get<ListFilesResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/workflow_executions/${encodeURIComponent(String(uid))}/files/${encodeURIComponent(String(path))}`,
-            {
-                params: queryParameters,
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,
