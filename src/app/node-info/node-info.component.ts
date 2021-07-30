@@ -4,7 +4,7 @@ import { SimpleWorkflowDetail, WorkflowPhase, WorkflowService, } from '../workfl
 import * as yaml from 'js-yaml';
 import { TemplateDefinition, VolumeMount } from '../workflow-template/workflow-template.service';
 import { FileNavigator } from '../files/fileNavigator';
-import { Parameter, WorkflowServiceService } from '../../api';
+import { FileServiceService, Parameter, WorkflowServiceService } from '../../api';
 import { Metric, MetricsService } from './metrics/metrics.service';
 import { WorkflowFileApiWrapper } from '../files/WorkflowFileApiWrapper';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -28,7 +28,9 @@ interface SideCar {
 })
 export class NodeInfoComponent implements OnInit, OnDestroy {
 
-  constructor(private workflowService: WorkflowService,
+  constructor(
+              private fileService: FileServiceService,
+              private workflowService: WorkflowService,
               private workflowServiceService: WorkflowServiceService,
               private metricsService: MetricsService,
               private snackBar: MatSnackBar,
@@ -287,7 +289,7 @@ export class NodeInfoComponent implements OnInit, OnDestroy {
 
     const directories = NodeInfoComponent.outputArtifactsToDirectories(this.outputArtifacts);
 
-    const service = new WorkflowFileApiWrapper(this.namespace, 'dialog', this.workflowServiceService);
+    const service = new WorkflowFileApiWrapper(this.namespace, this.fileService);
 
     for (const directory of directories) {
       const fileNavigator = new FileNavigator({

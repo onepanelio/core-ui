@@ -17,6 +17,18 @@ export class TextFileViewComponent implements OnInit {
   renderMode = 'text';
   formattedExtension  = 'text';
 
+  public static CanEdit(): boolean {
+    return false;
+  }
+
+  public static Supports(file: ModelFile): boolean {
+    return TextFileViewComponent.IsTextExtension(file.extension);
+  }
+
+  public static IsTextExtension(extension: string){
+    return (/(txt|text|log|config|json|xml|yaml)$/i).test(extension);
+  }
+
   constructor() {
   }
 
@@ -46,7 +58,8 @@ export class TextFileViewComponent implements OnInit {
             if (typeof res === 'string' ) {
               this.displayContent = res;
             } else {
-              this.setBase64Content(res.data);
+              // TODO - should we be able to get into this situation?
+              // this.setBase64Content(res.data);
             }
           }, err => {
             console.error(err);
@@ -54,18 +67,6 @@ export class TextFileViewComponent implements OnInit {
             this.loading.emit(false);
           });
     }
-  }
-
-  public static CanEdit(): boolean {
-    return false;
-  }
-
-  public static Supports(file: ModelFile): boolean {
-    return TextFileViewComponent.IsTextExtension(file.extension);
-  }
-
-  public static IsTextExtension(extension: string){
-    return (/(txt|text|log|config|json|xml|yaml)$/i).test(extension);
   }
 
   private setBase64Content(content: string) {

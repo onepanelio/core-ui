@@ -1,6 +1,6 @@
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { ArtifactResponse, ListFilesResponse } from '../../api';
+import { ArtifactResponse, GetPresignedUrlResponse, ListFilesResponse } from '../../api';
 
 export interface PaginatedListFilesResponse {
     count: number;
@@ -18,7 +18,7 @@ export interface PaginationOptions {
 
 export interface FileApi {
     listFiles(path: string, pagination?: PaginationOptions): Observable<PaginatedListFilesResponse>;
-    getContent(path: string): Observable<ArtifactResponse|string>;
+    getContent(path: string): Observable<GetPresignedUrlResponse|string>;
 }
 
 export class FileSyncerFileApi implements FileApi {
@@ -57,7 +57,7 @@ export class FileSyncerFileApi implements FileApi {
         return this.getRequest(url);
     }
 
-    public getContent(path: string): Observable<ArtifactResponse|string> {
+    public getContent(path: string): Observable<GetPresignedUrlResponse|string> {
         if (!path.startsWith('/')) {
             path = '/' + path;
         }
