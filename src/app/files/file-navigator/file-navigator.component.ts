@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FileNavigator } from '../fileNavigator';
 import { ModelFile } from '../../../api';
-import { GenericFileViewComponent } from '../file-viewer/generic-file-view/generic-file-view.component';
 
 export type FileAction = 'download';
 

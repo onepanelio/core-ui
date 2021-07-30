@@ -14,6 +14,7 @@ import { FileApi } from '../../file-api';
 export class GenericFileViewComponent {
     public static BIG_FILE_SIZE = 5 * 1024 * 1024; // 5 MB
     public static MAX_IMAGE_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
+    public static MAX_TEXT_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 
     fileType = 'unknown';
 
@@ -32,6 +33,10 @@ export class GenericFileViewComponent {
 
         if (ImageFileViewComponent.Supports(file)) {
             return size > GenericFileViewComponent.MAX_IMAGE_FILE_SIZE;
+        }
+
+        if (TextFileViewComponent.Supports(file)) {
+            return size > GenericFileViewComponent.MAX_TEXT_FILE_SIZE;
         }
 
         return size > GenericFileViewComponent.BIG_FILE_SIZE;

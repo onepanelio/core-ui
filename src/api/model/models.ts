@@ -1,7 +1,6 @@
 export * from './addSecretKeyValueResponse';
 export * from './addWorkflowExecutionsMetricsRequest';
 export * from './archiveWorkflowTemplateResponse';
-export * from './artifactResponse';
 export * from './createWorkflowExecutionBody';
 export * from './createWorkspaceBody';
 export * from './cronWorkflow';

@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ModelFile } from '../../../../api';
 import 'brace/mode/json';
 import { FileApi } from '../../file-api';
+import { GenericFileViewComponent } from '../generic-file-view/generic-file-view.component';
 
 @Component({
   selector: 'app-text-file-view',
@@ -58,8 +59,15 @@ export class TextFileViewComponent implements OnInit {
             if (typeof res === 'string' ) {
               this.displayContent = res;
             } else {
-              // TODO - should we be able to get into this situation?
-              // this.setBase64Content(res.data);
+              if ( parseInt(res.size, 10) >= GenericFileViewComponent.MAX_TEXT_FILE_SIZE) {
+                return;
+              }
+
+              fetch(res.url).then(innerRes => {
+                return innerRes.text();
+              }).then( content => {
+                this.displayContent = content;
+              });
             }
           }, err => {
             console.error(err);

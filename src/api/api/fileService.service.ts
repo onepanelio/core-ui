@@ -93,15 +93,15 @@ export class FileServiceService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getObjectPresignedUrl(namespace: string, key: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<GetPresignedUrlResponse>;
-    public getObjectPresignedUrl(namespace: string, key: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpResponse<GetPresignedUrlResponse>>;
-    public getObjectPresignedUrl(namespace: string, key: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpEvent<GetPresignedUrlResponse>>;
-    public getObjectPresignedUrl(namespace: string, key: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<any> {
+    public getObjectDownloadPresignedUrl(namespace: string, key: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<GetPresignedUrlResponse>;
+    public getObjectDownloadPresignedUrl(namespace: string, key: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpResponse<GetPresignedUrlResponse>>;
+    public getObjectDownloadPresignedUrl(namespace: string, key: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpEvent<GetPresignedUrlResponse>>;
+    public getObjectDownloadPresignedUrl(namespace: string, key: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
-            throw new Error('Required parameter namespace was null or undefined when calling getObjectPresignedUrl.');
+            throw new Error('Required parameter namespace was null or undefined when calling getObjectDownloadPresignedUrl.');
         }
         if (key === null || key === undefined) {
-            throw new Error('Required parameter key was null or undefined when calling getObjectPresignedUrl.');
+            throw new Error('Required parameter key was null or undefined when calling getObjectDownloadPresignedUrl.');
         }
 
         let headers = this.defaultHeaders;

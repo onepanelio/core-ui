@@ -13,5 +13,6 @@
 
 export interface GetPresignedUrlResponse { 
     url?: string;
+    size?: string;
 }
 
