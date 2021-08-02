@@ -11,7 +11,8 @@
  */
 
 
-export interface ArtifactResponse { 
-    data?: string;
+export interface GetPresignedUrlResponse { 
+    url?: string;
+    size?: string;
 }
 

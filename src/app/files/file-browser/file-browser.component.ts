@@ -196,7 +196,7 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
           if (typeof res === 'string' ) {
             link.href = res;
           } else {
-            link.href = 'data:application/octet-stream;charset=utf-16le;base64,' + res.data;
+            link.href = res.url;
           }
 
           document.body.appendChild(link);
@@ -214,9 +214,7 @@ export class FileBrowserComponent implements OnInit, OnDestroy {
   }
 
   canDownload(file: ModelFile) {
-    return !file.directory &&
-            parseInt(file.size, 10) < GenericFileViewComponent.MAX_DOWNLOAD_SIZE
-    ;
+    return !file.directory;
   }
 
   copyLocationToClipboard() {

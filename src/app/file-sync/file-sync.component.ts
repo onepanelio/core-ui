@@ -1,5 +1,12 @@
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
-import { ConfigServiceService, WorkflowServiceService, Workspace, WorkspaceComponent, WorkspaceServiceService } from '../../api';
+import {
+  ConfigServiceService,
+  FileServiceService,
+  WorkflowServiceService,
+  Workspace,
+  WorkspaceComponent,
+  WorkspaceServiceService
+} from '../../api';
 import * as yaml from 'js-yaml';
 import { MatDialog } from '@angular/material/dialog';
 import { FileBrowserDialogComponent, FileBrowserDialogData } from '../files/file-browser-dialog/file-browser-dialog.component';
@@ -43,6 +50,7 @@ export class FileSyncComponent implements OnInit {
   bucket = '';
 
   constructor(
+      private fileService: FileServiceService,
       private workflowService: WorkflowServiceService,
       private authService: AuthService,
       private dialog: MatDialog,
@@ -93,7 +101,7 @@ export class FileSyncComponent implements OnInit {
   }
 
   private getWorkflowFileApiService() {
-    return new WorkflowFileApiWrapper(this.namespace, 'dialog', this.workflowService);
+    return new WorkflowFileApiWrapper(this.namespace, this.fileService);
   }
 
   handleBrowse() {

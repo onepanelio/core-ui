@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ModelFile } from '../../../../api';
 import { FileActionEvent } from '../../file-navigator/file-navigator.component';
-import { GenericFileViewComponent } from '../generic-file-view/generic-file-view.component';
 
 @Component({
   selector: 'app-big-file-view',
@@ -15,12 +14,7 @@ export class BigFileViewComponent implements OnInit {
 
   @Input() set file(value: ModelFile) {
     this._file = value;
-    if (value.size) {
-      const size = parseInt(value.size, 10);
-      this.displayDownload = size < GenericFileViewComponent.MAX_DOWNLOAD_SIZE; // 10 MB limit
-    } else {
-      this.displayDownload = false;
-    }
+    this.displayDownload = !!value.size;
   }
   get file(): ModelFile {
     return this._file;

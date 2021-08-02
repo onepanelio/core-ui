@@ -14,6 +14,18 @@ export class ImageFileViewComponent implements OnInit {
 
   displayContent: string;
 
+  public static CanEdit(): boolean {
+    return false;
+  }
+
+  public static Supports(file: ModelFile): boolean {
+    return ImageFileViewComponent.IsImageExtension(file.extension);
+  }
+
+  public static IsImageExtension(extension: string) {
+    return (/(gif|jpg|jpeg|tiff|png)$/i).test(extension);
+  }
+
   constructor() {
   }
 
@@ -26,7 +38,7 @@ export class ImageFileViewComponent implements OnInit {
             if (typeof res === 'string' ) {
               this.setLinkContent(res);
             } else {
-              this.setBase64Content(res.data);
+              this.setLinkContent(res.url);
             }
           }, err => {
             console.error(err);
@@ -34,18 +46,6 @@ export class ImageFileViewComponent implements OnInit {
             this.loading.emit(false);
           });
     }
-  }
-
-  public static CanEdit(): boolean {
-    return false;
-  }
-
-  public static Supports(file: ModelFile): boolean {
-    return ImageFileViewComponent.IsImageExtension(file.extension);
-  }
-
-  public static IsImageExtension(extension: string){
-    return (/(gif|jpg|jpeg|tiff|png)$/i).test(extension);
   }
 
   private setLinkContent(url: string) {

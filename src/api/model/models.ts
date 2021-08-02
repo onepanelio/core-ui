@@ -1,7 +1,6 @@
 export * from './addSecretKeyValueResponse';
 export * from './addWorkflowExecutionsMetricsRequest';
 export * from './archiveWorkflowTemplateResponse';
-export * from './artifactResponse';
 export * from './createWorkflowExecutionBody';
 export * from './createWorkspaceBody';
 export * from './cronWorkflow';
@@ -13,6 +12,7 @@ export * from './getAccessTokenResponse';
 export * from './getConfigResponse';
 export * from './getLabelsResponse';
 export * from './getNamespaceConfigResponse';
+export * from './getPresignedUrlResponse';
 export * from './getWorkflowExecutionMetricsResponse';
 export * from './getWorkflowExecutionStatisticsForNamespaceResponse';
 export * from './getWorkspaceStatisticsForNamespaceResponse';

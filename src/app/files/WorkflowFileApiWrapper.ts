@@ -1,13 +1,12 @@
 import { FileApi, PaginatedListFilesResponse, PaginationOptions } from './file-api';
 import { Observable } from 'rxjs';
-import { ArtifactResponse, ListFilesResponse, WorkflowServiceService } from '../../api';
+import { FileServiceService, GetPresignedUrlResponse } from '../../api';
 import { map } from 'rxjs/operators';
 
 export class WorkflowFileApiWrapper implements FileApi {
     constructor(
         private namespace: string,
-        private uid: string,
-        private workflowService: WorkflowServiceService) {
+        private fileService: FileServiceService) {
     }
 
     public listFiles(path: string, pagination?: PaginationOptions): Observable<PaginatedListFilesResponse> {
@@ -22,8 +21,8 @@ export class WorkflowFileApiWrapper implements FileApi {
             };
         }
 
-        return this.workflowService
-                   .listFiles(this.namespace, this.uid, path, pagination.page, pagination.perPage)
+        return this.fileService
+                   .listFiles(this.namespace, path, pagination.page, pagination.perPage)
                    .pipe(map(res => {
                        return {
                             count: res.count,
@@ -36,7 +35,7 @@ export class WorkflowFileApiWrapper implements FileApi {
                    }));
     }
 
-    getContent(path: string): Observable<ArtifactResponse|string> {
-        return this.workflowService.getArtifact(this.namespace, this.uid, path);
+    getContent(path: string): Observable<GetPresignedUrlResponse|string> {
+        return this.fileService.getObjectDownloadPresignedURL(this.namespace, path);
     }
 }
