@@ -18,5 +18,6 @@ export interface CreateWorkspaceBody {
     workspaceTemplateVersion?: string;
     parameters?: Array<Parameter>;
     labels?: Array<KeyValue>;
+    captureNode?: boolean;
 }
 
