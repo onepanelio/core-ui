@@ -110,7 +110,7 @@ export class WorkspaceExecuteDialogComponent implements OnInit {
       parameter.value = parameter.value.toString();
       formattedParameters.push(parameter);
     }
-    
+
     const createWorkspace: CreateWorkspaceBody = {
       workspaceTemplateUid: this.workspaceTemplate.uid,
       parameters: formattedParameters,
