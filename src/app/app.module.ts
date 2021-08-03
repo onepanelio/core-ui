@@ -139,6 +139,7 @@ import { PrefixFileInputComponent } from './files/prefix-file-input/prefix-file-
 import { YamlComponent } from './fields/yaml/yaml.component';
 import { MarkdownModule } from 'ngx-markdown';
 import { ModelsComponent } from './models/models.component';
+import { CheckboxComponent } from './fields/checkbox/checkbox.component';
 
 @NgModule({
     declarations: [
@@ -247,6 +248,7 @@ import { ModelsComponent } from './models/models.component';
         PrefixFileInputComponent,
         YamlComponent,
         ModelsComponent,
+        CheckboxComponent,
     ],
     entryComponents: [
         WorkflowExecuteDialogComponent,

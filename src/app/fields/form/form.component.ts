@@ -9,7 +9,7 @@ import { Parameter } from '../../../api';
 })
 export class FormComponent implements OnInit {
     // tslint:disable-next-line:variable-name
-    _fieldData = new Array<Parameter>();
+    _fieldData = new Array<Parameter|any>();
 
     form: FormGroup;
 

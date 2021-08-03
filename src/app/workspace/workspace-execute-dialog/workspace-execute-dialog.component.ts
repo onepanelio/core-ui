@@ -93,12 +93,24 @@ export class WorkspaceExecuteDialogComponent implements OnInit {
 
   createAndRun() {
     const formattedParameters = [];
+
     for (const parameter of this.parameters) {
+      if (parameter.name === 'nodeInfo') {
+        const fakeParam = parameter as any;
+
+        fakeParam.nodePool.value = fakeParam.nodePool.value.toString();
+        formattedParameters.push(fakeParam.nodePool);
+
+        this.captureNode.setValue(fakeParam.captureNode.value);
+
+        continue;
+      }
+
       // convert all the parameters to string
       parameter.value = parameter.value.toString();
       formattedParameters.push(parameter);
     }
-
+    
     const createWorkspace: CreateWorkspaceBody = {
       workspaceTemplateUid: this.workspaceTemplate.uid,
       parameters: formattedParameters,
@@ -139,7 +151,28 @@ export class WorkspaceExecuteDialogComponent implements OnInit {
 
           this.workspaceTemplateService.generateWorkspaceTemplateWorkflowTemplate(namespace, 'generated', res)
               .subscribe(generatedRes => {
-                this.parameters = WorkflowExecuteDialogComponent.pluckParameters(generatedRes.manifest);
+                const parameters = WorkflowExecuteDialogComponent.pluckParameters(generatedRes.manifest);
+                const nodePoolIndex = parameters.findIndex((value => value.name === 'sys-node-pool'));
+
+                const nodePoolParameter = parameters[nodePoolIndex];
+                const captureNodeParamter: Parameter = {
+                  name: 'captureNode',
+                  displayName: 'Request all node resources',
+                  type: 'input.checkbox',
+                  value: 'true',
+                };
+
+                const combinedParameter = {
+                  name: 'nodeInfo',
+                  displayName: 'Node information',
+                  type: 'nodeInfo',
+                  nodePool: nodePoolParameter,
+                  captureNode: captureNodeParamter
+                };
+
+                parameters.splice(nodePoolIndex, 1, combinedParameter);
+
+                this.parameters = parameters;
               });
         });
   }
