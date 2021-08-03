@@ -11,7 +11,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {
   WorkflowExecuteDialogComponent,
 } from '../../workflow/workflow-execute-dialog/workflow-execute-dialog.component';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { NamespaceTracker } from '../../namespace/namespace-tracker.service';
 import { AppRouter } from '../../router/app-router.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -39,6 +39,7 @@ export class WorkspaceExecuteDialogComponent implements OnInit {
   labels = new Array<KeyValue>();
   parameters: Array<Parameter>;
   errors = {};
+  captureNode: AbstractControl;
 
   state: WorkspaceExecutionState = 'loading';
 
@@ -56,7 +57,12 @@ export class WorkspaceExecuteDialogComponent implements OnInit {
       private workspaceTemplateService: WorkspaceTemplateServiceService,
       @Inject(MAT_DIALOG_DATA) public data: WorkspaceExecuteDialogData
   ) {
-    this.form = this.formBuilder.group({});
+
+    this.form = this.formBuilder.group({
+      captureNode: ['', Validators.required],
+    });
+    this.captureNode = this.form.get('captureNode');
+    this.captureNode.setValue(true);
 
     this.namespace = data.namespace;
 
@@ -96,7 +102,8 @@ export class WorkspaceExecuteDialogComponent implements OnInit {
     const createWorkspace: CreateWorkspaceBody = {
       workspaceTemplateUid: this.workspaceTemplate.uid,
       parameters: formattedParameters,
-      labels: this.labels
+      labels: this.labels,
+      captureNode: this.form.get('captureNode').value as boolean,
     };
 
     this.state = 'creating';
