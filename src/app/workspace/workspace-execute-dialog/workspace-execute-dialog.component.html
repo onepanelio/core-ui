@@ -3,7 +3,6 @@
 
 <form [formGroup]="form">
     <div class="mr-12">
-
         <app-alert [alert]="alert" [autoDismiss]="false" class="d-block mt-3"></app-alert>
 
         <mat-form-field *ngIf="state !== 'no-templates'" class="mt-7 fix-mat-overflow w-100" appearance="outline">
@@ -24,7 +23,6 @@
                 [errors]="errors"
                 class="parameters mb-3 d-block">
         </app-form>
-        <mat-checkbox *ngIf="parameters" [formControl]="captureNode">Request all node resources</mat-checkbox>
         <div class="environment bg-primary-light op-rounded-regular mt-5">
             <div class="font-roboto-bold font-weight-bold font-size-regular">Environment variables</div>
             <div class="mt-1 font-roboto font-size-regular color-black">
