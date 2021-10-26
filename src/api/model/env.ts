@@ -11,7 +11,8 @@
  */
 
 
-export interface HasServiceResponse { 
-    hasService?: boolean;
+export interface Env { 
+    name?: string;
+    value?: string;
 }
 

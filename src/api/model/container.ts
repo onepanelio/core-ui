@@ -9,9 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Env } from './env';
 
 
-export interface HasServiceResponse { 
-    hasService?: boolean;
+export interface Container { 
+    image?: string;
+    name?: string;
+    env?: Array<Env>;
 }
 

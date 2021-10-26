@@ -17,9 +17,9 @@ import { HttpClient, HttpHeaders, HttpParams,
 import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
-import { GetPresignedUrlResponse } from '../model/models';
+import { CreateInferenceServiceRequest } from '../model/models';
+import { GetInferenceServiceResponse } from '../model/models';
 import { GoogleRpcStatus } from '../model/models';
-import { ListFilesResponse } from '../model/models';
 
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
 import { Configuration }                                     from '../configuration';
@@ -29,7 +29,7 @@ import { Configuration }                                     from '../configurat
 @Injectable({
   providedIn: 'root'
 })
-export class FileServiceService {
+export class InferenceServiceService {
 
     protected basePath = 'http://localhost:8888';
     public defaultHeaders = new HttpHeaders();
@@ -89,19 +89,19 @@ export class FileServiceService {
 
     /**
      * @param namespace 
-     * @param key 
+     * @param body 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getObjectDownloadPresignedURL(namespace: string, key: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<GetPresignedUrlResponse>;
-    public getObjectDownloadPresignedURL(namespace: string, key: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpResponse<GetPresignedUrlResponse>>;
-    public getObjectDownloadPresignedURL(namespace: string, key: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpEvent<GetPresignedUrlResponse>>;
-    public getObjectDownloadPresignedURL(namespace: string, key: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<any> {
+    public createInferenceService(namespace: string, body: CreateInferenceServiceRequest, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<GetInferenceServiceResponse>;
+    public createInferenceService(namespace: string, body: CreateInferenceServiceRequest, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpResponse<GetInferenceServiceResponse>>;
+    public createInferenceService(namespace: string, body: CreateInferenceServiceRequest, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpEvent<GetInferenceServiceResponse>>;
+    public createInferenceService(namespace: string, body: CreateInferenceServiceRequest, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
-            throw new Error('Required parameter namespace was null or undefined when calling getObjectDownloadPresignedURL.');
+            throw new Error('Required parameter namespace was null or undefined when calling createInferenceService.');
         }
-        if (key === null || key === undefined) {
-            throw new Error('Required parameter key was null or undefined when calling getObjectDownloadPresignedURL.');
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling createInferenceService.');
         }
 
         let headers = this.defaultHeaders;
@@ -128,12 +128,22 @@ export class FileServiceService {
         }
 
 
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            headers = headers.set('Content-Type', httpContentTypeSelected);
+        }
+
         let responseType: 'text' | 'json' = 'json';
         if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
             responseType = 'text';
         }
 
-        return this.httpClient.get<GetPresignedUrlResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/files/presigned-url/${encodeURIComponent(String(key))}`,
+        return this.httpClient.post<GetInferenceServiceResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/inferenceservice`,
+            body,
             {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
@@ -146,31 +156,19 @@ export class FileServiceService {
 
     /**
      * @param namespace 
-     * @param path 
-     * @param page 
-     * @param perPage 
+     * @param name 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listFiles(namespace: string, path: string, page?: number, perPage?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<ListFilesResponse>;
-    public listFiles(namespace: string, path: string, page?: number, perPage?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpResponse<ListFilesResponse>>;
-    public listFiles(namespace: string, path: string, page?: number, perPage?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpEvent<ListFilesResponse>>;
-    public listFiles(namespace: string, path: string, page?: number, perPage?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<any> {
+    public deleteInferenceService(namespace: string, name: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<object>;
+    public deleteInferenceService(namespace: string, name: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpResponse<object>>;
+    public deleteInferenceService(namespace: string, name: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpEvent<object>>;
+    public deleteInferenceService(namespace: string, name: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<any> {
         if (namespace === null || namespace === undefined) {
-            throw new Error('Required parameter namespace was null or undefined when calling listFiles.');
+            throw new Error('Required parameter namespace was null or undefined when calling deleteInferenceService.');
         }
-        if (path === null || path === undefined) {
-            throw new Error('Required parameter path was null or undefined when calling listFiles.');
-        }
-
-        let queryParameters = new HttpParams({encoder: this.encoder});
-        if (page !== undefined && page !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>page, 'page');
-        }
-        if (perPage !== undefined && perPage !== null) {
-          queryParameters = this.addToHttpParams(queryParameters,
-            <any>perPage, 'perPage');
+        if (name === null || name === undefined) {
+            throw new Error('Required parameter name was null or undefined when calling deleteInferenceService.');
         }
 
         let headers = this.defaultHeaders;
@@ -202,9 +200,65 @@ export class FileServiceService {
             responseType = 'text';
         }
 
-        return this.httpClient.get<ListFilesResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/files/list/${encodeURIComponent(String(path))}`,
+        return this.httpClient.delete<object>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/inferenceservice/${encodeURIComponent(String(name))}`,
             {
-                params: queryParameters,
+                responseType: <any>responseType,
+                withCredentials: this.configuration.withCredentials,
+                headers: headers,
+                observe: observe,
+                reportProgress: reportProgress
+            }
+        );
+    }
+
+    /**
+     * @param namespace 
+     * @param name 
+     * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
+     * @param reportProgress flag to report request and response progress.
+     */
+    public getInferenceService(namespace: string, name: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<GetInferenceServiceResponse>;
+    public getInferenceService(namespace: string, name: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpResponse<GetInferenceServiceResponse>>;
+    public getInferenceService(namespace: string, name: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<HttpEvent<GetInferenceServiceResponse>>;
+    public getInferenceService(namespace: string, name: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json' | 'application/octet-stream'}): Observable<any> {
+        if (namespace === null || namespace === undefined) {
+            throw new Error('Required parameter namespace was null or undefined when calling getInferenceService.');
+        }
+        if (name === null || name === undefined) {
+            throw new Error('Required parameter name was null or undefined when calling getInferenceService.');
+        }
+
+        let headers = this.defaultHeaders;
+
+        // authentication (Bearer) required
+        if (this.configuration.apiKeys) {
+            const key: string | undefined = this.configuration.apiKeys["Bearer"] || this.configuration.apiKeys["authorization"];
+            if (key) {
+                headers = headers.set('authorization', key);
+            }
+        }
+
+        let httpHeaderAcceptSelected: string | undefined = options && options.httpHeaderAccept;
+        if (httpHeaderAcceptSelected === undefined) {
+            // to determine the Accept header
+            const httpHeaderAccepts: string[] = [
+                'application/json',
+                'application/octet-stream'
+            ];
+            httpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
+        }
+        if (httpHeaderAcceptSelected !== undefined) {
+            headers = headers.set('Accept', httpHeaderAcceptSelected);
+        }
+
+
+        let responseType: 'text' | 'json' = 'json';
+        if(httpHeaderAcceptSelected && httpHeaderAcceptSelected.startsWith('text')) {
+            responseType = 'text';
+        }
+
+        return this.httpClient.get<GetInferenceServiceResponse>(`${this.configuration.basePath}/apis/v1beta1/${encodeURIComponent(String(namespace))}/inferenceservice/${encodeURIComponent(String(name))}`,
+            {
                 responseType: <any>responseType,
                 withCredentials: this.configuration.withCredentials,
                 headers: headers,

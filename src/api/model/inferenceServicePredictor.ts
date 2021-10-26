@@ -11,7 +11,14 @@
  */
 
 
-export interface HasServiceResponse { 
-    hasService?: boolean;
+export interface InferenceServicePredictor { 
+    name?: string;
+    runtimeVersion?: string;
+    storageUri?: string;
+    nodeSelector?: string;
+    minCpu?: string;
+    minMemory?: string;
+    maxCpu?: string;
+    maxMemory?: string;
 }
 

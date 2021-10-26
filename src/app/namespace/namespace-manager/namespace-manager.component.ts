@@ -3,6 +3,7 @@ import { NamespaceServiceService } from '../../../api';
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Pagination } from '../../requests/pagination';
+import { PermissionService } from '../../permissions/permission.service';
 
 @Component({
     selector: 'app-namespace-manager',
@@ -13,12 +14,15 @@ export class NamespaceManagerComponent implements OnInit {
     @Output() namespaceSelected = new EventEmitter<string>();
     @Output() newNamespaceClick = new EventEmitter();
 
+    canCreateNamespace = false;
     queryInput: FormControl;
     pagination = new Pagination();
 
     namespaces = [];
 
-    constructor(private namespaceServiceService: NamespaceServiceService) {
+    constructor(
+        private namespaceServiceService: NamespaceServiceService,
+        private permissionService: PermissionService) {
     }
 
     ngOnInit() {
@@ -32,6 +36,11 @@ export class NamespaceManagerComponent implements OnInit {
             });
 
         this.getNamespaces();
+
+        this.permissionService.getNamespacePermissions('create')
+            .subscribe(permissions => {
+                this.canCreateNamespace = permissions.create;
+            });
     }
 
     getNamespaces() {

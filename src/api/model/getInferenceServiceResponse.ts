@@ -9,9 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { InferenceServiceCondition } from './inferenceServiceCondition';
 
 
-export interface HasServiceResponse { 
-    hasService?: boolean;
+export interface GetInferenceServiceResponse { 
+    ready?: boolean;
+    conditions?: Array<InferenceServiceCondition>;
+    predictUrl?: string;
 }
 
