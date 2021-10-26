@@ -11,7 +11,9 @@
  */
 
 
-export interface HasServiceResponse { 
-    hasService?: boolean;
+export interface InferenceServiceCondition { 
+    lastTransitionTime?: string;
+    status?: string;
+    type?: string;
 }
 

@@ -6,6 +6,7 @@
                 <input [formControl]="queryInput" matInput />
             </mat-form-field>
         </form>
+        <app-button *ngIf="canCreateNamespace" (click)="onNewNamespaceClick()">Create Namespace</app-button>
     </div>
 
     <div *ngFor="let namespace of namespaces" (click)="onNamespaceClick(namespace.name)" class="font-size-regular font-roboto namespace">

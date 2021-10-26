@@ -77,6 +77,7 @@ export class LoginComponent implements OnInit {
         }).subscribe(res => {
             this.authService.setLogin(this.usernameInput.value, res.accessToken, res.domain);
 
+            this.namespaceTracker.activeNamespace = res.username;
             this.namespaceTracker.getNamespaces();
 
             if (this.authService.redirectUrl) {
@@ -86,7 +87,7 @@ export class LoginComponent implements OnInit {
                 return;
             }
 
-            this.appRouter.navigateToHomePage();
+            this.appRouter.navigateToNamespaceHomepage(res.username);
             this.loggingIn = false;
         }, (err: HttpErrorResponse) => {
             if (err.status === 0) {

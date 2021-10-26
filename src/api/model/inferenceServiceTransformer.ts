@@ -9,9 +9,14 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { Container } from './container';
 
 
-export interface HasServiceResponse { 
-    hasService?: boolean;
+export interface InferenceServiceTransformer { 
+    containers?: Array<Container>;
+    minCpu?: string;
+    minMemory?: string;
+    maxCpu?: string;
+    maxMemory?: string;
 }
 

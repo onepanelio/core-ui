@@ -130,4 +130,19 @@ export class PermissionService {
 
         return this.getPermissionsRequest(requests, verbs);
     }
+
+    getNamespacePermissions(...verbs: PermissionVerb[]) {
+        const requests = [];
+
+        for (const verb of verbs) {
+            requests.push(
+                this.authServiceService.isAuthorized({
+                    verb,
+                    resource: 'namespaces',
+                })
+            );
+        }
+
+        return this.getPermissionsRequest(requests, verbs);
+    }
 }

@@ -8,7 +8,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { filter } from 'rxjs/operators';
 import { MatSelect } from '@angular/material/select';
-import { Namespace, NamespaceServiceService, ServiceServiceService } from '../api';
+import { NamespaceServiceService, ServiceServiceService } from '../api';
 import { AuthService } from './auth/auth.service';
 import { environment } from '../environments/environment';
 import { MatDialog } from '@angular/material/dialog';
@@ -16,6 +16,8 @@ import { CreateNamespaceDialogComponent } from './namespace/create-namespace-dia
 import 'hammerjs';
 import { AppRouter } from './router/app-router.service';
 import { PermissionService } from './permissions/permission.service';
+import { AlertService } from './alert/alert.service';
+import { Alert } from './alert/alert';
 
 @Component({
     selector: 'app-root',
@@ -43,7 +45,8 @@ export class AppComponent implements OnInit {
                 private activatedRoute: ActivatedRoute,
                 private router: Router,
                 private dialog: MatDialog,
-                private snackbar: MatSnackBar) {
+                private snackbar: MatSnackBar,
+                private alertService: AlertService) {
         this.version = environment.version;
 
         this.namespaceTracker.namespacesChanged.subscribe(() => {
@@ -98,6 +101,9 @@ export class AppComponent implements OnInit {
     onNewNamespace() {
         const dialogRef = this.dialog.open(CreateNamespaceDialogComponent, {
             maxHeight: '100vh',
+            data: {
+                sourceNamespace: this.namespaceTracker.activeNamespace
+            }
         });
 
         dialogRef.afterClosed().subscribe(namespaceName => {
@@ -105,15 +111,13 @@ export class AppComponent implements OnInit {
                 return;
             }
 
-            const namespaceData: Namespace = {
-                name: namespaceName
-            };
+            this.showNamespaceManager = false;
 
-            this.namespaceService.createNamespace(namespaceData)
-                .subscribe(res => {
-                    this.onNamespaceChange(namespaceName);
-                    return;
-                });
+            this.alertService.storeAlert(new Alert({
+                message: `Namespace '${namespaceName}' successfully created`
+            }));
+
+            this.namespaceTracker.getNamespaces();
         });
     }
 
